@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Laravel</title>
+    
+    <!-- Meta SEO Standard -->
+    <meta name="description" content="Benvenuti sul nostro sito ufficiale">
+    
+    <!-- Open Graph (Facebook, LinkedIn, Pinterest, WhatsApp ecc.) -->
+    <meta property="og:title" content="Laravel" />
+    <meta property="og:description" content="Benvenuti sul nostro sito ufficiale" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://localhost/baseweb/public/shop/mare/edsds" />
+        
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Laravel">
+    <meta name="twitter:description" content="Benvenuti sul nostro sito ufficiale">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    <link rel="preload" as="style" href="http://localhost/baseweb/public/build/assets/app-DOFJhNs4.css" /><link rel="modulepreload" as="script" href="http://localhost/baseweb/public/build/assets/app-CBbTb_k3.js" /><link rel="stylesheet" href="http://localhost/baseweb/public/build/assets/app-DOFJhNs4.css" /><script type="module" src="http://localhost/baseweb/public/build/assets/app-CBbTb_k3.js"></script></head>
+<body class="font-sans antialiased text-gray-900 bg-gray-50 flex flex-col min-h-screen">
+    
+    <header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex">
+                <!-- Logo -->
+                <div class="shrink-0 flex items-center">
+                    <a href="http://localhost/baseweb/public" class="text-2xl font-bold text-indigo-600 flex items-center">
+                                                                            <img src="http://localhost/baseweb/public/storage/logo/cedam_mobile.jpg" alt="Laravel" class="h-10 w-auto object-contain">
+                                            </a>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <a href="http://localhost/baseweb/public" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                        Home
+                    </a>
+                    
+                                                                <a href="http://localhost/baseweb/public/shop" class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-gray-900 text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                            Shop
+                        </a>
+                                        
+                                    </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <!-- Page Content -->
+    <main class="flex-grow">
+        <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">T-shirt demo</h1>
+                            <p class="text-sm text-gray-500 mt-1 uppercase tracking-wider">adidas</p>
+                    </div>
+                    <a href="http://localhost/baseweb/public/shop/mare" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">&larr; Torna a mare</a>
+            </div>
+</div>
+
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
+        
+        <!-- Galleria Immagini -->
+        <div x-data="{ currentImage: 0, 
+                      images: [
+                                                                                    'http://localhost/baseweb/public/storage/articoli/foto/NKog4vfBc2UqpQJVycmIZ75wAP4eFBraFRPDY1LM.jpg',
+                                                            'http://localhost/baseweb/public/storage/varie/cappello.jpg',
+                                                                          ]
+                    }" 
+             class="flex flex-col">
+             
+            <template x-if="images.length > 0">
+                <div class="w-full bg-white rounded-lg border overflow-hidden">
+                    <img :src="images[currentImage]" alt="T-shirt demo" class="w-full max-h-96 object-contain">
+                </div>
+            </template>
+            <template x-if="images.length === 0">
+                 <div class="w-full h-96 max-h-96 bg-gray-100 rounded-lg flex items-center justify-center border">
+                    <span class="text-gray-400">Nessuna immagine</span>
+                </div>
+            </template>
+
+            <!-- Thumbnails -->
+            <template x-if="images.length > 1">
+                <div class="mt-4 grid grid-cols-4 gap-2">
+                    <template x-for="(img, index) in images" :key="index">
+                        <button @click="currentImage = index" 
+                                class="border-2 rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                :class="{'border-indigo-500': currentImage === index, 'border-transparent': currentImage !== index}">
+                            <img :src="img" class="h-20 w-full object-cover">
+                        </button>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <!-- Dettagli e Carrello -->
+        <div class="mt-10 px-4 sm:px-0 lg:mt-0" 
+             x-data="productB2C([{&amp;quot;id&amp;quot;:1,&amp;quot;shop_product_id&amp;quot;:1,&amp;quot;sku&amp;quot;:&amp;quot;sku_1_1&amp;quot;,&amp;quot;ean&amp;quot;:&amp;quot;123456789123456&amp;quot;,&amp;quot;colore&amp;quot;:&amp;quot;blu&amp;quot;,&amp;quot;taglia&amp;quot;:&amp;quot;S&amp;quot;,&amp;quot;prezzo&amp;quot;:&amp;quot;10.00&amp;quot;,&amp;quot;prezzo_scontato&amp;quot;:null,&amp;quot;foto&amp;quot;:&amp;quot;http:\/\/localhost\/baseweb\/public\/storage\/articoli\/foto\/NKog4vfBc2UqpQJVycmIZ75wAP4eFBraFRPDY1LM.jpg&amp;quot;,&amp;quot;created_at&amp;quot;:&amp;quot;2026-03-02T11:02:48.000000Z&amp;quot;,&amp;quot;updated_at&amp;quot;:&amp;quot;2026-03-02T14:25:55.000000Z&amp;quot;},{&amp;quot;id&amp;quot;:2,&amp;quot;shop_product_id&amp;quot;:1,&amp;quot;sku&amp;quot;:&amp;quot;sku_1_2&amp;quot;,&amp;quot;ean&amp;quot;:&amp;quot;123456789123457&amp;quot;,&amp;quot;colore&amp;quot;:&amp;quot;blu&amp;quot;,&amp;quot;taglia&amp;quot;:&amp;quot;M&amp;quot;,&amp;quot;prezzo&amp;quot;:&amp;quot;10.00&amp;quot;,&amp;quot;prezzo_scontato&amp;quot;:null,&amp;quot;foto&amp;quot;:&amp;quot;http:\/\/localhost\/baseweb\/public\/storage\/articoli\/foto\/NKog4vfBc2UqpQJVycmIZ75wAP4eFBraFRPDY1LM.jpg&amp;quot;,&amp;quot;created_at&amp;quot;:&amp;quot;2026-03-02T11:03:54.000000Z&amp;quot;,&amp;quot;updated_at&amp;quot;:&amp;quot;2026-03-02T14:25:55.000000Z&amp;quot;},{&amp;quot;id&amp;quot;:3,&amp;quot;shop_product_id&amp;quot;:1,&amp;quot;sku&amp;quot;:&amp;quot;sku_1_3&amp;quot;,&amp;quot;ean&amp;quot;:&amp;quot;123456789123458&amp;quot;,&amp;quot;colore&amp;quot;:&amp;quot;nero&amp;quot;,&amp;quot;taglia&amp;quot;:&amp;quot;S&amp;quot;,&amp;quot;prezzo&amp;quot;:&amp;quot;10.00&amp;quot;,&amp;quot;prezzo_scontato&amp;quot;:null,&amp;quot;foto&amp;quot;:&amp;quot;http:\/\/localhost\/baseweb\/public\/storage\/articoli\/foto\/ZYIs90iGais7QLcA0oGktAHbgE4JlPDlEbXJMGC1.png&amp;quot;,&amp;quot;created_at&amp;quot;:&amp;quot;2026-03-02T11:04:19.000000Z&amp;quot;,&amp;quot;updated_at&amp;quot;:&amp;quot;2026-03-02T14:25:55.000000Z&amp;quot;}])">
+            <h2 class="text-3xl tracking-tight text-gray-900 font-extrabold">T-shirt demo</h2>
+                            <p class="text-sm text-gray-500 mt-2">SKU: sku_1</p>
+            
+            <div class="mt-3">
+                <p class="text-3xl text-gray-900 font-bold" x-html="formattedPrice"></p>
+            </div>
+
+            <div class="mt-6 border-t border-gray-200 pt-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Descrizione</h3>
+                <div class="prose prose-sm text-gray-700">
+                    <p>maglia nuova</p>
+                </div>
+            </div>
+
+            <!-- Selezione B2C -->
+            <div class="mt-8">
+                <form action="#" method="POST" class="bg-gray-50 border border-gray-200 rounded-lg p-6">
+                    <input type="hidden" name="_token" value="ocPzkC8XYakxOGbwmvS4YyEzT4eVj5pTtKWZ0YBl" autocomplete="off">                    <input type="hidden" name="product_id" value="1">
+                    <input type="hidden" name="variant_id" x-model="selectedVariantId">
+                    
+                                            
+                        <!-- Selezione Colore -->
+                        <div x-show="availableColors.length > 0" class="mb-6">
+                            <h3 class="text-sm text-gray-900 font-medium whitespace-nowrap mb-3" id="color-choice-heading">Colore: <span x-text="selectedColor"></span></h3>
+                            <div class="flex items-center space-x-3">
+                                <template x-for="color in availableColors" :key="color">
+                                    <button type="button" 
+                                            @click="selectColor(color)"
+                                            class="px-4 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                            :class="selectedColor === color ? 'bg-indigo-600 text-white border-transparent' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
+                                        <span x-text="color"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Selezione Taglia -->
+                        <div x-show="availableSizes.length > 0" class="mb-6">
+                            <h3 class="text-sm text-gray-900 font-medium whitespace-nowrap mb-3" id="size-choice-heading">Taglia: <span x-text="selectedSize"></span></h3>
+                            <div class="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-4">
+                                <template x-for="size in availableSizes" :key="size">
+                                    <button type="button" 
+                                            @click="selectSize(size)"
+                                            class="px-4 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                            :class="selectedSize === size ? 'bg-indigo-600 text-white border-transparent' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
+                                        <span x-text="size"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        <!-- Messaggio Mancanza Varianti -->
+                        <div x-show="selectedVariantId === null && (selectedColor !== null || selectedSize !== null)" class="mt-2 text-sm text-red-600 mb-4">
+                            La combinazione selezionata non è disponibile.
+                        </div>
+
+                        <!-- Quantità -->
+                        <div class="mb-6 flex items-center mt-6">
+                            <h3 class="text-sm text-gray-900 font-medium mr-4">Quantità:</h3>
+                            <input type="number" name="quantity" min="1" x-model="quantity" class="w-20 text-center border-gray-300 rounded shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+
+                    
+                    <div class="mt-6 flex">
+                        <button type="button" 
+                                :disabled="selectedVariantId === null ||  false "
+                                onclick="alert('Funzione Carrello B2C in fase di sviluppo!')" 
+                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            Aggiungi al Carrello
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+                            <div class="mt-8 border-t border-gray-200 pt-6">
+                    <h3 class="text-sm font-medium text-gray-900">Tag Profilazione</h3>
+                    <div class="mt-2 flex flex-wrap gap-2">
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                primavera-estate
+                            </span>
+                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                mare
+                            </span>
+                                            </div>
+                </div>
+                    </div>
+    </div>
+</div>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-center text-sm">
+            <div class="mb-4 md:mb-0">
+                &copy; 2026 Laravel. Tutti i diritti riservati.
+            </div>
+            <div class="space-x-4">
+                <a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a>
+                <a href="http://localhost/baseweb/public/login" class="text-gray-400 hover:text-white transition">Area Riservata</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
