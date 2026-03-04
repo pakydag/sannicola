@@ -72,11 +72,46 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
 
     // Booking System
     Route::prefix('booking')->name('booking.')->group(function () {
-        Route::resource('structures', \App\Http\Controllers\Admin\BookingStructureController::class);
+        Route::get('/', [\App\Http\Controllers\Admin\AdminBookingController::class, 'index'])->name('bookings.index');
+        Route::get('/archive', [\App\Http\Controllers\Admin\AdminBookingController::class, 'archive'])->name('bookings.archive');
         Route::get('/calendar', [\App\Http\Controllers\Admin\AdminBookingController::class, 'calendar'])->name('calendar');
-        Route::get('/bookings', [\App\Http\Controllers\Admin\AdminBookingController::class, 'index'])->name('bookings.index');
-        Route::get('/bookings/{booking}', [\App\Http\Controllers\Admin\AdminBookingController::class, 'show'])->name('bookings.show');
+        Route::get('/block', [\App\Http\Controllers\Admin\AdminBookingController::class, 'block'])->name('bookings.block');
+        Route::post('/block', [\App\Http\Controllers\Admin\AdminBookingController::class, 'storeBlock'])->name('bookings.store_block');
+        Route::resource('structures', \App\Http\Controllers\Admin\BookingStructureController::class);
+        Route::resource('customers', \App\Http\Controllers\Admin\BookingCustomerController::class); // Added this line
+
+        // Booking Services
+        Route::get('services', [\App\Http\Controllers\Admin\BookingServiceController::class, 'index'])->name('services.index');
+        Route::post('services/categories', [\App\Http\Controllers\Admin\BookingServiceController::class, 'storeCategory'])->name('services.store-category');
+        Route::put('services/categories/{category}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'updateCategory'])->name('services.update-category');
+        Route::delete('services/categories/{category}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'destroyCategory'])->name('services.destroy-category');
+        Route::post('services/categories/{category}/services', [\App\Http\Controllers\Admin\BookingServiceController::class, 'storeService'])->name('services.store-service');
+        Route::delete('services/{service}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'destroyService'])->name('services.destroy-service');
+        
+        // Booking Extras
+        Route::resource('extras', \App\Http\Controllers\Admin\BookingExtraController::class)->except(['create', 'edit', 'show']);
+        Route::post('/{booking}/mark-as-paid', [\App\Http\Controllers\Admin\AdminBookingController::class, 'markAsPaid'])->name('bookings.mark_as_paid');
+        Route::post('/{booking}/cancel', [\App\Http\Controllers\Admin\AdminBookingController::class, 'cancel'])->name('bookings.cancel');
+        Route::get('/api/occupied-dates/{id}', [\App\Http\Controllers\Admin\AdminBookingController::class, 'getOccupiedDates'])->name('bookings.occupied_dates');
+        Route::get('/{booking}', [\App\Http\Controllers\Admin\AdminBookingController::class, 'show'])->name('bookings.show');
     });
+
+    // Customer Management
+    Route::prefix('customers')->name('customers.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('index');
+        Route::get('/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('show');
+    });
+
+    // Admin User Management (Super Admin only recommended but accessible to all admins for now as per request)
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+
+    // AI Agent Management (Vapi.ai)
+    Route::get('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'index'])->name('vapi.index');
+    Route::patch('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'update'])->name('vapi.update');
+    
+    // AI Tickets Management
+    Route::get('vapi/tickets', [\App\Http\Controllers\Admin\AiTicketController::class, 'index'])->name('vapi.tickets.index');
+    Route::delete('vapi/tickets/{ticket}', [\App\Http\Controllers\Admin\AiTicketController::class, 'destroy'])->name('vapi.tickets.destroy');
 });
 
 require __DIR__.'/auth.php';
@@ -98,14 +133,25 @@ Route::get('/shop/checkout/stripe/cancel', [\App\Http\Controllers\PublicShopCart
 Route::get('/shop/checkout/paypal/success', [\App\Http\Controllers\PublicShopCartController::class, 'paypalSuccess'])->name('public.shop.cart.paypal.success');
 Route::get('/shop/checkout/paypal/cancel', [\App\Http\Controllers\PublicShopCartController::class, 'paypalCancel'])->name('public.shop.cart.paypal.cancel');
 
-Route::get('/shop/{slug}', [\App\Http\Controllers\PublicShopController::class, 'collezione'])->name('public.shop.collezione');
+Route::get('/shop/collezione/{slug}', [\App\Http\Controllers\PublicShopController::class, 'collezione'])->name('public.shop.collezione');
+Route::get('/shop/categoria/{slug}', [\App\Http\Controllers\PublicShopController::class, 'categoria'])->name('public.shop.categoria');
 Route::get('/shop/{collezione_slug}/{prodotto_slug}', [\App\Http\Controllers\PublicShopController::class, 'prodotto'])->name('public.shop.prodotto');
 
 // Booking Pubblico
 Route::get('/booking', [\App\Http\Controllers\PublicBookingController::class, 'index'])->name('public.booking.index');
 Route::get('/booking/checkout', [\App\Http\Controllers\PublicBookingController::class, 'checkout'])->name('public.booking.checkout');
-Route::post('/booking/process-checkout', [\App\Http\Controllers\PublicBookingController::class, 'processCheckout'])->name('public.booking.process_checkout');
-Route::get('/booking/success/{id}', [\App\Http\Controllers\PublicBookingController::class, 'success'])->name('public.booking.success');
+    // Booking Checkout & Payment
+    Route::post('/booking/login', [\App\Http\Controllers\PublicBookingController::class, 'loginCheckout'])->name('public.booking.login');
+    Route::post('/booking/process-checkout', [\App\Http\Controllers\PublicBookingController::class, 'processCheckout'])->name('public.booking.process_checkout');
+    Route::get('/booking/success/{id}', [\App\Http\Controllers\PublicBookingController::class, 'success'])->name('public.booking.success');
+
+    // Booking Customer Dashboard
+    Route::middleware('auth:booking_customer')->prefix('booking/dashboard')->name('public.booking.dashboard.')->group(function() {
+        Route::get('/', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'index'])->name('index');
+        Route::get('/profile', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'profile'])->name('profile');
+        Route::post('/profile', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/logout', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'logout'])->name('logout');
+    });
 Route::get('/booking/stripe/success', [\App\Http\Controllers\PublicBookingController::class, 'stripeSuccess'])->name('public.booking.stripe.success');
 Route::get('/booking/paypal/success', [\App\Http\Controllers\PublicBookingController::class, 'paypalSuccess'])->name('public.booking.paypal.success');
 Route::get('/booking/{id}', [\App\Http\Controllers\PublicBookingController::class, 'show'])->name('public.booking.show');

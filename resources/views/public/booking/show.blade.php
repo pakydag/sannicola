@@ -76,9 +76,37 @@
                             </div>
                         </div>
 
-                        <div class="prose prose-indigo max-w-none text-gray-600">
+                        <div class="prose prose-indigo max-w-none text-gray-600 mb-12">
                             {!! $structure->descrizione !!}
                         </div>
+
+                        <!-- Servizi e Amenità -->
+                        @if($structure->services->count() > 0)
+                            <div class="mt-12 border-t pt-12">
+                                <h3 class="text-2xl font-extrabold text-gray-900 mb-8">Servizi e Dotazioni</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                                    @foreach($structure->services->groupBy('booking_service_category_id') as $catId => $services)
+                                        @php $category = $services->first()->category; @endphp
+                                        <div class="space-y-4">
+                                            <div class="flex items-center gap-3 mb-2">
+                                                <span class="text-2xl" aria-hidden="true">{{ $category->icona }}</span>
+                                                <h4 class="text-lg font-bold text-gray-900 uppercase tracking-wide">{{ $category->nome }}</h4>
+                                            </div>
+                                            <ul class="grid grid-cols-1 gap-2">
+                                                @foreach($services as $service)
+                                                    <li class="flex items-start gap-3 text-gray-600 text-sm">
+                                                        <svg class="h-5 w-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                        <span>{{ $service->nome }}</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
@@ -87,8 +115,13 @@
                     <div class="sticky top-8 bg-white rounded-3xl p-8 shadow-2xl border border-gray-100" x-data="bookingForm()">
                         <div class="flex justify-between items-end mb-8">
                             <div>
-                                <p class="text-3xl font-extrabold text-gray-900">€{{ number_format($structure->costo_al_giorno, 2, ',', '.') }}</p>
-                                <p class="text-gray-500 text-sm">per notte</p>
+                                @if($structure->tipo_prezzo === 'fisso')
+                                    <p class="text-xl font-extrabold text-gray-900">Prezzo fisso</p>
+                                    <p class="text-gray-500 text-sm">per periodo</p>
+                                @else
+                                    <p class="text-xl font-extrabold text-gray-900">Prezzo per persona</p>
+                                    <p class="text-gray-500 text-sm">per periodo</p>
+                                @endif
                             </div>
                             <div class="text-right">
                                 <span class="text-yellow-400">★★★★★</span>
@@ -108,38 +141,44 @@
                                 </div>
                                 <div class="col-span-2 p-3 bg-gray-50">
                                     <label class="block text-[10px] font-bold uppercase text-gray-400">Ospiti</label>
-                                    <div class="flex justify-between items-center mt-1">
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-xs">Adulti</span>
-                                            <select x-model="adults" class="bg-transparent border-0 p-0 text-sm focus:ring-0 font-extrabold">
-                                                @for($i=1; $i<=$structure->posti_totali; $i++)
-                                                    <option value="{{ $i }}">{{ $i }}</option>
-                                                @endfor
-                                            </select>
+                                    @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
+                                        <div class="grid grid-cols-2 gap-4 mt-2">
+                                            @foreach($structure->variants as $variant)
+                                                <div class="flex items-center justify-between bg-white p-2 rounded-lg border shadow-sm">
+                                                    <span class="text-xs font-bold">{{ $variant->nome }}</span>
+                                                    <select x-model.number="ospiti['{{ $variant->id }}']" @change="checkDates" class="bg-transparent border-0 p-0 text-sm focus:ring-0 font-extrabold w-12 text-right">
+                                                        @for($i=0; $i<=$structure->posti_totali; $i++)
+                                                            <option value="{{ $i }}">{{ $i }}</option>
+                                                        @endfor
+                                                    </select>
+                                                </div>
+                                            @endforeach
                                         </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-xs">Bambini</span>
-                                            <select x-model="kids" class="bg-transparent border-0 p-0 text-sm focus:ring-0 font-extrabold">
-                                                @for($i=0; $i<$structure->posti_totali; $i++)
-                                                    <option value="{{ $i }}">{{ $i }}</option>
-                                                @endfor
-                                            </select>
+                                    @endif
+                                </div>
+                                @if($structure->extras->count() > 0)
+                                    <div class="col-span-2 p-3 bg-gray-50 border-t">
+                                        <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Servizi Extra</label>
+                                        <div class="space-y-2">
+                                            @foreach($structure->extras as $extra)
+                                                <label class="flex items-center justify-between p-2 rounded-lg border bg-white cursor-pointer hover:border-indigo-300 transition-colors">
+                                                    <div class="flex items-center gap-2">
+                                                        <input type="checkbox" x-model="selectedExtras" value="{{ $extra->id }}" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        <span class="text-xs font-bold text-gray-700">{{ $extra->nome }}</span>
+                                                    </div>
+                                                    <span class="text-xs font-bold text-gray-500">€{{ number_format($extra->prezzo, 2) }}/g</span>
+                                                </label>
+                                            @endforeach
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
 
-                            <div x-show="totalDays > 0" x-transition class="space-y-3 py-4 text-sm animate-pulse" x-show="isChecking">
-                                <div class="flex justify-between items-center text-gray-600">
-                                    <span>Verifica disponibilità...</span>
-                                </div>
-                            </div>
-
-                            <div x-show="totalDays > 0 && !isChecking" x-transition class="space-y-3 py-4 text-sm">
+                            <div x-show="totalDays > 0" x-transition class="space-y-3 py-4 text-sm" :class="isChecking ? 'animate-pulse opacity-50' : ''">
                                 <template x-if="isAvailable">
                                     <div class="space-y-3">
                                         <div class="flex justify-between items-center text-gray-600">
-                                            <span>€{{ number_format($structure->costo_al_giorno, 2, ',', '.') }} x <span x-text="totalDays"></span> notti</span>
+                                            <span>Soggiorno di <span x-text="totalDays"></span> notti</span>
                                             <span class="font-bold text-gray-900">€<span x-text="totalPrice"></span></span>
                                         </div>
                                         <div class="flex justify-between items-center pt-3 border-t text-base">
@@ -148,17 +187,22 @@
                                         </div>
                                     </div>
                                 </template>
-                                <template x-if="!isAvailable">
+                                <template x-if="!isAvailable && !isChecking && totalGuests <= {{ $structure->posti_totali }}">
                                     <div class="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-center font-bold">
                                         Le date selezionate non sono disponibili.
+                                    </div>
+                                </template>
+                                <template x-if="totalGuests > {{ $structure->posti_totali }}">
+                                    <div class="p-3 bg-orange-50 border border-orange-200 text-orange-600 rounded-xl text-center font-bold">
+                                        Il numero totale di ospiti riservati (<span x-text="totalGuests"></span>) supera la capacità della struttura ({{ $structure->posti_totali }}).
                                     </div>
                                 </template>
                             </div>
 
                             <button type="submit" 
-                                    :disabled="!isAvailable || totalDays <= 0 || isChecking"
-                                    class="w-full py-4 rounded-2xl font-extrabold text-lg shadow-lg transition-all duration-300 transform active:scale-95"
-                                    :class="isAvailable && totalDays > 0 && !isChecking ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200' : 'bg-gray-100 text-gray-400 cursor-not-allowed'">
+                                    :disabled="!isAvailable || totalDays <= 0 || isChecking || parseFloat(totalPrice) <= 0 || totalGuests > {{ $structure->posti_totali }}"
+                                    x-show="totalDays > 0 && (isAvailable || totalGuests > {{ $structure->posti_totali }}) && (parseFloat(totalPrice) > 0 || totalGuests > {{ $structure->posti_totali }})"
+                                    class="w-full py-4 rounded-2xl font-extrabold text-lg shadow-lg transition-all duration-300 transform active:scale-95 bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <span x-show="!isChecking">Prenota Ora</span>
                                 <span x-show="isChecking">Verifica in corso...</span>
                             </button>
@@ -180,14 +224,18 @@
         return {
             startDate: '',
             endDate: '',
-            adults: 1,
-            kids: 0,
+            ospiti: {!! json_encode($structure->variants->pluck('id')->mapWithKeys(fn($id) => [(string)$id => 0])) !!},
             totalDays: 0,
             totalPrice: 0,
+            selectedExtras: [],
             isChecking: false,
             isAvailable: true,
             bookedDates: @json($bookedDates),
-            costPerDay: {{ $structure->costo_al_giorno }},
+            tipoPrezzo: '{{ $structure->tipo_prezzo }}',
+
+            get totalGuests() {
+                return Object.values(this.ospiti).reduce((a, b) => (parseInt(a) || 0) + (parseInt(b) || 0), 0);
+            },
 
             checkDates() {
                 if (this.startDate && this.endDate) {
@@ -197,7 +245,6 @@
                     if (end > start) {
                         const diffTime = Math.abs(end - start);
                         this.totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        this.totalPrice = (this.totalDays * this.costPerDay).toFixed(2);
                         this.verifyAvailability();
                     } else {
                         this.totalDays = 0;
@@ -206,6 +253,13 @@
             },
 
             verifyAvailability() {
+                // Se il totale ospiti supera la capacità, non verifichiamo nemmeno la disponibilità
+                if (this.totalGuests > {{ $structure->posti_totali }}) {
+                    this.isAvailable = false;
+                    this.totalPrice = 0;
+                    return;
+                }
+
                 this.isChecking = true;
                 this.isAvailable = true;
 
@@ -222,8 +276,14 @@
                     }
                 }
 
-                // Server side double check
-                fetch('{{ route('public.booking.check') }}', {
+                // Build ospiti payload — convert keys to integers for server
+                const ospitiPayload = {};
+                for (const key in this.ospiti) {
+                    ospitiPayload[key] = parseInt(this.ospiti[key]) || 0;
+                }
+
+                // Server side double check & Price calculation
+                fetch('{{ route("public.booking.check") }}', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -232,12 +292,15 @@
                     body: JSON.stringify({
                         structure_id: {{ $structure->id }},
                         start_date: this.startDate,
-                        end_date: this.endDate
+                        end_date: this.endDate,
+                        ospiti: ospitiPayload,
+                        extras: this.selectedExtras
                     })
                 })
                 .then(res => res.json())
                 .then(data => {
                     this.isAvailable = data.available;
+                    this.totalPrice = data.total_price;
                     this.isChecking = false;
                 })
                 .catch(() => {
@@ -246,11 +309,11 @@
             },
 
             submitBooking() {
-                if (!this.isAvailable || this.totalDays <= 0) return;
+                if (!this.isAvailable || this.totalDays <= 0 || parseFloat(this.totalPrice) <= 0) return;
 
                 const form = document.createElement('form');
                 form.method = 'POST';
-                form.action = '{{ route('public.booking.reserve') }}';
+                form.action = '{{ route("public.booking.reserve") }}';
                 
                 const csrf = document.createElement('input');
                 csrf.type = 'hidden';
@@ -258,22 +321,50 @@
                 csrf.value = '{{ csrf_token() }}';
                 form.appendChild(csrf);
 
-                const inputs = {
-                    structure_id: '{{ $structure->id }}',
-                    start_date: this.startDate,
-                    end_date: this.endDate,
-                    adulti: this.adults,
-                    bambini: this.kids,
-                    totale: this.totalPrice
-                };
+                // Add structure_id
+                const structureInput = document.createElement('input');
+                structureInput.type = 'hidden';
+                structureInput.name = 'structure_id';
+                structureInput.value = '{{ $structure->id }}';
+                form.appendChild(structureInput);
 
-                for (const key in inputs) {
+                // Add dates
+                const startInput = document.createElement('input');
+                startInput.type = 'hidden';
+                startInput.name = 'start_date';
+                startInput.value = this.startDate;
+                form.appendChild(startInput);
+
+                const endInput = document.createElement('input');
+                endInput.type = 'hidden';
+                endInput.name = 'end_date';
+                endInput.value = this.endDate;
+                form.appendChild(endInput);
+
+                // Add ospiti
+                for (const variantId in this.ospiti) {
                     const input = document.createElement('input');
                     input.type = 'hidden';
-                    input.name = key;
-                    input.value = inputs[key];
+                    input.name = `ospiti[${variantId}]`;
+                    input.value = this.ospiti[variantId];
                     form.appendChild(input);
                 }
+
+                // Add extras
+                this.selectedExtras.forEach(extraId => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'extras[]';
+                    input.value = extraId;
+                    form.appendChild(input);
+                });
+
+                // Add total
+                const totalInput = document.createElement('input');
+                totalInput.type = 'hidden';
+                totalInput.name = 'totale';
+                totalInput.value = this.totalPrice;
+                form.appendChild(totalInput);
 
                 document.body.appendChild(form);
                 form.submit();

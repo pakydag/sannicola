@@ -51,7 +51,7 @@
                                             {{ $s->posti_totali }} 👤
                                         </td>
                                         <td class="py-2 px-4 border-b text-right font-mono">
-                                            €{{ number_format($s->costo_al_giorno, 2, ',', '.') }}
+                                            {{ $s->tipo_prezzo === 'fisso' ? 'Fisso' : 'Per persona' }}
                                         </td>
                                         <td class="py-2 px-4 border-b text-center">
                                             @if($s->attivo)
@@ -61,6 +61,7 @@
                                             @endif
                                         </td>
                                         <td class="py-2 px-4 border-b text-right">
+                                            <a href="{{ route('admin.booking.bookings.block', ['structure_id' => $s->id]) }}" class="text-amber-600 hover:text-amber-900 mr-3">Blocca Date</a>
                                             <a href="{{ route('admin.booking.structures.edit', $s) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Modifica</a>
                                             <form action="{{ route('admin.booking.structures.destroy', $s) }}" method="POST" class="inline-block" onsubmit="return confirm('Sicuro di voler eliminare questa struttura?');">
                                                 @csrf @method('DELETE')

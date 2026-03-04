@@ -1,0 +1,122 @@
+@extends('public.layouts.main')
+
+@section('title', $categoria->nome . ' - Shop ' . config('app.name'))
+
+@section('content')
+<div class="bg-gray-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <nav class="flex mb-4 text-xs font-medium text-gray-400 uppercase tracking-widest" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="{{ route('public.shop.index') }}" class="hover:text-indigo-600 transition-colors">Shop</a>
+                </li>
+                @if($categoria->parent && $categoria->parent->parent)
+                    <li>
+                        <div class="flex items-center">
+                            <span class="mx-2">/</span>
+                            <a href="{{ route('public.shop.categoria', $categoria->parent->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $categoria->parent->parent->nome }}</a>
+                        </div>
+                    </li>
+                @endif
+                @if($categoria->parent)
+                    <li>
+                        <div class="flex items-center">
+                            <span class="mx-2">/</span>
+                            <a href="{{ route('public.shop.categoria', $categoria->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $categoria->parent->nome }}</a>
+                        </div>
+                    </li>
+                @endif
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <span class="mx-2 text-gray-300">/</span>
+                        <span class="text-indigo-600">{{ $categoria->nome }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
+            {{ $categoria->nome }}
+        </h1>
+        <p class="text-gray-500 max-w-2xl">
+            Sfoglia i nostri prodotti della categoria {{ $categoria->nome }}.
+        </p>
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar -->
+        <aside class="w-full lg:w-1/5 flex-shrink-0">
+            @include('public.shop.partials.sidebar')
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-grow">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @forelse($prodotti as $prodotto)
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-xl hover:-translate-y-1 group">
+                        @php
+                            $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
+                        @endphp
+                        
+                        <div class="relative overflow-hidden aspect-[4/3]">
+                            @if($primaFoto)
+                                <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            @else
+                                <div class="w-full h-full bg-gray-50 flex items-center justify-center text-gray-300">
+                                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                            @endif
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+                            
+                            @if($prodotto->variants->first() && $prodotto->variants->first()->prezzo_scontato > 0)
+                                <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">Saldi</div>
+                            @endif
+                        </div>
+                        
+                        <div class="p-6 flex-grow flex flex-col">
+                            @if($prodotto->marca)
+                                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
+                            @endif
+                            
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                            
+                            <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                                @php
+                                    $variant = $prodotto->variants->first();
+                                    $prezzo = $variant ? $variant->prezzo : 0;
+                                    $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
+                                @endphp
+                                
+                                <div class="flex flex-col">
+                                    @if($prezzo_scontato > 0)
+                                        <span class="text-lg font-black text-red-600 leading-none">€ {{ number_format($prezzo_scontato, 2, ',', '.') }}</span>
+                                        <span class="text-xs line-through text-gray-400 mt-1">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                    @elseif($prezzo > 0)
+                                        <span class="text-lg font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                    @else
+                                        <span class="text-sm font-bold text-gray-400 italic">Prezzo su richiesta</span>
+                                    @endif
+                                </div>
+                                
+                                <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'generale', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-span-full bg-white rounded-2xl border border-dashed border-gray-200 p-12 text-center">
+                        <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-300">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900">Nessun prodotto trovato</h3>
+                        <p class="text-gray-500 text-sm mt-1">Non ci sono ancora prodotti assegnati a questa categoria.</p>
+                        <a href="{{ route('public.shop.index') }}" class="mt-6 inline-flex text-indigo-600 font-bold hover:underline">Torna allo Shop</a>
+                    </div>
+                @endforelse
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

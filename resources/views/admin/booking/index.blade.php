@@ -1,16 +1,72 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Booking - Prenotazioni') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ $isArchive ? __('Booking - Archivio Prenotazioni Passate') : __('Booking - Prenotazioni Attive') }}
+            </h2>
+            <div class="flex gap-2">
+                @if($isArchive)
+                    <a href="{{ route('admin.booking.bookings.index') }}" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded shadow text-sm">
+                        Vedie Prenotazioni Attive
+                    </a>
+                @else
+                    <a href="{{ route('admin.booking.bookings.archive') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow text-sm">
+                        Vedi Archivio Passato
+                    </a>
+                @endif
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
+                    
+                    <!-- Filtri -->
+                    <form action="{{ $isArchive ? route('admin.booking.bookings.archive') : route('admin.booking.bookings.index') }}" method="GET" class="mb-6 bg-gray-50 p-4 rounded-lg flex flex-wrap gap-4 items-end">
+                        <div class="flex-1 min-w-[200px]">
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Struttura</label>
+                            <select name="structure_id" class="w-full border-gray-300 rounded shadow-sm text-sm">
+                                <option value="">Tutte le strutture</option>
+                                @foreach($structures as $s)
+                                    <option value="{{ $s->id }}" {{ request('structure_id') == $s->id ? 'selected' : '' }}>{{ $s->nome }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="w-32">
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mese</label>
+                            <select name="month" class="w-full border-gray-300 rounded shadow-sm text-sm">
+                                <option value="">Tutti</option>
+                                @for($i=1; $i<=12; $i++)
+                                    <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                                        {{ \Carbon\Carbon::create()->month($i)->translatedFormat('F') }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="w-24">
+                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Anno</label>
+                            <select name="year" class="w-full border-gray-300 rounded shadow-sm text-sm">
+                                <option value="">Tutti</option>
+                                @for($i=date('Y')-2; $i<=date('Y')+2; $i++)
+                                    <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="submit" class="bg-indigo-100 text-indigo-700 hover:bg-indigo-200 font-bold py-2 px-4 rounded border border-indigo-200 text-sm">
+                                Filtra
+                            </button>
+                            <a href="{{ $isArchive ? route('admin.booking.bookings.archive') : route('admin.booking.bookings.index') }}" class="bg-white text-gray-600 hover:bg-gray-100 font-bold py-2 px-4 rounded border border-gray-300 text-sm">
+                                Reset
+                            </a>
+                        </div>
+                    </form>
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200">
+                            <!-- ... existing table headers ... -->
                             <thead>
                                 <tr>
                                     <th class="py-2 px-4 border-b text-left">ID</th>
@@ -65,6 +121,13 @@
                             </tbody>
                         </table>
                     </div>
+                    <div class="mt-4">
+                        {{ $bookings->links() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
                     <div class="mt-4">
                         {{ $bookings->links() }}
                     </div>

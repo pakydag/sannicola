@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'booking_customer' => [
+            'driver' => 'session',
+            'provider' => 'booking_customers',
+        ],
     ],
 
     /*
@@ -63,6 +67,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'booking_customers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\BookingCustomer::class,
         ],
 
         // 'users' => [

@@ -14,7 +14,7 @@ class PublicBookingController extends Controller
 
     public function show($id)
     {
-        $structure = \App\Models\BookingStructure::where('attivo', true)->with('photos')->findOrFail($id);
+        $structure = \App\Models\BookingStructure::where('attivo', true)->with(['photos', 'variants', 'prices', 'services.category', 'extras'])->findOrFail($id);
         
         // Get existing bookings for the calendar
         $bookings = \App\Models\Booking::where('booking_structure_id', $id)
@@ -42,6 +42,7 @@ class PublicBookingController extends Controller
             'structure_id' => 'required|exists:booking_structures,id',
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after:start_date',
+            'ospiti' => 'nullable|array',
         ]);
 
         $exists = \App\Models\Booking::where('booking_structure_id', $request->structure_id)
@@ -55,7 +56,74 @@ class PublicBookingController extends Controller
                     });
             })->exists();
 
-        return response()->json(['available' => !$exists]);
+        $structure = \App\Models\BookingStructure::with(['prices', 'variants'])->findOrFail($request->structure_id);
+    
+        // Validate guest capacity
+        $totalGuests = array_sum($request->ospiti ?: []);
+        if ($totalGuests > $structure->posti_totali) {
+            return response()->json([
+                'available' => false,
+                'error' => "Il numero totale di ospiti ($totalGuests) supera la capacità della struttura ({$structure->posti_totali}).",
+                'total_price' => 0,
+                'details' => []
+            ]);
+        }
+
+        $priceData = $this->calculatePrice($structure, $request->start_date, $request->end_date, $request->ospiti ?: [], $request->extras ?: []);
+
+        return response()->json([
+            'available' => !$exists,
+            'total_price' => number_format($priceData['total'], 2, '.', ''),
+            'details' => $priceData['details']
+        ]);
+    }
+
+    private function calculatePrice($structure, $start, $end, $ospiti, $extraIds = [])
+    {
+        $startDate = new \DateTime($start);
+        $endDate = new \DateTime($end);
+        $total = 0;
+        $details = [];
+
+        $seasonalPrices = $structure->prices;
+        
+        // Load extras to get their prices
+        $selectedExtras = \App\Models\BookingExtra::whereIn('id', $extraIds)->get();
+        $extrasDailyCost = $selectedExtras->sum('prezzo');
+
+        for ($date = clone $startDate; $date < $endDate; $date->modify('+1 day')) {
+            $currentDateStr = $date->format('Y-m-d');
+            $dayPrice = 0;
+
+            if ($structure->tipo_prezzo === 'fisso') {
+                $match = $seasonalPrices->where('tipo', 'fisso')
+                    ->where('start_date', '<=', $currentDateStr)
+                    ->where('end_date', '>=', $currentDateStr)
+                    ->first();
+                $dayPrice = $match ? $match->prezzo : 0;
+            } else {
+                // Costo per Persona based on variants
+                foreach ($ospiti as $variantId => $count) {
+                    if ($count <= 0) continue;
+                    
+                    $priceMatch = $seasonalPrices->where('booking_variant_id', $variantId)
+                        ->where('start_date', '<=', $currentDateStr)
+                        ->where('end_date', '>=', $currentDateStr)
+                        ->first();
+                        
+                    $vPrice = $priceMatch ? $priceMatch->prezzo : 0; 
+                    $dayPrice += ($vPrice * $count);
+                }
+            }
+            
+            // Add Extras daily cost
+            $dayPrice += $extrasDailyCost;
+
+            $total += $dayPrice;
+            $details[] = ['date' => $currentDateStr, 'price' => $dayPrice];
+        }
+
+        return ['total' => $total, 'details' => $details, 'extras' => $selectedExtras];
     }
 
     public function reserve(Request $request)
@@ -64,8 +132,8 @@ class PublicBookingController extends Controller
             'structure_id' => 'required|exists:booking_structures,id',
             'start_date' => 'required|date|after_or_equal:today',
             'end_date' => 'required|date|after:start_date',
-            'adulti' => 'required|integer|min:1',
-            'bambini' => 'required|integer|min:0',
+            'ospiti' => 'nullable|array',
+            'extras' => 'nullable|array',
             'totale' => 'required|numeric'
         ]);
 
@@ -81,13 +149,21 @@ class PublicBookingController extends Controller
             return redirect()->back()->with('error', 'Le date selezionate non sono più disponibili.');
         }
 
-        // Store reservation data in session for checkout
+        $structure = \App\Models\BookingStructure::findOrFail($request->structure_id);
+
+    // Validate guest capacity
+    $totalGuests = array_sum($request->ospiti ?: []);
+    if ($totalGuests > $structure->posti_totali) {
+        return redirect()->back()->with('error', "Il numero totale di ospiti ($totalGuests) supera la capacità della struttura ({$structure->posti_totali}).");
+    }
+
+    // Store reservation data in session for checkout
         session()->put('pending_booking', [
             'booking_structure_id' => $request->structure_id,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
-            'adulti' => $request->adulti,
-            'bambini' => $request->bambini,
+            'ospiti_dettaglio' => $request->ospiti,
+            'extra_dettaglio' => $request->extras,
             'totale_prezzo' => $request->totale
         ]);
 
@@ -101,7 +177,7 @@ class PublicBookingController extends Controller
             return redirect()->route('public.booking.index');
         }
 
-        $structure = \App\Models\BookingStructure::findOrFail($pending['booking_structure_id']);
+        $structure = \App\Models\BookingStructure::with('variants')->findOrFail($pending['booking_structure_id']);
         return view('public.booking.checkout', compact('pending', 'structure'));
     }
 
@@ -112,25 +188,70 @@ class PublicBookingController extends Controller
             return redirect()->route('public.booking.index');
         }
 
-        $request->validate([
+        $isLoggedIn = \Illuminate\Support\Facades\Auth::guard('booking_customer')->check();
+        
+        $rules = [
             'nome' => 'required|string|max:255',
             'cognome' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'telefono' => 'required|string|max:50',
+            'nazione' => 'required|string|max:100',
+            'citta' => 'required|string|max:100',
             'payment_method' => 'required|string'
-        ]);
+        ];
 
-        // 1. Handle Customer
-        $customer = \App\Models\Customer::where('email', $request->email)->first();
-        if (!$customer) {
-            $customer = new \App\Models\Customer();
-            $customer->email = $request->email;
-            $customer->password = \Illuminate\Support\Facades\Hash::make(\Illuminate\Support\Str::random(12));
+        // Se non è loggato e non è un utente esistente (password fittizia), validiamo la password
+        if (!$isLoggedIn && $request->password !== 'existing_customer') {
+            $rules['password'] = [
+                'required', 'string', 'min:8', 'confirmed',
+                \Illuminate\Validation\Rules\Password::min(8)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+            ];
         }
+
+        $request->validate($rules);
+
+        // 1. Handle Customer in dedicated archive
+        if ($isLoggedIn) {
+            $customer = \Illuminate\Support\Facades\Auth::guard('booking_customer')->user();
+        } else {
+            $customer = \App\Models\BookingCustomer::where('email', $request->email)->first();
+        }
+
+        $isNewCustomer = false;
+        if (!$customer) {
+            $customer = new \App\Models\BookingCustomer();
+            $customer->email = $request->email;
+            $isNewCustomer = true;
+        }
+        
         $customer->nome = $request->nome;
         $customer->cognome = $request->cognome;
         $customer->telefono = $request->telefono;
+        $customer->nazione = $request->nazione;
+        $customer->citta = $request->citta;
+        
+        if ($request->password !== 'existing_customer') {
+            $customer->password = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+        
         $customer->save();
+
+        // Se non era loggato, lo logghiamo ora (opzionale, ma utile per l'esperienza utente)
+        if (!$isLoggedIn) {
+            \Illuminate\Support\Facades\Auth::guard('booking_customer')->login($customer);
+        }
+
+        if ($isNewCustomer) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($customer->email)->send(new \App\Mail\WelcomeCustomerMail($customer));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Errore invio email benvenuto: ' . $e->getMessage());
+            }
+        }
 
         // 2. Create Booking
         $booking = new \App\Models\Booking();
@@ -138,15 +259,24 @@ class PublicBookingController extends Controller
         $booking->booking_structure_id = $pending['booking_structure_id'];
         $booking->start_date = $pending['start_date'];
         $booking->end_date = $pending['end_date'];
-        $booking->adulti = $pending['adulti'];
-        $booking->bambini = $pending['bambini'];
+        $booking->ospiti_dettaglio = $pending['ospiti_dettaglio'];
+        $booking->extra_dettaglio = $pending['extra_dettaglio'] ?? [];
+        // Sum total people for legacy columns
+        $totalPeople = array_sum($pending['ospiti_dettaglio'] ?: []);
+        $booking->adulti = $totalPeople ?: 1; 
+        $booking->bambini = 0;
         $booking->totale_prezzo = $pending['totale_prezzo'];
         $booking->stato = 'in_attesa';
         $booking->stato_pagamento = 'non_pagato';
         $booking->metodo_pagamento = $request->payment_method;
         $booking->save();
 
-        // 3. Handle Payment (similar to shop)
+        // Send email based on payment method
+        if ($booking->metodo_pagamento === 'bonifico') {
+            $this->sendBookingConfirmation($booking, true);
+        }
+
+        // 3. Handle Payment
         if ($booking->metodo_pagamento === 'stripe') {
             return $this->handleStripe($booking);
         } elseif ($booking->metodo_pagamento === 'paypal') {
@@ -155,6 +285,15 @@ class PublicBookingController extends Controller
             // Bonifico / Contrassegno (manual)
             session()->forget('pending_booking');
             return redirect()->route('public.booking.success', ['id' => $booking->id]);
+        }
+    }
+
+    private function sendBookingConfirmation($booking, $isPending = false)
+    {
+        try {
+            \Illuminate\Support\Facades\Mail::to($booking->customer->email)->send(new \App\Mail\BookingConfirmationMail($booking, $isPending));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Errore invio conferma prenotazione: ' . $e->getMessage());
         }
     }
 
@@ -259,9 +398,12 @@ class PublicBookingController extends Controller
         if ($session->payment_status === 'paid') {
             $booking = \App\Models\Booking::find($session->client_reference_id);
             if ($booking) {
+                \Illuminate\Support\Facades\Log::info('Stripe Success: Marking booking #' . $booking->id . ' as paid.');
                 $booking->stato_pagamento = 'pagato';
                 $booking->stato = 'confermato';
                 $booking->save();
+                
+                $this->sendBookingConfirmation($booking, false);
                 session()->forget('pending_booking');
                 return redirect()->route('public.booking.success', ['id' => $booking->id]);
             }
@@ -309,6 +451,7 @@ class PublicBookingController extends Controller
                 $booking->stato_pagamento = 'pagato';
                 $booking->stato = 'confermato';
                 $booking->save();
+                $this->sendBookingConfirmation($booking, false);
                 session()->forget('pending_booking');
                 return redirect()->route('public.booking.success', ['id' => $booking->id]);
             }
@@ -320,5 +463,22 @@ class PublicBookingController extends Controller
     {
         $booking = \App\Models\Booking::with('structure')->findOrFail($id);
         return view('public.booking.success', compact('booking'));
+    }
+
+    public function loginCheckout(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $remember = $request->has('remember');
+
+        if (\Illuminate\Support\Facades\Auth::guard('booking_customer')->attempt($credentials, $remember)) {
+            $request->session()->regenerate();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Credenziali non valide.'], 401);
     }
 }

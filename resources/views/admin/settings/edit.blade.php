@@ -1,3 +1,9 @@
+@php 
+    $user = Auth::user();
+    $shop_enabled = \App\Models\Setting::where('key', 'shop_enabled')->value('value') == '1'; 
+    $booking_enabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1';
+@endphp
+
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -5,7 +11,9 @@
         </h2>
     </x-slot>
 
-    <div class="py-12" x-data="{ activeTab: 'generali' }">
+    <div class="py-12" x-data="{ 
+        activeTab: '{{ $user->is_super_admin || $user->can_manage_site ? 'generali' : ($user->can_manage_shop ? 'pagamenti' : 'pagamenti_booking') }}' 
+    }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 border-b border-gray-200">
@@ -28,15 +36,27 @@
 
                     <!-- Tabs Menu -->
                     <div class="flex border-b mb-6 border-gray-200">
+                        @if($user->is_super_admin || $user->can_manage_site)
                         <button @click="activeTab = 'generali'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'generali', 'text-gray-600 hover:text-indigo-600': activeTab !== 'generali'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
                             ⚙️ Generali & Logo
                         </button>
+                        @endif
+
+                        @if($user->is_super_admin || $user->can_manage_site)
                         <button @click="activeTab = 'email'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'email', 'text-gray-600 hover:text-indigo-600': activeTab !== 'email'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
                             📧 Email (SMTP)
                         </button>
-                        @if(isset($settings['shop_enabled']) && $settings['shop_enabled'] == '1')
+                        @endif
+
+                        @if(($user->is_super_admin || $shop_enabled) && ($user->is_super_admin || $user->can_manage_shop))
                         <button @click="activeTab = 'pagamenti'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pagamenti', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pagamenti'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
-                            💳 Pagamenti
+                            🛍️ Pagamenti Shop
+                        </button>
+                        @endif
+
+                        @if(($user->is_super_admin || $booking_enabled) && ($user->is_super_admin || $user->can_manage_booking))
+                        <button @click="activeTab = 'pagamenti_booking'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pagamenti_booking', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pagamenti_booking'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
+                            🏨 Pagamenti Booking
                         </button>
                         @endif
                     </div>
@@ -64,7 +84,7 @@
                                 <p class="text-xs text-gray-500 mt-1">Scegli il file immagine (PNG, JPG o SVG) dal File Manager.</p>
                             </div>
 
-                            @if(Auth::user()->email === 'admin@admin.com')
+                            @if($user->is_super_admin)
                                 <div class="mt-8 border-t pt-6 border-gray-100">
                                     <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4 flex items-center gap-2">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
@@ -72,19 +92,21 @@
                                         </svg>
                                         Opzioni Super Amministratore
                                     </h3>
-                                    <label class="inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" name="shop_enabled" value="1" class="sr-only peer" {{ (isset($settings['shop_enabled']) && $settings['shop_enabled'] == '1') ? 'checked' : '' }}>
-                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                                        <span class="ms-3 text-sm font-medium text-gray-900">Abilita Modulo Shop B2B</span>
-                                    </label>
-                                    <p class="text-xs text-gray-500 mt-2">Attivando questa opzione, un nuovo menu 'Shop Online' apparirà nell'amministrazione con gestione Prodotti, Categorie, Varianti, Clienti e Ordini.</p>
+                                    <div class="space-y-4">
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="shop_enabled" value="1" class="sr-only peer" {{ (isset($settings['shop_enabled']) && $settings['shop_enabled'] == '1') ? 'checked' : '' }}>
+                                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                            <span class="ms-3 text-sm font-medium text-gray-900">Abilita Modulo Shop B2B</span>
+                                        </label>
+                                        <p class="text-xs text-gray-500">Attivando questa opzione, un nuovo menu 'Shop Online' apparirà nell'amministrazione.</p>
 
-                                    <label class="inline-flex items-center cursor-pointer mt-4">
-                                        <input type="checkbox" name="booking_enabled" value="1" class="sr-only peer" {{ (isset($settings['booking_enabled']) && $settings['booking_enabled'] == '1') ? 'checked' : '' }}>
-                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                                        <span class="ms-3 text-sm font-medium text-gray-900">Abilita Modulo Booking</span>
-                                    </label>
-                                    <p class="text-xs text-gray-500 mt-2">Attivando questa opzione, un nuovo menu 'Booking' apparirà nell'amministrazione per gestire strutture, disponibilità e prenotazioni.</p>
+                                        <label class="inline-flex items-center cursor-pointer mt-4">
+                                            <input type="checkbox" name="booking_enabled" value="1" class="sr-only peer" {{ (isset($settings['booking_enabled']) && $settings['booking_enabled'] == '1') ? 'checked' : '' }}>
+                                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                            <span class="ms-3 text-sm font-medium text-gray-900">Abilita Modulo Booking</span>
+                                        </label>
+                                        <p class="text-xs text-gray-500">Attivando questa opzione, un nuovo menu 'Booking' apparirà nell'amministrazione.</p>
+                                    </div>
                                 </div>
                             @endif
                         </div>
@@ -92,8 +114,6 @@
                         <!-- TAB: Email -->
                         <div x-show="activeTab === 'email'" style="display: none;" class="space-y-6">
                             <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Configurazione Provider di Posta (SMTP)</h3>
-                            <p class="text-sm text-gray-600 mb-4">Tramite questi parametri il sito invierà mail automatiche, ad esempio notifiche dei form di contatto dirette agli amministratori.</p>
-
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Protocollo (Mailer)</label>
@@ -102,86 +122,95 @@
                                         <option value="log" {{ (old('mail_mailer', $settings['mail_mailer'] ?? '') == 'log') ? 'selected' : '' }}>Log (Solo Test)</option>
                                     </select>
                                 </div>
-                                
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Indirizzo Server (Host)</label>
-                                    <input type="text" name="mail_host" value="{{ old('mail_host', $settings['mail_host'] ?? 'smtp.example.com') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. smtp.gmail.com">
+                                    <input type="text" name="mail_host" value="{{ old('mail_host', $settings['mail_host'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. smtp.gmail.com">
                                 </div>
-
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Porta Server</label>
-                                    <input type="text" name="mail_port" value="{{ old('mail_port', $settings['mail_port'] ?? '587') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. 587, 465">
+                                    <input type="text" name="mail_port" value="{{ old('mail_port', $settings['mail_port'] ?? '587') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="587">
                                 </div>
-
                                 <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Tipo di Criptazione</label>
-                                    <select name="mail_encryption" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
-                                        <option value="tls" {{ (old('mail_encryption', $settings['mail_encryption'] ?? 'tls') == 'tls') ? 'selected' : '' }}>TLS</option>
-                                        <option value="ssl" {{ (old('mail_encryption', $settings['mail_encryption'] ?? '') == 'ssl') ? 'selected' : '' }}>SSL</option>
-                                        <option value="" {{ (old('mail_encryption', $settings['mail_encryption'] ?? '') == '') ? 'selected' : '' }}>Nessuna</option>
-                                    </select>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                                    <input type="text" name="mail_username" value="{{ old('mail_username', $settings['mail_username'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-
-                                <div class="col-span-2 md:col-span-1">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Nome Utente Server (Username)</label>
-                                    <input type="text" name="mail_username" value="{{ old('mail_username', $settings['mail_username'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="La tua email login">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                                    <input type="password" name="mail_password" value="{{ old('mail_password', $settings['mail_password'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-
-                                <div class="col-span-2 md:col-span-1">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Password Server</label>
-                                    <input type="password" name="mail_password" value="{{ old('mail_password', $settings['mail_password'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="La tua password">
-                                    <p class="text-xs text-gray-500 mt-1">Verrà salvata offuscata ma pre-compilata se già presente.</p>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Email Mittente</label>
+                                    <input type="email" name="mail_from_address" value="{{ old('mail_from_address', $settings['mail_from_address'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-
-                                <div class="col-span-2 border-t pt-4 mt-2">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Mittente Principale (Indirizzo)</label>
-                                    <input type="email" name="mail_from_address" value="{{ old('mail_from_address', $settings['mail_from_address'] ?? 'no-reply@miosito.it') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Es. contatti@azienda.it">
-                                    <p class="text-xs text-gray-500 mt-1">L'indirizzo email che compare in chi riceve l'email.</p>
-                                </div>
-
-                                <div class="col-span-2">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Mittente Principale (Nome)</label>
-                                    <input type="text" name="mail_from_name" value="{{ old('mail_from_name', $settings['mail_from_name'] ?? config('app.name')) }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Es. Nome Azienda Srl">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Nome Mittente</label>
+                                    <input type="text" name="mail_from_name" value="{{ old('mail_from_name', $settings['mail_from_name'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
                             </div>
                         </div>
 
-                        <!-- TAB: Pagamenti -->
-                        @if(isset($settings['shop_enabled']) && $settings['shop_enabled'] == '1')
+                        <!-- TAB: Pagamenti Shop -->
+                        @if($user->is_super_admin || $shop_enabled)
                         <div x-show="activeTab === 'pagamenti'" style="display: none;" class="space-y-6">
-                            
-                            <!-- Metodi Attivi -->
                             <div class="bg-gray-50 p-4 border rounded-md mb-6">
-                                <h3 class="text-md font-bold text-gray-800 mb-3 border-b pb-2">Metodi di Pagamento Disponibili</h3>
-                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <h3 class="text-md font-bold text-gray-800 mb-3 border-b pb-2">Metodi di Pagamento SHOP</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <label class="inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="payment_stripe_enabled" value="1" class="sr-only peer" {{ (isset($settings['payment_stripe_enabled']) && $settings['payment_stripe_enabled'] == '1') ? 'checked' : '' }}>
                                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         <span class="ms-3 text-sm font-medium text-gray-900">Carta di Credito (Stripe)</span>
                                     </label>
-
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="payment_paypal_enabled" value="1" class="sr-only peer" {{ (isset($settings['payment_paypal_enabled']) && $settings['payment_paypal_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">PayPal</span>
+                                    </label>
                                     <label class="inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="payment_bonifico_enabled" value="1" class="sr-only peer" {{ (isset($settings['payment_bonifico_enabled']) && $settings['payment_bonifico_enabled'] == '1') ? 'checked' : '' }}>
                                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         <span class="ms-3 text-sm font-medium text-gray-900">Bonifico Bancario</span>
                                     </label>
-
                                     <label class="inline-flex items-center cursor-pointer">
                                         <input type="checkbox" name="payment_contrassegno_enabled" value="1" class="sr-only peer" {{ (isset($settings['payment_contrassegno_enabled']) && $settings['payment_contrassegno_enabled'] == '1') ? 'checked' : '' }}>
                                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                                        <span class="ms-3 text-sm font-medium text-gray-900">Contrassegno (Alla Consegna)</span>
-                                    </label>
-
-                                    <label class="inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" name="payment_paypal_enabled" value="1" class="sr-only peer" {{ (isset($settings['payment_paypal_enabled']) && $settings['payment_paypal_enabled'] == '1') ? 'checked' : '' }}>
-                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                                        <span class="ms-3 text-sm font-medium text-gray-900">PayPal Checkout</span>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Pagamento alla Consegna (Contrassegno)</span>
                                     </label>
                                 </div>
                             </div>
+                        </div>
+                        @endif
 
-                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Configurazione Carta di Credito (Stripe)</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- TAB: Pagamenti Booking -->
+                        @if($user->is_super_admin || $booking_enabled)
+                        <div x-show="activeTab === 'pagamenti_booking'" style="display: none;" class="space-y-6">
+                            <div class="bg-gray-50 p-4 border rounded-md mb-6">
+                                <h3 class="text-md font-bold text-gray-800 mb-3 border-b pb-2">Metodi di Pagamento BOOKING</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="booking_payment_stripe_enabled" value="1" class="sr-only peer" {{ (isset($settings['booking_payment_stripe_enabled']) && $settings['booking_payment_stripe_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Carta di Credito (Stripe)</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="booking_payment_paypal_enabled" value="1" class="sr-only peer" {{ (isset($settings['booking_payment_paypal_enabled']) && $settings['booking_payment_paypal_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">PayPal</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="booking_payment_bonifico_enabled" value="1" class="sr-only peer" {{ (isset($settings['booking_payment_bonifico_enabled']) && $settings['booking_payment_bonifico_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Bonifico Bancario</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
+                        <!-- Chiavi API (Visibili se almeno un modulo ha Stripe/PayPal attivo) -->
+                        <div x-show="activeTab === 'pagamenti' || activeTab === 'pagamenti_booking'" style="display: none;" class="space-y-6 pt-6 border-t">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Configurazione API (Comuni a Shop e Booking)</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- ... existing API keys content ... -->
                                 <div class="col-span-2 md:col-span-1">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Stripe Publisheable Key</label>
                                     <input type="text" name="stripe_key" value="{{ old('stripe_key', $settings['stripe_key'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="pk_test_...">
@@ -191,9 +220,9 @@
                                     <input type="password" name="stripe_secret" value="{{ old('stripe_secret', $settings['stripe_secret'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="sk_test_...">
                                 </div>
                             </div>
-
-                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Configurazione PayPal</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <!-- PayPal configuration -->
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2 mt-6">Configurazione PayPal</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                                 <div class="col-span-2 md:col-span-1">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">PayPal Client ID</label>
                                     <input type="text" name="paypal_client_id" value="{{ old('paypal_client_id', $settings['paypal_client_id'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Client ID...">
@@ -211,8 +240,9 @@
                                 </div>
                             </div>
 
-                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Coordinate Bonifico Bancario</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Bonifico configuration -->
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2 mt-6">Coordinate Bonifico Bancario</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                                 <div class="col-span-2 md:col-span-1">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Intestato A (Intestazione)</label>
                                     <input type="text" name="bonifico_intestazione" value="{{ old('bonifico_intestazione', $settings['bonifico_intestazione'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Ragione Sociale...">
@@ -226,9 +256,7 @@
                                     <input type="text" name="bonifico_iban" value="{{ old('bonifico_iban', $settings['bonifico_iban'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-xl font-mono uppercase tracking-widest" placeholder="IT00...">
                                 </div>
                             </div>
-
                         </div>
-                        @endif
 
                         <div class="mt-8 pt-6 border-t border-gray-200">
                             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-8 rounded shadow focus:outline-none focus:shadow-outline text-lg">

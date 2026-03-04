@@ -42,11 +42,6 @@
                                 <div>
                                     <label class="block text-gray-700 font-bold mb-2">Posti Letto Totali</label>
                                     <input type="number" name="posti_totali" value="{{ old('posti_totali', 1) }}" min="1" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
-                                </div>
-                                <div>
-                                    <label class="block text-gray-700 font-bold mb-2">Costo al Giorno (€)</label>
-                                    <input type="number" step="0.01" name="costo_al_giorno" value="{{ old('costo_al_giorno', '0.00') }}" min="0" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
-                                </div>
                             </div>
                             <div class="mt-4">
                                 <label class="inline-flex items-center">

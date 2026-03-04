@@ -33,7 +33,7 @@ class ShopProductController extends Controller
 
     public function create()
     {
-        $categorie = ShopCategory::orderBy('ordine')->get();
+        $categorie = ShopCategory::with(['children', 'parent'])->orderBy('ordine')->get();
         $collezioni = ShopCollection::orderBy('ordine')->get();
         $tags = \App\Models\Tag::orderBy('nome')->get();
         return view('admin.shop.prodotti.create', compact('categorie', 'collezioni', 'tags'));
@@ -109,7 +109,7 @@ class ShopProductController extends Controller
 
     public function edit(ShopProduct $prodotto)
     {
-        $categorie = ShopCategory::orderBy('ordine')->get();
+        $categorie = ShopCategory::with(['children', 'parent'])->orderBy('ordine')->get();
         $collezioni = ShopCollection::orderBy('ordine')->get();
         $tags = \App\Models\Tag::orderBy('nome')->get();
         $prodotto->load('variants', 'tags');

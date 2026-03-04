@@ -24,6 +24,36 @@ class SettingController extends Controller
      */
     public function update(Request $request)
     {
+        $user = auth()->user();
+        
+        // Define settings groups
+        $shopSettings = [
+            'shop_enabled',
+            'payment_stripe_enabled',
+            'payment_bonifico_enabled',
+            'payment_contrassegno_enabled',
+            'payment_paypal_enabled',
+        ];
+        
+        $bookingSettings = [
+            'booking_enabled',
+            'booking_payment_stripe_enabled',
+            'booking_payment_paypal_enabled',
+            'booking_payment_bonifico_enabled',
+        ];
+
+        $paymentParams = [
+            'stripe_key', 'stripe_secret',
+            'paypal_client_id', 'paypal_secret', 'paypal_mode',
+            'bonifico_intestazione', 'bonifico_banca', 'bonifico_iban'
+        ];
+
+        $generalSettings = [
+            'site_logo', 'mail_mailer', 'mail_host', 'mail_port', 
+            'mail_username', 'mail_password', 'mail_encryption', 
+            'mail_from_address', 'mail_from_name'
+        ];
+
         $validated = $request->validate([
             'site_logo' => 'nullable|string',
             'mail_mailer' => 'nullable|string',
@@ -44,22 +74,35 @@ class SettingController extends Controller
             'bonifico_iban' => 'nullable|string',
         ]);
 
-        if (auth()->user()->email === 'admin@admin.com') {
-            $validated['shop_enabled'] = $request->has('shop_enabled') ? '1' : '0';
-            $validated['booking_enabled'] = $request->has('booking_enabled') ? '1' : '0';
+        // Process Checkboxes
+        $checkboxes = array_merge($shopSettings, $bookingSettings);
+        foreach ($checkboxes as $chk) {
+            $canEdit = false;
+            if ($user->is_super_admin) $canEdit = true;
+            elseif (in_array($chk, $shopSettings) && $user->can_manage_shop) $canEdit = true;
+            elseif (in_array($chk, $bookingSettings) && $user->can_manage_booking) $canEdit = true;
+
+            if ($canEdit) {
+                $validated[$chk] = $request->has($chk) ? '1' : '0';
+            }
         }
 
-        // Handle Checkboxes individually since unchecked checkboxes are not sent in request
-        $validated['payment_stripe_enabled'] = $request->has('payment_stripe_enabled') ? '1' : '0';
-        $validated['payment_bonifico_enabled'] = $request->has('payment_bonifico_enabled') ? '1' : '0';
-        $validated['payment_contrassegno_enabled'] = $request->has('payment_contrassegno_enabled') ? '1' : '0';
-        $validated['payment_paypal_enabled'] = $request->has('payment_paypal_enabled') ? '1' : '0';
-
+        // Process standard fields
         foreach ($validated as $key => $value) {
-            Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value]
-            );
+            $canEdit = false;
+            if ($user->is_super_admin) $canEdit = true;
+            elseif (in_array($key, $paymentParams)) {
+                if ($user->can_manage_shop || $user->can_manage_booking) $canEdit = true;
+            } elseif (in_array($key, $generalSettings)) {
+                if ($user->can_manage_site) $canEdit = true;
+            }
+
+            if ($canEdit) {
+                Setting::updateOrCreate(
+                    ['key' => $key],
+                    ['value' => $value]
+                );
+            }
         }
 
         return redirect()->route('admin.settings.edit')->with('success', 'Configurazione aggiornata con successo.');

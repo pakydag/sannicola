@@ -23,7 +23,7 @@
                                 </div>
                             @endif
                             <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-indigo-700 font-bold text-sm shadow-sm">
-                                €{{ number_format($s->costo_al_giorno, 2, ',', '.') }} / notte
+                                Da configurare nei periodi
                             </div>
                         </div>
 

@@ -27,11 +27,22 @@
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Categoria Padre</label>
                             <select name="parent_id" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none">
-                                <option value="">-- Nessuna (Categoria Principale) --</option>
-                                @foreach($categorie_padre as $cp)
-                                    <option value="{{ $cp->id }}" {{ old('parent_id', $categoria->parent_id) == $cp->id ? 'selected' : '' }}>{{ $cp->nome }}</option>
+                                @php
+                                    $rootCats = $categorie_padre->whereNull('parent_id');
+                                @endphp
+                                @foreach($rootCats as $macro)
+                                    <option value="{{ $macro->id }}" {{ old('parent_id', $categoria->parent_id) == $macro->id ? 'selected' : '' }} class="font-bold bg-gray-100">{{ $macro->nome }} (Macrocategoria)</option>
+                                    @php
+                                        $subCats = $categorie_padre->where('parent_id', $macro->id);
+                                    @endphp
+                                    @foreach($subCats as $cat)
+                                        <option value="{{ $cat->id }}" {{ old('parent_id', $categoria->parent_id) == $cat->id ? 'selected' : '' }}>&nbsp;&nbsp;&nbsp;↳ {{ $cat->nome }} (Categoria)</option>
+                                    @endforeach
                                 @endforeach
                             </select>
+                            <p class="text-[11px] text-gray-500 mt-2">
+                                Modifica la gerarchia spostando questa categoria sotto un'altra.
+                            </p>
                         </div>
                         <div class="mb-6">
                             <label class="inline-flex items-center">

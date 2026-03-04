@@ -16,7 +16,7 @@ class ShopCategoryController extends Controller
 
     public function create()
     {
-        $categorie_padre = ShopCategory::whereNull('parent_id')->orderBy('ordine')->get();
+        $categorie_padre = ShopCategory::with('parent')->orderBy('ordine')->get();
         return view('admin.shop.categorie.create', compact('categorie_padre'));
     }
 
@@ -46,7 +46,7 @@ class ShopCategoryController extends Controller
 
     public function edit(ShopCategory $categoria)
     {
-        $categorie_padre = ShopCategory::where('id', '!=', $categoria->id)->whereNull('parent_id')->orderBy('ordine')->get();
+        $categorie_padre = ShopCategory::where('id', '!=', $categoria->id)->with('parent')->orderBy('ordine')->get();
         return view('admin.shop.categorie.edit', compact('categoria', 'categorie_padre'));
     }
 

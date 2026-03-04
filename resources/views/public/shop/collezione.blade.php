@@ -3,72 +3,98 @@
 @section('title', $collezione->nome . ' - Shop ' . config('app.name'))
 
 @section('content')
-<div class="bg-white shadow">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                Collezione: {{ $collezione->nome }}
-            </h1>
-            <div class="mt-4">
-                <a href="{{ route('public.shop.index') }}" class="text-indigo-600 hover:text-indigo-800 font-medium">&larr; Torna alle collezioni</a>
-            </div>
-        </div>
+<div class="bg-gray-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <nav class="flex mb-4 text-xs font-medium text-gray-400 uppercase tracking-widest" aria-label="Breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                <li class="inline-flex items-center">
+                    <a href="{{ route('public.shop.index') }}" class="hover:text-indigo-600 transition-colors">Shop</a>
+                </li>
+                <li>
+                    <div class="flex items-center">
+                        <span class="mx-2">/</span>
+                        <span class="text-indigo-600">Collezione: {{ $collezione->nome }}</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
+            Collezione: {{ $collezione->nome }}
+        </h1>
+        <p class="text-gray-500 max-w-2xl">
+            {{ $collezione->descrizione ?? 'Esplora i prodotti di questa collezione.' }}
+        </p>
     </div>
 </div>
 
 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        @forelse($prodotti as $prodotto)
-            <div class="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col transition hover:shadow-md">
-                @php
-                    $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
-                @endphp
-                @if($primaFoto)
-                    <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $collezione->slug, 'prodotto_slug' => $prodotto->slug]) }}" class="block p-4 border-b">
-                        <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-48 object-cover rounded">
-                    </a>
-                @else
-                    <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $collezione->slug, 'prodotto_slug' => $prodotto->slug]) }}" class="block p-4 border-b bg-gray-100 flex items-center justify-center h-56">
-                        <span class="text-gray-400">Nessuna immagine</span>
-                    </a>
-                @endif
-                
-                <div class="p-4 flex-grow flex flex-col">
-                    @if($prodotto->marca)
-                        <span class="text-xs text-gray-500 uppercase tracking-wider">{{ $prodotto->marca }}</span>
-                    @endif
-                    <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $collezione->slug, 'prodotto_slug' => $prodotto->slug]) }}" class="block mt-1">
-                        <h3 class="text-lg font-semibold text-gray-900">{{ $prodotto->nome }}</h3>
-                    </a>
-                    
-                    <div class="mt-auto pt-4">
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar -->
+        <aside class="w-full lg:w-1/5 flex-shrink-0">
+            @include('public.shop.partials.sidebar')
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-grow">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @forelse($prodotti as $prodotto)
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-xl hover:-translate-y-1 group">
                         @php
-                            $defaultPrezzo = 0;
-                            $defaultPrezzoScontato = null;
-                            if($prodotto->variants->count() > 0) {
-                                $defaultPrezzo = $prodotto->variants->first()->prezzo;
-                                $defaultPrezzoScontato = $prodotto->variants->first()->prezzo_scontato;
-                            }
+                            $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
                         @endphp
                         
-                        @if($defaultPrezzoScontato > 0)
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xl font-bold text-red-600">€ {{ number_format($defaultPrezzoScontato, 2, ',', '.') }}</span>
-                                <span class="text-sm line-through text-gray-400">€ {{ number_format($defaultPrezzo, 2, ',', '.') }}</span>
+                        <div class="relative overflow-hidden aspect-[4/3]">
+                            @if($primaFoto)
+                                <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            @else
+                                <div class="w-full h-full bg-gray-50 flex items-center justify-center text-gray-300">
+                                    <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                </div>
+                            @endif
+                            
+                            @if($prodotto->variants->first() && $prodotto->variants->first()->prezzo_scontato > 0)
+                                <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">Saldi</div>
+                            @endif
+                        </div>
+                        
+                        <div class="p-6 flex-grow flex flex-col">
+                            @if($prodotto->marca)
+                                <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
+                            @endif
+                            
+                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                            
+                            <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
+                                @php
+                                    $variant = $prodotto->variants->first();
+                                    $prezzo = $variant ? $variant->prezzo : 0;
+                                    $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
+                                @endphp
+                                
+                                <div class="flex flex-col">
+                                    @if($prezzo_scontato > 0)
+                                        <span class="text-lg font-black text-red-600 leading-none">€ {{ number_format($prezzo_scontato, 2, ',', '.') }}</span>
+                                        <span class="text-xs line-through text-gray-400 mt-1">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                    @elseif($prezzo > 0)
+                                        <span class="text-lg font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                    @else
+                                        <span class="text-sm font-bold text-gray-400 italic">Dettagli</span>
+                                    @endif
+                                </div>
+                                
+                                <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? $collezione->slug, 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
+                                </a>
                             </div>
-                        @elseif($defaultPrezzo > 0)
-                            <span class="text-xl font-bold text-gray-900">€ {{ number_format($defaultPrezzo, 2, ',', '.') }}</span>
-                        @else
-                            <span class="text-sm font-medium text-gray-500">Vedi dettagli</span>
-                        @endif
+                        </div>
                     </div>
-                </div>
+                @empty
+                    <div class="col-span-full py-12 text-center text-gray-500 bg-white rounded-2xl border border-dashed border-gray-200">
+                        Nessun prodotto in questa collezione.
+                    </div>
+                @endforelse
             </div>
-        @empty
-            <div class="col-span-full text-center text-gray-500 py-12">
-                Nessun prodotto disponibile in questa collezione al momento.
-            </div>
-        @endforelse
+        </div>
     </div>
 </div>
 @endsection

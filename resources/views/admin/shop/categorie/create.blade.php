@@ -27,11 +27,24 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2">Categoria Padre</label>
                             <select name="parent_id" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none">
                                 <option value="">-- Nessuna (Crea come Categoria Principale/Padre) --</option>
-                                @foreach($categorie_padre as $cp)
-                                    <option value="{{ $cp->id }}" {{ old('parent_id') == $cp->id ? 'selected' : '' }}>{{ $cp->nome }}</option>
+                                @php
+                                    $rootCats = $categorie_padre->whereNull('parent_id');
+                                @endphp
+                                @foreach($rootCats as $macro)
+                                    <option value="{{ $macro->id }}" {{ old('parent_id') == $macro->id ? 'selected' : '' }} class="font-bold bg-gray-100">{{ $macro->nome }} (Macrocategoria)</option>
+                                    @php
+                                        $subCats = $categorie_padre->where('parent_id', $macro->id);
+                                    @endphp
+                                    @foreach($subCats as $cat)
+                                        <option value="{{ $cat->id }}" {{ old('parent_id') == $cat->id ? 'selected' : '' }}>&nbsp;&nbsp;&nbsp;↳ {{ $cat->nome }} (Categoria)</option>
+                                    @endforeach
                                 @endforeach
                             </select>
-                            <p class="text-xs text-gray-500 mt-1">Lasciando "-- Nessuna --" questa diventerà una <b>Categoria Padre</b>. Puoi invece cliccare la tendina e selezionare una categoria padre per renderla una sottocategoria.</p>
+                            <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
+                                • Scegli <b>-- Nessuna --</b> per creare una <b>Macrocategoria</b>.<br>
+                                • Scegli una Macrocategoria per creare una <b>Categoria</b>.<br>
+                                • Scegli una Categoria per creare una <b>Sottocategoria</b>.
+                            </p>
                         </div>
                         <div class="mb-6">
                             <label class="inline-flex items-center">

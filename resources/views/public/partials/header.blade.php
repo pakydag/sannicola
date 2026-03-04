@@ -30,6 +30,15 @@
                             Shop
                         </a>
                     @endif
+
+                    @php
+                        $bookingEnabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value');
+                    @endphp
+                    @if($bookingEnabled == '1')
+                        <a href="{{ route('public.booking.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 {{ request()->routeIs('public.booking.*') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }} text-sm font-medium leading-5 transition duration-150 ease-in-out">
+                            Booking
+                        </a>
+                    @endif
                     
                     @if(isset($shared_sezioni))
                         @foreach($shared_sezioni as $sez)
@@ -76,26 +85,57 @@
                     @endif
                 </nav>
             </div>
-            </div>
             
             <!-- Icone destra (Account + Carrello) -->
             <div class="flex items-center space-x-2 sm:ml-6">
+                @if($bookingEnabled == '1' && Auth::guard('booking_customer')->check())
+                    <!-- Icona Booking Customer -->
+                    <div class="relative inline-flex items-center" x-data="{ open: false }" @click.away="open = false">
+                        <button @click="open = !open" class="p-2 text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1" title="Area Booking">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
+                            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        </button>
+                        <div x-show="open" class="absolute right-0 top-12 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 py-1" style="display: none;">
+                            <div class="px-4 py-2 text-xs text-gray-400 border-b">Area Booking</div>
+                            <a href="{{ route('public.booking.dashboard.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 italic">Le mie prenotazioni</a>
+                            <a href="{{ route('public.booking.dashboard.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 italic">Profilo</a>
+                            <form action="{{ route('public.booking.dashboard.logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 italic">Esci</button>
+                            </form>
+                        </div>
+                    </div>
+                @endif
+
                 @auth
                     <!-- Icona Account Autenticato -->
-                    <a href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('public.account.dashboard') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-indigo-600 transition-colors" title="Il Mio Account">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </a>
+                    @if(Auth::user()->role === 'admin')
+                        <a href="{{ route('dashboard') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-indigo-600 transition-colors" title="Dashboard Admin">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </a>
+                    @elseif($shopEnabled == '1')
+                        <a href="{{ route('public.account.dashboard') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-indigo-600 transition-colors" title="Il Mio Account Shop">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </a>
+                    @endif
                 @else
-                    <!-- Icona Login Ospite -->
-                    <a href="{{ route('login') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-indigo-600 transition-colors" title="Accedi / Registrati">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
-                    </a>
+                    @if(!Auth::guard('booking_customer')->check())
+                        <!-- Icona Login Ospite Shop (mostrata solo se non loggato come booking customer) -->
+                        <a href="{{ route('login') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-indigo-600 transition-colors" title="Accedi Shop / Registrati">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                            </svg>
+                        </a>
+                    @endif
                 @endauth
 
+                @if($shopEnabled == '1')
                 <!-- Icona Carrello -->
                 <a href="{{ route('public.shop.cart.index') }}" class="relative inline-flex items-center p-2 text-gray-500 hover:text-indigo-600 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,6 +150,7 @@
                         </span>
                     @endif
                 </a>
+                @endif
             </div>
         </div>
     </div>

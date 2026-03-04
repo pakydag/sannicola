@@ -48,8 +48,23 @@
                                     <label class="block text-gray-700 font-bold mb-2">Categoria</label>
                                     <select name="shop_category_id" class="shadow border rounded w-full py-2 px-3 text-gray-700">
                                         <option value="">Nessuna</option>
-                                        @foreach($categorie as $c)
-                                            <option value="{{ $c->id }}" {{ old('shop_category_id') == $c->id ? 'selected' : '' }}>{{ $c->nome }}</option>
+                                        @foreach($categorie->whereNull('parent_id') as $macro)
+                                            <optgroup label="{{ $macro->nome }}">
+                                                @php
+                                                    $cats = $categorie->where('parent_id', $macro->id);
+                                                @endphp
+                                                @foreach($cats as $cat)
+                                                    <option disabled class="font-bold text-gray-400">-- {{ $cat->nome }} --</option>
+                                                    @php
+                                                        $subs = $categorie->where('parent_id', $cat->id);
+                                                    @endphp
+                                                    @foreach($subs as $sub)
+                                                        <option value="{{ $sub->id }}" {{ old('shop_category_id') == $sub->id ? 'selected' : '' }}>
+                                                            &nbsp;&nbsp;&nbsp;{{ $sub->nome }}
+                                                        </option>
+                                                    @endforeach
+                                                @endforeach
+                                            </optgroup>
                                         @endforeach
                                     </select>
                                 </div>
