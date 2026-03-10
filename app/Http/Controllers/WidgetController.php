@@ -8,6 +8,25 @@ use Illuminate\Http\Request;
 
 class WidgetController extends Controller
 {
+    private function stripDomain($url)
+    {
+        if (empty($url) || !is_string($url)) return $url;
+        $baseUrl = config('app.url');
+        return str_replace($baseUrl, '', $url);
+    }
+
+    private function processDataRecursive($data)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                $data[$key] = $this->processDataRecursive($value);
+            }
+        } elseif (is_string($data)) {
+            return $this->stripDomain($data);
+        }
+        return $data;
+    }
+
     public function store(Request $request, Article $articolo)
     {
         $validated = $request->validate([
@@ -21,7 +40,7 @@ class WidgetController extends Controller
         $articolo->widgets()->create([
             'titolo' => $validated['titolo'] ?? null,
             'tipo' => $validated['tipo'],
-            'data' => $validated['data'] ?? [],
+            'data' => $this->processDataRecursive($validated['data'] ?? []),
             'ordine' => $maxOrdine + 1,
         ]);
 

@@ -36,8 +36,11 @@
 
             @if($articolo->hasMedia('foto'))
                 <figure class="my-10">
-                    <!-- Spatie converte in WEBP o formato originale ma usiamo la versione full per il dettaglio articolo -->
                     <img class="w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200" src="{{ $articolo->getFirstMediaUrl('foto') }}" alt="{{ $articolo->titolo }}">
+                </figure>
+            @elseif($articolo->foto)
+                <figure class="my-10">
+                    <img class="w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200" src="{{ asset($articolo->foto) }}" alt="{{ $articolo->titolo }}">
                 </figure>
             @endif
 

@@ -1,0 +1,36 @@
+# Walkthrough - Accessibility Widget
+
+I have implemented a custom accessibility widget that provides several tools to improve the user experience for people with different needs.
+
+## Features Implemented
+
+1.  **Floating Trigger:** A fixed accessibility icon at the bottom-left of the screen.
+2.  **Settings Panel:** A sliding sidebar with the following toggleable options:
+    *   **Text Resizing:** Increase (up to 200%) or decrease (down to 80%) the base font size.
+    *   **High Contrast:** Toggles a high-contrast mode for better readability.
+    *   **Highlight Links:** Adds a yellow background and outline to all links.
+    *   **Large Cursor:** Replaces the default cursor with a larger version.
+    *   **Stop Animations:** Disables all CSS animations and transitions.
+    *   **Reading Mask:** A horizontal highlight that follows the mouse to help focus on specific lines (ADHD/Dyslexia support).
+3.  **Persistence:** All settings are saved in `localStorage` and automatically applied when the user returns or refreshes the page.
+
+## Components and Files
+
+- [accessibility-widget.blade.php](file:///c:/xampp/htdocs/baseweb/resources/views/components/accessibility-widget.blade.php): The HTML structure.
+- [accessibility.css](file:///c:/xampp/htdocs/baseweb/resources/css/accessibility.css): Custom styles and accessibility overrides.
+- [accessibility.js](file:///c:/xampp/htdocs/baseweb/resources/js/accessibility.js): Logic for toggling settings and applying changes.
+
+## Verification
+
+### Manual Test Steps
+1. Navigate to any public page on the site.
+2. Observe the blue person icon at the bottom-left.
+3. Click the icon to open the panel.
+4. Try clicking "Contrasto Elevato" - the page should turn black with white text.
+5. Try "Ingrandisci" (A+) - the text should grow.
+6. Try "Maschera Lettura" - a dark overlay should appear with a clear horizontal strip following the mouse.
+7. Refresh the page - all active settings should remain active.
+8. Click "Ripristina Impostazioni" to go back to defaults.
+
+> [!NOTE]
+> Since this is a front-end UI change, you might need to run `npm run dev` or `npm run build` to see the changes if they don't appear immediately.

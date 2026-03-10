@@ -8,6 +8,13 @@ use Illuminate\Support\Str;
 
 class SectionController extends Controller
 {
+    private function stripDomain($url)
+    {
+        if (empty($url)) return $url;
+        $baseUrl = config('app.url');
+        return str_replace($baseUrl, '', $url);
+    }
+
     public function index()
     {
         $sezioni = Section::orderBy('ordine')->get();
@@ -38,6 +45,8 @@ class SectionController extends Controller
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
         ]);
+
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
@@ -78,6 +87,8 @@ class SectionController extends Controller
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
         ]);
+
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');

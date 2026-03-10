@@ -40,7 +40,7 @@ class PublicController extends Controller
         $seo = [
             'title' => $this->global_seo['home_seo_title'] ?: config('app.name', 'Sito Web'),
             'description' => $this->global_seo['home_seo_description'] ?: 'Benvenuti sul nostro sito web ufficiale.',
-            'image' => $this->global_seo['home_seo_image'] ?: asset('img/default-share.jpg'),
+            'image' => $this->global_seo['home_seo_image'] ? asset($this->global_seo['home_seo_image']) : asset('img/default-share.jpg'),
             'url' => url()->current()
         ];
 
@@ -70,7 +70,7 @@ class PublicController extends Controller
         $seo = [
             'title' => $sezione->seo_title ?: ($sezione->nome . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name'))),
             'description' => $sezione->seo_description ?: Str::limit(strip_tags($sezione->contenuto), 160) ?: ($this->global_seo['home_seo_description'] ?? 'Esplora i contenuti di ' . $sezione->nome),
-            'image' => $sezione->seo_image ?: $sezione->foto ?: $this->global_seo['home_seo_image'] ?: asset('img/default-share.jpg'),
+            'image' => $sezione->seo_image ? asset($sezione->seo_image) : ($sezione->foto ? asset($sezione->foto) : ($this->global_seo['home_seo_image'] ? asset($this->global_seo['home_seo_image']) : asset('img/default-share.jpg'))),
             'url' => url()->current()
         ];
 
@@ -99,7 +99,7 @@ class PublicController extends Controller
         $seo = [
             'title' => $articolo->seo_title ?: ($articolo->titolo . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name'))),
             'description' => $articolo->seo_description ?: Str::limit(strip_tags($articolo->contenuto), 160) ?: ($this->global_seo['home_seo_description'] ?? 'Leggi l\'articolo ' . $articolo->titolo),
-            'image' => $articolo->seo_image ?: $articolo->foto ?: $this->global_seo['home_seo_image'] ?: asset('img/default-share.jpg'),
+            'image' => $articolo->seo_image ? asset($articolo->seo_image) : ($articolo->foto ? asset($articolo->foto) : ($this->global_seo['home_seo_image'] ? asset($this->global_seo['home_seo_image']) : asset('img/default-share.jpg'))),
             'url' => url()->current()
         ];
 

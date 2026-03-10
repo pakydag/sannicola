@@ -71,6 +71,8 @@
                                         <td class="py-2 px-4 border-b">
                                             @if($articolo->hasMedia('foto'))
                                                 <img src="{{ $articolo->getFirstMediaUrl('foto', 'thumb') }}" alt="Foto" class="w-16 h-16 object-cover rounded">
+                                            @elseif($articolo->foto)
+                                                <img src="{{ asset($articolo->foto) }}" alt="Foto" class="w-16 h-16 object-cover rounded opacity-50">
                                             @else
                                                 <span class="text-gray-400 italic">Nessuna</span>
                                             @endif

@@ -129,7 +129,7 @@
                                     </div>
                                     @if($sezione->seo_image)
                                         <div class="mt-2 text-sm text-gray-600">
-                                            <img src="{{ $sezione->seo_image }}" class="h-20 w-auto object-cover mt-1 border rounded shadow-sm">
+                                            <img src="{{ asset($sezione->seo_image) }}" class="h-20 w-auto object-cover mt-1 border rounded shadow-sm">
                                         </div>
                                     @endif
                                     @error('seo_image') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
@@ -188,6 +188,9 @@
 
             // Callback function expected by FileManager
             function fmSetLink($url) {
+                const baseUrl = '{{ config('app.url') }}';
+                const relativeUrl = $url.replace(baseUrl, '');
+
                 if(fmActiveTarget === 'editor') {
                     if(editorInstance) {
                         editorInstance.model.change( writer => {
@@ -198,7 +201,7 @@
                         } );
                     }
                 } else if(fmActiveTarget === 'seo_image') {
-                    document.getElementById('seo_image').value = $url;
+                    document.getElementById('seo_image').value = relativeUrl;
                 }
             }
 

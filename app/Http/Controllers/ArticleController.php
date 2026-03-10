@@ -10,6 +10,48 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    private function stripDomain($url)
+    {
+        if (empty($url)) return $url;
+        $url = str_replace(config('app.url'), '', $url);
+        // Assicuriamoci che inizi con / solo se non è già un URL assoluto (es. esterno)
+        if (!empty($url) && $url[0] !== '/' && !str_starts_with($url, 'http')) {
+            $url = '/' . $url;
+        }
+        return $url;
+    }
+
+    private function addSmartMedia($model, $path, $collection)
+    {
+        if (empty($path)) return;
+
+        try {
+            if (str_starts_with($path, 'http')) {
+                // È un URL assoluto (es. se lfm restituisce assoluto di un altro server)
+                $model->addMediaFromUrl($path)->toMediaCollection($collection);
+            } else {
+                // È un percorso relativo, cerchiamo il file localmente
+                // Rimuoviamo il prefisso /storage/ perché il file reale è in storage/app/public/
+                $relativePath = ltrim($path, '/');
+                if (str_starts_with($relativePath, 'storage/')) {
+                    $relativePath = str_replace('storage/', '', $relativePath);
+                }
+                
+                $fullPath = storage_path('app/public/' . $relativePath);
+                
+                if (file_exists($fullPath)) {
+                    $model->addMedia($fullPath)->preservingOriginal()->toMediaCollection($collection);
+                } else {
+                    \Log::warning("File not found for media: " . $fullPath);
+                    // Fallback: prova comunque come URL se APP_URL è corretto
+                    $model->addMediaFromUrl(asset($path))->toMediaCollection($collection);
+                }
+            }
+        } catch (\Exception $e) {
+            \Log::error("Smart Media error ($collection): " . $e->getMessage());
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -66,6 +108,10 @@ class ArticleController extends Controller
             'has_contact_form' => 'boolean',
         ]);
 
+        $validated['foto'] = $this->stripDomain($validated['foto']);
+        $validated['allegato'] = $this->stripDomain($validated['allegato']);
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
+
         $validated['visibile'] = $request->has('visibile');
         $validated['has_contact_form'] = $request->has('has_contact_form');
 
@@ -80,17 +126,11 @@ class ArticleController extends Controller
         }
 
         if ($request->filled('foto')) {
-            try {
-                $articolo->addMediaFromUrl($request->foto)->toMediaCollection('foto');
-            } catch (\Exception $e) {
-                // Ignore download errors on locahost or save manually
-            }
+            $this->addSmartMedia($articolo, $request->foto, 'foto');
         }
 
         if ($request->filled('allegato')) {
-            try {
-                $articolo->addMediaFromUrl($request->allegato)->toMediaCollection('allegati');
-            } catch (\Exception $e) {}
+            $this->addSmartMedia($articolo, $request->allegato, 'allegati');
         }
 
         return redirect()->route('admin.articoli.index')->with('success', 'Articolo creato con successo.');
@@ -139,6 +179,10 @@ class ArticleController extends Controller
             'has_contact_form' => 'boolean',
         ]);
 
+        $validated['foto'] = $this->stripDomain($validated['foto']);
+        $validated['allegato'] = $this->stripDomain($validated['allegato']);
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
+
         $validated['visibile'] = $request->has('visibile');
         $validated['has_contact_form'] = $request->has('has_contact_form');
 
@@ -153,17 +197,13 @@ class ArticleController extends Controller
         }
 
         if ($request->filled('foto')) {
-            try {
-                $articoli->clearMediaCollection('foto');
-                $articoli->addMediaFromUrl($request->foto)->toMediaCollection('foto');
-            } catch (\Exception $e) {}
+            $articoli->clearMediaCollection('foto');
+            $this->addSmartMedia($articoli, $request->foto, 'foto');
         }
 
         if ($request->filled('allegato')) {
-            try {
-                $articoli->clearMediaCollection('allegati');
-                $articoli->addMediaFromUrl($request->allegato)->toMediaCollection('allegati');
-            } catch (\Exception $e) {}
+            $articoli->clearMediaCollection('allegati');
+            $this->addSmartMedia($articoli, $request->allegato, 'allegati');
         }
 
         return redirect()->route('admin.articoli.index')->with('success', 'Articolo aggiornato con successo.');

@@ -8,6 +8,13 @@ use App\Models\Setting;
 
 class SettingController extends Controller
 {
+    private function stripDomain($url)
+    {
+        if (empty($url)) return $url;
+        $baseUrl = config('app.url');
+        return str_replace($baseUrl, '', $url);
+    }
+
     /**
      * Show the form for editing the settings.
      */
@@ -73,6 +80,10 @@ class SettingController extends Controller
             'bonifico_banca' => 'nullable|string',
             'bonifico_iban' => 'nullable|string',
         ]);
+
+        if (isset($validated['site_logo'])) {
+            $validated['site_logo'] = $this->stripDomain($validated['site_logo']);
+        }
 
         // Process Checkboxes
         $checkboxes = array_merge($shopSettings, $bookingSettings);

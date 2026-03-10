@@ -97,7 +97,7 @@
                         <div class="mb-4">
                             <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Sostituisci Foto Principale (Lascia vuoto per mantenere attuale)</label>
                             <div class="flex items-stretch">
-                                <input type="text" name="foto" id="foto" value="{{ old('foto') }}" readonly placeholder="Nessuna foto selezionata. Clicca su Scegli..."
+                                <input type="text" name="foto" id="foto" value="{{ old('foto', $articolo->foto) }}" readonly placeholder="Nessuna foto selezionata. Clicca su Scegli..."
                                     class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-gray-100 leading-tight focus:outline-none focus:shadow-outline">
                                 <button type="button" id="fm-foto-button" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0">
                                     <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -117,7 +117,7 @@
                         <div class="mb-8">
                             <label for="allegato" class="block text-gray-700 text-sm font-bold mb-2">Sostituisci Allegato (Lascia vuoto per mantenere attuale)</label>
                             <div class="flex items-stretch">
-                                <input type="text" name="allegato" id="allegato" value="{{ old('allegato') }}" readonly placeholder="Nessun allegato selezionato. Clicca su Scegli..."
+                                <input type="text" name="allegato" id="allegato" value="{{ old('allegato', $articolo->allegato) }}" readonly placeholder="Nessun allegato selezionato. Clicca su Scegli..."
                                     class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-gray-100 leading-tight focus:outline-none focus:shadow-outline">
                                 <button type="button" id="fm-allegato-button" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0">
                                     <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
@@ -161,7 +161,7 @@
                                     </div>
                                     @if($articolo->seo_image)
                                         <div class="mt-2 text-sm text-gray-600">
-                                            <img src="{{ $articolo->seo_image }}" class="h-20 w-auto object-cover mt-1 border rounded shadow-sm">
+                                            <img src="{{ asset($articolo->seo_image) }}" class="h-20 w-auto object-cover mt-1 border rounded shadow-sm">
                                         </div>
                                     @endif
                                     @error('seo_image') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
@@ -554,24 +554,28 @@
 
             // Callback function expected by FileManager popup
             function fmSetLink($url) {
+                const baseUrl = '{{ config('app.url') }}';
+                // Rimuoviamo il baseUrl se presente per salvare il percorso relativo
+                const relativeUrl = $url.replace(baseUrl, '');
+                
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {
                         editorInstance.model.change( writer => {
                             const imageElement = writer.createElement( 'imageBlock', {
-                                src: $url
+                                src: $url // Qui manteniamo l'assoluto per l'editor CKEditor se serve, o usiamo relativo
                             } );
                             editorInstance.model.insertContent( imageElement, editorInstance.model.document.selection );
                         } );
                     }
                 } else if (fmActiveTarget === 'foto') {
-                    document.getElementById('foto').value = $url;
+                    document.getElementById('foto').value = relativeUrl;
                 } else if (fmActiveTarget === 'allegato') {
-                    document.getElementById('allegato').value = $url;
+                    document.getElementById('allegato').value = relativeUrl;
                 } else if (fmActiveTarget === 'seo_image') {
-                    document.getElementById('seo_image').value = $url;
+                    document.getElementById('seo_image').value = relativeUrl;
                 } else if (fmActiveTarget === 'widget_video' || fmActiveTarget === 'widget_gallery' || fmActiveTarget === 'widget_single') {
                     if(fmActiveInput) {
-                        fmActiveInput.value = $url;
+                        fmActiveInput.value = relativeUrl;
                     }
                 }
             }
