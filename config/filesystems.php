@@ -60,6 +60,18 @@ return [
             'report' => false,
         ],
 
+        'remote' => [
+            'driver' => 'ftp',
+            'host' => env('REMOTE_FTP_HOST'),
+            'username' => env('REMOTE_FTP_USERNAME'),
+            'password' => env('REMOTE_FTP_PASSWORD'),
+            'port' => env('REMOTE_FTP_PORT', 21),
+            'root' => env('REMOTE_FTP_ROOT', 'public_html'),
+            'passive' => true,
+            'ssl' => false,
+            'timeout' => 30,
+        ],
+
     ],
 
     /*
