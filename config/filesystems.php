@@ -60,6 +60,7 @@ return [
             'report' => false,
         ],
 
+        // Disco per la sincronizzazione con il server remoto tramite FTP
         'remote' => [
             'driver' => 'ftp',
             'host' => env('REMOTE_FTP_HOST'),
