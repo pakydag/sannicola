@@ -21,13 +21,13 @@
                 $isReversed = ($index % 2 !== 0);
             @endphp
             
-            <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-gray-50 rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-gray-50 rounded-2xl p-6 md:p-10 shadow-sm border border-gray-100">
                 
                 <!-- Image Section -->
                 <div class="w-full md:w-1/2">
                     @if($item->hasMedia('foto'))
-                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="block overflow-hidden rounded-xl shadow-md group">
-                            <img src="{{ $item->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $item->titolo }}" class="w-full h-64 md:h-80 object-cover transform group-hover:scale-105 transition-transform duration-500">
+                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="block overflow-hidden rounded-xl">
+                            <img src="{{ $item->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $item->titolo }}" class="w-auto h-40 object-contain animate-bounce">
                         </a>
                     @else
                         <div class="w-full h-64 md:h-80 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400">

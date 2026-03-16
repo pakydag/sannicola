@@ -6,29 +6,40 @@
 
 <!-- Home Blocks (Drag & Drop Widgets) -->
 @if(isset($homeBlocks) && $homeBlocks->count() > 0)
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+    <div class="mx-auto">
         @foreach($homeBlocks as $block)
             @php $widget = $block->globalWidget; @endphp
             @if($widget)
-```blade
-                <div class="widget-block bg-white rounded-2xl shadow-sm ring-1 ring-gray-800 p-8 overflow-hidden">
-```
-                    @if($widget->titolo)
-                        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
-                    @endif
+
+                   
 
                     @if($widget->tipo === 'gallery')
-                        @include('public.partials.widgets.gallery', ['widget' => $widget])
+                    <div class="max-w-full w-screen mx-auto mb-12 widget-block bg-white shadow-sm rounded-none overflow-hidden">
+                    @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
+                    @endif    
+                        @include('public.partials.widgets.gallery', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'video')
-                        @include('public.partials.widgets.video', ['widget' => $widget])
+                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm ring-1 ring-gray-800 p-8 overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
+                            @endif
+                            @include('public.partials.widgets.video', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'mirror_blocks')
-                        @include('public.partials.widgets.mirror', ['widget' => $widget])
+                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm ring-1 ring-gray-800 p-8 overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl font-extrabold hidden text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
+                            @endif
+                            @include('public.partials.widgets.mirror', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'single_block')
-                        @include('public.partials.widgets.single_block', ['widget' => $widget])
+                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm ring-gray-800 overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
+                            @endif
+                            @include('public.partials.widgets.single_block', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'section_grid')
-                        @include('public.partials.widgets.section_grid', ['widget' => $widget])
+                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm ring-1 ring-gray-800 p-8 overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
+                            @endif
+                            @include('public.partials.widgets.section_grid', ['widget' => $widget])</div>
                     @endif
-                </div>
+                
             @endif
         @endforeach
     </div>
