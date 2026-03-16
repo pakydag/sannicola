@@ -65,6 +65,16 @@
                                     <button type="button" id="btn-sfoglia-video" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli MP4...</button>
                                 </div>
                             </div>
+                            <div class="mb-4 flex space-x-6">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="data[autoplay]" value="1" {{ old('data.autoplay', $globalWidget->data['autoplay'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
+                                    <span class="ml-2 text-gray-700 font-medium">Autoplay (Parte in automatico)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="data[loop]" value="1" {{ old('data.loop', $globalWidget->data['loop'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
+                                    <span class="ml-2 text-gray-700 font-medium">Loop (Ripeti all'infinito)</span>
+                                </label>
+                            </div>
 
                         <!-- Mirror Blocks -->
                         @elseif($globalWidget->tipo === 'mirror_blocks')
@@ -142,6 +152,91 @@
                                     </select>
                                 </div>
                             </div>
+
+                        <!-- Image Text Image -->
+                        @elseif($globalWidget->tipo === 'image_text_image')
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4 mt-6">
+                                <!-- Elemento Sinistra -->
+                                <div class="bg-gray-50 p-4 rounded shadow-inner border border-gray-200">
+                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Foto Sinistra</h3>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Immagine</label>
+                                        <div class="flex relative rounded-md shadow-sm">
+                                            <input type="text" id="iti_img_left" name="data[img_left]" value="{{ old('data.img_left', $globalWidget->data['img_left'] ?? '') }}" readonly class="shadow border rounded-l w-full py-1 text-sm px-2 bg-white focus:outline-none">
+                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_img_left">Sfoglia</button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Link Cliccabile (Opzionale)</label>
+                                        <input type="url" name="data[link_left]" value="{{ old('data.link_left', $globalWidget->data['link_left'] ?? '') }}" placeholder="https://..." class="shadow border rounded w-full py-1 text-sm px-2 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Elemento Centrale (Testo) -->
+                                <div class="bg-gray-50 p-4 rounded shadow-inner border border-gray-200">
+                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Testo Centrale</h3>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Titolo in Evidenza</label>
+                                        <input type="text" name="data[center_title]" value="{{ old('data.center_title', $globalWidget->data['center_title'] ?? '') }}" class="shadow border rounded w-full py-1 text-sm px-2 focus:outline-none">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Sottotitolo / Descrizione</label>
+                                        <textarea name="data[center_subtitle]" rows="3" class="shadow border rounded w-full py-1 text-sm px-2 focus:outline-none">{{ old('data.center_subtitle', $globalWidget->data['center_subtitle'] ?? '') }}</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Colore Testo (HEX)</label>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="color" name="data[text_color]" value="{{ old('data.text_color', $globalWidget->data['text_color'] ?? '#111827') }}" class="h-8 w-8 border rounded cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Elemento Destra -->
+                                <div class="bg-gray-50 p-4 rounded shadow-inner border border-gray-200">
+                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Foto Destra</h3>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Immagine</label>
+                                        <div class="flex relative rounded-md shadow-sm">
+                                            <input type="text" id="iti_img_right" name="data[img_right]" value="{{ old('data.img_right', $globalWidget->data['img_right'] ?? '') }}" readonly class="shadow border rounded-l w-full py-1 text-sm px-2 bg-white focus:outline-none">
+                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_img_right">Sfoglia</button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Link Cliccabile (Opzionale)</label>
+                                        <input type="url" name="data[link_right]" value="{{ old('data.link_right', $globalWidget->data['link_right'] ?? '') }}" placeholder="https://..." class="shadow border rounded w-full py-1 text-sm px-2 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                        <!-- Booking Search Widget -->
+                        @elseif($globalWidget->tipo === 'booking_search')
+                            <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner mt-6">
+                                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-yellow-700">
+                                                Questo widget mostrerà un motore di ricerca disponibilità. Sarà visibile sul sito pubblico solo se il modulo <strong>Booking</strong> è abilitato.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Testo in Evidenza (Titolo Interno)</label>
+                                        <input type="text" name="data[title]" value="{{ old('data.title', $globalWidget->data['title'] ?? '') }}" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo</label>
+                                        <input type="text" name="data[subtitle]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
                         @endif
 
                         <div class="text-right mt-8 pt-4 border-t">
@@ -217,10 +312,24 @@
                         }
                     });
                 }
+
+                const itBottons = document.querySelectorAll('.btn-sfoglia-iti');
+                itBottons.forEach(btn => {
+                    btn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveInput = document.getElementById(event.target.getAttribute('data-target'));
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                });
             });
 
             function fmSetLink($url) {
                 if (fmActiveInput) {
+                    // Fix absolute URL: Rimuove l'URL di base (es. http://localhost/baseweb/public) per avere il percorso relativo (/storage/...)
+                    let baseUrl = '{{ app('url')->to('/') }}'.replace(/\/$/, "");
+                    if ($url.startsWith(baseUrl)) {
+                        $url = $url.slice(baseUrl.length);
+                    }
                     fmActiveInput.value = $url;
                 }
             }

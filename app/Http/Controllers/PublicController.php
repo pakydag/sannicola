@@ -15,9 +15,7 @@ class PublicController extends Controller
 {
     public function __construct()
     {
-        // Share standard visible sections with all public views for the navigation menu
-        $shared_sezioni = Section::where('visibile', true)->orderBy('ordine')->get();
-        View::share('shared_sezioni', $shared_sezioni);
+        // Let AppServiceProvider handle shared_sezioni to ensure it's loaded for all public views
 
         // Fetch Global SEO Settings once
         $this->global_seo = [

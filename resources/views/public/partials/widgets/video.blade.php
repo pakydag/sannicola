@@ -3,9 +3,10 @@
         class="absolute top-0 left-0 w-full h-full object-cover" 
         controls 
         controlsList="nodownload" 
-        preload="metadata">
-        
-        <source src="{{ $widget->data['video_url'] ?? '' }}" type="video/mp4">
+        preload="metadata"
+        {{ !empty($widget->data['autoplay']) ? 'autoplay muted playsinline' : '' }}
+        {{ !empty($widget->data['loop']) ? 'loop' : '' }}>
+        <source src="{{ asset($widget->data['video_url'] ?? '') }}" type="video/mp4">
         
         Il tuo browser non supporta il tag video.
     </video>

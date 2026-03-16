@@ -22,7 +22,7 @@ class GlobalWidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'required|string|max:255',
-            'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid',
+            'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid,image_text_image,booking_search',
             'data' => 'nullable|array',
         ]);
 

@@ -12,6 +12,89 @@ class PublicBookingController extends Controller
         return view('public.booking.index', compact('structures'));
     }
 
+    public function search(Request $request)
+    {
+        $request->validate([
+            'start_date' => 'required|date|after_or_equal:today',
+            'end_date' => 'required|date|after:start_date',
+            'adulti' => 'required|integer|min:1',
+            'bambini' => 'required|integer|min:0',
+        ]);
+
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+        $totalGuests = $request->adulti + $request->bambini;
+
+        // 1. Trova tutte le strutture attive con capienza sufficiente
+        $structures = \App\Models\BookingStructure::where('attivo', true)
+                        ->where('posti_totali', '>=', $totalGuests)
+                        ->with('photos', 'prices')
+                        ->get();
+
+        $availableStructures = collect();
+
+        // 2. Filtra quelle già prenotate nelle date richieste
+        foreach ($structures as $structure) {
+            $exists = \App\Models\Booking::where('booking_structure_id', $structure->id)
+                ->where('stato', '!=', 'annullato')
+                ->where(function ($query) use ($startDate, $endDate) {
+                    $query->whereBetween('start_date', [$startDate, $endDate])
+                        ->orWhereBetween('end_date', [$startDate, $endDate])
+                        ->orWhere(function ($q) use ($startDate, $endDate) {
+                            $q->where('start_date', '<=', $startDate)
+                                ->where('end_date', '>=', $endDate);
+                        });
+                })->exists();
+
+            if (!$exists) {
+                // Calcolo preventivo veloce (opzionale - usa adulto generico se tipo_prezzo non fisso)
+                $priceData = $this->calculateQuickPrice($structure, $startDate, $endDate, $totalGuests);
+                $structure->preventivo = $priceData;
+                $availableStructures->push($structure);
+            }
+        }
+
+        return view('public.booking.search_results', [
+            'structures' => $availableStructures,
+            'searchParams' => $request->all()
+        ]);
+    }
+
+    private function calculateQuickPrice($structure, $start, $end, $totalGuests)
+    {
+        $startDate = new \DateTime($start);
+        $endDate = new \DateTime($end);
+        $total = 0;
+
+        $seasonalPrices = $structure->prices;
+
+        for ($date = clone $startDate; $date < $endDate; $date->modify('+1 day')) {
+            $currentDateStr = $date->format('Y-m-d');
+            $dayPrice = 0;
+
+            if ($structure->tipo_prezzo === 'fisso') {
+                $match = $seasonalPrices->where('tipo', 'fisso')
+                    ->where('start_date', '<=', $currentDateStr)
+                    ->where('end_date', '>=', $currentDateStr)
+                    ->first();
+                $dayPrice = $match ? $match->prezzo : 0;
+            } else {
+                // Per un calcolo rapido preventivo generico, prendiamo il prezzo del primo variant "Adulto" o variante base
+                $baseVariantMatch = $seasonalPrices->where('tipo', 'per_persona')
+                    ->where('start_date', '<=', $currentDateStr)
+                    ->where('end_date', '>=', $currentDateStr)
+                    ->first();
+                // Moltiplichiamo il prezzo trovato (o 0 se non c'è config) per il numero totale degli ospiti
+                $vPrice = $baseVariantMatch ? $baseVariantMatch->prezzo : 0; 
+                $dayPrice = ($vPrice * $totalGuests);
+            }
+
+            $total += $dayPrice;
+        }
+
+        return $total;
+    }
+
     public function show($id)
     {
         $structure = \App\Models\BookingStructure::where('attivo', true)->with(['photos', 'variants', 'prices', 'services.category', 'extras'])->findOrFail($id);

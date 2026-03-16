@@ -46,5 +46,15 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Exception $e) {
             // Ignora errori di boot se ad esempio il DB non è ancora migrato
         }
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('sections')) {
+                \Illuminate\Support\Facades\View::composer('public.partials.header', function ($view) {
+                    $view->with('shared_sezioni', \App\Models\Section::where('visibile', true)->orderBy('ordine')->get());
+                });
+            }
+        } catch (\Exception $e) {
+            // Ignora
+        }
     }
 }

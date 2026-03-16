@@ -5,7 +5,7 @@
         <div class="flex gap-2 overflow-x-auto pb-4">
             @foreach($widget->data['photos'] as $photo)
                 @if(!empty($photo['url']))
-                    <img src="{{ $photo['url'] }}" class="h-32 object-cover rounded shadow-sm border border-gray-200" alt="Anteprima">
+                    <img src="{{ asset($photo['url']) }}" class="h-32 object-cover rounded shadow-sm border border-gray-200" alt="Anteprima">
                 @endif
             @endforeach
         </div>
@@ -23,10 +23,10 @@
                         <div class="swiper-slide h-64 sm:h-96 md:h-[500px]">
                             @if(!empty($photo['link']))
                                 <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
-                                    <img src="{{ $photo['url'] }}" class="w-full h-full object-cover" alt="Image">
+                                    <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
                                 </a>
                             @else
-                                <img src="{{ $photo['url'] }}" class="w-full h-full object-cover" alt="Image">
+                                <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
                             @endif
                         </div>
                     @endif
