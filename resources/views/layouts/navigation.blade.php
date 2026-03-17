@@ -123,17 +123,26 @@
             <div class="pt-4 pb-2 border-t border-slate-800/50 mt-2">
                 <p class="px-3 text-xs font-bold tracking-wider text-slate-500 uppercase">Agenti & B2B</p>
                 <div class="mt-2 space-y-1">
-                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                    <a href="{{ route('admin.b2b.dashboard') }}" class="{{ request()->routeIs('admin.b2b.dashboard') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                         <span class="ml-7">Dashboard B2B</span>
                     </a>
-                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                    <a href="{{ route('admin.b2b.agents.index') }}" class="{{ request()->routeIs('admin.b2b.agents.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                         <span class="ml-7">Agenti</span>
                     </a>
-                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                    <a href="{{ route('admin.b2b.customers.index') }}" class="{{ request()->routeIs('admin.b2b.customers.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                         <span class="ml-7">Clienti B2B</span>
                     </a>
-                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
-                        <span class="ml-7">Marchi & Condizioni</span>
+                    <a href="{{ route('admin.b2b.products.index') }}" class="{{ request()->routeIs('admin.b2b.products.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Inventario Prodotti</span>
+                    </a>
+                    <a href="{{ route('admin.b2b.orders.index') }}" class="{{ request()->routeIs('admin.b2b.orders.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7 text-indigo-400">Ordini Ricevuti</span>
+                    </a>
+                    <a href="{{ route('admin.b2b.brands.index') }}" class="{{ request()->routeIs('admin.b2b.brands.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all text-xs opacity-70">
+                        <span class="ml-7">Gestione Marchi</span>
+                    </a>
+                    <a href="{{ route('admin.b2b.payment-conditions.index') }}" class="{{ request()->routeIs('admin.b2b.payment-conditions.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all text-xs opacity-70">
+                        <span class="ml-7">Condizioni Pagamento</span>
                     </a>
                 </div>
             </div>
@@ -229,10 +238,11 @@
                 @if($user->is_super_admin || $user->can_manage_agents)
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Agenti & B2B</p>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Dashboard B2B</a>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agenti</a>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Clienti B2B</a>
-                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Marchi & Condizioni</a>
+                    <a href="{{ route('admin.b2b.dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Dashboard B2B</a>
+                    <a href="{{ route('admin.b2b.agents.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agenti</a>
+                    <a href="{{ route('admin.b2b.customers.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Clienti B2B</a>
+                    <a href="{{ route('admin.b2b.products.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Inventario Prodotti</a>
+                    <a href="{{ route('admin.b2b.orders.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-indigo-400 hover:text-indigo-300 hover:bg-slate-700 font-bold">Ordini Ricevuti</a>
                 </div>
                 @endif
 

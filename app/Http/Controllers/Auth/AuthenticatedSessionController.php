@@ -33,9 +33,19 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Determina la fallback route in base al ruolo se non c'è un url intended vero e proprio
-        $fallbackRoute = $request->user()->role === 'admin' 
-            ? route('dashboard', absolute: false) 
-            : route('public.account.dashboard', absolute: false);
+        if ($request->user()->role === 'admin') {
+            $user = $request->user();
+            // Se è un admin B2B e NON è super_admin, lo mandiamo direttamente al dashboard B2B
+            if (!$user->is_super_admin && $user->can_manage_agents && !$user->can_manage_site) {
+                $fallbackRoute = route('admin.b2b.dashboard', absolute: false);
+            } else {
+                $fallbackRoute = route('dashboard', absolute: false);
+            }
+        } elseif ($request->user()->role === 'agent') {
+            $fallbackRoute = route('agent.dashboard', absolute: false);
+        } else {
+            $fallbackRoute = route('public.account.dashboard', absolute: false);
+        }
 
         return redirect()->intended($fallbackRoute);
     }
@@ -45,11 +55,17 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $role = $request->user()?->role;
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        if ($role === 'admin' || $role === 'agent') {
+            return redirect()->route('login');
+        }
 
         return redirect('/');
     }

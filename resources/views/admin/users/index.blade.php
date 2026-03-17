@@ -52,6 +52,8 @@
                                             @if($user->can_manage_site) <span class="px-2 py-0.5 rounded text-xs bg-blue-100 text-blue-700">Sito</span> @endif
                                             @if($user->can_manage_shop) <span class="px-2 py-0.5 rounded text-xs bg-green-100 text-green-700">Shop</span> @endif
                                             @if($user->can_manage_booking) <span class="px-2 py-0.5 rounded text-xs bg-yellow-100 text-yellow-700">Booking</span> @endif
+                                            @if($user->can_manage_voip) <span class="px-2 py-0.5 rounded text-xs bg-purple-100 text-purple-700">Agente AI</span> @endif
+                                            @if($user->can_manage_agents) <span class="px-2 py-0.5 rounded text-xs bg-indigo-100 text-indigo-700">B2B</span> @endif
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

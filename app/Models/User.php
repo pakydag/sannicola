@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'surname',
         'email',
+        'phone',
         'password',
         'role',
         'is_super_admin',
@@ -37,6 +38,14 @@ class User extends Authenticatable
     public function b2bBrands()
     {
         return $this->belongsToMany(B2bBrand::class, 'agent_brand', 'user_id', 'b2b_brand_id');
+    }
+
+    /**
+     * Get the customers that the agent is authorized to manage.
+     */
+    public function b2bCustomers()
+    {
+        return $this->belongsToMany(B2bCustomer::class, 'agent_customer', 'user_id', 'b2b_customer_id');
     }
 
     /**

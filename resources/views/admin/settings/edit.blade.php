@@ -12,7 +12,7 @@
     </x-slot>
 
     <div class="py-12" x-data="{ 
-        activeTab: '{{ $user->is_super_admin || $user->can_manage_site ? 'generali' : ($user->can_manage_shop ? 'pagamenti' : 'pagamenti_booking') }}' 
+        activeTab: 'generali' 
     }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -36,27 +36,29 @@
 
                     <!-- Tabs Menu -->
                     <div class="flex border-b mb-6 border-gray-200">
-                        @if($user->is_super_admin || $user->can_manage_site)
                         <button @click="activeTab = 'generali'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'generali', 'text-gray-600 hover:text-indigo-600': activeTab !== 'generali'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">
                             ⚙️ Generali & Logo
                         </button>
-                        @endif
 
-                        @if($user->is_super_admin || $user->can_manage_site)
                         <button @click="activeTab = 'email'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'email', 'text-gray-600 hover:text-indigo-600': activeTab !== 'email'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
                             📧 Email (SMTP)
                         </button>
-                        @endif
 
-                        @if(($user->is_super_admin || $shop_enabled) && ($user->is_super_admin || $user->can_manage_shop))
+                        @if($user->is_super_admin || ($shop_enabled && $user->can_manage_shop))
                         <button @click="activeTab = 'pagamenti'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pagamenti', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pagamenti'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
                             🛍️ Pagamenti Shop
                         </button>
                         @endif
 
-                        @if(($user->is_super_admin || $booking_enabled) && ($user->is_super_admin || $user->can_manage_booking))
+                        @if($user->is_super_admin || ($booking_enabled && $user->can_manage_booking))
                         <button @click="activeTab = 'pagamenti_booking'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pagamenti_booking', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pagamenti_booking'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
                             🏨 Pagamenti Booking
+                        </button>
+                        @endif
+
+                        @if($user->is_super_admin || $user->can_manage_agents)
+                        <button @click="activeTab = 'pagamenti_b2b'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pagamenti_b2b', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pagamenti_b2b'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
+                            💳 Pagamenti B2B
                         </button>
                         @endif
                     </div>
@@ -206,8 +208,35 @@
                         </div>
                         @endif
 
+                        <!-- TAB: Pagamenti B2B -->
+                        @if($user->is_super_admin || $user->can_manage_agents)
+                        <div x-show="activeTab === 'pagamenti_b2b'" style="display: none;" class="space-y-6">
+                            <div class="bg-gray-50 p-4 border rounded-md mb-6">
+                                <h3 class="text-md font-bold text-gray-800 mb-3 border-b pb-2 text-indigo-600 uppercase">Metodi di Pagamento B2B</h3>
+                                <p class="text-xs text-gray-500 mb-4">Abilitando questi metodi, potrai inviare link di pagamento diretti dalla gestione ordini B2B.</p>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="b2b_payment_stripe_enabled" value="1" class="sr-only peer" {{ (isset($settings['b2b_payment_stripe_enabled']) && $settings['b2b_payment_stripe_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Carta di Credito (Stripe)</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="b2b_payment_paypal_enabled" value="1" class="sr-only peer" {{ (isset($settings['b2b_payment_paypal_enabled']) && $settings['b2b_payment_paypal_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">PayPal</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="b2b_payment_bonifico_enabled" value="1" class="sr-only peer" {{ (isset($settings['b2b_payment_bonifico_enabled']) && $settings['b2b_payment_bonifico_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Bonifico Bancario</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <!-- Chiavi API (Visibili se almeno un modulo ha Stripe/PayPal attivo) -->
-                        <div x-show="activeTab === 'pagamenti' || activeTab === 'pagamenti_booking'" style="display: none;" class="space-y-6 pt-6 border-t">
+                        <div x-show="activeTab === 'pagamenti' || activeTab === 'pagamenti_booking' || activeTab === 'pagamenti_b2b'" style="display: none;" class="space-y-6 pt-6 border-t">
                             <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Configurazione API (Comuni a Shop e Booking)</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- ... existing API keys content ... -->

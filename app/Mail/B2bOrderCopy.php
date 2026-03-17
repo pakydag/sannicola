@@ -3,26 +3,27 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AdminUserCreated extends Mailable
+class B2bOrderCopy extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $password;
+    public $order;
+    public $paymentLink;
+    public $paymentMethod;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($user, $password)
+    public function __construct($order, $paymentLink = null, $paymentMethod = 'bonifico')
     {
-        $this->user = $user;
-        $this->password = $password;
+        $this->order = $order;
+        $this->paymentLink = $paymentLink;
+        $this->paymentMethod = $paymentMethod;
     }
 
     /**
@@ -31,7 +32,7 @@ class AdminUserCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Impostazione Accesso Agente - ' . config('app.name'),
+            subject: 'Riepilogo Ordine B2B #' . $this->order->id,
         );
     }
 
@@ -41,14 +42,12 @@ class AdminUserCreated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.admin_user_created',
+            view: 'emails.order_copy',
         );
     }
 
     /**
      * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
     public function attachments(): array
     {

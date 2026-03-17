@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
                     config([
                         'mail.mailers.smtp.host'       => $settings['mail_host'] ?? config('mail.mailers.smtp.host'),
                         'mail.mailers.smtp.port'       => $settings['mail_port'] ?? config('mail.mailers.smtp.port'),
-                        'mail.mailers.smtp.encryption' => $settings['mail_encryption'] ?? config('mail.mailers.smtp.encryption'),
+                        'mail.mailers.smtp.encryption' => !empty($settings['mail_encryption']) ? $settings['mail_encryption'] : null,
                         'mail.mailers.smtp.username'   => $settings['mail_username'] ?? config('mail.mailers.smtp.username'),
                         'mail.mailers.smtp.password'   => $settings['mail_password'] ?? config('mail.mailers.smtp.password'),
                         'mail.from.address'            => $settings['mail_from_address'] ?? config('mail.from.address'),

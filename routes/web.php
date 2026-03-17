@@ -112,6 +112,34 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     // AI Tickets Management
     Route::get('vapi/tickets', [\App\Http\Controllers\Admin\AiTicketController::class, 'index'])->name('vapi.tickets.index');
     Route::delete('vapi/tickets/{ticket}', [\App\Http\Controllers\Admin\AiTicketController::class, 'destroy'])->name('vapi.tickets.destroy');
+
+    // Modulo B2B Agenti
+    Route::prefix('b2b')->name('b2b.')->group(function () {
+        Route::resource('brands', \App\Http\Controllers\Admin\B2b\B2bBrandController::class);
+        Route::resource('payment-conditions', \App\Http\Controllers\Admin\B2b\B2bPaymentConditionController::class);
+        Route::resource('customers', \App\Http\Controllers\Admin\B2b\B2bCustomerController::class);
+        Route::resource('agents', \App\Http\Controllers\Admin\B2b\AgentController::class);
+        Route::resource('products', \App\Http\Controllers\Admin\B2b\B2bProductController::class);
+        Route::resource('orders', \App\Http\Controllers\Admin\B2b\B2bOrderController::class);
+        Route::post('orders/{order}/send-copy', [\App\Http\Controllers\Admin\B2b\B2bOrderController::class, 'sendOrderCopy'])->name('orders.send_copy');
+        Route::get('dashboard', [\App\Http\Controllers\Admin\B2b\B2bDashboardController::class, 'index'])->name('dashboard');
+    });
+});
+
+// Portale Agente B2B
+Route::middleware(['auth', 'agent'])->prefix('agenti')->name('agent.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Agent\AgentPortalController::class, 'dashboard'])->name('dashboard');
+    Route::get('/catalogo', [\App\Http\Controllers\Agent\AgentPortalController::class, 'catalog'])->name('catalog');
+    Route::get('/prodotto/{product}', [\App\Http\Controllers\Agent\AgentPortalController::class, 'product'])->name('product');
+    Route::get('/carrello', [\App\Http\Controllers\Agent\AgentPortalController::class, 'cart'])->name('cart');
+    Route::post('/carrello/add', [\App\Http\Controllers\Agent\AgentPortalController::class, 'addToCart'])->name('cart.add');
+    Route::post('/carrello/update', [\App\Http\Controllers\Agent\AgentPortalController::class, 'updateCart'])->name('cart.update');
+    Route::delete('/carrello/remove/{index}', [\App\Http\Controllers\Agent\AgentPortalController::class, 'removeFromCart'])->name('cart.remove');
+    Route::get('/checkout', [\App\Http\Controllers\Agent\AgentPortalController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [\App\Http\Controllers\Agent\AgentPortalController::class, 'processCheckout'])->name('process_checkout');
+    Route::get('/ordini', [\App\Http\Controllers\Agent\AgentPortalController::class, 'orders'])->name('orders');
+    Route::get('/ordini/{order}', [\App\Http\Controllers\Agent\AgentPortalController::class, 'orderDetail'])->name('order_detail');
+    Route::get('/profilo', [\App\Http\Controllers\Agent\AgentPortalController::class, 'profile'])->name('profile');
 });
 
 require __DIR__.'/auth.php';

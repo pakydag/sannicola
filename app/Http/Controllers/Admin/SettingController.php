@@ -49,6 +49,12 @@ class SettingController extends Controller
             'booking_payment_bonifico_enabled',
         ];
 
+        $b2bSettings = [
+            'b2b_payment_stripe_enabled',
+            'b2b_payment_paypal_enabled',
+            'b2b_payment_bonifico_enabled',
+        ];
+
         $paymentParams = [
             'stripe_key', 'stripe_secret',
             'paypal_client_id', 'paypal_secret', 'paypal_mode',
@@ -86,12 +92,20 @@ class SettingController extends Controller
         }
 
         // Process Checkboxes
-        $checkboxes = array_merge($shopSettings, $bookingSettings);
+        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings);
         foreach ($checkboxes as $chk) {
             $canEdit = false;
-            if ($user->is_super_admin) $canEdit = true;
-            elseif (in_array($chk, $shopSettings) && $user->can_manage_shop) $canEdit = true;
-            elseif (in_array($chk, $bookingSettings) && $user->can_manage_booking) $canEdit = true;
+            
+            // Solo il super admin può abilitare/disabilitare i moduli principali
+            if (in_array($chk, ['shop_enabled', 'booking_enabled'])) {
+                if ($user->is_super_admin) $canEdit = true;
+            } else {
+                // Gli altri toggle (Stripe, Paypal, etc) possono essere gestiti dai rispettivi admin
+                if ($user->is_super_admin) $canEdit = true;
+                elseif (in_array($chk, $shopSettings) && $user->can_manage_shop) $canEdit = true;
+                elseif (in_array($chk, $bookingSettings) && $user->can_manage_booking) $canEdit = true;
+                elseif (in_array($chk, $b2bSettings) && $user->can_manage_agents) $canEdit = true;
+            }
 
             if ($canEdit) {
                 $validated[$chk] = $request->has($chk) ? '1' : '0';
@@ -102,10 +116,12 @@ class SettingController extends Controller
         foreach ($validated as $key => $value) {
             $canEdit = false;
             if ($user->is_super_admin) $canEdit = true;
-            elseif (in_array($key, $paymentParams)) {
-                if ($user->can_manage_shop || $user->can_manage_booking) $canEdit = true;
-            } elseif (in_array($key, $generalSettings)) {
-                if ($user->can_manage_site) $canEdit = true;
+            elseif (in_array($key, $generalSettings)) {
+                // Tutti gli amministratori che accedono a questa pagina possono modificare logo e mail
+                $canEdit = true;
+            } elseif (in_array($key, $paymentParams)) {
+                // I parametri API possono essere salvati se si ha accesso a Shop, Booking o B2B
+                if ($user->can_manage_shop || $user->can_manage_booking || $user->can_manage_agents) $canEdit = true;
             }
 
             if ($canEdit) {
