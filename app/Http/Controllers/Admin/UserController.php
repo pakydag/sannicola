@@ -43,6 +43,7 @@ class UserController extends Controller
             'can_manage_site' => 'boolean',
             'can_manage_shop' => 'boolean',
             'can_manage_booking' => 'boolean',
+            'can_manage_voip' => 'boolean',
         ]);
 
         $password = $this->generatePassword();
@@ -57,6 +58,7 @@ class UserController extends Controller
             'can_manage_site' => $request->has('can_manage_site'),
             'can_manage_shop' => $request->has('can_manage_shop'),
             'can_manage_booking' => $request->has('can_manage_booking'),
+            'can_manage_voip' => $request->has('can_manage_voip'),
         ]);
 
         Mail::to($user->email)->send(new AdminUserCreated($user, $password));
@@ -85,6 +87,7 @@ class UserController extends Controller
             'can_manage_site' => 'boolean',
             'can_manage_shop' => 'boolean',
             'can_manage_booking' => 'boolean',
+            'can_manage_voip' => 'boolean',
         ]);
 
         $user->update([
@@ -95,6 +98,7 @@ class UserController extends Controller
             'can_manage_site' => $request->has('can_manage_site'),
             'can_manage_shop' => $request->has('can_manage_shop'),
             'can_manage_booking' => $request->has('can_manage_booking'),
+            'can_manage_voip' => $request->has('can_manage_voip'),
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Amministratore aggiornato con successo.');

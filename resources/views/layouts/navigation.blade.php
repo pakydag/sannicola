@@ -124,7 +124,9 @@
                     <svg class="text-slate-400 group-hover:text-white mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     Amministratori
                 </a>
+                @endif
 
+                @if($user->is_super_admin || $user->can_manage_voip)
                 <a href="{{ route('admin.vapi.index') }}" class="{{ request()->routeIs('admin.vapi.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                     <svg class="text-slate-400 group-hover:text-white mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     Agente AI
@@ -158,15 +160,19 @@
             <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-slate-800">Dashboard</a>
             
             @if(Auth::check() && Auth::user()->role === 'admin')
+                @php $user = Auth::user(); @endphp
+                @if($user->is_super_admin || $user->can_manage_site)
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Sito</p>
+                    <a href="{{ route('public.home') }}" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Vai al Sito Web</a>
                     <a href="{{ route('admin.articoli.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Articoli</a>
                     <a href="{{ route('admin.home.edit') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Home Page Editor</a>
                     <a href="{{ route('admin.sezioni.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Sezioni Sito</a>
                     <a href="{{ route('admin.global-widgets.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Widget Globali</a>
                 </div>
+                @endif
 
-                @if(\App\Models\Setting::where('key', 'shop_enabled')->value('value') == '1')
+                @if(\App\Models\Setting::where('key', 'shop_enabled')->value('value') == '1' && ($user->is_super_admin || $user->can_manage_shop))
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Shop</p>
                     <a href="{{ route('admin.shop.categorie.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Categorie</a>
@@ -177,7 +183,7 @@
                 </div>
                 @endif
 
-                @if(\App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1')
+                @if(\App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1' && ($user->is_super_admin || $user->can_manage_booking))
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Booking</p>
                     <a href="{{ route('admin.booking.structures.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Strutture</a>
@@ -187,8 +193,19 @@
                 @endif
 
                 <div class="mt-4 pt-4 border-t border-slate-700">
+                    @if($user->is_super_admin || $user->can_manage_site)
                     <a href="{{ route('admin.filemanager') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">File Manager</a>
                     <a href="{{ route('admin.contatti.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Rubrica Contatti</a>
+                    @endif
+                    
+                    @if($user->is_super_admin)
+                    <a href="{{ route('admin.users.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Amministratori</a>
+                    @endif
+                    
+                    @if($user->is_super_admin || $user->can_manage_voip)
+                    <a href="{{ route('admin.vapi.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agente AI</a>
+                    @endif
+
                     <a href="{{ route('admin.settings.edit') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Configurazione</a>
                 </div>
                 

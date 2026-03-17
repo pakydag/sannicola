@@ -27,6 +27,7 @@ class User extends Authenticatable
         'can_manage_site',
         'can_manage_shop',
         'can_manage_booking',
+        'can_manage_voip',
     ];
 
     /**
