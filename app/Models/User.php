@@ -28,7 +28,16 @@ class User extends Authenticatable
         'can_manage_shop',
         'can_manage_booking',
         'can_manage_voip',
+        'can_manage_agents',
     ];
+
+    /**
+     * Get the brands that the agent is authorized to view.
+     */
+    public function b2bBrands()
+    {
+        return $this->belongsToMany(B2bBrand::class, 'agent_brand', 'user_id', 'b2b_brand_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

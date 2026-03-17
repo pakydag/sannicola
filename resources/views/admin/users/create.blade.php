@@ -70,6 +70,11 @@
                                             <input id="can_manage_voip" name="can_manage_voip" type="checkbox" value="1" {{ old('can_manage_voip') ? 'checked' : '' }} class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
                                             <label for="can_manage_voip" class="ml-2 text-sm text-gray-700">Agente AI (Voip)</label>
                                         </div>
+
+                                        <div class="flex items-center">
+                                            <input id="can_manage_agents" name="can_manage_agents" type="checkbox" value="1" {{ old('can_manage_agents') ? 'checked' : '' }} class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                            <label for="can_manage_agents" class="ml-2 text-sm text-gray-700">B2B (Agenti, Clienti B2B, Ordini B2B)</label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

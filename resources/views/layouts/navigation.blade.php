@@ -118,6 +118,27 @@
             </div>
             @endif
 
+            <!-- Categoria: AGENTI & B2B (condizionale) -->
+            @if($user->is_super_admin || $user->can_manage_agents)
+            <div class="pt-4 pb-2 border-t border-slate-800/50 mt-2">
+                <p class="px-3 text-xs font-bold tracking-wider text-slate-500 uppercase">Agenti & B2B</p>
+                <div class="mt-2 space-y-1">
+                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Dashboard B2B</span>
+                    </a>
+                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Agenti</span>
+                    </a>
+                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Clienti B2B</span>
+                    </a>
+                    <a href="#" class="text-slate-300 hover:bg-slate-800 hover:text-white group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Marchi & Condizioni</span>
+                    </a>
+                </div>
+            </div>
+            @endif
+
              <!-- Link Singoli Inferiori -->
             <div class="pt-4 pb-2 border-t border-slate-800/50 mt-2 space-y-1">
                 @if($user->is_super_admin || $user->can_manage_site)
@@ -202,6 +223,16 @@
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Voip & AI</p>
                     <a href="{{ route('admin.vapi.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agente AI</a>
+                </div>
+                @endif
+
+                @if($user->is_super_admin || $user->can_manage_agents)
+                <div class="mt-4 pt-4 border-t border-slate-700">
+                    <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Agenti & B2B</p>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Dashboard B2B</a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agenti</a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Clienti B2B</a>
+                    <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Marchi & Condizioni</a>
                 </div>
                 @endif
 
