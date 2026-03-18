@@ -14,4 +14,9 @@
         /* Puoi anche aggiungere CSS standard */
         border: 2px solid gold;
     }
+     .bottone-personalizzato2 {
+        @apply bg-indigo-600 text-white px-6 py-2 rounded-lg shadow-md;
+        /* Puoi anche aggiungere CSS standard */
+        border: 2px solid silver;
+    }
 }
