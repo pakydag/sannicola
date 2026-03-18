@@ -1,7 +1,17 @@
+@import './accessibility.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}
 
-@import './accessibility.css';
+/* resources/css/app.css */
+@layer components {
+    .bottone-personalizzato {
+        @apply bg-indigo-600 text-white px-6 py-2 rounded-lg shadow-md;
+        /* Puoi anche aggiungere CSS standard */
+        border: 2px solid gold;
+    }
+}
