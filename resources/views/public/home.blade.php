@@ -39,12 +39,12 @@
                             @endif
                             @include('public.partials.widgets.section_grid', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'image_text_image')
-                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm overflow-hidden">
-                            @if($widget->titolo)<h2 class="text-3xl font-extrabold text-center text-gray-900 tracking-tight sm:text-4xl px-4 py-6">{{ $widget->titolo }}</h2>
+                        <div class="max-w-7xl mx-auto mb-12 widget-block overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl font-extrabold text-center text-gray-900 tracking-tight sm:text-4xl px-4 py-6 hidden">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.image_text_image', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'booking_search' && (config('app.booking_enabled') === '1' || \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1'))
-                        <div class="max-w-full mx-auto mb-12 widget-block">
+                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 widget-block">
                             @include('public.partials.widgets.booking_search', ['widget' => $widget])
                         </div>
                     @endif

@@ -5,7 +5,7 @@
 @endphp
 
 <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center bg-white rounded-xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] p-6 transition-all hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.15)] overflow-hidden">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center p-6 overflow-hidden">
         
         <!-- Left Image -->
         <div class="col-span-1 overflow-hidden rounded-lg shadow-sm group">

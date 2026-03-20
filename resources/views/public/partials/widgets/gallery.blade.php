@@ -16,7 +16,7 @@
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         @endonce
 
-        <div class="swiper widget-gallery-swiper shadow-lg border border-gray-100 overflow-hidden">
+        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden">
             <div class="swiper-wrapper">
                 @foreach($widget->data['photos'] as $photo)
                     @if(!empty($photo['url']))
