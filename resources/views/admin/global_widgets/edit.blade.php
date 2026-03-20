@@ -37,23 +37,29 @@
                             <div id="gallery-container" class="space-y-3 mb-4">
                                 @php
                                     $photos = old('data.photos', $globalWidget->data['photos'] ?? []);
-                                    if(empty($photos)) $photos = [['url' => '', 'link' => '']];
+                                    if(empty($photos)) $photos = [['url' => '', 'video_url' => '', 'link' => '']];
                                 @endphp
                                 @foreach($photos as $index => $photo)
                                     <div class="flex items-center space-x-2 gallery-row mb-3">
-                                        <div class="flex-1 flex">
-                                            <input type="text" name="data[photos][{{ $index }}][url]" value="{{ $photo['url'] ?? '' }}" readonly required placeholder="URL Foto" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                            <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 font-bold py-2 px-4 text-sm rounded-r shadow border border-l-0">Scegli...</button>
+                                        <div class="flex-1 flex flex-col space-y-2 text-sm">
+                                            <div class="flex">
+                                                <input type="text" name="data[photos][{{ $index }}][url]" value="{{ $photo['url'] ?? '' }}" readonly required placeholder="URL Foto" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
+                                                <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 font-bold py-2 px-4 shadow border border-l-0 text-sm whitespace-nowrap">📸 Foto</button>
+                                            </div>
+                                            <div class="flex">
+                                                <input type="text" name="data[photos][{{ $index }}][video_url]" value="{{ $photo['video_url'] ?? '' }}" readonly placeholder="URL Video (opzionale)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
+                                                <button type="button" class="btn-sfoglia-video-gallery bg-gray-200 hover:bg-gray-300 font-bold py-2 px-4 shadow border border-l-0 text-sm whitespace-nowrap">🎥 Video</button>
+                                            </div>
                                         </div>
                                         <div class="flex-1">
-                                            <input type="text" name="data[photos][{{ $index }}][link]" value="{{ $photo['link'] ?? '' }}" placeholder="Link Opzionale" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                            <input type="text" name="data[photos][{{ $index }}][link]" value="{{ $photo['link'] ?? '' }}" placeholder="Link Opzionale" class="shadow border rounded w-full py-2 px-3 h-full focus:outline-none text-sm">
                                         </div>
                                         <button type="button" class="btn-rimuovi-foto text-red-500 hover:text-red-700"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
                                     </div>
                                 @endforeach
                             </div>
                             <div class="flex items-center justify-between mt-4">
-                                <button type="button" id="btn-aggiungi-foto" class="text-indigo-600 font-bold flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi Foto</button>
+                                <button type="button" id="btn-aggiungi-foto" class="text-indigo-600 font-bold flex items-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi Slide</button>
                             </div>
 
                         <!-- Video -->
@@ -108,11 +114,20 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Link al click (Opzionale)</label>
                                 <input type="url" name="data[link]" value="{{ old('data.link', $globalWidget->data['link'] ?? '') }}" placeholder="https://..." class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Immagine Sfondo / Principale</label>
-                                <div class="flex mt-1 relative rounded-md shadow-sm">
-                                    <input type="text" id="single_block_image" name="data[image]" value="{{ old('data.image', $globalWidget->data['image'] ?? '') }}" readonly required placeholder="Immagine dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                    <button type="button" id="btn-sfoglia-single" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli Immagine...</button>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Immagine Sfondo / Principale</label>
+                                    <div class="flex mt-1 relative rounded-md shadow-sm">
+                                        <input type="text" id="single_block_image" name="data[image]" value="{{ old('data.image', $globalWidget->data['image'] ?? '') }}" readonly required placeholder="Immagine dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
+                                        <button type="button" id="btn-sfoglia-single" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli Foto...</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Video Sfondo (Opzionale)</label>
+                                    <div class="flex mt-1 relative rounded-md shadow-sm">
+                                        <input type="text" id="single_block_video" name="data[video]" value="{{ old('data.video', $globalWidget->data['video'] ?? '') }}" readonly placeholder="URL Video (.mp4)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
+                                        <button type="button" id="btn-sfoglia-single-video" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli Video...</button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-4">
@@ -158,12 +173,19 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4 mt-6">
                                 <!-- Elemento Sinistra -->
                                 <div class="bg-gray-50 p-4 rounded shadow-inner border border-gray-200">
-                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Foto Sinistra</h3>
+                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Sinistra (Foto/Video)</h3>
                                     <div class="mb-3">
                                         <label class="block text-xs text-gray-600 font-bold mb-1">Immagine</label>
                                         <div class="flex relative rounded-md shadow-sm">
                                             <input type="text" id="iti_img_left" name="data[img_left]" value="{{ old('data.img_left', $globalWidget->data['img_left'] ?? '') }}" readonly class="shadow border rounded-l w-full py-1 text-sm px-2 bg-white focus:outline-none">
-                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_img_left">Sfoglia</button>
+                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_img_left">Foto</button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Video (Opzionale)</label>
+                                        <div class="flex relative rounded-md shadow-sm">
+                                            <input type="text" id="iti_video_left" name="data[video_left]" value="{{ old('data.video_left', $globalWidget->data['video_left'] ?? '') }}" readonly class="shadow border rounded-l w-full py-1 text-sm px-2 bg-white focus:outline-none">
+                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_video_left">Video</button>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -193,12 +215,19 @@
 
                                 <!-- Elemento Destra -->
                                 <div class="bg-gray-50 p-4 rounded shadow-inner border border-gray-200">
-                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Foto Destra</h3>
+                                    <h3 class="font-bold text-gray-700 mb-3 text-center border-b pb-2">Destra (Foto/Video)</h3>
                                     <div class="mb-3">
                                         <label class="block text-xs text-gray-600 font-bold mb-1">Immagine</label>
                                         <div class="flex relative rounded-md shadow-sm">
                                             <input type="text" id="iti_img_right" name="data[img_right]" value="{{ old('data.img_right', $globalWidget->data['img_right'] ?? '') }}" readonly class="shadow border rounded-l w-full py-1 text-sm px-2 bg-white focus:outline-none">
-                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_img_right">Sfoglia</button>
+                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_img_right">Foto</button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="block text-xs text-gray-600 font-bold mb-1">Video (Opzionale)</label>
+                                        <div class="flex relative rounded-md shadow-sm">
+                                            <input type="text" id="iti_video_right" name="data[video_right]" value="{{ old('data.video_right', $globalWidget->data['video_right'] ?? '') }}" readonly class="shadow border rounded-l w-full py-1 text-sm px-2 bg-white focus:outline-none">
+                                            <button type="button" class="btn-sfoglia-iti relative inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded-r-md text-gray-700 bg-gray-200" data-target="iti_video_right">Video</button>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -271,6 +300,14 @@
                         window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
+                const btnSingleVideo = document.getElementById('btn-sfoglia-single-video');
+                if (btnSingleVideo) {
+                    btnSingleVideo.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveInput = document.getElementById('single_block_video');
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                }
 
                 const galleryContainer = document.getElementById('gallery-container');
                 let photoIndex = {{ isset($photos) ? count($photos) : 1 }};
@@ -280,12 +317,18 @@
                         const row = document.createElement('div');
                         row.className = 'flex items-center space-x-2 gallery-row mb-3';
                         row.innerHTML = `
-                            <div class="flex-1 flex">
-                                <input type="text" name="data[photos][${photoIndex}][url]" readonly required placeholder="URL Foto" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 font-bold py-2 px-4 text-sm rounded-r shadow border border-l-0">Scegli...</button>
+                            <div class="flex-1 flex flex-col space-y-2 text-sm">
+                                <div class="flex">
+                                    <input type="text" name="data[photos][${photoIndex}][url]" readonly required placeholder="URL Foto" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
+                                    <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 font-bold py-2 px-4 shadow border border-l-0">📸 Foto</button>
+                                </div>
+                                <div class="flex">
+                                    <input type="text" name="data[photos][${photoIndex}][video_url]" readonly placeholder="URL Video (opzionale)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
+                                    <button type="button" class="btn-sfoglia-video-gallery bg-gray-200 hover:bg-gray-300 font-bold py-2 px-4 shadow border border-l-0">🎥 Video</button>
+                                </div>
                             </div>
                             <div class="flex-1">
-                                <input type="text" name="data[photos][${photoIndex}][link]" placeholder="Link Opzionale" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="data[photos][${photoIndex}][link]" placeholder="Link Opzionale" class="shadow border rounded w-full py-2 px-3 h-full focus:outline-none text-sm">
                             </div>
                             <button type="button" class="btn-rimuovi-foto text-red-500 hover:text-red-700"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
                         `;
@@ -302,12 +345,18 @@
                             fmActiveInput = btn.previousElementSibling;
                             window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                         }
+                        if(e.target.closest('.btn-sfoglia-video-gallery')) {
+                            e.preventDefault();
+                            const btn = e.target.closest('.btn-sfoglia-video-gallery');
+                            fmActiveInput = btn.previousElementSibling;
+                            window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                        }
                         if(e.target.closest('.btn-rimuovi-foto')) {
                             e.preventDefault();
                             if(document.querySelectorAll('.gallery-row').length > 1) {
                                 e.target.closest('.gallery-row').remove();
                             } else {
-                                alert('Almeno una foto necessaria.');
+                                alert('Almeno una slide necessaria.');
                             }
                         }
                     });

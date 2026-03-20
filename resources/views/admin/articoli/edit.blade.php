@@ -256,12 +256,18 @@
                                 </div>
                                 <div id="gallery-container" class="space-y-3 mb-4">
                                     <div class="flex items-center space-x-2 gallery-row">
-                                        <div class="flex-1 flex">
-                                            <input type="text" name="data[photos][0][url]" readonly required placeholder="URL Foto dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                            <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">Scegli...</button>
+                                        <div class="flex-1 flex flex-col space-y-2">
+                                            <div class="flex">
+                                                <input type="text" name="data[photos][0][url]" readonly required placeholder="URL Foto dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
+                                                <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">📸 Foto</button>
+                                            </div>
+                                            <div class="flex">
+                                                <input type="text" name="data[photos][0][video_url]" readonly placeholder="URL Video (opzionale)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
+                                                <button type="button" class="btn-sfoglia-video-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">🎥 Video</button>
+                                            </div>
                                         </div>
                                         <div class="flex-1">
-                                            <input type="text" name="data[photos][0][link]" placeholder="Link Opzionale (http://...)" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                            <input type="text" name="data[photos][0][link]" placeholder="Link Opzionale (http://...)" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-sm h-full">
                                         </div>
                                         <button type="button" class="btn-rimuovi-foto text-red-500 opacity-50 hover:opacity-100" title="Rimuovi"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
                                     </div>
@@ -351,13 +357,24 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Link al click (Opzionale)</label>
                                 <input type="url" name="data[link]" placeholder="https://..." class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Immagine Sfondo / Principale</label>
-                                <div class="flex mt-1 relative rounded-md shadow-sm">
-                                    <input type="text" id="single_block_image" name="data[image]" readonly required placeholder="URL Immagine dal File Manager" class="shadow appearance-none border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                    <button type="button" id="btn-sfoglia-single" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none">
-                                        <span>Scegli Immagine...</span>
-                                    </button>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Immagine Sfondo / Principale</label>
+                                    <div class="flex mt-1 relative rounded-md shadow-sm">
+                                        <input type="text" id="single_block_image" name="data[image]" readonly required placeholder="URL Immagine dal File Manager" class="shadow appearance-none border rounded-l w-full py-2 px-3 bg-white focus:outline-none focus:shadow-outline">
+                                        <button type="button" id="btn-sfoglia-single" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none">
+                                            <span>Scegli Foto...</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Video Sfondo (Opzionale)</label>
+                                    <div class="flex mt-1 relative rounded-md shadow-sm">
+                                        <input type="text" id="single_block_video" name="data[video]" readonly placeholder="URL Video (.mp4)" class="shadow appearance-none border rounded-l w-full py-2 px-3 bg-white focus:outline-none focus:shadow-outline">
+                                        <button type="button" id="btn-sfoglia-single-video" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none">
+                                            <span>Scegli Video...</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-4">
@@ -507,26 +524,39 @@
                         window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
+                if (document.getElementById('btn-sfoglia-single-video')) {
+                    document.getElementById('btn-sfoglia-single-video').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fmActiveTarget = 'widget_single_video';
+                        fmActiveInput = document.getElementById('single_block_video');
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                }
 
                 // --- Widget Gallery: Dynamic Rows ---
                 const galleryContainer = document.getElementById('gallery-container');
-                let photoIndex = 1;
-
-                document.getElementById('btn-aggiungi-foto').addEventListener('click', () => {
+                                document.getElementById('btn-aggiungi-foto').addEventListener('click', () => {
                     const row = document.createElement('div');
                     row.className = 'flex items-center space-x-2 gallery-row mt-3';
                     row.innerHTML = `
-                        <div class="flex-1 flex">
-                            <input type="text" name="data[photos][${photoIndex}][url]" readonly required placeholder="URL Foto dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                            <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">Scegli...</button>
+                        <div class="flex-1 flex flex-col space-y-2">
+                            <div class="flex">
+                                <input type="text" name="data[photos][${photoIndex}][url]" readonly required placeholder="URL Foto dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
+                                <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">📸 Foto</button>
+                            </div>
+                            <div class="flex">
+                                <input type="text" name="data[photos][${photoIndex}][video_url]" readonly placeholder="URL Video (opzionale)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
+                                <button type="button" class="btn-sfoglia-video-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">🎥 Video</button>
+                            </div>
                         </div>
                         <div class="flex-1">
-                            <input type="text" name="data[photos][${photoIndex}][link]" placeholder="Link Opzionale (http://...)" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                            <input type="text" name="data[photos][${photoIndex}][link]" placeholder="Link Opzionale (http://...)" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-sm h-full">
                         </div>
-                        <button type="button" class="btn-rimuovi-foto text-red-500 opacity-50 hover:opacity-100" title="Rimuovi"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
+                        <button type="button" class="btn-rimuovi-foto text-red-500 opacity-50 hover:opacity-100" title="Rimuovi"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
                     `;
                     galleryContainer.appendChild(row);
                     photoIndex++;
+                });;
                 });
 
                 // Delegated events for dynamic gallery buttons
@@ -536,6 +566,14 @@
                         e.preventDefault();
                         const btn = e.target.closest('.btn-sfoglia-gallery');
                         fmActiveTarget = 'widget_gallery';
+                        fmActiveInput = btn.previousElementSibling; // The input field
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    }
+                    // Sfoglia video gallery button
+                    if(e.target.closest('.btn-sfoglia-video-gallery')) {
+                        e.preventDefault();
+                        const btn = e.target.closest('.btn-sfoglia-video-gallery');
+                        fmActiveTarget = 'widget_gallery_video';
                         fmActiveInput = btn.previousElementSibling; // The input field
                         window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                     }
@@ -573,7 +611,7 @@
                     document.getElementById('allegato').value = relativeUrl;
                 } else if (fmActiveTarget === 'seo_image') {
                     document.getElementById('seo_image').value = relativeUrl;
-                } else if (fmActiveTarget === 'widget_video' || fmActiveTarget === 'widget_gallery' || fmActiveTarget === 'widget_single') {
+                } else if (fmActiveTarget === 'widget_video' || fmActiveTarget === 'widget_gallery' || fmActiveTarget === 'widget_single' || fmActiveTarget === 'widget_single_video' || fmActiveTarget === 'widget_gallery_video') {
                     if(fmActiveInput) {
                         fmActiveInput.value = relativeUrl;
                     }

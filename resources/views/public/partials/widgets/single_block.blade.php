@@ -19,7 +19,13 @@
 
     <div class="rounded-xl overflow-hidden shadow-lg transition-transform hover:-translate-y-1" style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
         <div class="flex flex-col md:flex-row items-stretch">
-            @if(!empty($widget->data['image']))
+            @if(!empty($widget->data['video']))
+                <div class="md:w-1/2 relative bg-black">
+                    <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
+                        <source src="{{ asset($widget->data['video']) }}" type="video/mp4">
+                    </video>
+                </div>
+            @elseif(!empty($widget->data['image']))
                 <div class="md:w-1/2 relative bg-gray-200">
                     <img src="{{ asset($widget->data['image']) }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
                 </div>

@@ -4,9 +4,16 @@
         <!-- Rendering semplificato per l'area di amministrazione (no js, no swiper) -->
         <div class="flex gap-2 overflow-x-auto pb-4">
             @foreach($widget->data['photos'] as $photo)
-                @if(!empty($photo['url']))
-                    <img src="{{ asset($photo['url']) }}" class="h-32 object-cover rounded shadow-sm border border-gray-200" alt="Anteprima">
-                @endif
+                <div class="flex-shrink-0 relative">
+                    @if(!empty($photo['url']))
+                        <img src="{{ asset($photo['url']) }}" class="h-32 w-48 object-cover rounded shadow-sm border border-gray-200" alt="Anteprima">
+                    @endif
+                    @if(!empty($photo['video_url']))
+                        <div class="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-[10px] px-1 rounded flex items-center">
+                            <svg class="w-3 h-3 mr-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.5 9a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1z" /></svg> Video
+                        </div>
+                    @endif
+                </div>
             @endforeach
         </div>
     @else
@@ -19,14 +26,20 @@
         <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden">
             <div class="swiper-wrapper">
                 @foreach($widget->data['photos'] as $photo)
-                    @if(!empty($photo['url']))
+                    @if(!empty($photo['url']) || !empty($photo['video_url']))
                         <div class="swiper-slide h-64 sm:h-96 md:h-[500px]">
-                            @if(!empty($photo['link']))
-                                <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
+                            @if(!empty($photo['video_url']))
+                                <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                                    <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
+                                </video>
+                            @elseif(!empty($photo['url']))
+                                @if(!empty($photo['link']))
+                                    <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
+                                        <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
+                                    </a>
+                                @else
                                     <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
-                                </a>
-                            @else
-                                <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
+                                @endif
                             @endif
                         </div>
                     @endif

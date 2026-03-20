@@ -12,7 +12,11 @@
             @if($leftLink)
                 <a href="{{ $leftLink }}" target="_blank" rel="noopener noreferrer" class="block">
             @endif
-            @if(!empty($widget->data['img_left']))
+            @if(!empty($widget->data['video_left']))
+                <video autoplay loop muted playsinline class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-105">
+                    <source src="{{ asset($widget->data['video_left']) }}" type="video/mp4">
+                </video>
+            @elseif(!empty($widget->data['img_left']))
                 <img src="{{ asset($widget->data['img_left']) }}" alt="Foto Sinistra" class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-105">
             @endif
             @if($leftLink)
@@ -40,7 +44,11 @@
             @if($rightLink)
                 <a href="{{ $rightLink }}" target="_blank" rel="noopener noreferrer" class="block">
             @endif
-            @if(!empty($widget->data['img_right']))
+            @if(!empty($widget->data['video_right']))
+                <video autoplay loop muted playsinline class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-105">
+                    <source src="{{ asset($widget->data['video_right']) }}" type="video/mp4">
+                </video>
+            @elseif(!empty($widget->data['img_right']))
                 <img src="{{ asset($widget->data['img_right']) }}" alt="Foto Destra" class="w-full h-auto object-cover transform transition-transform duration-500 group-hover:scale-105">
             @endif
             @if($rightLink)
