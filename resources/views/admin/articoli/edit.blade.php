@@ -466,6 +466,7 @@
             let editorInstance;
             let fmActiveTarget = 'editor';
             let fmActiveInput = null; // Used for dynamic gallery/video inputs
+            let photoIndex = 1; // Initialize index for new gallery photos
             
             ClassicEditor
                 .create( document.querySelector( '#descrizione' ) )
@@ -556,7 +557,6 @@
                     `;
                     galleryContainer.appendChild(row);
                     photoIndex++;
-                });;
                 });
 
                 // Delegated events for dynamic gallery buttons
