@@ -1,5 +1,5 @@
 <div class="mx-auto">
-    <div class="bg-indigo-600 overflow-hidden p-6 md:p-10 relative">
+    <div class=" bg-black overflow-hidden p-6 md:p-10 relative">
         <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-indigo-500 rounded-full opacity-50 blur-3xl"></div>
         <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-indigo-700 rounded-full opacity-50 blur-3xl"></div>
         
