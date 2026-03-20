@@ -19,8 +19,8 @@
                     @endif    
                         @include('public.partials.widgets.gallery', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'video')
-                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm ring-1 ring-gray-800 p-8 overflow-hidden">
-                            @if($widget->titolo)<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
+                        <div class="max-w-full w-screen mx-auto widget-block bg-white shadow-sm rounded-none overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.video', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'mirror_blocks')

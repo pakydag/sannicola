@@ -1,6 +1,6 @@
-<div class="video-container relative w-full overflow-hidden rounded-xl shadow-lg" style="padding-top: 56.25%;">
+<div class="w-full h-64 sm:h-96 md:h-[500px] relative overflow-hidden">
     <video 
-        class="absolute top-0 left-0 w-full h-full object-cover" 
+        class="w-full h-full object-cover" 
         controls 
         controlsList="nodownload" 
         preload="metadata"

@@ -78,8 +78,8 @@
                     @endphp
 
                     @if($actualWidget)
-                        <div class="widget-block bg-white rounded-2xl shadow-sm ring-1 ring-gray-200 p-8 overflow-hidden">
-                            @if($actualWidget->titolo)
+                        <div class="widget-block bg-white shadow-sm overflow-hidden {{ ($actualWidget->tipo === 'gallery' || $actualWidget->tipo === 'video') ? 'rounded-none p-0' : 'rounded-2xl ring-1 ring-gray-200 p-8' }}">
+                            @if($actualWidget->titolo && !in_array($actualWidget->tipo, ['gallery', 'video']))
                                 <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-100">{{ $actualWidget->titolo }}</h3>
                             @endif
 
