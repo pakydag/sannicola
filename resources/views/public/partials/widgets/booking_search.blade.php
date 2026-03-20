@@ -1,11 +1,11 @@
-<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <div class="bg-indigo-600 rounded-2xl shadow-xl overflow-hidden p-6 md:p-10 relative">
+<div class="mx-auto">
+    <div class="bg-indigo-600 overflow-hidden p-6 md:p-10 relative">
         <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-indigo-500 rounded-full opacity-50 blur-3xl"></div>
         <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-indigo-700 rounded-full opacity-50 blur-3xl"></div>
         
-        <div class="relative z-10">
+        <div class="relative z-10 max-w-7xl mx-auto">
             @if(!empty($widget->data['title']) || !empty($widget->data['subtitle']))
-                <div class="text-center mb-8">
+                <div class="text-center mb-8 hidden">
                     @if(!empty($widget->data['title']))
                         <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-2">{{ $widget->data['title'] }}</h2>
                     @endif
@@ -15,11 +15,11 @@
                 </div>
             @endif
 
-            <form action="{{ route('public.booking.search') }}" method="GET" class="bg-white p-4 md:p-6 rounded-xl shadow-lg flex flex-col md:flex-row items-end gap-4">
+            <form action="{{ route('public.booking.search') }}" method="GET" class="p-4 md:p-6 flex flex-col md:flex-row items-end gap-4">
                 
                 <!-- Check-in -->
                 <div class="w-full md:w-1/4">
-                    <label class="block text-sm font-bold text-gray-700 mb-2" for="start_date">
+                    <label class="block text-sm font-bold text-white mb-2" for="start_date">
                         Check-in
                     </label>
                     <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors" 
@@ -28,7 +28,7 @@
 
                 <!-- Check-out -->
                 <div class="w-full md:w-1/4">
-                    <label class="block text-sm font-bold text-gray-700 mb-2" for="end_date">
+                    <label class="block text-sm font-bold text-white mb-2" for="end_date">
                         Check-out
                     </label>
                     <input class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors" 
@@ -37,7 +37,7 @@
 
                 <!-- Adulti -->
                 <div class="w-full md:w-1/6">
-                    <label class="block text-sm font-bold text-gray-700 mb-2" for="adulti">
+                    <label class="block text-sm font-bold text-white mb-2" for="adulti">
                         Adulti
                     </label>
                     <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white" 
@@ -50,7 +50,7 @@
 
                 <!-- Bambini (0-17) -->
                 <div class="w-full md:w-1/6">
-                    <label class="block text-sm font-bold text-gray-700 mb-2" for="bambini">
+                    <label class="block text-sm font-bold text-white mb-2" for="bambini">
                         Bambini / Ragazzi
                     </label>
                     <select class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white" 
