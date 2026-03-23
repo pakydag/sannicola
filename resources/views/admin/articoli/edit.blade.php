@@ -121,6 +121,10 @@
                                         <div class="mt-2 text-xs text-gray-500">
                                             <img src="{{ $articolo->getFirstMediaUrl('foto', 'thumb') }}" class="h-16 w-16 object-cover rounded border shadow-sm">
                                         </div>
+                                    @elseif($articolo->foto)
+                                        <div class="mt-2">
+                                            <img src="{{ asset($articolo->foto) }}" class="h-16 w-16 object-cover rounded border shadow-sm border-gray-200">
+                                        </div>
                                     @endif
                                 </div>
 
@@ -521,25 +525,25 @@
                 document.getElementById('fm-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'editor';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-foto-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'foto';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-allegato-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'allegato';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'seo_image';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
 
                 document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
@@ -547,16 +551,10 @@
                     document.getElementById('seo_image').value = '';
                 });
 
-                document.getElementById('fm-foto-button').addEventListener('click', (event) => {
-                    event.preventDefault();
-                    fmActiveTarget = 'foto';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
-                });
-
                 document.getElementById('fm-video-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'video';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
 
                 // --- Widget Video ---
@@ -564,7 +562,7 @@
                     e.preventDefault();
                     fmActiveTarget = 'widget_video';
                     fmActiveInput = document.getElementById('video_url');
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
 
                 // --- Widget Blocco Singolo ---
@@ -573,7 +571,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_single';
                         fmActiveInput = document.getElementById('single_block_image');
-                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                     });
                 }
                 if (document.getElementById('btn-sfoglia-single-video')) {
@@ -581,7 +579,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_single_video';
                         fmActiveInput = document.getElementById('single_block_video');
-                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                     });
                 }
 
@@ -622,7 +620,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_gallery';
                         fmActiveInput = btnSfoglia.previousElementSibling; 
-                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                         return;
                     }
 
@@ -632,7 +630,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_gallery_video';
                         fmActiveInput = btnSfogliaVid.previousElementSibling;
-                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                         return;
                     }
 
