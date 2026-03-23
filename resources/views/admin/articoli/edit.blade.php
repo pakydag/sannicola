@@ -590,7 +590,6 @@
                         e.preventDefault();
                         const galleryContainer = document.getElementById('gallery-container');
                         if (!galleryContainer) return;
-
                         const row = document.createElement('div');
                         row.className = 'flex items-center space-x-2 gallery-row mt-3';
                         row.innerHTML = `
