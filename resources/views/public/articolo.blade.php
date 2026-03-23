@@ -49,7 +49,7 @@
 
             @if($articolo->video)
                 <figure class="{{ $alignment === 'center' ? 'my-10' : '' }}">
-                    <video class="{{ $alignmentClasses }}" controls>
+                    <video class="{{ $alignmentClasses }}" autoplay loop muted playsinline controls>
                         <source src="{{ asset($articolo->video) }}" type="video/mp4">
                         Il tuo browser non supporta il tag video.
                     </video>
