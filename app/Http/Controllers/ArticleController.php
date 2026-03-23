@@ -98,21 +98,26 @@ class ArticleController extends Controller
             'sottotitolo' => 'nullable|string|max:255',
             'descrizione' => 'required|string',
             'link' => 'nullable|url|max:255',
-            'foto' => 'nullable|string', // string for URL from File Manager
-            'allegato' => 'nullable|string', // string for URL from File Manager
+            'foto' => 'nullable|string', 
+            'video' => 'nullable|string',
+            'allineamento_media' => 'nullable|in:left,center,right',
+            'allegato' => 'nullable|string', 
             'slug' => 'nullable|string|max:255|unique:articles,slug',
             'visibile' => 'boolean',
+            'mostra_data' => 'boolean',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'has_contact_form' => 'boolean',
         ]);
 
-        $validated['foto'] = $this->stripDomain($validated['foto']);
-        $validated['allegato'] = $this->stripDomain($validated['allegato']);
-        $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
+        $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
+        $validated['video'] = $this->stripDomain($validated['video'] ?? '');
+        $validated['allegato'] = $this->stripDomain($validated['allegato'] ?? '');
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
+        $validated['mostra_data'] = $request->has('mostra_data');
         $validated['has_contact_form'] = $request->has('has_contact_form');
 
         if (!empty($validated['slug'])) {
@@ -170,20 +175,25 @@ class ArticleController extends Controller
             'descrizione' => 'required|string',
             'link' => 'nullable|url|max:255',
             'foto' => 'nullable|string',
+            'video' => 'nullable|string',
+            'allineamento_media' => 'nullable|in:left,center,right',
             'allegato' => 'nullable|string',
             'slug' => 'nullable|string|max:255|unique:articles,slug,' . $articoli->id,
             'visibile' => 'boolean',
+            'mostra_data' => 'boolean',
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'has_contact_form' => 'boolean',
         ]);
 
-        $validated['foto'] = $this->stripDomain($validated['foto']);
-        $validated['allegato'] = $this->stripDomain($validated['allegato']);
-        $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
+        $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
+        $validated['video'] = $this->stripDomain($validated['video'] ?? '');
+        $validated['allegato'] = $this->stripDomain($validated['allegato'] ?? '');
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
+        $validated['mostra_data'] = $request->has('mostra_data');
         $validated['has_contact_form'] = $request->has('has_contact_form');
 
         if (!empty($validated['slug'])) {

@@ -70,6 +70,15 @@
                             @error('has_contact_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- Mostra Data -->
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="mostra_data" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('mostra_data', true) ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600">Mostra la data di pubblicazione nell'articolo</span>
+                            </label>
+                            @error('mostra_data') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         <!-- Descrizione -->
                         <div class="mb-4">
                             <div class="flex items-center justify-between mb-2">
@@ -92,18 +101,44 @@
                             @error('link') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Foto -->
-                        <div class="mb-4">
-                            <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto Principale dell'Articolo</label>
-                            <div class="flex items-stretch">
-                                <input type="text" name="foto" id="foto" value="{{ old('foto') }}" readonly placeholder="Nessuna foto selezionata. Clicca su Scegli..."
-                                    class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-gray-100 leading-tight focus:outline-none focus:shadow-outline">
-                                <button type="button" id="fm-foto-button" class="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0">
-                                    <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    Scegli file
-                                </button>
+                        <!-- Foto e Video Principale + Allineamento -->
+                        <div class="mb-8 bg-gray-50 p-4 rounded border border-gray-200">
+                            <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Media Principale Articolo</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Foto -->
+                                <div>
+                                    <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto Principale</label>
+                                    <div class="flex items-stretch">
+                                        <input type="text" name="foto" id="foto" value="{{ old('foto') }}" readonly placeholder="Scegli foto..."
+                                            class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                        <button type="button" id="fm-foto-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0 text-sm">
+                                            Scegli
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Video -->
+                                <div>
+                                    <label for="video" class="block text-gray-700 text-sm font-bold mb-2">Video Principale (MP4)</label>
+                                    <div class="flex items-stretch">
+                                        <input type="text" name="video" id="video" value="{{ old('video') }}" readonly placeholder="Scegli video..."
+                                            class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                        <button type="button" id="fm-video-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0 text-sm">
+                                            Scegli
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            @error('foto') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+
+                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                <label for="allineamento_media" class="block text-gray-700 text-sm font-bold mb-2">Allineamento Media (Foto o Video)</label>
+                                <select name="allineamento_media" id="allineamento_media" class="shadow border rounded w-full md:w-1/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                    <option value="left" {{ old('allineamento_media') == 'left' ? 'selected' : '' }}>⬅ Sinistra</option>
+                                    <option value="center" {{ old('allineamento_media', 'center') == 'center' ? 'selected' : '' }}>↔ Centro</option>
+                                    <option value="right" {{ old('allineamento_media') == 'right' ? 'selected' : '' }}>➡ Destra</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Allegato -->
@@ -211,10 +246,19 @@
                     event.preventDefault();
                     document.getElementById('seo_image').value = '';
                 });
+
+                document.getElementById('fm-video-button').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    fmActiveTarget = 'video';
+                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                });
             });
 
             // Callback function expected by FileManager
-            function fmSetLink($url) {
+             function fmSetLink($url) {
+                const baseUrl = '{{ config('app.url') }}';
+                const relativeUrl = $url.replace(baseUrl, '');
+
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {
                         editorInstance.model.change( writer => {
@@ -225,11 +269,13 @@
                         } );
                     }
                 } else if (fmActiveTarget === 'foto') {
-                    document.getElementById('foto').value = $url;
+                    document.getElementById('foto').value = relativeUrl;
+                } else if (fmActiveTarget === 'video') {
+                    document.getElementById('video').value = relativeUrl;
                 } else if (fmActiveTarget === 'allegato') {
-                    document.getElementById('allegato').value = $url;
+                    document.getElementById('allegato').value = relativeUrl;
                 } else if (fmActiveTarget === 'seo_image') {
-                    document.getElementById('seo_image').value = $url;
+                    document.getElementById('seo_image').value = relativeUrl;
                 }
             }
         </script>

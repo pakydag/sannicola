@@ -5,6 +5,11 @@
                 &copy; {{ date('Y') }} {{ config('app.name', 'CRM Laravel') }}. Tutti i diritti riservati.
             </div>
             <div class="space-x-4">
+                @if(isset($shared_sezioni))
+                    @foreach($shared_sezioni->where('mostra_nel_footer', true) as $sez)
+                        <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" class="text-gray-400 hover:text-white transition">{{ $sez->nome }}</a>
+                    @endforeach
+                @endif
                 <a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a>
                 <a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a>
                 <a href="{{ route('login') }}" class="text-gray-400 hover:text-white transition">Area Riservata</a>

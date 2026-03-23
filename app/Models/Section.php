@@ -14,6 +14,8 @@ class Section extends Model
         'tipo',
         'menu_a_tendina',
         'colonne_griglia',
+        'mostra_nel_menu',
+        'mostra_nel_footer',
         'slug',
         'seo_title',
         'seo_description',

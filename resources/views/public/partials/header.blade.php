@@ -47,7 +47,7 @@
                     @endif
                     
                     @if(isset($shared_sezioni))
-                        @foreach($shared_sezioni as $sez)
+                        @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
                             @if($sez->tipo == 'archivio' && $sez->menu_a_tendina)
                                 <!-- Dropdown per Archivio -->
                                 <div class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent" x-data="{ open: false }" @click.away="open = false" @mouseenter="open = true" @mouseleave="open = false">

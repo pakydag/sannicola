@@ -55,11 +55,21 @@
                             @error('tipo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Visibile Checkbox -->
-                        <div class="mb-4">
+                        <!-- Visibilità Checkboxes -->
+                        <div class="mb-4 bg-indigo-50 p-4 rounded border border-indigo-100 grid grid-cols-1 md:grid-cols-3 gap-4">
                             <label class="flex items-center">
                                 <input type="checkbox" name="visibile" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('visibile', true) ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-600">Sezione visibile al pubblico sul sito</span>
+                                <span class="ml-2 text-sm font-bold text-gray-700">Pubblicata (Visibile)</span>
+                            </label>
+                            
+                            <label class="flex items-center">
+                                <input type="checkbox" name="mostra_nel_menu" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('mostra_nel_menu', true) ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600">Mostra nel Menu (Header)</span>
+                            </label>
+
+                            <label class="flex items-center">
+                                <input type="checkbox" name="mostra_nel_footer" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('mostra_nel_footer', false) ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600">Mostra nel Footer</span>
                             </label>
                         </div>
 

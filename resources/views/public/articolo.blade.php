@@ -22,7 +22,9 @@
             <header class="mb-10 text-center">
                 <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase">
                     {{ $articolo->section->nome ?? 'Senza Categoria' }}
-                    &bull; {{ $articolo->created_at->format('d M Y') }}
+                    @if($articolo->mostra_data)
+                        &bull; {{ $articolo->created_at->format('d M Y') }}
+                    @endif
                 </p>
                 <h1 class="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
                     {{ $articolo->titolo }}
@@ -34,14 +36,36 @@
                 @endif
             </header>
 
-            @if($articolo->hasMedia('foto'))
-                <figure class="my-10">
-                    <img class="w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200" src="{{ $articolo->getFirstMediaUrl('foto') }}" alt="{{ $articolo->titolo }}">
+            @php
+                $alignment = $articolo->allineamento_media ?? 'center';
+                $alignmentClasses = 'w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200 mb-10';
+                
+                if ($alignment === 'left') {
+                    $alignmentClasses = 'md:float-left md:mr-8 md:mb-6 md:w-1/2 w-full rounded-xl bg-gray-50 object-cover max-h-[500px] shadow-lg ring-1 ring-gray-200';
+                } elseif ($alignment === 'right') {
+                    $alignmentClasses = 'md:float-right md:ml-8 md:mb-6 md:w-1/2 w-full rounded-xl bg-gray-50 object-cover max-h-[500px] shadow-lg ring-1 ring-gray-200';
+                }
+            @endphp
+
+            @if($articolo->video)
+                <figure class="{{ $alignment === 'center' ? 'my-10' : '' }}">
+                    <video class="{{ $alignmentClasses }}" controls>
+                        <source src="{{ asset($articolo->video) }}" type="video/mp4">
+                        Il tuo browser non supporta il tag video.
+                    </video>
+                </figure>
+            @elseif($articolo->hasMedia('foto'))
+                <figure class="{{ $alignment === 'center' ? 'my-10' : '' }}">
+                    <img class="{{ $alignmentClasses }}" src="{{ $articolo->getFirstMediaUrl('foto') }}" alt="{{ $articolo->titolo }}">
                 </figure>
             @elseif($articolo->foto)
-                <figure class="my-10">
-                    <img class="w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200" src="{{ asset($articolo->foto) }}" alt="{{ $articolo->titolo }}">
+                <figure class="{{ $alignment === 'center' ? 'my-10' : '' }}">
+                    <img class="{{ $alignmentClasses }}" src="{{ asset($articolo->foto) }}" alt="{{ $articolo->titolo }}">
                 </figure>
+            @endif
+
+            @if($alignment !== 'center')
+                <div class="clear-both"></div>
             @endif
 
             <div class="prose prose-lg prose-indigo mx-auto text-gray-600 max-w-prose">

@@ -49,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
 
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('sections')) {
-                \Illuminate\Support\Facades\View::composer('public.partials.header', function ($view) {
+                \Illuminate\Support\Facades\View::composer(['public.partials.header', 'public.partials.footer'], function ($view) {
                     $view->with('shared_sezioni', \App\Models\Section::where('visibile', true)->orderBy('ordine')->get());
                 });
             }

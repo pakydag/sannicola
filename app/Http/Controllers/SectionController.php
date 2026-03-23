@@ -39,6 +39,8 @@ class SectionController extends Controller
             'visibile' => 'boolean',
             'tipo' => 'required|in:pagina,archivio',
             'menu_a_tendina' => 'boolean',
+            'mostra_nel_menu' => 'boolean',
+            'mostra_nel_footer' => 'boolean',
             'colonne_griglia' => 'required|integer|min:1|max:6',
             'slug' => 'nullable|string|max:255|unique:sections,slug',
             'seo_title' => 'nullable|string|max:255',
@@ -50,6 +52,8 @@ class SectionController extends Controller
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
+        $validated['mostra_nel_menu'] = $request->has('mostra_nel_menu');
+        $validated['mostra_nel_footer'] = $request->has('mostra_nel_footer');
 
         if (!empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['slug']);
@@ -81,6 +85,8 @@ class SectionController extends Controller
             'ordine' => 'required|integer',
             'tipo' => 'required|in:pagina,archivio',
             'menu_a_tendina' => 'boolean',
+            'mostra_nel_menu' => 'boolean',
+            'mostra_nel_footer' => 'boolean',
             'colonne_griglia' => 'required|integer|min:1|max:6',
             'slug' => 'nullable|string|max:255|unique:sections,slug,' . $sezioni->id,
             'seo_title' => 'nullable|string|max:255',
@@ -92,6 +98,8 @@ class SectionController extends Controller
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
+        $validated['mostra_nel_menu'] = $request->has('mostra_nel_menu');
+        $validated['mostra_nel_footer'] = $request->has('mostra_nel_footer');
 
         if (!empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['slug']);
