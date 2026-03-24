@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (config('app.asset_url')) {
+            \Illuminate\Support\Facades\URL::forceAssetRoot(config('app.asset_url'));
+        }
+
         try {
             // Se le impostazioni esistono nel filesystem o db, carichiamo la conf mail
             if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
