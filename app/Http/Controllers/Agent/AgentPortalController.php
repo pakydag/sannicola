@@ -161,6 +161,26 @@ class AgentPortalController extends Controller
             'total_amount' => 0, // Calcolato sotto
         ]);
 
+        // 2. Sync with Unified CRM Contact
+        $b2bCustomer = B2bCustomer::find($request->b2b_customer_id);
+        if ($b2bCustomer) {
+            $contact = \App\Models\Contact::where('email', $b2bCustomer->email)->first();
+            if (!$contact) {
+                $contact = new \App\Models\Contact();
+                $contact->email = $b2bCustomer->email ?? "b2b_" . uniqid() . "@example.com";
+            }
+            $contact->first_name = $contact->first_name ?? $b2bCustomer->contact_name;
+            $contact->last_name = $contact->last_name ?? $b2bCustomer->contact_surname;
+            $contact->company_name = $contact->company_name ?? $b2bCustomer->business_name;
+            $contact->vat_number = $contact->vat_number ?? $b2bCustomer->vat_number;
+            $contact->phone = $contact->phone ?? $b2bCustomer->phone;
+            $contact->is_b2b_customer = true;
+            // Tags are synced automatically by the model's booted event
+            $contact->save();
+            
+            $order->update(['contact_id' => $contact->id]);
+        }
+
         $total = 0;
         foreach ($cart as $item) {
             $order->items()->create([

@@ -41,9 +41,34 @@ class VapiWebhookController extends Controller
 
                     Log::info('Saving ticket with args:', $args);
 
+                    // Try to find a contact to link
+                    $phone = $payload['call']['customer']['number'] ?? null;
+                    $contactId = null;
+
+                    if ($phone) {
+                        // Normalize phone (strip + etc if needed, or search exactly)
+                        $contact = \App\Models\Contact::where('phone', 'like', "%$phone%")
+                            ->orWhere('mobile', 'like', "%$phone%")
+                            ->first();
+                        
+                        if ($contact) {
+                            $contactId = $contact->id;
+                        }
+                    }
+
+                    // Fallback to name search if phone not found
+                    if (!$contactId && isset($args['customer_name'])) {
+                        $contact = \App\Models\Contact::whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$args['customer_name']}%"])
+                            ->first();
+                        if ($contact) {
+                            $contactId = $contact->id;
+                        }
+                    }
+
                     try {
                         // Save ticket to database
                         $ticket = AiTicket::create([
+                            'contact_id'      => $contactId,
                             'assistance_type' => $args['assistance_type'] ?? 'Generico',
                             'company_name'    => $args['company_name'] ?? 'N/A',
                             'customer_name'   => $args['customer_name'] ?? 'N/A',

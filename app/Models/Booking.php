@@ -21,6 +21,11 @@ class Booking extends Model
         return $this->belongsTo(BookingCustomer::class, 'customer_id');
     }
 
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
+
     public function structure()
     {
         return $this->belongsTo(BookingStructure::class, 'booking_structure_id');

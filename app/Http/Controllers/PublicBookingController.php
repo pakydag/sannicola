@@ -352,6 +352,24 @@ class PublicBookingController extends Controller
         $booking->stato = 'in_attesa';
         $booking->stato_pagamento = 'non_pagato';
         $booking->metodo_pagamento = $request->payment_method;
+        
+        // 2b. Sync with Unified CRM Contact
+        $contact = \App\Models\Contact::where('email', $customer->email)->first();
+        if (!$contact) {
+            $contact = new \App\Models\Contact();
+            $contact->email = $customer->email;
+            $contact->password = $customer->password;
+        }
+        $contact->first_name = $customer->nome;
+        $contact->last_name = $customer->cognome;
+        $contact->phone = $customer->telefono;
+        $contact->country = $customer->nazione;
+        $contact->city = $customer->citta;
+        $contact->is_booking_customer = true;
+        // Tags are synced automatically by the model's booted event
+        $contact->save();
+        
+        $booking->contact_id = $contact->id;
         $booking->save();
 
         // Send email based on payment method

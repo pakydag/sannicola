@@ -100,6 +100,8 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     Route::prefix('customers')->name('customers.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('index');
         Route::get('/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('show');
+        Route::post('/{customer}/tags/add', [\App\Http\Controllers\Admin\CustomerController::class, 'addTag'])->name('add-tag');
+        Route::delete('/{customer}/tags/remove', [\App\Http\Controllers\Admin\CustomerController::class, 'removeTag'])->name('remove-tag');
     });
 
     // Admin User Management (Super Admin only recommended but accessible to all admins for now as per request)
@@ -146,6 +148,9 @@ require __DIR__.'/auth.php';
 
 // Form Contatti Pubblico
 Route::post('/contatti/invia', [PublicController::class, 'submitContactForm'])->name('public.contact.submit');
+
+// Spoki Webhook
+Route::post('/webhook/spoki', [\App\Http\Controllers\SpokiWebhookController::class, 'handle']);
 
 // Shop Pubblico
 Route::get('/shop', [\App\Http\Controllers\PublicShopController::class, 'index'])->name('public.shop.index');

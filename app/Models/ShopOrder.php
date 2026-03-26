@@ -18,6 +18,11 @@ class ShopOrder extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
+
     public function items()
     {
         return $this->hasMany(ShopOrderItem::class);

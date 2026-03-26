@@ -50,7 +50,15 @@
                                             {{ $ticket->company_name }}
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                            {{ $ticket->customer_name }}
+                                            @if($ticket->contact_id)
+                                                <a href="{{ route('admin.customers.show', $ticket->contact_id) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">
+                                                    {{ $ticket->contact->full_name }}
+                                                </a>
+                                                <div class="text-xs text-gray-400">{{ $ticket->company_name }}</div>
+                                            @else
+                                                <div class="font-medium text-gray-900">{{ $ticket->customer_name }}</div>
+                                                <div class="text-xs text-gray-500">{{ $ticket->company_name }}</div>
+                                            @endif
                                         </td>
                                         <td class="px-3 py-4 text-sm text-gray-500">
                                             <div class="max-w-xs truncate" title="{{ $ticket->description }}">

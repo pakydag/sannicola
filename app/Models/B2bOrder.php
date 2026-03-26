@@ -18,6 +18,11 @@ class B2bOrder extends Model
         return $this->belongsTo(B2bCustomer::class, 'b2b_customer_id');
     }
 
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
+    }
+
     public function items()
     {
         return $this->hasMany(B2bOrderItem::class, 'b2b_order_id');

@@ -176,6 +176,29 @@ class PublicShopCartController extends Controller
         $order->spedizione_provincia = $request->provincia; // Opzionale
         $order->spedizione_nazione = $request->nazione;
 
+        // 5b. Sync with Unified CRM Contact
+        $contact = \App\Models\Contact::where('email', $customer->email)->first();
+        if (!$contact) {
+            $contact = new \App\Models\Contact();
+            $contact->email = $customer->email;
+            $contact->password = $customer->password;
+        }
+        $contact->first_name = $customer->nome;
+        $contact->last_name = $customer->cognome;
+        $contact->phone = $customer->telefono;
+        $contact->address = $customer->indirizzo;
+        $contact->city = $customer->citta;
+        $contact->zip_code = $customer->cap;
+        $contact->country = $customer->nazione;
+        $contact->company_name = $customer->ragione_sociale;
+        $contact->vat_number = $customer->partita_iva;
+        $contact->sdi_code = $customer->sdi;
+        $contact->pec = $customer->pec;
+        $contact->is_shop_customer = true;
+        // Tags are synced automatically by the model's booted event
+        $contact->save();
+
+        $order->contact_id = $contact->id;
         $order->save();
 
         // 6. Create Order Items and decrease stock

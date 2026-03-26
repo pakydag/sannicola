@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'spoki' => [
+        'key' => env('SPOKI_API_KEY'),
+        'url' => 'https://api.spoki.com/api/1/',
+    ],
+
 ];
