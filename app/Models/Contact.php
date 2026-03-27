@@ -35,6 +35,7 @@ class Contact extends Authenticatable
             'is_booking_customer' => 'Booking',
             'is_b2b_customer' => 'B2B',
             'is_lead' => 'Lead',
+            'is_vapi_lead' => 'Agente AI',
         ];
 
         // Normalize existing tags to avoid case issues
@@ -70,6 +71,7 @@ class Contact extends Authenticatable
         'is_booking_customer',
         'is_b2b_customer',
         'is_lead',
+        'is_vapi_lead',
         'is_active',
         'tags',
         'meta_data',
@@ -85,6 +87,7 @@ class Contact extends Authenticatable
         'is_booking_customer' => 'boolean',
         'is_b2b_customer' => 'boolean',
         'is_lead' => 'boolean',
+        'is_vapi_lead' => 'boolean',
         'is_active' => 'boolean',
         'tags' => 'array',
         'meta_data' => 'array',

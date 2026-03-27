@@ -26,6 +26,29 @@ class CustomerController extends Controller
         return view('admin.customers.index', compact('customers'));
     }
 
+    public function create()
+    {
+        return view('admin.customers.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name'   => 'required|string|max:255',
+            'last_name'    => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'email'        => 'nullable|email|unique:contacts,email',
+            'phone'        => 'nullable|string|max:20',
+            'mobile'       => 'nullable|string|max:20',
+        ]);
+
+        $customer = Contact::create(array_merge($validated, [
+            'is_active' => true,
+        ]));
+
+        return redirect()->route('admin.customers.index')->with('success', 'Contatto creato correttamente.');
+    }
+
     public function show($id)
     {
         $customer = Contact::with(['shopOrders', 'bookings.structure', 'b2bOrders'])->findOrFail($id);

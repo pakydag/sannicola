@@ -13,8 +13,42 @@ class AiTicketController extends Controller
      */
     public function index()
     {
-        $tickets = AiTicket::latest()->paginate(20);
+        $tickets = AiTicket::with('contact')->latest()->paginate(20);
         return view('admin.vapi.tickets', compact('tickets'));
+    }
+
+    /**
+     * Display the specified ticket.
+     */
+    public function show(AiTicket $ticket)
+    {
+        $ticket->load('contact');
+        return view('admin.vapi.show', compact('ticket'));
+    }
+
+    /**
+     * Mark the ticket as closed.
+     */
+    public function close(AiTicket $ticket)
+    {
+        $ticket->update([
+            'status' => 'closed',
+            'closed_at' => now(),
+        ]);
+
+        return redirect()->route('admin.vapi.tickets.index')->with('success', 'Ticket chiuso con successo.');
+    }
+
+    /**
+     * Update ticket comments.
+     */
+    public function updateComments(Request $request, AiTicket $ticket)
+    {
+        $ticket->update([
+            'comments' => $request->comments,
+        ]);
+
+        return back()->with('success', 'Commenti salvati con successo.');
     }
 
     /**

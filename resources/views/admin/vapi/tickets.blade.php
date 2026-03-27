@@ -66,16 +66,22 @@
                                             </div>
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $ticket->status === 'open' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800' }}">
-                                                {{ ucfirst($ticket->status) }}
+                                            <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $ticket->status === 'open' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
+                                                {{ $ticket->status === 'open' ? 'Aperto' : 'Chiuso' }}
                                             </span>
+                                            @if($ticket->closed_at)
+                                                <div class="text-[10px] text-gray-400 mt-1">{{ $ticket->closed_at->format('d/m/Y H:i') }}</div>
+                                            @endif
                                         </td>
                                         <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                                            <form action="{{ route('admin.vapi.tickets.destroy', $ticket) }}" method="POST" class="inline" onsubmit="return confirm('Sei sicuro di voler eliminare questo ticket?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Elimina</button>
-                                            </form>
+                                            <div class="flex justify-end gap-3">
+                                                <a href="{{ route('admin.vapi.tickets.show', $ticket) }}" class="text-indigo-600 hover:text-indigo-900">Dettaglio</a>
+                                                <form action="{{ route('admin.vapi.tickets.destroy', $ticket) }}" method="POST" class="inline" onsubmit="return confirm('Sei sicuro di voler eliminare questo ticket?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Elimina</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty

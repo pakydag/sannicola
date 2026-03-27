@@ -109,9 +109,12 @@
             <div class="pt-4 pb-2 border-t border-slate-800/50 mt-2">
                 <p class="px-3 text-xs font-bold tracking-wider text-slate-500 uppercase">Voip & AI</p>
                 <div class="mt-2 space-y-1">
-                    <a href="{{ route('admin.vapi.index') }}" class="{{ request()->routeIs('admin.vapi.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                    <a href="{{ route('admin.vapi.index') }}" class="{{ request()->routeIs('admin.vapi.index') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                         <svg class="text-slate-400 group-hover:text-white mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2-0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                         Agente AI
+                    </a>
+                    <a href="{{ route('admin.vapi.tickets.index') }}" class="{{ request()->routeIs('admin.vapi.tickets.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Ticket Ricevuti</span>
                     </a>
                 </div>
             </div>
@@ -226,6 +229,7 @@
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <p class="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Voip & AI</p>
                     <a href="{{ route('admin.vapi.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agente AI</a>
+                    <a href="{{ route('admin.vapi.tickets.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Ticket Ricevuti</a>
                 </div>
                 @endif
 

@@ -96,12 +96,20 @@ class VapiController extends Controller
                             'type' => 'string',
                             'description' => 'Nome e Cognome della persona'
                         ],
+                        'email' => [
+                            'type' => 'string',
+                            'description' => 'Indirizzo e-mail della persona'
+                        ],
+                        'phone' => [
+                            'type' => 'string',
+                            'description' => 'Numero di telefono del chiamante'
+                        ],
                         'description' => [
                             'type' => 'string',
                             'description' => 'Descrizione dettagliata del problema'
                         ]
                     ],
-                    'required' => ['assistance_type', 'company_name', 'customer_name', 'description']
+                    'required' => ['assistance_type', 'company_name', 'customer_name', 'email', 'description']
                 ]
             ],
             'server' => [
@@ -126,9 +134,9 @@ class VapiController extends Controller
             Http::withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type'  => 'application/json',
-            ])->patch("{$this->baseUrl}/tool/{$toolId}", [
+            ])->patch("{$this->baseUrl}/tool/{$toolId}", array_merge($toolConfig, [
                 'server' => ['url' => url('/api/vapi/webhook')]
-            ]);
+            ]));
         }
 
         // 2. Collega il tool all'assistente tramite toolIds
@@ -152,6 +160,7 @@ class VapiController extends Controller
         $payload = [
             'model' => $modelConfig,
             'firstMessage' => $request->input('welcome_message'),
+            'serverUrl' => url('/api/vapi/webhook'),
         ];
 
         $response = Http::withHeaders([

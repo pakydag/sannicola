@@ -99,6 +99,8 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     // Customer Management
     Route::prefix('customers')->name('customers.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('index');
+        Route::get('/create', [\App\Http\Controllers\Admin\CustomerController::class, 'create'])->name('create');
+        Route::post('/', [\App\Http\Controllers\Admin\CustomerController::class, 'store'])->name('store');
         Route::get('/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('show');
         Route::post('/{customer}/tags/add', [\App\Http\Controllers\Admin\CustomerController::class, 'addTag'])->name('add-tag');
         Route::delete('/{customer}/tags/remove', [\App\Http\Controllers\Admin\CustomerController::class, 'removeTag'])->name('remove-tag');
@@ -113,6 +115,9 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     
     // AI Tickets Management
     Route::get('vapi/tickets', [\App\Http\Controllers\Admin\AiTicketController::class, 'index'])->name('vapi.tickets.index');
+    Route::get('vapi/tickets/{ticket}', [\App\Http\Controllers\Admin\AiTicketController::class, 'show'])->name('vapi.tickets.show');
+    Route::patch('vapi/tickets/{ticket}/close', [\App\Http\Controllers\Admin\AiTicketController::class, 'close'])->name('vapi.tickets.close');
+    Route::patch('vapi/tickets/{ticket}/comments', [\App\Http\Controllers\Admin\AiTicketController::class, 'updateComments'])->name('vapi.tickets.update-comments');
     Route::delete('vapi/tickets/{ticket}', [\App\Http\Controllers\Admin\AiTicketController::class, 'destroy'])->name('vapi.tickets.destroy');
 
     // Modulo B2B Agenti
