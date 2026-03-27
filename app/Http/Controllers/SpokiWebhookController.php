@@ -25,10 +25,12 @@ class SpokiWebhookController extends Controller
             return response()->json(['status' => 'ignored', 'reason' => 'no_phone'], 200);
         }
 
-        // Find or create the contact by phone
-        // We might want to normalize the phone number here if needed
-        $contact = Contact::where('phone', $phone)
-            ->orWhere('mobile', $phone)
+        // Normalize phone for comparison (remove extras like + or spaces)
+        $normalizedPhone = preg_replace('/[^0-9]/', '', $phone);
+
+        // Find or create the contact by phone (normalized search)
+        $contact = Contact::whereRaw("REPLACE(REPLACE(phone, '+', ''), ' ', '') = ?", [$normalizedPhone])
+            ->orWhereRaw("REPLACE(REPLACE(mobile, '+', ''), ' ', '') = ?", [$normalizedPhone])
             ->first();
 
         if (!$contact) {
