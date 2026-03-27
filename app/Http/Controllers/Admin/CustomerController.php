@@ -93,4 +93,22 @@ class CustomerController extends Controller
 
         return back()->with('success', 'Tag rimosso.');
     }
+
+    public function toggleFeature(Request $request, $id)
+    {
+        $customer = Contact::findOrFail($id);
+        
+        $feature = $request->get('feature');
+        $allowedFeatures = ['is_shop_customer', 'is_booking_customer', 'is_b2b_customer', 'is_spoki_customer'];
+        
+        if (in_array($feature, $allowedFeatures)) {
+            $customer->$feature = !$customer->$feature;
+            $customer->save();
+            
+            $status = $customer->$feature ? 'abilitata' : 'disabilitata';
+            return back()->with('success', "Funzione " . str_replace('is_', '', $feature) . " $status per il contatto.");
+        }
+
+        return back()->with('error', 'Funzione non valida.');
+    }
 }

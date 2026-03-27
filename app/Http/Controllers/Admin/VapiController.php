@@ -8,9 +8,15 @@ use Illuminate\Support\Facades\Http;
 
 class VapiController extends Controller
 {
-    private $assistantId = '5a05fa0e-87e8-43cc-969e-4c5c469670de';
-    private $apiKey     = '02d6eef9-2b56-4db7-b4cc-162cbad6b2c7';
+    private $assistantId;
+    private $apiKey;
     private $baseUrl    = 'https://api.vapi.ai';
+
+    public function __construct()
+    {
+        $this->assistantId = \App\Models\Setting::where('key', 'vapi_assistant_id')->value('value') ?: '5a05fa0e-87e8-43cc-969e-4c5c469670de';
+        $this->apiKey = \App\Models\Setting::where('key', 'vapi_key')->value('value') ?: '02d6eef9-2b56-4db7-b4cc-162cbad6b2c7';
+    }
 
     /**
      * Display the current prompt from Vapi.ai

@@ -64,7 +64,8 @@ class SettingController extends Controller
         $generalSettings = [
             'site_logo', 'mail_mailer', 'mail_host', 'mail_port', 
             'mail_username', 'mail_password', 'mail_encryption', 
-            'mail_from_address', 'mail_from_name'
+            'mail_from_address', 'mail_from_name',
+            'vapi_key', 'vapi_assistant_id', 'spoki_key'
         ];
 
         $validated = $request->validate([
@@ -85,6 +86,9 @@ class SettingController extends Controller
             'bonifico_intestazione' => 'nullable|string',
             'bonifico_banca' => 'nullable|string',
             'bonifico_iban' => 'nullable|string',
+            'vapi_key' => 'nullable|string',
+            'vapi_assistant_id' => 'nullable|string',
+            'spoki_key' => 'nullable|string',
         ]);
 
         if (isset($validated['site_logo'])) {
@@ -97,7 +101,7 @@ class SettingController extends Controller
             $canEdit = false;
             
             // Solo il super admin può abilitare/disabilitare i moduli principali
-            if (in_array($chk, ['shop_enabled', 'booking_enabled'])) {
+            if (in_array($chk, ['shop_enabled', 'booking_enabled', 'spoki_enabled'])) {
                 if ($user->is_super_admin) $canEdit = true;
             } else {
                 // Gli altri toggle (Stripe, Paypal, etc) possono essere gestiti dai rispettivi admin

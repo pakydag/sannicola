@@ -104,6 +104,7 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
         Route::get('/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('show');
         Route::post('/{customer}/tags/add', [\App\Http\Controllers\Admin\CustomerController::class, 'addTag'])->name('add-tag');
         Route::delete('/{customer}/tags/remove', [\App\Http\Controllers\Admin\CustomerController::class, 'removeTag'])->name('remove-tag');
+        Route::post('/{customer}/toggle-feature', [\App\Http\Controllers\Admin\CustomerController::class, 'toggleFeature'])->name('toggle-feature');
     });
 
     // Admin User Management (Super Admin only recommended but accessible to all admins for now as per request)

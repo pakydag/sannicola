@@ -13,7 +13,7 @@ class SpokiService
 
     public function __construct()
     {
-        $this->apiKey = config('services.spoki.key');
+        $this->apiKey = \App\Models\Setting::where('key', 'spoki_key')->value('value') ?: config('services.spoki.key');
         $this->baseUrl = config('services.spoki.url');
     }
 

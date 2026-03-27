@@ -172,9 +172,8 @@
                         </div>
                     </div>
 
-                    <!-- Tax Info -->
                     @if($customer->vat_number || $customer->tax_id)
-                    <div class="bg-indigo-900 overflow-hidden shadow-lg sm:rounded-2xl text-white">
+                    <div class="bg-indigo-900 overflow-hidden shadow-lg sm:rounded-2xl text-white mb-8">
                         <div class="p-8">
                             <h3 class="font-black text-xs text-indigo-400 uppercase tracking-widest mb-6">Dati Fiscali</h3>
                             <div class="space-y-4">
@@ -200,11 +199,45 @@
                         </div>
                     </div>
                     @endif
+
+                    <!-- Enabled Services / permissions -->
+                    <div class="bg-white overflow-hidden shadow-lg sm:rounded-2xl border border-slate-100">
+                        <div class="p-8">
+                            <h3 class="font-black text-xs text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-4 mb-6">Servizi Abilitati</h3>
+                            <div class="space-y-4">
+                                @php
+                                    $features = [
+                                        'is_shop_customer' => ['label' => 'Shop B2C', 'icon' => '🛍️'],
+                                        'is_booking_customer' => ['label' => 'Booking', 'icon' => '🏨'],
+                                        'is_b2b_customer' => ['label' => 'B2B / Agente', 'icon' => '💼'],
+                                        'is_spoki_customer' => ['label' => 'Spoki (WA)', 'icon' => '💬'],
+                                    ];
+                                @endphp
+
+                                @foreach($features as $key => $data)
+                                    <form action="{{ route('admin.customers.toggle-feature', $customer->id) }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="feature" value="{{ $key }}">
+                                        <button type="submit" class="w-full flex items-center justify-between p-3 rounded-xl border {{ $customer->$key ? 'bg-indigo-50 border-indigo-100' : 'bg-slate-50 border-slate-100 grayscale opacity-60' }} hover:scale-[1.02] transition-all group">
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-xl">{{ $data['icon'] }}</span>
+                                                <span class="text-xs font-bold text-slate-700">{{ $data['label'] }}</span>
+                                            </div>
+                                            <div class="relative w-8 h-4 bg-slate-200 rounded-full">
+                                                <div class="absolute top-0.5 {{ $customer->$key ? 'right-0.5 bg-indigo-600' : 'left-0.5 bg-slate-400' }} w-3 h-3 rounded-full transition-all"></div>
+                                            </div>
+                                        </button>
+                                    </form>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Main Activity Column -->
                 <div class="md:col-span-2 space-y-8">
                     <!-- Prenotazioni -->
+                    @if($customer->is_booking_customer)
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl border border-slate-100">
                         <div class="p-8">
                             <header class="flex justify-between items-center mb-6 border-b border-slate-50 pb-4">
@@ -240,8 +273,11 @@
                             @endforelse
                         </div>
                     </div>
+                    @endif
+iv>
 
                     <!-- Shop Orders -->
+                    @if($customer->is_shop_customer)
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl border border-slate-100">
                         <div class="p-8">
                             <header class="flex justify-between items-center mb-6 border-b border-slate-50 pb-4">
@@ -277,6 +313,7 @@
                             @endforelse
                         </div>
                     </div>
+                    @endif
 
                     <!-- B2B Activity -->
                     @if($customer->is_b2b_customer)
@@ -316,6 +353,7 @@
                     @endif
 
                     <!-- AI Voice Assistant Tickets -->
+                    @if($customer->aiTickets->count() > 0 || $customer->is_vapi_lead)
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl border border-slate-100">
                         <div class="p-8">
                             <header class="flex justify-between items-center mb-6 border-b border-slate-50 pb-4">
@@ -346,6 +384,7 @@
                             @endforelse
                         </div>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -61,6 +61,10 @@
                             💳 Pagamenti B2B
                         </button>
                         @endif
+
+                        <button @click="activeTab = 'ai_spoki'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'ai_spoki', 'text-gray-600 hover:text-indigo-600': activeTab !== 'ai_spoki'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
+                            🤖 AI & Spoki
+                        </button>
                     </div>
 
                     <form action="{{ route('admin.settings.update') }}" method="POST">
@@ -234,6 +238,40 @@
                             </div>
                         </div>
                         @endif
+
+                        <!-- TAB: AI & Spoki -->
+                        <div x-show="activeTab === 'ai_spoki'" style="display: none;" class="space-y-6">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Integrazioni AI & Automazioni</h3>
+                            
+                            @if($user->is_super_admin)
+                                <div class="bg-gray-50 p-4 border rounded-md mb-6">
+                                    <h4 class="text-sm font-bold text-gray-800 mb-3 border-b pb-2">Moduli Sistema</h4>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="spoki_enabled" value="1" class="sr-only peer" {{ (isset($settings['spoki_enabled']) && $settings['spoki_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Abilita Sincronizzazione Spoki (WhatsApp)</span>
+                                    </label>
+                                </div>
+                            @endif
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Vapi AI Secret Key</label>
+                                    <input type="password" name="vapi_key" value="{{ old('vapi_key', $settings['vapi_key'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="vapi-secret-...">
+                                    <p class="text-xs text-gray-500 mt-1">Chiave segreta per l'integrazione con l'assistente vocale Vapi.ai.</p>
+                                </div>
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Vapi Assistant ID</label>
+                                    <input type="text" name="vapi_assistant_id" value="{{ old('vapi_assistant_id', $settings['vapi_assistant_id'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="5a05fa0e-...">
+                                    <p class="text-xs text-gray-500 mt-1">L'ID dell'assistente configurato su Vapi.ai.</p>
+                                </div>
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Spoki API Key</label>
+                                    <input type="password" name="spoki_key" value="{{ old('spoki_key', $settings['spoki_key'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Spoki API Key...">
+                                    <p class="text-xs text-gray-500 mt-1">Chiave API per inviare messaggi e sincronizzare contatti su Spoki.</p>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Chiavi API (Visibili se almeno un modulo ha Stripe/PayPal attivo) -->
                         <div x-show="activeTab === 'pagamenti' || activeTab === 'pagamenti_booking' || activeTab === 'pagamenti_b2b'" style="display: none;" class="space-y-6 pt-6 border-t">
