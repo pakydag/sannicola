@@ -11,6 +11,23 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    
+    protected static function booted()
+    {
+        static::saved(function ($user) {
+            // Create or update the Contact in CRM
+            Contact::updateOrCreate(
+                ['email' => $user->email],
+                [
+                    'first_name' => $user->name,
+                    'last_name' => $user->surname ?? '',
+                    'phone' => $user->phone,
+                    'is_active' => true,
+                    // Map roles to contact types if needed
+                ]
+            );
+        });
+    }
 
     /**
      * The attributes that are mass assignable.
