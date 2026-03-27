@@ -151,6 +151,9 @@ Route::post('/contatti/invia', [PublicController::class, 'submitContactForm'])->
 
 // Spoki Webhook
 Route::post('/webhook/spoki', [\App\Http\Controllers\SpokiWebhookController::class, 'handle']);
+Route::get('/webhook/spoki', function () {
+    return response()->json(['status' => 'active', 'message' => 'Spoki Webhook is ready for POST requests.']);
+});
 
 // Shop Pubblico
 Route::get('/shop', [\App\Http\Controllers\PublicShopController::class, 'index'])->name('public.shop.index');
