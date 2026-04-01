@@ -122,9 +122,20 @@ class VapiWebhookController extends Controller
     private function saveTicketTool($toolCall, $args, $payload)
     {
         $callId = $payload['call']['id'] ?? ($payload['message']['callId'] ?? null);
-        // Estrazione telefono più robusta
+        
+        // Estrazione telefono
         $phone = $args['phone'] ?? ($payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null));
         
+        // VALIDAZIONE: Se il telefono sembra un nome (contiene troppe lettere o è uguale al nome)
+        // Lo rifiutiamo in modo che l'AI debba chiederlo di nuovo.
+        if ($phone && (preg_match('/[a-zA-Z]{5,}/', $phone) || $phone === ($args['customer_name'] ?? ''))) {
+             Log::warning("Vapi: nome rilevato nel campo telefono ('{$phone}'). Rifiuto il tool call.");
+             return [
+                'toolCallId' => $toolCall['id'] ?? 'default',
+                'result'     => "Errore: Il numero di telefono non è valido. Per favore, chiedi ALL'UTENTE di fornirti il suo NUMERO DI TELEFONO NUMERICO (senza nomi)."
+            ];
+        }
+
         $contactId = null;
 
         if ($phone) {

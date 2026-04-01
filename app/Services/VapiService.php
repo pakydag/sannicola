@@ -102,7 +102,10 @@ class VapiService
                             'company_name' => ['type' => 'string', 'description' => 'Il nome dell\'azienda che chiama'],
                             'customer_name' => ['type' => 'string', 'description' => 'Nome e Cognome della persona'],
                             'email' => ['type' => 'string', 'description' => 'Indirizzo e-mail della persona'],
-                            'phone' => ['type' => 'string', 'description' => 'Numero di telefono del chiamante'],
+                            'phone' => [
+                                'type' => 'string', 
+                                'description' => 'Numero di telefono NUMERICO del chiamante. NON inserire nomi o cognomi in questo campo.'
+                            ],
                             'description' => ['type' => 'string', 'description' => 'Descrizione dettagliata del problema']
                         ],
                         'required' => ['assistance_type', 'company_name', 'customer_name', 'phone', 'description']
@@ -117,7 +120,8 @@ class VapiService
             $basePrompt = $finalPrompt;
             $instr = "ISTRUZIONE OBBLIGATORIA: Prima di salvare un ticket con 'save_ticket', devi SEMPRE chiamare 'get_assistance_types' per conoscere i reparti disponibili.\n" .
                      "IMPORTANTE: Usa SOLO i reparti restituiti dalla funzione 'get_assistance_types'. Non inventare reparti.\n" .
-                     "Chiedi all'utente a quale di questi reparti desidera rivolgersi.\n\n";
+                     "Chiedi all'utente a quale di questi reparti desidera rivolgersi.\n" .
+                     "RELAZIONE CAMPI: Non confondere MAI il nome dell'utente con il suo numero di telefono. Se non conosci il numero di telefono (ad esempio in una chat), DEVI chiederlo all'utente prima di salvare il ticket.\n\n";
             
             if (strpos($basePrompt, 'get_assistance_types') === false) {
                 $basePrompt = $instr . $basePrompt;
