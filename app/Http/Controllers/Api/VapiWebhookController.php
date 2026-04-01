@@ -97,10 +97,16 @@ class VapiWebhookController extends Controller
                     }
 
                     try {
+                        // Find Department by name
+                        $department = \App\Models\Department::where('name', $args['assistance_type'] ?? '')
+                            ->where('is_active', true)
+                            ->first();
+
                         // Save ticket to database
                         $ticket = AiTicket::create([
                             'contact_id'      => $contactId,
                             'call_id'         => $callId,
+                            'department_id'   => $department ? $department->id : null,
                             'assistance_type' => $args['assistance_type'] ?? 'Generico',
                             'company_name'    => $args['company_name'] ?? 'N/A',
                             'customer_name'   => $args['customer_name'] ?? 'N/A',
@@ -111,6 +117,20 @@ class VapiWebhookController extends Controller
                         ]);
 
                         Log::info('Ticket saved successfully, ID: ' . $ticket->id);
+
+                        // Send Email Notification
+                        try {
+                            $targetEmail = $department ? $department->email : \App\Models\Setting::where('key', 'mail_from_address')->value('value');
+                            
+                            if ($targetEmail) {
+                                \Illuminate\Support\Facades\Mail::to($targetEmail)->send(new \App\Mail\AiTicketCreated($ticket));
+                                Log::info("Notification email sent to: {$targetEmail}");
+                            } else {
+                                Log::warning("No target email found for notification (no department and no fallback).");
+                            }
+                        } catch (\Exception $e) {
+                            Log::error('Error sending ticket notification email: ' . $e->getMessage());
+                        }
 
                         return response()->json([
                             'results' => [
@@ -124,6 +144,27 @@ class VapiWebhookController extends Controller
                         Log::error('Error saving ticket: ' . $e->getMessage());
                         return response()->json(['error' => $e->getMessage()], 500);
                     }
+                }
+
+                if ($functionName === 'get_assistance_types') {
+                    $types = \App\Models\Department::where('is_active', true)->pluck('name')->toArray();
+                    
+                    if (empty($types)) {
+                        $types = ['Generico'];
+                    }
+
+                    Log::info('Returning assistance types to Vapi from Departments:', $types);
+
+                    return response()->json([
+                        'results' => [
+                            [
+                                'toolCallId' => $toolCall['id'] ?? 'default',
+                                'result'     => [
+                                    'available_types' => $types
+                                ]
+                            ]
+                        ]
+                    ]);
                 }
             }
         }

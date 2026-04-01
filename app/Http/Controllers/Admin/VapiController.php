@@ -60,29 +60,41 @@ class VapiController extends Controller
         $assistant = $getCurrent->json();
         $modelConfig = $assistant['model'] ?? [];
         
-        // 1. Assicurati che il tool "save_ticket" esista come risorsa standalone
-        $toolsListResponse = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $this->apiKey,
-        ])->get("{$this->baseUrl}/tool");
+        // 1. Sincronizzazione Tool "get_assistance_types"
+        $toolsListResponse = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/tool");
+        $allTools = $toolsListResponse->successful() ? $toolsListResponse->json() : [];
 
-        $toolId = null;
-        if ($toolsListResponse->successful()) {
-            foreach ($toolsListResponse->json() as $tool) {
-                if (isset($tool['function']['name']) && $tool['function']['name'] === 'save_ticket') {
-                    $toolId = $tool['id'];
-                    break;
-                }
-            }
+        $getAssistanceToolId = null;
+        $saveTicketToolId = null;
+
+        foreach ($allTools as $tool) {
+            $name = $tool['function']['name'] ?? '';
+            if ($name === 'get_assistance_types') $getAssistanceToolId = $tool['id'];
+            if ($name === 'save_ticket') $saveTicketToolId = $tool['id'];
         }
 
-        $toolConfig = [
+        // Configurazione Tool: get_assistance_types
+        $getAssistanceConfig = [
             'type' => 'function',
-            'messages' => [
-                [
-                    'type' => 'request-start',
-                    'content' => 'Sto salvando il tuo ticket...',
-                ],
+            'function' => [
+                'name' => 'get_assistance_types',
+                'description' => 'Ottiene l\'elenco dei reparti di assistenza disponibili nel sistema (es. Software, Web, Amministrazione) per smistare correttamente il ticket.',
+                'parameters' => ['type' => 'object', 'properties' => (object)[]]
             ],
+            'server' => ['url' => url('/api/vapi/webhook')]
+        ];
+
+        if (!$getAssistanceToolId) {
+            $res = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->post("{$this->baseUrl}/tool", $getAssistanceConfig);
+            if ($res->successful()) $getAssistanceToolId = $res->json()['id'];
+        } else {
+            Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->patch("{$this->baseUrl}/tool/{$getAssistanceToolId}", $getAssistanceConfig);
+        }
+
+        // Configurazione Tool: save_ticket (Dinamico)
+        $saveTicketConfig = [
+            'type' => 'function',
+            'messages' => [['type' => 'request-start', 'content' => 'Sto salvando il tuo ticket...']],
             'function' => [
                 'name' => 'save_ticket',
                 'description' => 'Salva un ticket di assistenza nel database locale.',
@@ -91,77 +103,41 @@ class VapiController extends Controller
                     'properties' => [
                         'assistance_type' => [
                             'type' => 'string',
-                            'description' => 'Il tipo di assistenza scelta (Cedam, Web, Applicativi)',
-                            'enum' => ['Software Cedam', 'Software Web', 'Applicativi Web']
+                            'description' => 'Il nome esatto del reparto scelto tra quelli disponibili (ottenuti da get_assistance_types).'
                         ],
-                        'company_name' => [
-                            'type' => 'string',
-                            'description' => 'Il nome dell\'azienda che chiama'
-                        ],
-                        'customer_name' => [
-                            'type' => 'string',
-                            'description' => 'Nome e Cognome della persona'
-                        ],
-                        'email' => [
-                            'type' => 'string',
-                            'description' => 'Indirizzo e-mail della persona'
-                        ],
-                        'phone' => [
-                            'type' => 'string',
-                            'description' => 'Numero di telefono del chiamante'
-                        ],
-                        'description' => [
-                            'type' => 'string',
-                            'description' => 'Descrizione dettagliata del problema'
-                        ]
+                        'company_name' => ['type' => 'string', 'description' => 'Il nome dell\'azienda che chiama'],
+                        'customer_name' => ['type' => 'string', 'description' => 'Nome e Cognome della persona'],
+                        'email' => ['type' => 'string', 'description' => 'Indirizzo e-mail della persona'],
+                        'phone' => ['type' => 'string', 'description' => 'Numero di telefono del chiamante'],
+                        'description' => ['type' => 'string', 'description' => 'Descrizione dettagliata del problema']
                     ],
-                    'required' => ['assistance_type', 'company_name', 'customer_name', 'email', 'description']
+                    'required' => ['assistance_type', 'company_name', 'customer_name', 'description']
                 ]
             ],
-            'server' => [
-                'url' => url('/api/vapi/webhook')
-            ]
+            'server' => ['url' => url('/api/vapi/webhook')]
         ];
 
-        if (!$toolId) {
-            // Crea il tool se non esiste
-            $createToolResponse = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type'  => 'application/json',
-            ])->post("{$this->baseUrl}/tool", $toolConfig);
-
-            if ($createToolResponse->successful()) {
-                $toolId = $createToolResponse->json()['id'];
-            } else {
-                return back()->withErrors(['api' => 'Errore nella creazione del tool: ' . $createToolResponse->body()]);
-            }
+        if (!$saveTicketToolId) {
+            $res = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->post("{$this->baseUrl}/tool", $saveTicketConfig);
+            if ($res->successful()) $saveTicketToolId = $res->json()['id'];
         } else {
-            // Aggiorna l'URL del tool esistente (per ngrok)
-            Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Content-Type'  => 'application/json',
-            ])->patch("{$this->baseUrl}/tool/{$toolId}", array_merge($toolConfig, [
-                'server' => ['url' => url('/api/vapi/webhook')]
-            ]));
+            Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->patch("{$this->baseUrl}/tool/{$saveTicketToolId}", $saveTicketConfig);
         }
 
-        // 2. Collega il tool all'assistente tramite toolIds
-        $toolIds = $modelConfig['toolIds'] ?? [];
-        if (!in_array($toolId, $toolIds)) {
-            $toolIds[] = $toolId;
-        }
-        // 3. Update model config: REMOVE inline tools to avoid conflict, use only toolIds
-        unset($modelConfig['tools']); 
-        
+        // 2. Collega i tool all'assistente
+        $toolIds = array_filter([$getAssistanceToolId, $saveTicketToolId]);
         $modelConfig['toolIds'] = $toolIds;
+        unset($modelConfig['tools']); 
 
-        // Update messages with the new prompt
-        $modelConfig['messages'] = [
-            [
-                'role' => 'system',
-                'content' => $request->input('prompt')
-            ]
-        ];
+        // 3. Aggiorna Prompt con istruzioni di sequenza
+        $basePrompt = $request->input('prompt');
+        $instr = "ISTRUZIONE OBBLIGATORIA: Prima di salvare un ticket con 'save_ticket', devi SEMPRE chiamare 'get_assistance_types' per conoscere i reparti disponibili e chiedere all'utente a quale reparto desidera rivolgersi.\n\n";
+        
+        if (strpos($basePrompt, 'get_assistance_types') === false) {
+            $basePrompt = $instr . $basePrompt;
+        }
+
+        $modelConfig['messages'] = [['role' => 'system', 'content' => $basePrompt]];
 
         $payload = [
             'model' => $modelConfig,

@@ -23,10 +23,16 @@
                                     <p class="text-sm text-gray-900 font-medium">{{ $ticket->created_at->format('d/m/Y H:i') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-400 uppercase font-semibold">Reparto / Tipo</p>
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ $ticket->assistance_type }}
-                                    </span>
+                                    <p class="text-xs text-gray-400 uppercase font-semibold">Reparto Assegnato</p>
+                                    @if($ticket->department)
+                                        <div class="flex flex-col">
+                                            <span class="text-sm text-gray-900 font-bold">{{ $ticket->department->name }}</span>
+                                            <span class="text-xs text-indigo-600 font-medium italic">{{ $ticket->department->email }}</span>
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400 italic">Non Assegnato (Fallback)</span>
+                                        <div class="text-[10px] text-gray-500 mt-1">Tipo AI: {{ $ticket->assistance_type }}</div>
+                                    @endif
                                 </div>
                             </div>
 

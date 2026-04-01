@@ -9,9 +9,22 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <div class="flex justify-between items-center mb-6">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                         <h2 class="text-2xl font-semibold text-slate-800">Ticket Ricevuti</h2>
-                        <a href="{{ route('admin.vapi.index') }}" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">Torna alla Configurazione</a>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                            <form action="{{ route('admin.vapi.tickets.index') }}" method="GET" class="flex gap-2">
+                                <select name="department_id" onchange="this.form.submit()" class="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-sm">
+                                    <option value="">Tutti i Reparti</option>
+                                    @foreach($departments as $dept)
+                                        <option value="{{ $dept->id }}" {{ request('department_id') == $dept->id ? 'selected' : '' }}>
+                                            {{ $dept->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                            <a href="{{ route('admin.vapi.index') }}" class="text-indigo-600 hover:text-indigo-900 text-sm font-medium pt-2">⚙️ Configurazione</a>
+                        </div>
                     </div>
 
                     @if(session('success'))
@@ -25,7 +38,8 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 uppercase">Data</th>
-                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Tipo</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Reparto</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Tipo (AI)</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Azienda</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Cliente</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Problema</th>
@@ -40,6 +54,15 @@
                                     <tr>
                                         <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-900 sm:pl-6">
                                             {{ $ticket->created_at->format('d/m/Y H:i') }}
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            @if($ticket->department)
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-800">
+                                                    {{ $ticket->department->name }}
+                                                </span>
+                                            @else
+                                                <span class="text-gray-400 font-italic text-xs">N/A</span>
+                                            @endif
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">

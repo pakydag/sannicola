@@ -9,6 +9,7 @@ class AiTicket extends Model
     protected $fillable = [
         'contact_id',
         'call_id',
+        'department_id',
         'assistance_type',
         'company_name',
         'customer_name',
@@ -25,6 +26,11 @@ class AiTicket extends Model
     protected $casts = [
         'closed_at' => 'datetime',
     ];
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
 
     public function contact()
     {

@@ -11,10 +11,18 @@ class AiTicketController extends Controller
     /**
      * Display a listing of the tickets.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = AiTicket::with('contact')->latest()->paginate(20);
-        return view('admin.vapi.tickets', compact('tickets'));
+        $query = AiTicket::with(['contact', 'department'])->latest();
+
+        if ($request->has('department_id') && $request->department_id != '') {
+            $query->where('department_id', $request->department_id);
+        }
+
+        $tickets = $query->paginate(20);
+        $departments = \App\Models\Department::where('is_active', true)->get();
+
+        return view('admin.vapi.tickets', compact('tickets', 'departments'));
     }
 
     /**

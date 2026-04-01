@@ -113,6 +113,7 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     // AI Agent Management (Vapi.ai)
     Route::get('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'index'])->name('vapi.index');
     Route::patch('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'update'])->name('vapi.update');
+    Route::resource('departments', \App\Http\Controllers\Admin\DepartmentController::class);
     
     // AI Tickets Management
     Route::get('vapi/tickets', [\App\Http\Controllers\Admin\AiTicketController::class, 'index'])->name('vapi.tickets.index');
