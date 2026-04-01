@@ -81,7 +81,7 @@ class VapiController extends Controller
                 'description' => 'Ottiene l\'elenco dei reparti di assistenza disponibili nel sistema (es. Software, Web, Amministrazione) per smistare correttamente il ticket.',
                 'parameters' => ['type' => 'object', 'properties' => (object)[]]
             ],
-            'server' => ['url' => url('/api/vapi/webhook')]
+            'server' => ['url' => request()->root() . '/api/vapi/webhook']
         ];
 
         if (!$getAssistanceToolId) {
@@ -114,7 +114,7 @@ class VapiController extends Controller
                     'required' => ['assistance_type', 'company_name', 'customer_name', 'description']
                 ]
             ],
-            'server' => ['url' => url('/api/vapi/webhook')]
+            'server' => ['url' => request()->root() . '/api/vapi/webhook']
         ];
 
         if (!$saveTicketToolId) {
@@ -131,7 +131,9 @@ class VapiController extends Controller
 
         // 3. Aggiorna Prompt con istruzioni di sequenza
         $basePrompt = $request->input('prompt');
-        $instr = "ISTRUZIONE OBBLIGATORIA: Prima di salvare un ticket con 'save_ticket', devi SEMPRE chiamare 'get_assistance_types' per conoscere i reparti disponibili e chiedere all'utente a quale reparto desidera rivolgersi.\n\n";
+        $instr = "ISTRUZIONE OBBLIGATORIA: Prima di salvare un ticket con 'save_ticket', devi SEMPRE chiamare 'get_assistance_types' per conoscere i reparti disponibili.\n" .
+                 "IMPORTANTE: Usa SOLO i reparti restituiti dalla funzione 'get_assistance_types'. Non inventare reparti e non usare opzioni predefinite se non coincidono con quella ottenute dal sistema.\n" .
+                 "Chiedi all'utente a quale di questi reparti desidera rivolgersi.\n\n";
         
         if (strpos($basePrompt, 'get_assistance_types') === false) {
             $basePrompt = $instr . $basePrompt;
@@ -142,7 +144,7 @@ class VapiController extends Controller
         $payload = [
             'model' => $modelConfig,
             'firstMessage' => $request->input('welcome_message'),
-            'serverUrl' => url('/api/vapi/webhook'),
+            'serverUrl' => request()->root() . '/api/vapi/webhook',
         ];
 
         $response = Http::withHeaders([

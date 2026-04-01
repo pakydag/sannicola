@@ -18,7 +18,11 @@ class VapiWebhookController extends Controller
         $payload = $request->all();
         
         // Log payload for debugging
-        Log::info('Vapi Webhook JSON payload:', $payload);
+        Log::info('Vapi Webhook JSON payload:', [
+            'host' => $request->getHost(),
+            'url' => $request->fullUrl(),
+            'payload' => $payload
+        ]);
 
         $callId = $payload['call']['id'] ?? ($payload['message']['callId'] ?? null);
         if (isset($payload['message']['type']) && ($payload['message']['type'] === 'tool-calls' || $payload['message']['type'] === 'function-call')) {
