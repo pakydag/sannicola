@@ -286,66 +286,6 @@ class VapiWebhookController extends Controller
         ];
     }
 
-        $hours = $department->working_hours;
-        $dayOfWeek = date('w', strtotime($date));
-        // Convert PHP 0 (Sun) to user input (6 for Sat, maybe something else for others? No, in my UI: 1=Mon-Fri, 6=Sat)
-        $isWorkDay = false;
-        $allowedDays = $hours['days'] ?? [];
-        if (in_array('1', $allowedDays) && $dayOfWeek >= 1 && $dayOfWeek <= 5) $isWorkDay = true;
-        if (in_array('6', $allowedDays) && $dayOfWeek == 6) $isWorkDay = true;
-
-        if (!$isWorkDay) {
-            return [
-                'toolCallId' => $toolCall['id'] ?? 'default',
-                'result'     => "Il reparto $deptName è chiuso il giorno selezionato ($date)."
-            ];
-        }
-
-        $start = $hours['start'] ?? '09:00';
-        $end = $hours['end'] ?? '18:00';
-        $duration = $department->appointment_duration ?? 30;
-
-        $existingAppointments = \App\Models\Appointment::where('department_id', $department->id)
-            ->whereDate('start_time', $date)
-            ->where('status', '!=', 'cancelled')
-            ->get();
-
-        $availableSlots = [];
-        $current = strtotime("$date $start");
-        $endTime = strtotime("$date $end");
-
-        while ($current + ($duration * 60) <= $endTime) {
-            $slotStart = date('Y-m-d H:i:s', $current);
-            $slotEnd = date('Y-m-d H:i:s', $current + ($duration * 60));
-
-            $isOccupied = $existingAppointments->contains(function($app) use ($slotStart, $slotEnd) {
-                return ($slotStart >= $app->start_time && $slotStart < $app->end_time) ||
-                       ($slotEnd > $app->start_time && $slotEnd <= $app->end_time);
-            });
-
-            if (!$isOccupied && $current > time()) {
-                $availableSlots[] = date('H:i', $current);
-            }
-            $current += ($duration * 60);
-        }
-
-        if (empty($availableSlots)) {
-            return [
-                'toolCallId' => $toolCall['id'] ?? 'default',
-                'result'     => "Non ci sono orari disponibili per $deptName il giorno $date."
-            ];
-        }
-
-        return [
-            'toolCallId' => $toolCall['id'] ?? 'default',
-            'result'     => [
-                'date' => $date,
-                'available_slots' => $availableSlots,
-                'message' => "Ecco gli orari disponibili per il reparto $deptName: " . implode(', ', $availableSlots)
-            ]
-        ];
-    }
-
     private function bookAppointmentTool($toolCall, $args, $payload)
     {
         $deptName = $args['department_name'] ?? '';
