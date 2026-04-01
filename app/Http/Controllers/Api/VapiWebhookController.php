@@ -214,7 +214,7 @@ class VapiWebhookController extends Controller
         $deptName = $args['department_name'] ?? '';
         $date = $args['date'] ?? now()->toDateString();
         
-        $department = Department::where('is_active', true)->where('name', $deptName)->first();
+        $department = Department::where('is_active', true)->whereRaw('LOWER(name) = ?', [strtolower($deptName)])->first();
         if (!$department || !$department->working_hours) {
             return [
                 'toolCallId' => $toolCall['id'] ?? 'default',
@@ -289,7 +289,7 @@ class VapiWebhookController extends Controller
         $time = $args['time'] ?? '';
         $phone = $args['phone'] ?? ($payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null));
 
-        $department = Department::where('is_active', true)->where('name', $deptName)->first();
+        $department = Department::where('is_active', true)->whereRaw('LOWER(name) = ?', [strtolower($deptName)])->first();
         if (!$department) {
             return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Reparto non trovato."];
         }
