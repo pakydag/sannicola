@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Agenda Appuntamenti Vanessa') }}
+                {{ __('Agenda Appuntamenti') }}
             </h2>
             <div class="flex items-center space-x-4">
                 <form action="{{ route('admin.appointments.index') }}" method="GET" id="deptFilterForm">
