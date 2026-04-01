@@ -116,20 +116,72 @@ class VapiService
 
             $saveTicketToolId = $this->upsertTool($saveTicketToolId, $saveTicketConfig);
 
+            // 2.3 Configurazione Tool: check_availability
+            $checkAvailabilityToolId = null;
+            foreach ($allTools as $tool) {
+                if (($tool['function']['name'] ?? '') === 'check_availability') $checkAvailabilityToolId = $tool['id'];
+            }
+            $checkAvailabilityConfig = [
+                'type' => 'function',
+                'function' => [
+                    'name' => 'check_availability',
+                    'description' => 'Verifica la disponibilità di orari liberi per un appuntamento in un determinato reparto e data.',
+                    'parameters' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'department_name' => ['type' => 'string', 'enum' => $departments, 'description' => 'Il nome del reparto scelto.'],
+                            'date' => ['type' => 'string', 'description' => 'La data desiderata (formato YYYY-MM-DD). Se l\'utente dice "domani", converti in data reale.']
+                        ],
+                        'required' => ['department_name', 'date']
+                    ]
+                ],
+                'server' => ['url' => $webhookUrl]
+            ];
+            $checkAvailabilityToolId = $this->upsertTool($checkAvailabilityToolId, $checkAvailabilityConfig);
+
+            // 2.4 Configurazione Tool: book_appointment
+            $bookAppointmentToolId = null;
+            foreach ($allTools as $tool) {
+                if (($tool['function']['name'] ?? '') === 'book_appointment') $bookAppointmentToolId = $tool['id'];
+            }
+            $bookAppointmentConfig = [
+                'type' => 'function',
+                'messages' => [['type' => 'request-start', 'content' => 'Sto verificando e fissando il tuo appuntamento...', 'blocking' => false]],
+                'function' => [
+                    'name' => 'book_appointment',
+                    'description' => 'Prenota un appuntamento in agenda per il reparto scelto.',
+                    'parameters' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'department_name' => ['type' => 'string', 'enum' => $departments, 'description' => 'Il nome del reparto scelto.'],
+                            'customer_name' => ['type' => 'string', 'description' => 'Nome e Cognome del cliente.'],
+                            'phone' => ['type' => 'string', 'description' => 'Numero di telefono del cliente.'],
+                            'date' => ['type' => 'string', 'description' => 'Data dell\'appuntamento (YYYY-MM-DD).'],
+                            'time' => ['type' => 'string', 'description' => 'Ora dell\'appuntamento (HH:MM).'],
+                            'reason' => ['type' => 'string', 'description' => 'Breve motivo dell\'appuntamento.']
+                        ],
+                        'required' => ['department_name', 'customer_name', 'phone', 'date', 'time', 'reason']
+                    ]
+                ],
+                'server' => ['url' => $webhookUrl]
+            ];
+            $bookAppointmentToolId = $this->upsertTool($bookAppointmentToolId, $bookAppointmentConfig);
+
             // 3. Update Assistant
             $basePrompt = $finalPrompt;
-            $instr = "ISTRUZIONE OBBLIGATORIA: Prima di salvare un ticket con 'save_ticket', devi SEMPRE chiamare 'get_assistance_types' per conoscere i reparti disponibili.\n" .
-                     "IMPORTANTE: Usa SOLO i reparti restituiti dalla funzione 'get_assistance_types'. Non inventare reparti.\n" .
-                     "Chiedi all'utente a quale di questi reparti desidera rivolgersi.\n" .
-                     "RELAZIONE CAMPI: Non confondere MAI il nome dell'utente con il suo numero di telefono. Se non conosci il numero di telefono (ad esempio in una chat), DEVI chiederlo all'utente prima di salvare il ticket.\n\n";
+            $instr = "GESTIONE AGENDA: Oltre all'apertura ticket, puoi fissare APPUNTAMENTI.\n" .
+                     "1. Per fissare un appuntamento, devi PRIMA conoscere il reparto (get_assistance_types).\n" .
+                     "2. Una volta noto il reparto e il giorno, USA 'check_availability' per vedere gli orari liberi e riferiscili all'utente.\n" .
+                     "3. Quando l'utente sceglie un orario, usa 'book_appointment' per confermare.\n" .
+                     "4. Non inventare orari: proponi solo quelli che rientrano negli orari di lavoro del reparto e che sono liberi.\n\n" .
+                     "RELAZIONE CAMPI EXTRA: Assicurati sempre di avere il NOME e il TELEFONO corretti.\n\n";
             
-            if (strpos($basePrompt, 'get_assistance_types') === false) {
+            if (strpos($basePrompt, 'book_appointment') === false) {
                 $basePrompt = $instr . $basePrompt;
             }
 
             $modelConfig['messages'] = [['role' => 'system', 'content' => $basePrompt]];
-            // Ensure tools are linked (Vapi uses toolIds in model config)
-            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId]);
+            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId]);
             unset($modelConfig['tools']);
 
             $payload = [

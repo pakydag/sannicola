@@ -33,6 +33,8 @@ class DepartmentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'appointment_duration' => 'required|integer|min:5|max:480',
+            'working_hours' => 'nullable|array',
             'is_active' => 'boolean',
         ]);
 
@@ -57,6 +59,8 @@ class DepartmentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'appointment_duration' => 'required|integer|min:5|max:480',
+            'working_hours' => 'nullable|array',
             'is_active' => 'boolean',
         ]);
 

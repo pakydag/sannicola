@@ -114,6 +114,14 @@ class VapiWebhookController extends Controller
             if ($functionName === 'get_assistance_types') {
                 $results[] = $this->getAssistanceTypesTool($toolCall);
             }
+
+            if ($functionName === 'check_availability') {
+                $results[] = $this->checkAvailabilityTool($toolCall, $args);
+            }
+
+            if ($functionName === 'book_appointment') {
+                $results[] = $this->bookAppointmentTool($toolCall, $args, $payload);
+            }
         }
 
         return response()->json(['results' => $results]);
@@ -198,6 +206,123 @@ class VapiWebhookController extends Controller
         return [
             'toolCallId' => $toolCall['id'] ?? 'default',
             'result'     => ['available_types' => !empty($types) ? $types : ['Generico']]
+        ];
+    }
+
+    private function checkAvailabilityTool($toolCall, $args)
+    {
+        $deptName = $args['department_name'] ?? '';
+        $date = $args['date'] ?? now()->toDateString();
+        
+        $department = Department::where('is_active', true)->where('name', $deptName)->first();
+        if (!$department || !$department->working_hours) {
+            return [
+                'toolCallId' => $toolCall['id'] ?? 'default',
+                'result'     => "Spiacente, non ho informazioni sugli orari per il reparto $deptName."
+            ];
+        }
+
+        $hours = $department->working_hours;
+        $dayOfWeek = date('w', strtotime($date));
+        // Convert PHP 0 (Sun) to user input (6 for Sat, maybe something else for others? No, in my UI: 1=Mon-Fri, 6=Sat)
+        $isWorkDay = false;
+        $allowedDays = $hours['days'] ?? [];
+        if (in_array('1', $allowedDays) && $dayOfWeek >= 1 && $dayOfWeek <= 5) $isWorkDay = true;
+        if (in_array('6', $allowedDays) && $dayOfWeek == 6) $isWorkDay = true;
+
+        if (!$isWorkDay) {
+            return [
+                'toolCallId' => $toolCall['id'] ?? 'default',
+                'result'     => "Il reparto $deptName è chiuso il giorno selezionato ($date)."
+            ];
+        }
+
+        $start = $hours['start'] ?? '09:00';
+        $end = $hours['end'] ?? '18:00';
+        $duration = $department->appointment_duration ?? 30;
+
+        $existingAppointments = \App\Models\Appointment::where('department_id', $department->id)
+            ->whereDate('start_time', $date)
+            ->where('status', '!=', 'cancelled')
+            ->get();
+
+        $availableSlots = [];
+        $current = strtotime("$date $start");
+        $endTime = strtotime("$date $end");
+
+        while ($current + ($duration * 60) <= $endTime) {
+            $slotStart = date('Y-m-d H:i:s', $current);
+            $slotEnd = date('Y-m-d H:i:s', $current + ($duration * 60));
+
+            $isOccupied = $existingAppointments->contains(function($app) use ($slotStart, $slotEnd) {
+                return ($slotStart >= $app->start_time && $slotStart < $app->end_time) ||
+                       ($slotEnd > $app->start_time && $slotEnd <= $app->end_time);
+            });
+
+            if (!$isOccupied && $current > time()) {
+                $availableSlots[] = date('H:i', $current);
+            }
+            $current += ($duration * 60);
+        }
+
+        if (empty($availableSlots)) {
+            return [
+                'toolCallId' => $toolCall['id'] ?? 'default',
+                'result'     => "Non ci sono orari disponibili per $deptName il giorno $date."
+            ];
+        }
+
+        return [
+            'toolCallId' => $toolCall['id'] ?? 'default',
+            'result'     => [
+                'date' => $date,
+                'available_slots' => $availableSlots,
+                'message' => "Ecco gli orari disponibili per il reparto $deptName: " . implode(', ', $availableSlots)
+            ]
+        ];
+    }
+
+    private function bookAppointmentTool($toolCall, $args, $payload)
+    {
+        $deptName = $args['department_name'] ?? '';
+        $date = $args['date'] ?? '';
+        $time = $args['time'] ?? '';
+        $phone = $args['phone'] ?? ($payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null));
+
+        $department = Department::where('is_active', true)->where('name', $deptName)->first();
+        if (!$department) {
+            return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Reparto non trovato."];
+        }
+
+        // Cerca o crea contatto
+        $contact = Contact::where('phone', 'like', "%$phone%")->orWhere('mobile', 'like', "%$phone%")->first();
+        if (!$contact && isset($args['customer_name'])) {
+            $nameParts = explode(' ', $args['customer_name'], 2);
+            $contact = Contact::create([
+                'first_name' => $nameParts[0],
+                'last_name' => $nameParts[1] ?? '',
+                'phone' => $phone,
+                'is_vapi_lead' => true,
+                'is_active' => true,
+            ]);
+        }
+
+        $startTime = date('Y-m-d H:i:s', strtotime("$date $time"));
+        $endTime = date('Y-m-d H:i:s', strtotime("$startTime + {$department->appointment_duration} minutes"));
+
+        $appointment = \App\Models\Appointment::create([
+            'contact_id' => $contact ? $contact->id : null,
+            'department_id' => $department->id,
+            'title' => "Appuntamento: " . ($args['customer_name'] ?? 'Cliente'),
+            'description' => $args['reason'] ?? 'N/D',
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'status' => 'confirmed'
+        ]);
+
+        return [
+            'toolCallId' => $toolCall['id'] ?? 'default',
+            'result' => "Appuntamento confermato per il $date alle $time. Ti comunico che ho segnato l'impegno in agenda."
         ];
     }
 

@@ -115,6 +115,12 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     Route::patch('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'update'])->name('vapi.update');
     Route::resource('departments', \App\Http\Controllers\Admin\DepartmentController::class);
     
+    // Appointment Management (AI Agenda)
+    Route::get('appointments', [\App\Http\Controllers\Admin\AppointmentController::class, 'index'])->name('appointments.index');
+    Route::get('appointments/events', [\App\Http\Controllers\Admin\AppointmentController::class, 'events'])->name('appointments.events');
+    Route::delete('appointments/{appointment}', [\App\Http\Controllers\Admin\AppointmentController::class, 'destroy'])->name('appointments.destroy');
+    Route::patch('appointments/{appointment}/cancel', [\App\Http\Controllers\Admin\AppointmentController::class, 'cancel'])->name('appointments.cancel');
+    
     // AI Tickets Management
     Route::get('vapi/tickets', [\App\Http\Controllers\Admin\AiTicketController::class, 'index'])->name('vapi.tickets.index');
     Route::get('vapi/tickets/{ticket}', [\App\Http\Controllers\Admin\AiTicketController::class, 'show'])->name('vapi.tickets.show');
