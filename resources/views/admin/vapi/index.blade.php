@@ -37,6 +37,15 @@
                         <div class="mt-4 p-4 bg-indigo-50 border border-indigo-100 rounded-md">
                             <h4 class="text-sm font-bold text-indigo-800 mb-1">Istruzioni per il Sistema Ticket</h4>
                             <p class="text-xs text-indigo-700">Il sistema è pronto a ricevere ticket. Assicurati che il prompt termini chiedendo all'AI di chiamare la funzione <code>save_ticket</code> con i parametri: <code>assistance_type</code>, <code>company_name</code>, <code>customer_name</code>, e <code>description</code>.</p>
+                            
+                            <div class="mt-3 pt-3 border-t border-indigo-200">
+                                <h5 class="text-xs font-bold text-indigo-900 uppercase">URL Webhook per Vapi:</h5>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <code class="bg-white px-2 py-1 rounded border border-indigo-200 text-[10px] flex-1 text-indigo-600 truncate">{{ url('/api/vapi/webhook') }}</code>
+                                    <button onclick="navigator.clipboard.writeText('{{ url('/api/vapi/webhook') }}'); alert('URL Copiato!')" class="text-[10px] bg-indigo-600 text-white px-2 py-1 rounded hover:bg-indigo-700">Copia</button>
+                                </div>
+                                <p class="text-[10px] text-indigo-500 mt-1 italic">Usa questo URL nella sezione "Server URL" di Vapi se l'aggiornamento automatico non dovesse funzionare.</p>
+                            </div>
                         </div>
                     </div>
 

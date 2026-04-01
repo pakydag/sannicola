@@ -101,9 +101,10 @@ class VapiWebhookController extends Controller
                     }
 
                     try {
-                        // Find Department by name
-                        $department = \App\Models\Department::where('name', $args['assistance_type'] ?? '')
-                            ->where('is_active', true)
+                        // Find Department by name (Case-Insensitive)
+                        $assistanceType = $args['assistance_type'] ?? '';
+                        $department = \App\Models\Department::where('is_active', true)
+                            ->whereRaw('LOWER(name) = ?', [strtolower($assistanceType)])
                             ->first();
 
                         // Save ticket to database
