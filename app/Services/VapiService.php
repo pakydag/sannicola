@@ -35,7 +35,7 @@ class VapiService
             ])->get("{$this->baseUrl}/assistant/{$this->assistantId}");
 
             if ($getCurrent->failed()) {
-                Log::error('VapiService: Failed to fetch assistant data: ' . $getCurrent->body());
+                Log::error('VapiService: Failed to fetch assistant data: ' . $getCurrent->status() . ' - ' . $getCurrent->body());
                 return false;
             }
 
@@ -58,7 +58,7 @@ class VapiService
                 if ($name === 'save_ticket') $saveTicketToolId = $tool['id'];
             }
 
-            // Prepare department names for Enums
+            // Prepare department names for Enums (Ensure consistent case or whatever is in DB)
             $departments = Department::where('is_active', true)->pluck('name')->toArray();
             if (empty($departments)) {
                 $departments = ['Generico'];
@@ -80,12 +80,12 @@ class VapiService
                 'server' => ['url' => $webhookUrl]
             ];
 
-            $this->upsertTool($getAssistanceToolId, $getAssistanceConfig);
+            $getAssistanceToolId = $this->upsertTool($getAssistanceToolId, $getAssistanceConfig);
 
             // Configurazione Tool: save_ticket (Dinamico con Enums aggiornati)
             $saveTicketConfig = [
                 'type' => 'function',
-                'messages' => [['type' => 'request-start', 'content' => 'Sto salvando il tuo ticket...']],
+                'messages' => [['type' => 'request-start', 'content' => 'Sto salvando il tuo ticket...', 'blocking' => false]],
                 'function' => [
                     'name' => 'save_ticket',
                     'description' => 'Salva un ticket di assistenza nel database locale.',
@@ -138,7 +138,7 @@ class VapiService
             ])->patch("{$this->baseUrl}/assistant/{$this->assistantId}", $payload);
 
             if ($response->failed()) {
-                Log::error('VapiService: Error updating assistant: ' . $response->body());
+                Log::error('VapiService: Error updating assistant: ' . $response->status() . ' - ' . $response->body());
                 return false;
             }
 
@@ -158,9 +158,19 @@ class VapiService
     {
         if (!$toolId) {
             $res = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->post("{$this->baseUrl}/tool", $config);
-            return $res->successful() ? $res->json()['id'] : null;
+            if ($res->failed()) {
+                Log::error('VapiService: Error creating tool: ' . $res->status() . ' - ' . $res->body());
+                return null;
+            }
+            return $res->json()['id'];
         } else {
-            Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->patch("{$this->baseUrl}/tool/{$toolId}", $config);
+            // PATCH must not send read-only fields
+            unset($config['type'], $config['id'], $config['orgId'], $config['createdAt'], $config['updatedAt']);
+            
+            $res = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->patch("{$this->baseUrl}/tool/{$toolId}", $config);
+            if ($res->failed()) {
+                Log::error("VapiService: Error updating tool {$toolId}: " . $res->status() . ' - ' . $res->body());
+            }
             return $toolId;
         }
     }
