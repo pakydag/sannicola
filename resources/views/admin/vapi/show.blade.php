@@ -17,22 +17,34 @@
                         <div class="p-6">
                             <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">Dettagli Conversazione</h3>
                             
-                            <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                                 <div>
                                     <p class="text-xs text-gray-400 uppercase font-semibold">Data Apertura</p>
                                     <p class="text-sm text-gray-900 font-medium">{{ $ticket->created_at->format('d/m/Y H:i') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-400 uppercase font-semibold">Reparto Assegnato</p>
-                                    @if($ticket->department)
-                                        <div class="flex flex-col">
-                                            <span class="text-sm text-gray-900 font-bold">{{ $ticket->department->name }}</span>
-                                            <span class="text-xs text-indigo-600 font-medium italic">{{ $ticket->department->email }}</span>
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-400 italic">Non Assegnato (Fallback)</span>
-                                        <div class="text-[10px] text-gray-500 mt-1">Tipo AI: {{ $ticket->assistance_type }}</div>
-                                    @endif
+                                    <p class="text-xs text-gray-400 uppercase font-semibold">Costo Chiamata</p>
+                                    <p class="text-sm text-indigo-600 font-bold">
+                                        @if($ticket->cost > 0)
+                                            ${{ number_format($ticket->cost, 2) }}
+                                        @else
+                                            <span class="text-gray-400 font-normal">N/A</span>
+                                        @endif
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 uppercase font-semibold">Durata</p>
+                                    <p class="text-sm text-gray-900 font-medium">
+                                        @if($ticket->duration > 0)
+                                            {{ floor($ticket->duration / 60) }}:{{ str_pad($ticket->duration % 60, 2, '0', STR_PAD_LEFT) }}
+                                        @else
+                                            <span class="text-gray-400 font-normal">N/A</span>
+                                        @endif
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-400 uppercase font-semibold">Reparto</p>
+                                    <span class="text-sm text-gray-900 font-bold">{{ $ticket->department->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
 
@@ -41,6 +53,11 @@
                                 <div class="p-4 bg-gray-50 rounded-md border border-gray-100 text-sm text-gray-700">
                                     {{ $ticket->description }}
                                 </div>
+                            </div>
+
+                            <!-- Dettagli Tecnici (per Debug) -->
+                            <div class="mb-6 bg-slate-50 p-2 rounded border border-dashed border-slate-200">
+                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">ID Chiamata Vapi: <span class="font-mono text-slate-500">{{ $ticket->vapi_call_id ?? $ticket->call_id ?? 'Non registrato' }}</span></p>
                             </div>
 
                             <!-- Box Commenti -->
@@ -54,7 +71,7 @@
                                 <form action="{{ route('admin.vapi.tickets.update-comments', $ticket) }}" method="POST">
                                     @csrf
                                     @method('PATCH')
-                                    <textarea name="comments" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Inserisci qui annotazioni o commenti interni...">{{ $ticket->comments }}</textarea>
+                                    <textarea name="comments" rows="3" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" placeholder="Inserisci qui annotazioni o commenti interni...">{{ $ticket->comments }}</textarea>
                                     <div class="mt-2 text-right">
                                         <button type="submit" class="bg-indigo-600 text-white px-4 py-1.5 rounded text-xs font-semibold hover:bg-indigo-700 transition-colors">
                                             Salva Commenti
@@ -72,20 +89,24 @@
                                 </div>
                             @endif
 
-                            @if($ticket->audio_url)
+                            @php
+                                $audio = $ticket->recording_url ?: $ticket->audio_url;
+                            @endphp
+
+                            @if($audio)
                                 <div>
                                     <p class="text-xs text-gray-400 uppercase font-semibold mb-2">Registrazione Audio</p>
                                     <audio controls class="w-full">
-                                        <source src="{{ $ticket->audio_url }}" type="audio/mpeg">
+                                        <source src="{{ $audio }}" type="audio/mpeg">
                                         Il tuo browser non supporta l'elemento audio.
                                     </audio>
                                     <div class="mt-2 text-right">
-                                        <a href="{{ $ticket->audio_url }}" target="_blank" class="text-xs text-indigo-600 hover:text-indigo-800">Scarica file audio &rarr;</a>
+                                        <a href="{{ $audio }}" target="_blank" class="text-xs text-indigo-600 hover:text-indigo-800">Scarica file audio &rarr;</a>
                                     </div>
                                 </div>
                             @else
                                 <div class="p-4 bg-amber-50 rounded-md border border-amber-200 text-xs text-amber-700">
-                                    Registrazione audio non ancora disponibile.
+                                    Registrazione audio non ancora disponibile. Vapi invia il report pochi secondi dopo la fine della chiamata.
                                 </div>
                             @endif
                         </div>
