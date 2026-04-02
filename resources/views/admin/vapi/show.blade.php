@@ -55,10 +55,30 @@
                                 </div>
                             </div>
 
-                            <!-- Dettagli Tecnici (per Debug) -->
                             <div class="mb-6 bg-slate-50 p-2 rounded border border-dashed border-slate-200">
-                                <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">ID Chiamata Vapi: <span class="font-mono text-slate-500">{{ $ticket->vapi_call_id ?? $ticket->call_id ?? 'Non registrato' }}</span></p>
+                                <div class="flex justify-between items-center">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">ID Chiamata Vapi: <span class="font-mono text-slate-500">{{ $ticket->vapi_call_id ?? $ticket->call_id ?? 'Non registrato' }}</span></p>
+                                    
+                                    @if($ticket->vapi_call_id || $ticket->call_id)
+                                        <form action="{{ route('admin.vapi.tickets.sync', $ticket) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 px-2 py-1 rounded font-bold transition-colors">
+                                                🔄 Sincronizza Dati Vapi
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
+
+                            @if($errors->any())
+                                <div class="mb-6 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded">
+                                    <ul class="list-disc pl-4">
+                                        @foreach($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                             <!-- Box Commenti -->
                             <div class="mb-6">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AiTicket;
+use App\Services\VapiService;
 use Illuminate\Http\Request;
 
 class AiTicketController extends Controller
@@ -60,11 +61,43 @@ class AiTicketController extends Controller
     }
 
     /**
-     * Remove the specified ticket from storage.
+     * Synchronize call data from Vapi.ai API
      */
-    public function destroy(AiTicket $ticket)
+    public function syncCall(AiTicket $ticket, VapiService $vapiService)
     {
-        $ticket->delete();
-        return redirect()->route('admin.vapi.tickets.index')->with('success', 'Ticket eliminato con successo.');
+        $callId = $ticket->vapi_call_id ?: $ticket->call_id;
+
+        if (!$callId) {
+            return back()->withErrors(['error' => 'Nessun ID chiamata registrato per questo ticket.']);
+        }
+
+        $callDetails = $vapiService->getCallDetails($callId);
+
+        if (!$callDetails) {
+            return back()->withErrors(['error' => 'Impossibile recuperare i dati da Vapi.ai. Verifica la connessione o l\'ID.']);
+        }
+
+        // Estrazione dati (stessa logica robusta del webhook)
+        $cost = $callDetails['cost'] ?? ($callDetails['totalCost'] ?? ($callDetails['total_cost'] ?? 0));
+        $duration = $callDetails['duration'] ?? 0;
+        
+        if (!$duration && isset($callDetails['startedAt']) && isset($callDetails['endedAt'])) {
+            $start = strtotime($callDetails['startedAt']);
+            $end = strtotime($callDetails['endedAt']);
+            $duration = $end - $start;
+        }
+
+        $recordingUrl = $callDetails['recordingUrl'] ?? ($callDetails['recording_url'] ?? null);
+        $transcript = $callDetails['transcript'] ?? ($callDetails['fullTranscript'] ?? null);
+
+        $ticket->update([
+            'cost' => $cost,
+            'duration' => $duration,
+            'recording_url' => $recordingUrl ?: $ticket->recording_url,
+            'audio_url' => $recordingUrl ?: $ticket->audio_url,
+            'transcription' => $transcript ?: $ticket->transcription,
+        ]);
+
+        return back()->with('success', 'Dati sincronizzati correttamente da Vapi.ai.');
     }
 }

@@ -174,4 +174,20 @@ class VapiService
             return $toolId;
         }
     }
+
+    /**
+     * Get details for a specific call from Vapi
+     */
+    public function getCallDetails($callId)
+    {
+        try {
+            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
+                ->get("{$this->baseUrl}/call/{$callId}");
+
+            return $response->successful() ? $response->json() : null;
+        } catch (\Exception $e) {
+            Log::error('VapiService Get Call Details Error: ' . $e->getMessage());
+            return null;
+        }
+    }
 }
