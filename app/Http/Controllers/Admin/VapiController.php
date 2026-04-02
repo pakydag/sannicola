@@ -8,6 +8,7 @@ use App\Models\VapiFile;
 use App\Services\VapiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class VapiController extends Controller
@@ -55,12 +56,21 @@ class VapiController extends Controller
             }
         }
 
-        $assistantRes = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/assistant/{$this->assistantId}");
-        $assistant = $assistantRes->successful() ? $assistantRes->json() : [];
+        try {
+            $assistantRes = Http::timeout(5)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
+                ->get("{$this->baseUrl}/assistant/{$this->assistantId}");
+            $assistant = $assistantRes->successful() ? $assistantRes->json() : [];
 
-        // 4. Recupera Voci Disponibili da Vapi
-        $voicesRes = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/voice");
-        $availableVoices = $voicesRes->successful() ? $voicesRes->json() : [];
+            // 4. Recupera Voci Disponibili da Vapi
+            $voicesRes = Http::timeout(5)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
+                ->get("{$this->baseUrl}/voice");
+            $availableVoices = $voicesRes->successful() ? $voicesRes->json() : [];
+        } catch (\Exception $e) {
+            Log::warning('VapiController: Connection timeout or error: ' . $e->getMessage());
+            $assistant = [];
+            $availableVoices = [];
+        }
+        
         $voice_id = Setting::where('key', 'vapi_voice_id')->value('value') ?: ($assistant['voice']['voiceId'] ?? '');
 
         return view('admin.vapi.index', compact(
