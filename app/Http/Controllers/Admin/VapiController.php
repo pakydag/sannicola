@@ -57,12 +57,12 @@ class VapiController extends Controller
         }
 
         try {
-            $assistantRes = Http::timeout(5)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
+            $assistantRes = Http::timeout(10)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
                 ->get("{$this->baseUrl}/assistant/{$this->assistantId}");
             $assistant = $assistantRes->successful() ? $assistantRes->json() : [];
 
             // 4. Recupera Voci Disponibili da Vapi
-            $voicesRes = Http::timeout(5)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
+            $voicesRes = Http::timeout(10)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
                 ->get("{$this->baseUrl}/voice");
             $availableVoices = $voicesRes->successful() ? $voicesRes->json() : [];
         } catch (\Exception $e) {

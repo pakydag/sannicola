@@ -105,12 +105,19 @@
                                 <div>
                                     <label for="voice_id" class="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-widest">Scegli Voce</label>
                                     <select name="voice_id" id="voice_id" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm">
-                                        @foreach($availableVoices as $voice)
-                                            <option value="{{ $voice['id'] }}" {{ $voice_id == $voice['id'] ? 'selected' : '' }}>
-                                                {{ $voice['name'] ?? 'Senza Nome' }} ({{ ucfirst($voice['provider'] ?? 'Sconosciuto') }})
-                                            </option>
-                                        @endforeach
+                                        @if(empty($availableVoices))
+                                            <option value="{{ $voice_id }}">Voce Corrente: {{ $voice_id }} (Errore caricamento lista)</option>
+                                        @else
+                                            @foreach($availableVoices as $voice)
+                                                <option value="{{ $voice['id'] }}" {{ $voice_id == $voice['id'] ? 'selected' : '' }}>
+                                                    {{ $voice['name'] ?? 'Senza Nome' }} ({{ ucfirst($voice['provider'] ?? 'Sconosciuto') }})
+                                                </option>
+                                            @endforeach
+                                        @endif
                                     </select>
+                                    @if(empty($availableVoices))
+                                        <p class="mt-1 text-[10px] text-red-500 italic text-right">Impossibile recuperare l'elenco completo da Vapi.ai in questo momento.</p>
+                                    @endif
                                 </div>
 
                                 <div class="pt-4 border-t border-gray-100">
