@@ -16,6 +16,10 @@ class Appointment extends Model
         'description',
         'start_time',
         'end_time',
+        'vapi_call_id',
+        'cost',
+        'duration',
+        'recording_url',
         'status',
     ];
 

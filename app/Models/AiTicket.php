@@ -19,6 +19,10 @@ class AiTicket extends Model
         'comments',
         'transcription',
         'audio_url',
+        'vapi_call_id',
+        'cost',
+        'duration',
+        'recording_url',
         'status',
         'closed_at',
     ];

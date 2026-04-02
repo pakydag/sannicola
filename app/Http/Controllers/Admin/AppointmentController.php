@@ -51,6 +51,9 @@ class AppointmentController extends Controller
                     'contact' => $clientLabel,
                     'phone' => $appointment->contact->phone ?? ($appointment->contact->mobile ?? 'N/A'),
                     'department' => $appointment->department->name ?? 'N/A',
+                    'cost' => $appointment->cost ? '$' . number_format($appointment->cost, 2) : 'N/A',
+                    'duration' => $appointment->duration ? floor($appointment->duration / 60) . ':' . str_pad($appointment->duration % 60, 2, '0', STR_PAD_LEFT) : 'N/A',
+                    'recording_url' => $appointment->recording_url,
                 ]
             ];
         });

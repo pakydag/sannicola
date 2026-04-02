@@ -176,6 +176,7 @@ class VapiWebhookController extends Controller
         $ticket = AiTicket::create([
             'contact_id'      => $contactId,
             'call_id'         => $callId,
+            'vapi_call_id'    => $callId,
             'department_id'   => $department ? $department->id : null,
             'assistance_type' => $args['assistance_type'] ?? 'Generico',
             'company_name'    => $args['company_name'] ?? 'N/A',
@@ -328,9 +329,12 @@ class VapiWebhookController extends Controller
         $startTime = date('Y-m-d H:i:s', strtotime("$date $time"));
         $endTime = date('Y-m-d H:i:s', strtotime("$startTime + {$department->appointment_duration} minutes"));
 
+        $callId = $payload['call']['id'] ?? ($payload['message']['callId'] ?? null);
+
         $appointment = \App\Models\Appointment::create([
             'contact_id' => $contact ? $contact->id : null,
             'department_id' => $department->id,
+            'vapi_call_id' => $callId,
             'title' => ($department->name ?? 'Reparto') . ": " . ($customerName),
             'description' => $args['reason'] ?? ($args['description'] ?? 'N/D'),
             'start_time' => $startTime,
@@ -345,18 +349,52 @@ class VapiWebhookController extends Controller
     }
 
     /**
-     * Aggiorna il ticket con trascrizione e audio a fine chiamata
+     * Aggiorna ticket e appuntamenti con costi, durata e registrazione a fine chiamata
      */
     private function handleEndOfCall($payload)
     {
-        $callId = $payload['call']['id'] ?? ($payload['message']['callId'] ?? null);
-        $ticket = AiTicket::where('call_id', $callId)->first();
-        if ($ticket) {
+        $callData = $payload['call'] ?? ($payload['message']['call'] ?? []);
+        $callId = $callData['id'] ?? ($payload['message']['callId'] ?? null);
+        
+        $cost = $callData['cost'] ?? 0;
+        $duration = 0;
+        
+        // Calcolo durata se presente
+        if (isset($callData['startedAt']) && isset($callData['endedAt'])) {
+            $start = strtotime($callData['startedAt']);
+            $end = strtotime($callData['endedAt']);
+            $duration = $end - $start;
+        }
+
+        $recordingUrl = $callData['recordingUrl'] ?? ($payload['message']['recordingUrl'] ?? null);
+        $transcript = $payload['message']['transcript'] ?? ($payload['transcript'] ?? null);
+
+        Log::info("Vapi End of Call: updating records for Call #{$callId}", [
+            'cost' => $cost,
+            'duration' => $duration
+        ]);
+
+        // 1. Aggiorna Ticket AI associati
+        $tickets = AiTicket::where('vapi_call_id', $callId)->get();
+        foreach ($tickets as $ticket) {
             $ticket->update([
-                'transcription' => $payload['message']['transcript'] ?? null,
-                'audio_url'     => $payload['message']['recordingUrl'] ?? null,
+                'cost' => $cost,
+                'duration' => $duration,
+                'recording_url' => $recordingUrl,
+                'transcription' => $transcript ?? $ticket->transcription,
             ]);
         }
+
+        // 2. Aggiorna Appuntamenti associati
+        $appointments = \App\Models\Appointment::where('vapi_call_id', $callId)->get();
+        foreach ($appointments as $appointment) {
+            $appointment->update([
+                'cost' => $cost,
+                'duration' => $duration,
+                'recording_url' => $recordingUrl,
+            ]);
+        }
+
         return response()->json(['status' => 'ok']);
     }
 }

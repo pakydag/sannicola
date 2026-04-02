@@ -43,6 +43,9 @@
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Azienda</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Cliente</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Problema</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Costo</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Durata</th>
+                                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Rec</th>
                                     <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 uppercase">Stato</th>
                                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
                                         <span class="sr-only">Azioni</span>
@@ -88,6 +91,29 @@
                                                 {{ $ticket->description }}
                                             </div>
                                         </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">
+                                            @if($ticket->cost > 0)
+                                                ${{ number_format($ticket->cost, 2) }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            @if($ticket->duration > 0)
+                                                {{ floor($ticket->duration / 60) }}:{{ str_pad($ticket->duration % 60, 2, '0', STR_PAD_LEFT) }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                            @if($ticket->recording_url)
+                                                <a href="{{ $ticket->recording_url }}" target="_blank" title="Ascolta registrazione" class="text-indigo-600 hover:text-indigo-900">
+                                                    🎙️
+                                                </a>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                             <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $ticket->status === 'open' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }}">
                                                 {{ $ticket->status === 'open' ? 'Aperto' : 'Chiuso' }}
@@ -109,7 +135,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="py-10 text-center text-gray-500">
+                                        <td colspan="10" class="py-10 text-center text-gray-500">
                                             Nessun ticket trovato.
                                         </td>
                                     </tr>

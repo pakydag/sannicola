@@ -74,8 +74,13 @@
                                     <p class="mb-2"><strong>Cliente:</strong> ${props.contact}</p>
                                     <p class="mb-2"><strong>Telefono:</strong> ${props.phone}</p>
                                     <p class="mb-2"><strong>Reparto:</strong> ${props.department}</p>
+                                    <div class="my-3 p-2 bg-indigo-50 border border-indigo-100 rounded-lg flex justify-between">
+                                        <span><strong>Costo:</strong> ${props.cost}</span>
+                                        <span><strong>Durata:</strong> ${props.duration}</span>
+                                    </div>
                                     <p class="mb-2"><strong>Data:</strong> ${info.event.start.toLocaleString('it-IT')}</p>
                                     <p class="mb-2"><strong>Stato:</strong> <span class="${props.status === 'cancelled' ? 'text-red-600' : 'text-green-600'}">${props.status.toUpperCase()}</span></p>
+                                    ${props.recording_url ? `<p class="mt-2 text-center text-xs"><a href="${props.recording_url}" target="_blank" class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700">🎙️ Ascolta Registrazione</a></p>` : ''}
                                     ${info.event.description ? `<p class="mt-4 p-2 bg-gray-50 border rounded italic">"${info.event.description}"</p>` : ''}
                                 </div>
                             `,
