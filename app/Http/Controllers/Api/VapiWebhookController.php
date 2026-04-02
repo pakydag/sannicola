@@ -311,11 +311,14 @@ class VapiWebhookController extends Controller
 
         // Cerca o crea contatto
         $contact = Contact::where('phone', 'like', "%$phone%")->orWhere('mobile', 'like', "%$phone%")->first();
+        $customerName = $args['customer_name'] ?? ($contact ? $contact->name : 'Cliente');
+
         if (!$contact && isset($args['customer_name'])) {
             $nameParts = explode(' ', $args['customer_name'], 2);
             $contact = Contact::create([
                 'first_name' => $nameParts[0],
                 'last_name' => $nameParts[1] ?? '',
+                'company_name' => $args['company_name'] ?? null,
                 'phone' => $phone,
                 'is_vapi_lead' => true,
                 'is_active' => true,
@@ -328,8 +331,8 @@ class VapiWebhookController extends Controller
         $appointment = \App\Models\Appointment::create([
             'contact_id' => $contact ? $contact->id : null,
             'department_id' => $department->id,
-            'title' => "Appuntamento: " . ($args['customer_name'] ?? 'Cliente'),
-            'description' => $args['reason'] ?? 'N/D',
+            'title' => ($department->name ?? 'Reparto') . ": " . ($customerName),
+            'description' => $args['reason'] ?? ($args['description'] ?? 'N/D'),
             'start_time' => $startTime,
             'end_time' => $endTime,
             'status' => 'confirmed'

@@ -98,6 +98,14 @@ class Contact extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Get the full name of the contact.
+     */
+    public function getNameAttribute()
+    {
+        return trim("{$this->first_name} {$this->last_name}") ?: ($this->company_name ?: 'N/A');
+    }
+
     public function shopOrders()
     {
         return $this->hasMany(ShopOrder::class);

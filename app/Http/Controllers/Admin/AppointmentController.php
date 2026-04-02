@@ -33,9 +33,14 @@ class AppointmentController extends Controller
         $appointments = $query->get();
 
         $events = $appointments->map(function ($appointment) {
+            $clientLabel = $appointment->contact ? $appointment->contact->name : 'Anonimo';
+            if ($appointment->contact && $appointment->contact->company_name) {
+                $clientLabel .= " ({$appointment->contact->company_name})";
+            }
+
             return [
                 'id' => $appointment->id,
-                'title' => ($appointment->department->name ?? 'N/A') . ': ' . ($appointment->contact->name ?? 'Anonimo'),
+                'title' => ($appointment->department->name ?? 'Reparto') . ': ' . $clientLabel,
                 'start' => $appointment->start_time->toIso8601String(),
                 'end' => $appointment->end_time->toIso8601String(),
                 'description' => $appointment->description,
@@ -43,8 +48,8 @@ class AppointmentController extends Controller
                 'borderColor' => $appointment->status === 'cancelled' ? '#ef4444' : '#4f46e5',
                 'extendedProps' => [
                     'status' => $appointment->status,
-                    'contact' => $appointment->contact->name ?? 'N/A',
-                    'phone' => $appointment->contact->phone ?? 'N/A',
+                    'contact' => $clientLabel,
+                    'phone' => $appointment->contact->phone ?? ($appointment->contact->mobile ?? 'N/A'),
                     'department' => $appointment->department->name ?? 'N/A',
                 ]
             ];
