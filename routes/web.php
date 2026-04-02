@@ -113,6 +113,8 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     // AI Agent Management (Vapi.ai)
     Route::get('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'index'])->name('vapi.index');
     Route::patch('vapi', [\App\Http\Controllers\Admin\VapiController::class, 'update'])->name('vapi.update');
+    Route::post('vapi/files', [\App\Http\Controllers\Admin\VapiController::class, 'uploadFile'])->name('vapi.files.upload');
+    Route::delete('vapi/files/{id}', [\App\Http\Controllers\Admin\VapiController::class, 'deleteFile'])->name('vapi.files.destroy');
     Route::resource('departments', \App\Http\Controllers\Admin\DepartmentController::class);
     
     // Appointment Management (AI Agenda)
