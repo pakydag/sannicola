@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\VapiFile;
 use App\Services\VapiService;
 use Illuminate\Http\Request;
