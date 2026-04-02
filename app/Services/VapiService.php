@@ -106,14 +106,18 @@ class VapiService
                 'serverUrl' => $webhookUrl,
             ];
 
-            $response = Http::withHeaders([
+            $response = Http::timeout(10)->withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
                 'Content-Type'  => 'application/json',
             ])->patch("{$this->baseUrl}/assistant/{$this->assistantId}", $payload);
 
+            if ($response->failed()) {
+                Log::error('Vapi Sync Failed: ' . $response->status() . ' - ' . $response->body());
+            }
+
             return $response->successful();
         } catch (\Exception $e) {
-            Log::error('VapiService Sync Error: ' . $e->getMessage());
+            Log::error('VapiService Sync Exception: ' . $e->getMessage());
             return false;
         }
     }
