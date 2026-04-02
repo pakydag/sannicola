@@ -28,17 +28,17 @@
                                         @if($ticket->cost > 0)
                                             ${{ number_format($ticket->cost, 2) }}
                                         @else
-                                            <span class="text-gray-400 font-normal">N/A</span>
+                                            <span class="text-gray-400 font-normal">0.00 (N/A)</span>
                                         @endif
                                     </p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-400 uppercase font-semibold">Durata</p>
-                                    <p class="text-sm text-gray-900 font-medium">
+                                    <p class="text-sm text-slate-800 font-bold">
                                         @if($ticket->duration > 0)
                                             {{ floor($ticket->duration / 60) }}:{{ str_pad($ticket->duration % 60, 2, '0', STR_PAD_LEFT) }}
                                         @else
-                                            <span class="text-gray-400 font-normal">N/A</span>
+                                            <span class="text-gray-400 font-normal">00:00 (N/A)</span>
                                         @endif
                                     </p>
                                 </div>

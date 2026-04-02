@@ -91,18 +91,18 @@
                                                 {{ $ticket->description }}
                                             </div>
                                         </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 font-mono">
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-600 font-bold">
                                             @if($ticket->cost > 0)
                                                 ${{ number_format($ticket->cost, 2) }}
                                             @else
-                                                -
+                                                <span class="text-gray-300">-</span>
                                             @endif
                                         </td>
-                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                        <td class="whitespace-nowrap px-3 py-4 text-sm text-slate-500">
                                             @if($ticket->duration > 0)
                                                 {{ floor($ticket->duration / 60) }}:{{ str_pad($ticket->duration % 60, 2, '0', STR_PAD_LEFT) }}
                                             @else
-                                                -
+                                                <span class="text-gray-300">-</span>
                                             @endif
                                         </td>
                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
