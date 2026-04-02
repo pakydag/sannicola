@@ -126,6 +126,7 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     // AI Tickets Management
     Route::get('vapi/tickets', [\App\Http\Controllers\Admin\AiTicketController::class, 'index'])->name('vapi.tickets.index');
     Route::get('vapi/tickets/{ticket}', [\App\Http\Controllers\Admin\AiTicketController::class, 'show'])->name('vapi.tickets.show');
+    Route::post('vapi/tickets/sync-all', [\App\Http\Controllers\Admin\AiTicketController::class, 'bulkSync'])->name('vapi.tickets.bulk-sync');
     Route::post('vapi/tickets/{ticket}/sync', [\App\Http\Controllers\Admin\AiTicketController::class, 'syncCall'])->name('vapi.tickets.sync');
     Route::patch('vapi/tickets/{ticket}/close', [\App\Http\Controllers\Admin\AiTicketController::class, 'close'])->name('vapi.tickets.close');
     Route::patch('vapi/tickets/{ticket}/comments', [\App\Http\Controllers\Admin\AiTicketController::class, 'updateComments'])->name('vapi.tickets.update-comments');
