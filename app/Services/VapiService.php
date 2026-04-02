@@ -47,6 +47,11 @@ class VapiService
             $similarity = (float)(Setting::where('key', 'vapi_voice_similarity')->value('value') ?: 0.75);
             $speed = (float)(Setting::where('key', 'vapi_voice_speed')->value('value') ?: 1.0);
             $voiceId = Setting::where('key', 'vapi_voice_id')->value('value') ?: ($assistant['voice']['voiceId'] ?? '');
+            
+            $bgSound = Setting::where('key', 'vapi_voice_background_sound')->value('value') ?: 'off';
+            $bgSoundUrl = Setting::where('key', 'vapi_voice_background_sound_url')->value('value');
+            $inputMinChars = (int)(Setting::where('key', 'vapi_voice_input_min_characters')->value('value') ?: 30);
+
             $fileIds = VapiFile::whereNotNull('vapi_file_id')->pluck('vapi_file_id')->toArray();
 
             // 2. Sync Tools (Immutata logica dei tool)
@@ -84,6 +89,15 @@ class VapiService
             $voiceConfig['stability'] = $stability;
             $voiceConfig['similarityBoost'] = $similarity;
             $voiceConfig['speed'] = $speed;
+            
+            // Additional Configuration
+            $voiceConfig['backgroundSound'] = $bgSound;
+            if ($bgSound === 'custom' && $bgSoundUrl) {
+                $voiceConfig['backgroundSoundUrl'] = $bgSoundUrl;
+            } else {
+                unset($voiceConfig['backgroundSoundUrl']);
+            }
+            $voiceConfig['inputMinCharacters'] = $inputMinChars;
 
             $payload = [
                 'model' => $modelConfig,

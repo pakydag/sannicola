@@ -38,7 +38,12 @@ class VapiController extends Controller
         $voice_similarity = Setting::where('key', 'vapi_voice_similarity')->value('value') ?: 0.75;
         $voice_speed = Setting::where('key', 'vapi_voice_speed')->value('value') ?: 1.0;
 
-        // 3. Files Knowledge Base
+        // 3. Additional Voice Configuration
+        $voice_background_sound = Setting::where('key', 'vapi_voice_background_sound')->value('value') ?: 'off';
+        $voice_background_sound_url = Setting::where('key', 'vapi_voice_background_sound_url')->value('value');
+        $voice_input_min_characters = Setting::where('key', 'vapi_voice_input_min_characters')->value('value') ?: 30;
+
+        // 4. Files Knowledge Base
         $files = VapiFile::all();
 
         // 4. Inizializzazione se mancano dati critici
@@ -83,7 +88,10 @@ class VapiController extends Controller
             'files',
             'assistant',
             'availableVoices',
-            'voice_id'
+            'voice_id',
+            'voice_background_sound',
+            'voice_background_sound_url',
+            'voice_input_min_characters'
         ));
     }
 
@@ -97,6 +105,9 @@ class VapiController extends Controller
             'voice_similarity' => 'required|numeric|min:0|max:1',
             'voice_speed' => 'required|numeric|min:0.5|max:2',
             'voice_id' => 'required|string',
+            'voice_background_sound' => 'required|string|in:off,office,hospital,custom',
+            'voice_background_sound_url' => 'nullable|url',
+            'voice_input_min_characters' => 'required|integer|min:1|max:500',
         ]);
 
         // Salva tutto nel database locale
@@ -107,6 +118,9 @@ class VapiController extends Controller
         Setting::updateOrCreate(['key' => 'vapi_voice_similarity'], ['value' => $request->input('voice_similarity')]);
         Setting::updateOrCreate(['key' => 'vapi_voice_speed'], ['value' => $request->input('voice_speed')]);
         Setting::updateOrCreate(['key' => 'vapi_voice_id'], ['value' => $request->input('voice_id')]);
+        Setting::updateOrCreate(['key' => 'vapi_voice_background_sound'], ['value' => $request->input('voice_background_sound')]);
+        Setting::updateOrCreate(['key' => 'vapi_voice_background_sound_url'], ['value' => $request->input('voice_background_sound_url')]);
+        Setting::updateOrCreate(['key' => 'vapi_voice_input_min_characters'], ['value' => $request->input('voice_input_min_characters')]);
 
         // Sincronizza con Vapi.ai
         $success = $vapiService->syncAssistantConfig();

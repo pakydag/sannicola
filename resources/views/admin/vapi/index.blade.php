@@ -143,6 +143,34 @@
                                     </div>
                                     <input type="range" name="voice_speed" min="0.5" max="2" step="0.1" value="{{ $voice_speed }}" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="document.getElementById('speed-val').innerText = this.value">
                                 </div>
+
+                                <div class="pt-6 border-t border-gray-100 space-y-4">
+                                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Configurazioni Avanzate</h4>
+                                    
+                                    <div>
+                                        <label for="voice_background_sound" class="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-widest">Suono di Sfondo</label>
+                                        <select name="voice_background_sound" id="voice_background_sound" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm" onchange="document.getElementById('bg-sound-url-container').style.display = (this.value === 'custom' ? 'block' : 'none')">
+                                            <option value="off" {{ $voice_background_sound == 'off' ? 'selected' : '' }}>Nessuno (Off)</option>
+                                            <option value="office" {{ $voice_background_sound == 'office' ? 'selected' : '' }}>Ufficio (Office)</option>
+                                            <option value="hospital" {{ $voice_background_sound == 'hospital' ? 'selected' : '' }}>Ospedale (Hospital)</option>
+                                            <option value="custom" {{ $voice_background_sound == 'custom' ? 'selected' : '' }}>Personalizzato (Custom)</option>
+                                        </select>
+                                    </div>
+
+                                    <div id="bg-sound-url-container" style="display: {{ $voice_background_sound == 'custom' ? 'block' : 'none' }}">
+                                        <label for="voice_background_sound_url" class="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-widest">URL Suono Personalizzato</label>
+                                        <input type="url" name="voice_background_sound_url" id="voice_background_sound_url" value="{{ old('voice_background_sound_url', $voice_background_sound_url) }}" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm" placeholder="https://esempio.it/suono.mp3">
+                                    </div>
+
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <label for="voice_input_min_characters" class="text-xs font-bold text-gray-500 uppercase tracking-widest">Caratteri Minimi Input</label>
+                                            <span class="text-xs font-bold text-indigo-600 tooltip" title="Determina quanto l'AI aspetta prima di rispondere. Valore consigliato: 30.">?</span>
+                                        </div>
+                                        <input type="number" name="voice_input_min_characters" id="voice_input_min_characters" value="{{ old('voice_input_min_characters', $voice_input_min_characters) }}" min="1" max="500" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm">
+                                        <p class="text-[10px] text-gray-400 mt-1 italic">Determina la sensibilità al parlato prima di generare la risposta.</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
