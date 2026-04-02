@@ -358,18 +358,19 @@ class VapiWebhookController extends Controller
         $callId = $this->getCallIdFromPayload($payload);
         $callData = $payload['call'] ?? ($payload['message']['call'] ?? []);
         
-        $cost = $callData['cost'] ?? 0;
-        $duration = 0;
+        // Estrazione costo robusta
+        $cost = $callData['cost'] ?? ($callData['totalCost'] ?? ($callData['total_cost'] ?? 0));
         
-        // Calcolo durata se presente
-        if (isset($callData['startedAt']) && isset($callData['endedAt'])) {
+        // Estrazione durata robusta
+        $duration = $callData['duration'] ?? 0;
+        if (!$duration && isset($callData['startedAt']) && isset($callData['endedAt'])) {
             $start = strtotime($callData['startedAt']);
             $end = strtotime($callData['endedAt']);
             $duration = $end - $start;
         }
 
-        $recordingUrl = $callData['recordingUrl'] ?? ($payload['message']['recordingUrl'] ?? null);
-        $transcript = $payload['message']['transcript'] ?? ($payload['transcript'] ?? null);
+        $recordingUrl = $callData['recordingUrl'] ?? ($payload['message']['recordingUrl'] ?? ($callData['recording_url'] ?? null));
+        $transcript = $payload['message']['transcript'] ?? ($payload['transcript'] ?? ($callData['transcript'] ?? null));
 
         Log::info("Vapi End of Call: updating records for Call #{$callId}", [
             'cost' => $cost,
