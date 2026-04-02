@@ -55,8 +55,10 @@ class VapiController extends Controller
             }
         }
 
-        $assistantRes = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/assistant/{$this->assistantId}");
-        $assistant = $assistantRes->successful() ? $assistantRes->json() : [];
+        // 4. Recupera Voci Disponibili da Vapi
+        $voicesRes = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/voice");
+        $availableVoices = $voicesRes->successful() ? $voicesRes->json() : [];
+        $voice_id = Setting::where('key', 'vapi_voice_id')->value('value') ?: ($assistant['voice']['voiceId'] ?? '');
 
         return view('admin.vapi.index', compact(
             'prompt', 
@@ -66,7 +68,9 @@ class VapiController extends Controller
             'voice_similarity',
             'voice_speed',
             'files',
-            'assistant'
+            'assistant',
+            'availableVoices',
+            'voice_id'
         ));
     }
 
@@ -79,6 +83,7 @@ class VapiController extends Controller
             'voice_stability' => 'required|numeric|min:0|max:1',
             'voice_similarity' => 'required|numeric|min:0|max:1',
             'voice_speed' => 'required|numeric|min:0.5|max:2',
+            'voice_id' => 'required|string',
         ]);
 
         // Salva tutto nel database locale
@@ -88,6 +93,7 @@ class VapiController extends Controller
         Setting::updateOrCreate(['key' => 'vapi_voice_stability'], ['value' => $request->input('voice_stability')]);
         Setting::updateOrCreate(['key' => 'vapi_voice_similarity'], ['value' => $request->input('voice_similarity')]);
         Setting::updateOrCreate(['key' => 'vapi_voice_speed'], ['value' => $request->input('voice_speed')]);
+        Setting::updateOrCreate(['key' => 'vapi_voice_id'], ['value' => $request->input('voice_id')]);
 
         // Sincronizza con Vapi.ai
         $success = $vapiService->syncAssistantConfig();

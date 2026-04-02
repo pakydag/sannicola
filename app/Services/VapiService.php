@@ -46,6 +46,7 @@ class VapiService
             $stability = (float)(Setting::where('key', 'vapi_voice_stability')->value('value') ?: 0.5);
             $similarity = (float)(Setting::where('key', 'vapi_voice_similarity')->value('value') ?: 0.75);
             $speed = (float)(Setting::where('key', 'vapi_voice_speed')->value('value') ?: 1.0);
+            $voiceId = Setting::where('key', 'vapi_voice_id')->value('value') ?: ($assistant['voice']['voiceId'] ?? '');
             $fileIds = VapiFile::whereNotNull('vapi_file_id')->pluck('vapi_file_id')->toArray();
 
             // 2. Sync Tools (Immutata logica dei tool)
@@ -79,6 +80,7 @@ class VapiService
             }
 
             $voiceConfig = $assistant['voice'];
+            $voiceConfig['voiceId'] = $voiceId;
             $voiceConfig['stability'] = $stability;
             $voiceConfig['similarityBoost'] = $similarity;
             $voiceConfig['speed'] = $speed;
