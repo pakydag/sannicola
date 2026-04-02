@@ -374,13 +374,18 @@ class VapiWebhookController extends Controller
             'duration' => $duration
         ]);
 
-        // 1. Aggiorna Ticket AI associati
-        $tickets = AiTicket::where('vapi_call_id', $callId)->get();
+        // 1. Aggiorna Ticket AI associati (cerchiamo con entrambi i campi per sicurezza)
+        $tickets = AiTicket::where('vapi_call_id', $callId)
+            ->orWhere('call_id', $callId)
+            ->get();
+            
         foreach ($tickets as $ticket) {
             $ticket->update([
-                'cost' => $cost,
-                'duration' => $duration,
+                'vapi_call_id'  => $callId, // Assicuriamo che il nuovo campo sia popolato
+                'cost'          => $cost,
+                'duration'      => $duration,
                 'recording_url' => $recordingUrl,
+                'audio_url'     => $recordingUrl, // Feedback al vecchio campo per retrocompatibilità
                 'transcription' => $transcript ?? $ticket->transcription,
             ]);
         }
