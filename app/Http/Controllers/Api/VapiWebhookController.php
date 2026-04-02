@@ -358,19 +358,48 @@ class VapiWebhookController extends Controller
         $callId = $this->getCallIdFromPayload($payload);
         $callData = $payload['call'] ?? ($payload['message']['call'] ?? []);
         
-        // Estrazione costo robusta
-        $cost = $callData['cost'] ?? ($callData['totalCost'] ?? ($callData['total_cost'] ?? 0));
+        // LOG PER DEBUG: Vediamo esattamente cosa arriva
+        Log::info("Vapi EndOfCall Payload for #{$callId}:", [
+            'call_data_keys' => array_keys($callData),
+            'message_keys' => array_keys($payload['message'] ?? []),
+            'full_payload' => $payload // Questo scriverà tutto nel file laravel.log
+        ]);
+
+        // Estrazione costo ultra-robusta (cerchiamo ovunque)
+        $cost = $callData['cost'] ?? 
+                ($callData['totalCost'] ?? 
+                ($callData['total_cost'] ?? 
+                ($payload['message']['cost'] ?? 
+                ($payload['cost'] ?? 0))));
         
-        // Estrazione durata robusta
-        $duration = $callData['duration'] ?? 0;
+        // Estrazione durata ultra-robusta
+        $duration = $callData['duration'] ?? 
+                    ($payload['message']['duration'] ?? 
+                    ($payload['duration'] ?? 0));
+                    
         if (!$duration && isset($callData['startedAt']) && isset($callData['endedAt'])) {
             $start = strtotime($callData['startedAt']);
             $end = strtotime($callData['endedAt']);
             $duration = $end - $start;
         }
 
-        $recordingUrl = $callData['recordingUrl'] ?? ($payload['message']['recordingUrl'] ?? ($callData['recording_url'] ?? null));
-        $transcript = $payload['message']['transcript'] ?? ($payload['transcript'] ?? ($callData['transcript'] ?? null));
+        $recordingUrl = $callData['recordingUrl'] ?? 
+                        ($payload['message']['recordingUrl'] ?? 
+                        ($callData['recording_url'] ?? 
+                        ($payload['recordingUrl'] ?? null)));
+
+        $transcript = $payload['message']['transcript'] ?? 
+                      ($payload['transcript'] ?? 
+                      ($callData['transcript'] ?? 
+                      ($callData['fullTranscript'] ?? null)));
+
+        Log::info("Vapi Data Extracted:", [
+            'callId' => $callId,
+            'cost' => $cost,
+            'duration' => $duration,
+            'has_recording' => !empty($recordingUrl),
+            'has_transcript' => !empty($transcript)
+        ]);
 
         Log::info("Vapi End of Call: updating records for Call #{$callId}", [
             'cost' => $cost,
