@@ -55,6 +55,9 @@ class VapiController extends Controller
             }
         }
 
+        $assistantRes = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/assistant/{$this->assistantId}");
+        $assistant = $assistantRes->successful() ? $assistantRes->json() : [];
+
         // 4. Recupera Voci Disponibili da Vapi
         $voicesRes = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])->get("{$this->baseUrl}/voice");
         $availableVoices = $voicesRes->successful() ? $voicesRes->json() : [];
