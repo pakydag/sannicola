@@ -20,8 +20,9 @@ class VapiWebhookController extends Controller
     {
         $payload = $request->all();
         $messageType = $payload['message']['type'] ?? null;
+        $callId = $this->getCallIdFromPayload($payload);
         
-        Log::info('Vapi Webhook received:', ['type' => $messageType, 'callId' => $payload['call']['id'] ?? null]);
+        Log::info('Vapi Webhook received:', ['type' => $messageType, 'callId' => $callId]);
 
         // 1. GESTIONE PERSONALIZZAZIONE CHIAMATA (ASSISTANT REQUEST)
         if ($messageType === 'assistant-request') {
@@ -108,6 +109,7 @@ class VapiWebhookController extends Controller
             if (is_string($args)) $args = json_decode($args, true);
 
             if ($functionName === 'save_ticket') {
+                Log::info("Vapi Tool Call: save_ticket invoked", ['args' => $args, 'payload_call_id' => $this->getCallIdFromPayload($payload)]);
                 $results[] = $this->saveTicketTool($toolCall, $args, $payload);
             }
 
@@ -120,6 +122,7 @@ class VapiWebhookController extends Controller
             }
 
             if ($functionName === 'book_appointment') {
+                Log::info("Vapi Tool Call: book_appointment invoked", ['args' => $args, 'payload_call_id' => $this->getCallIdFromPayload($payload)]);
                 $results[] = $this->bookAppointmentTool($toolCall, $args, $payload);
             }
         }
@@ -129,7 +132,7 @@ class VapiWebhookController extends Controller
 
     private function saveTicketTool($toolCall, $args, $payload)
     {
-        $callId = $payload['call']['id'] ?? ($payload['message']['callId'] ?? null);
+        $callId = $this->getCallIdFromPayload($payload);
         
         // Estrazione telefono
         $phone = $args['phone'] ?? ($payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null));
@@ -328,8 +331,7 @@ class VapiWebhookController extends Controller
 
         $startTime = date('Y-m-d H:i:s', strtotime("$date $time"));
         $endTime = date('Y-m-d H:i:s', strtotime("$startTime + {$department->appointment_duration} minutes"));
-
-        $callId = $payload['call']['id'] ?? ($payload['message']['callId'] ?? null);
+        $callId = $this->getCallIdFromPayload($payload);
 
         $appointment = \App\Models\Appointment::create([
             'contact_id' => $contact ? $contact->id : null,
@@ -353,8 +355,8 @@ class VapiWebhookController extends Controller
      */
     private function handleEndOfCall($payload)
     {
+        $callId = $this->getCallIdFromPayload($payload);
         $callData = $payload['call'] ?? ($payload['message']['call'] ?? []);
-        $callId = $callData['id'] ?? ($payload['message']['callId'] ?? null);
         
         $cost = $callData['cost'] ?? 0;
         $duration = 0;
@@ -401,5 +403,25 @@ class VapiWebhookController extends Controller
         }
 
         return response()->json(['status' => 'ok']);
+    }
+
+    /**
+     * Utility per estrarre l'ID chiamata in modo robusto da vari formati di payload Vapi
+     */
+    private function getCallIdFromPayload($payload)
+    {
+        // 1. Dalla radice 'call'
+        if (isset($payload['call']['id'])) return $payload['call']['id'];
+
+        // 2. Dal messaggio nidificato
+        if (isset($payload['message']['call']['id'])) return $payload['message']['call']['id'];
+        
+        // 3. Da message.callId (comune in alcuni eventi report)
+        if (isset($payload['message']['callId'])) return $payload['message']['callId'];
+        
+        // 4. Da message.call.id se nidificato diversamente
+        if (isset($payload['message']['call']->id)) return $payload['message']['call']->id;
+        
+        return null;
     }
 }
