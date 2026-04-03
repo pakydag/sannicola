@@ -97,11 +97,13 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     });
 
     // Customer Management
+    Route::get('customers/export', [\App\Http\Controllers\Admin\CustomerController::class, 'exportCsv'])->name('customers.export');
     Route::prefix('customers')->name('customers.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\CustomerController::class, 'index'])->name('index');
         Route::get('/create', [\App\Http\Controllers\Admin\CustomerController::class, 'create'])->name('create');
         Route::post('/', [\App\Http\Controllers\Admin\CustomerController::class, 'store'])->name('store');
         Route::get('/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'show'])->name('show');
+        Route::delete('/{customer}', [\App\Http\Controllers\Admin\CustomerController::class, 'destroy'])->name('destroy');
         Route::post('/{customer}/tags/add', [\App\Http\Controllers\Admin\CustomerController::class, 'addTag'])->name('add-tag');
         Route::delete('/{customer}/tags/remove', [\App\Http\Controllers\Admin\CustomerController::class, 'removeTag'])->name('remove-tag');
         Route::post('/{customer}/toggle-feature', [\App\Http\Controllers\Admin\CustomerController::class, 'toggleFeature'])->name('toggle-feature');

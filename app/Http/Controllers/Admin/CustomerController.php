@@ -96,21 +96,61 @@ class CustomerController extends Controller
         return back()->with('success', 'Tag rimosso.');
     }
 
-    public function toggleFeature(Request $request, $id)
+    public function destroy($id)
     {
         $customer = Contact::findOrFail($id);
-        
-        $feature = $request->get('feature');
-        $allowedFeatures = ['is_shop_customer', 'is_booking_customer', 'is_b2b_customer', 'is_spoki_customer'];
-        
-        if (in_array($feature, $allowedFeatures)) {
-            $customer->$feature = !$customer->$feature;
-            $customer->save();
-            
-            $status = $customer->$feature ? 'abilitata' : 'disabilitata';
-            return back()->with('success', "Funzione " . str_replace('is_', '', $feature) . " $status per il contatto.");
-        }
+        $customer->delete();
+        return redirect()->route('admin.customers.index')->with('success', 'Contatto eliminato correttamente.');
+    }
 
-        return back()->with('error', 'Funzione non valida.');
+    public function exportCsv()
+    {
+        $fileName = 'crm_export_' . now()->format('Y-m-d_H-i') . '.csv';
+        $customers = Contact::all();
+
+        $headers = array(
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+
+        $columns = array('Nome', 'Cognome', 'Azienda', 'Email', 'Telefono', 'Cellulare', 'Tags', 'Creato il');
+
+        $callback = function() use($customers, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            // Add UTF-8 BOM for Excel
+            fputs($file, $bom = (chr(0xEF) . chr(0xBB) . chr(0xBF)));
+            
+            fputcsv($file, $columns, ';');
+
+            foreach ($customers as $customer) {
+                $row['Nome']       = $customer->first_name;
+                $row['Cognome']    = $customer->last_name;
+                $row['Azienda']    = $customer->company_name;
+                $row['Email']      = $customer->email;
+                $row['Telefono']   = $customer->phone;
+                $row['Cellulare']  = $customer->mobile;
+                $row['Tags']       = is_array($customer->tags) ? implode(', ', $customer->tags) : '';
+                $row['Creato il']  = $customer->created_at->format('d/m/Y H:i');
+
+                fputcsv($file, array(
+                    $row['Nome'], 
+                    $row['Cognome'], 
+                    $row['Azienda'], 
+                    $row['Email'], 
+                    $row['Telefono'], 
+                    $row['Cellulare'], 
+                    $row['Tags'], 
+                    $row['Creato il']
+                ), ';');
+            }
+
+            fclose($file);
+        };
+
+        return response()->streamDownload($callback, $fileName, $headers);
     }
 }

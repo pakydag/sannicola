@@ -4,14 +4,25 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('CRM') }}
             </h2>
-            <a href="{{ route('admin.customers.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                Nuovo Contatto
-            </a>
+            <div class="flex gap-4">
+                <a href="{{ route('admin.customers.export') }}" class="inline-flex items-center px-4 py-2 bg-slate-100 border border-slate-300 rounded-md font-semibold text-xs text-slate-700 uppercase tracking-widest hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    Esporta CSV
+                </a>
+                <a href="{{ route('admin.customers.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    Nuovo Contatto
+                </a>
+            </div>
         </div>
     </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if(session('success'))
+                <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="mb-6">
@@ -86,7 +97,19 @@
                                             </div>
                                         </td>
                                         <td class="py-2 px-4 border-b text-right">
-                                            <a href="{{ route('admin.customers.show', $customer) }}" class="inline-flex items-center px-3 py-1 bg-white border border-indigo-600 rounded-md font-semibold text-xs text-indigo-600 uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all">Dettaglio</a>
+                                            <div class="flex justify-end items-center gap-2">
+                                                <a href="{{ route('admin.customers.show', $customer) }}" class="inline-flex items-center px-3 py-1 bg-white border border-indigo-600 rounded-md font-semibold text-xs text-indigo-600 uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all">Dettaglio</a>
+                                                
+                                                <form action="{{ route('admin.customers.destroy', $customer) }}" method="POST" class="inline-block" onsubmit="return confirm('Sei sicuro di voler eliminare definitivamente questo contatto? Questa azione cancellerà anche la sua storia ordini e prenotazioni.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900 ml-2">
+                                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2-0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
