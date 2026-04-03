@@ -53,19 +53,25 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.vapi.update') }}" method="POST">
-                @csrf
-                @method('PATCH')
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Colonna Sinistra: Identità -->
+                <div class="lg:col-span-2 space-y-6">
+                    <form action="{{ route('admin.vapi.update') }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <input type="hidden" name="update_type" value="identity">
 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Colonna Sinistra: Identità -->
-                    <div class="lg:col-span-2 space-y-6">
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <div class="flex items-center gap-3 mb-6">
-                                <div class="p-2 bg-indigo-100 rounded-lg text-indigo-600">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-gray-900 uppercase">Identità e Istruzioni</h3>
                                 </div>
-                                <h3 class="text-lg font-bold text-gray-900 uppercase">Identità e Istruzioni</h3>
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 shadow-md transition">
+                                    Salva Istruzioni
+                                </button>
                             </div>
 
                             <div class="space-y-6">
@@ -79,18 +85,30 @@
                                     <input type="text" name="welcome_message" id="welcome_message" value="{{ old('welcome_message', $welcome_message) }}" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm" placeholder="Come posso aiutarti?">
                                 </div>
                             </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
+                </div>
 
-                    <!-- Colonna Destra: Parametri Tecnici -->
+                <!-- Colonna Destra: Parametri Tecnici -->
+                <form action="{{ route('admin.vapi.update') }}" method="POST" class="space-y-6">
+                    @csrf
+                    @method('PATCH')
+                    <input type="hidden" name="update_type" value="voice">
+
                     <div class="space-y-6">
                         <!-- Lingua e Voce -->
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                            <div class="flex items-center gap-3 mb-6">
-                                <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-purple-100 rounded-lg text-purple-600">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-gray-900 uppercase">Voce e Lingua</h3>
                                 </div>
-                                <h3 class="text-lg font-bold text-gray-900 uppercase">Voce e Lingua</h3>
+                                <button type="submit" class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-lg font-bold text-xs text-white uppercase tracking-widest hover:bg-purple-700 shadow-md transition">
+                                    Salva Voce
+                                </button>
                             </div>
 
                             <div class="space-y-6">
@@ -174,12 +192,10 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold uppercase tracking-widest hover:bg-indigo-700 shadow-lg shadow-indigo-100 transition duration-150">
-                            Salva e Sincronizza
-                        </button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
 
             <!-- Sezione Knowledge Base -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mt-6">

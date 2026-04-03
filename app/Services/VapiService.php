@@ -158,6 +158,10 @@ class VapiService
             ]);
 
             $modelConfig = $assistant['model'];
+            // Rimuoviamo proprietà che causano errori di validazione (obsolete o mal posizionate)
+            unset($modelConfig['fillerMessagesEnabled']);
+            unset($modelConfig['backchannelingEnabled']);
+
             $modelConfig['messages'] = [['role' => 'system', 'content' => $this->preparePrompt($finalPrompt)]];
             $modelConfig['toolIds'] = array_filter([
                 $getAssistanceToolId, 
@@ -177,20 +181,36 @@ class VapiService
                 unset($modelConfig['knowledgeBase']);
             }
 
-            $voiceConfig = $assistant['voice'];
+            $voiceConfig = $assistant['voice'] ?? [];
+            unset($voiceConfig['fillerMessagesEnabled']); 
+            
             $voiceConfig['voiceId'] = $voiceId;
-            $voiceConfig['stability'] = $stability;
-            $voiceConfig['similarityBoost'] = $similarity;
-            $voiceConfig['speed'] = $speed;
+            $voiceConfig['stability'] = (float)$stability;
+            $voiceConfig['similarityBoost'] = (float)$similarity;
+            $voiceConfig['speed'] = (float)$speed;
+
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
+                'transcription' => [
+                    'provider' => $assistant['transcription']['provider'] ?? 'deepgram',
+                    'language' => $language
+                ],
                 'firstMessage' => null, 
-                'firstMessageMode' => 'assistant-speaks-first-with-model-generated-message', 
+                'firstMessageMode' => 'assistant-speaks-first-with-model-generated-message',
                 'server' => [
                     'url' => $webhookUrl,
                 ],
             ];
+            
+            // Assicuriamoci che la lingua sia anche nel modello se supportata
+            $payload['model']['language'] = $language;
+
+            // Pulizia finale del payload top-level
+            unset($payload['fillerMessagesEnabled']);
+            unset($payload['firstMessageMode']);
+
+            Log::info('Vapi Syncing with payload: ', ['payload' => $payload]);
 
             $response = Http::timeout(10)->withHeaders([
                 'Authorization' => 'Bearer ' . $this->apiKey,
@@ -199,6 +219,8 @@ class VapiService
 
             if ($response->failed()) {
                 Log::error('Vapi Sync Failed: ' . $response->status() . ' - ' . $response->body());
+                // Salviamo l'ultimo errore per poterlo mostrare se necessario
+                Setting::updateOrCreate(['key' => 'vapi_last_error'], ['value' => $response->body()]);
             }
 
             return $response->successful();

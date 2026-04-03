@@ -97,39 +97,48 @@ class VapiController extends Controller
 
     public function update(Request $request, VapiService $vapiService)
     {
-        $request->validate([
-            'prompt' => 'required|string',
-            'welcome_message' => 'required|string',
-            'language' => 'required|string|in:it-IT,en-US',
-            'voice_stability' => 'required|numeric|min:0|max:1',
-            'voice_similarity' => 'required|numeric|min:0|max:1',
-            'voice_speed' => 'required|numeric|min:0.5|max:2',
-            'voice_id' => 'required|string',
-            'voice_background_sound' => 'required|string|in:off,office,hospital,custom',
-            'voice_background_sound_url' => 'nullable|url',
-            'voice_input_min_characters' => 'required|integer|min:1|max:500',
-        ]);
+        $type = $request->input('update_type', 'all');
 
-        // Salva tutto nel database locale
-        Setting::updateOrCreate(['key' => 'vapi_prompt'], ['value' => $request->input('prompt')]);
-        Setting::updateOrCreate(['key' => 'vapi_welcome_message'], ['value' => $request->input('welcome_message')]);
-        Setting::updateOrCreate(['key' => 'vapi_language'], ['value' => $request->input('language')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_stability'], ['value' => $request->input('voice_stability')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_similarity'], ['value' => $request->input('voice_similarity')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_speed'], ['value' => $request->input('voice_speed')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_id'], ['value' => $request->input('voice_id')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_background_sound'], ['value' => $request->input('voice_background_sound')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_background_sound_url'], ['value' => $request->input('voice_background_sound_url')]);
-        Setting::updateOrCreate(['key' => 'vapi_voice_input_min_characters'], ['value' => $request->input('voice_input_min_characters')]);
+        if ($type === 'identity' || $type === 'all') {
+            $request->validate([
+                'prompt' => 'required|string',
+                'welcome_message' => 'required|string',
+            ]);
 
-        // Sincronizza con Vapi.ai
+            Setting::updateOrCreate(['key' => 'vapi_prompt'], ['value' => $request->input('prompt')]);
+            Setting::updateOrCreate(['key' => 'vapi_welcome_message'], ['value' => $request->input('welcome_message')]);
+        }
+
+        if ($type === 'voice' || $type === 'all') {
+            $request->validate([
+                'language' => 'required|string|in:it-IT,en-US',
+                'voice_stability' => 'required|numeric|min:0|max:1',
+                'voice_similarity' => 'required|numeric|min:0|max:1',
+                'voice_speed' => 'required|numeric|min:0.5|max:2',
+                'voice_id' => 'required|string',
+                'voice_background_sound' => 'required|string|in:off,office,hospital,custom',
+                'voice_background_sound_url' => 'nullable|url',
+                'voice_input_min_characters' => 'required|integer|min:1|max:500',
+            ]);
+
+            Setting::updateOrCreate(['key' => 'vapi_language'], ['value' => $request->input('language')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_stability'], ['value' => $request->input('voice_stability')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_similarity'], ['value' => $request->input('voice_similarity')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_speed'], ['value' => $request->input('voice_speed')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_id'], ['value' => $request->input('voice_id')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_background_sound'], ['value' => $request->input('voice_background_sound')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_background_sound_url'], ['value' => $request->input('voice_background_sound_url')]);
+            Setting::updateOrCreate(['key' => 'vapi_voice_input_min_characters'], ['value' => $request->input('voice_input_min_characters')]);
+        }
+
+        // Sincronizza con Vapi.ai (sempre, ma il VapiService gestirà il payload completo dal DB)
         $success = $vapiService->syncAssistantConfig();
 
         if (!$success) {
-            return back()->withErrors(['api' => 'Errore nella sincronizzazione con Vapi.ai. Il DB locale è stato comunque aggiornato.']);
+            return back()->withInput()->withErrors(['api' => 'Configurazione salvata in locale, ma la sincronizzazione con Vapi.ai è fallita. Verifica i log o riprova più tardi.']);
         }
 
-        return redirect()->route('admin.vapi.index')->with('success', 'Configurazione salvata e sincronizzata con Vapi.ai.');
+        return redirect()->route('admin.vapi.index')->with('success', 'Configurazione ' . ($type === 'identity' ? 'Identità' : ($type === 'voice' ? 'Voce' : 'Completa')) . ' salvata e sincronizzata.');
     }
 
     /**
