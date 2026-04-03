@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Agente AI - Pannello di Controllo Vanessa') }}
+                {{ __('Pannello Configurazione Assistente AI') }}
             </h2>
             <div class="flex gap-2">
                 <a href="{{ route('admin.vapi.tickets.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
@@ -71,12 +71,12 @@
                             <div class="space-y-6">
                                 <div>
                                     <label for="prompt" class="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-widest">Prompt di Sistema (System Message)</label>
-                                    <textarea name="prompt" id="prompt" rows="12" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm font-mono text-sm" placeholder="Definisci qui il comportamento di Vanessa...">{{ old('prompt', $prompt) }}</textarea>
+                                    <textarea name="prompt" id="prompt" rows="12" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm font-mono text-sm" placeholder="Definisci qui il comportamento dell'assistente...">{{ old('prompt', $prompt) }}</textarea>
                                 </div>
 
                                 <div>
                                     <label for="welcome_message" class="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-widest">Messaggio di Benvenuto (First Message)</label>
-                                    <input type="text" name="welcome_message" id="welcome_message" value="{{ old('welcome_message', $welcome_message) }}" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm" placeholder="Ciao! Sono Vanessa...">
+                                    <input type="text" name="welcome_message" id="welcome_message" value="{{ old('welcome_message', $welcome_message) }}" class="w-full border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl shadow-sm text-sm" placeholder="Come posso aiutarti?">
                                 </div>
                             </div>
                         </div>

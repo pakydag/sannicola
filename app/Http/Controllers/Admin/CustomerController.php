@@ -66,6 +66,30 @@ class CustomerController extends Controller
         return view('admin.customers.show', compact('customer'));
     }
 
+    public function edit($id)
+    {
+        $customer = Contact::findOrFail($id);
+        return view('admin.customers.edit', compact('customer'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $customer = Contact::findOrFail($id);
+        
+        $validated = $request->validate([
+            'first_name'   => 'required|string|max:255',
+            'last_name'    => 'required|string|max:255',
+            'company_name' => 'nullable|string|max:255',
+            'email'        => 'nullable|email|unique:contacts,email,' . $id,
+            'phone'        => 'nullable|string|max:20',
+            'mobile'       => 'nullable|string|max:20',
+        ]);
+
+        $customer->update($validated);
+
+        return redirect()->route('admin.customers.show', $id)->with('success', 'Dati del contatto aggiornati correttamente.');
+    }
+
     public function addTag(Request $request, $id)
     {
         $customer = Contact::findOrFail($id);

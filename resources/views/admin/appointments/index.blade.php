@@ -82,7 +82,6 @@
                                     <p class="mb-2"><strong>Stato:</strong> <span class="${props.status === 'cancelled' ? 'text-red-600' : 'text-green-600'}">${props.status.toUpperCase()}</span></p>
                                     <div class="mt-4 flex flex-col space-y-2">
                                         <a href="/amministrazione/appointments/${info.event.id}" class="text-center bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-700 font-bold text-[10px] uppercase tracking-wider">📂 Vedi Dettaglio Completo</a>
-                                        ${props.recording_url ? `<a href="${props.recording_url}" target="_blank" class="text-center bg-slate-100 text-slate-700 px-3 py-2 rounded hover:bg-slate-200 font-bold text-[10px] uppercase tracking-wider">🎙️ Scarica Audio</a>` : ''}
                                     </div>
                                     ${info.event.description ? `<p class="mt-4 p-2 bg-gray-50 border rounded italic">"${info.event.description}"</p>` : ''}
                                 </div>
