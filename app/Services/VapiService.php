@@ -17,8 +17,8 @@ class VapiService
 
     public function __construct()
     {
-        $this->assistantId = Setting::where('key', 'vapi_assistant_id')->value('value') ?: '5a05fa0e-87e8-43cc-969e-4c5c469670de';
-        $this->apiKey = Setting::where('key', 'vapi_key')->value('value') ?: '02d6eef9-2b56-4db7-b4cc-162cbad6b2c7';
+        $this->assistantId = Setting::where('key', 'vapi_assistant_id')->value('value');
+        $this->apiKey = Setting::where('key', 'vapi_key')->value('value');
         $this->webhookUrl = Setting::where('key', 'vapi_webhook_url')->value('value') ?: url('/api/vapi/webhook');
     }
 
@@ -31,6 +31,11 @@ class VapiService
      */
     public function syncAssistantConfig($prompt = null, $welcomeMessage = null)
     {
+        if (!$this->assistantId || !$this->apiKey) {
+            Log::warning('VapiService: Sincronizzazione saltata, Assistant ID o API Key mancante nel database.');
+            return false;
+        }
+
         try {
             // 1. Recupera dati attuali e impostazioni locali
             $getCurrent = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
@@ -192,20 +197,14 @@ class VapiService
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
-                'transcription' => [
-                    'provider' => $assistant['transcription']['provider'] ?? 'deepgram',
-                    'language' => $language
-                ],
                 'firstMessage' => null, 
                 'firstMessageMode' => 'assistant-speaks-first-with-model-generated-message',
                 'server' => [
                     'url' => $webhookUrl,
                 ],
+                'language' => $language,
             ];
             
-            // Assicuriamoci che la lingua sia anche nel modello se supportata
-            $payload['model']['language'] = $language;
-
             // Pulizia finale del payload top-level
             unset($payload['fillerMessagesEnabled']);
             unset($payload['firstMessageMode']);

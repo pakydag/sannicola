@@ -19,8 +19,8 @@ class VapiController extends Controller
 
     public function __construct()
     {
-        $this->assistantId = Setting::where('key', 'vapi_assistant_id')->value('value') ?: '5a05fa0e-87e8-43cc-969e-4c5c469670de';
-        $this->apiKey = Setting::where('key', 'vapi_key')->value('value') ?: '02d6eef9-2b56-4db7-b4cc-162cbad6b2c7';
+        $this->assistantId = Setting::where('key', 'vapi_assistant_id')->value('value');
+        $this->apiKey = Setting::where('key', 'vapi_key')->value('value');
     }
 
     /**
