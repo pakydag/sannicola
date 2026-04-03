@@ -22,6 +22,15 @@ class VapiWebhookController extends Controller
         $messageType = $payload['message']['type'] ?? null;
         $callId = $this->getCallIdFromPayload($payload);
         
+        // --- LOG DI EMERGENZA PER DEBUG ---
+        $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? 'N/D');
+        $debugMsg = "\n[" . now()->format('Y-m-d H:i:s') . "] --- VAPI WEBHOOK HIT ---\n";
+        $debugMsg .= "MESSAGE TYPE: '{$messageType}'\n";
+        $debugMsg .= "CALL ID: '{$callId}'\n";
+        $debugMsg .= "RAW PHONE: '{$customerPhone}'\n";
+        file_put_contents(storage_path('logs/vapi_caller_debug.log'), $debugMsg, FILE_APPEND);
+        // ----------------------------------
+
         Log::info('Vapi Webhook received:', ['type' => $messageType, 'callId' => $callId]);
 
         // 1. GESTIONE PERSONALIZZAZIONE CHIAMATA (ASSISTANT REQUEST)
