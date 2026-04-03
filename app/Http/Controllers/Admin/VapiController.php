@@ -68,7 +68,7 @@ class VapiController extends Controller
 
             // 4. Recupera Voci Disponibili da Vapi
             $voicesRes = Http::timeout(10)->withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
-                ->get("{$this->baseUrl}/voice");
+                ->get("{$this->baseUrl}/voices");
             $availableVoices = $voicesRes->successful() ? $voicesRes->json() : [];
         } catch (\Exception $e) {
             Log::warning('VapiController: Connection timeout or error: ' . $e->getMessage());
