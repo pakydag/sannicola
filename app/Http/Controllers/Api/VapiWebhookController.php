@@ -110,7 +110,12 @@ class VapiWebhookController extends Controller
             ]);
         }
 
-        return response()->json([]);
+        // Fallback per numeri non riconosciuti
+        return response()->json([
+            'assistant' => [
+                'firstMessage' => "Cèdam srl, sono Vanessa, come posso aiutarti?"
+            ]
+        ]);
     }
 
     /**
