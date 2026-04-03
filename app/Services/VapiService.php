@@ -77,6 +77,7 @@ class VapiService
             $modelConfig = $assistant['model'];
             $modelConfig['messages'] = [['role' => 'system', 'content' => $this->preparePrompt($finalPrompt)]];
             $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId, $getCustomerContextToolId]);
+            $modelConfig['fillerMessagesEnabled'] = false; // Disabilita il "Ci vorrà solo un secondo"
 
             if (!empty($fileIds)) {
                 $modelConfig['knowledgeBase'] = ['provider' => 'vapi', 'fileIds' => $fileIds];
