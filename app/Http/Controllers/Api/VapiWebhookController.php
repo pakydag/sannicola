@@ -427,6 +427,16 @@ class VapiWebhookController extends Controller
             'status' => 'confirmed'
         ]);
 
+        // INVIO EMAIL AL REPARTO (Stile Ticket)
+        if ($department && $department->email) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($department->email)->send(new \App\Mail\AppointmentBooked($appointment));
+                Log::info("Email appuntamento inviata al reparto {$department->name} ({$department->email})");
+            } catch (\Exception $e) {
+                Log::error("Errore invio email appuntamento: " . $e->getMessage());
+            }
+        }
+
         return [
             'toolCallId' => $toolCall['id'] ?? 'default',
             'result' => "Appuntamento confermato per il $date alle $time. Ti comunico che ho segnato l'impegno in agenda."
@@ -512,6 +522,7 @@ class VapiWebhookController extends Controller
                 'cost' => $cost,
                 'duration' => $duration,
                 'recording_url' => $recordingUrl,
+                'transcription' => $transcript ?? $appointment->transcription,
             ]);
         }
 

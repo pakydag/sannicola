@@ -73,4 +73,10 @@ class AppointmentController extends Controller
         $appointment->save();
         return redirect()->back()->with('success', 'Appuntamento annullato.');
     }
+
+    public function show(Appointment $appointment)
+    {
+        $appointment->load(['contact', 'department']);
+        return view('admin.appointments.show', compact('appointment'));
+    }
 }
