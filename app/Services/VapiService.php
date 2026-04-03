@@ -92,7 +92,7 @@ class VapiService
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
                 'firstMessage' => $finalWelcome,
-                'firstMessageMode' => 'assistant-request', // Forza Vapi a chiedere il primo messaggio al server (Webhook)
+                'firstMessageMode' => 'assistant-speaks-first', // Forza Vanessa a parlare per prima
                 'serverUrl' => $webhookUrl,
             ];
 
