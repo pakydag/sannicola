@@ -121,6 +121,10 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     Route::delete('vapi/files/{id}', [\App\Http\Controllers\Admin\VapiController::class, 'deleteFile'])->name('vapi.files.destroy');
     Route::resource('departments', \App\Http\Controllers\Admin\DepartmentController::class);
     
+    // SMS Vapi Management
+    Route::get('vapi/sms', [\App\Http\Controllers\Admin\VapiSmsController::class, 'index'])->name('vapi.sms.index');
+    Route::delete('vapi/sms/{sms}', [\App\Http\Controllers\Admin\VapiSmsController::class, 'destroy'])->name('vapi.sms.destroy');
+    
     // Appointment Management (AI Agenda)
     Route::get('appointments', [\App\Http\Controllers\Admin\AppointmentController::class, 'index'])->name('appointments.index');
     Route::get('appointments/events', [\App\Http\Controllers\Admin\AppointmentController::class, 'events'])->name('appointments.events');

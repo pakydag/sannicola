@@ -65,6 +65,7 @@ class VapiService
             $getCustomerContextToolId = collect($allTools)->firstWhere('function.name', 'get_customer_context')['id'] ?? null;
             $updateContactInfoToolId = collect($allTools)->firstWhere('function.name', 'update_contact_info')['id'] ?? null;
             $transferCallToolId = collect($allTools)->firstWhere('function.name', 'transfer_call')['id'] ?? null;
+            $registerSmsToolId = collect($allTools)->firstWhere('function.name', 'register_sms')['id'] ?? null;
             $cancelAppointmentToolId = collect($allTools)->firstWhere('function.name', 'cancel_appointment')['id'] ?? null;
 
             $departments = Department::where('is_active', true)->pluck('name')->toArray() ?: ['Generico'];
@@ -87,6 +88,23 @@ class VapiService
                     'description' => 'Trasferisce la chiamata all\'amministratore (Pasquale).'
                 ]
             ]);
+            $registerSmsToolId = $this->upsertTool($registerSmsToolId, [
+                'type' => 'function', 
+                'function' => [
+                    'name' => 'register_sms', 
+                    'description' => 'Registra un messaggio SMS ricevuto. Usa questo tool ogni volta che ricevi un SMS per salvarlo nel sistema.', 
+                    'parameters' => [
+                        'type' => 'object', 
+                        'properties' => [
+                            'content' => ['type' => 'string', 'description' => 'Il testo del messaggio SMS'],
+                            'phone' => ['type' => 'string', 'description' => 'Il numero di telefono del mittente']
+                        ],
+                        'required' => ['content', 'phone']
+                    ]
+                ], 
+                'server' => ['url' => $webhookUrl]
+            ]);
+
             $getAssistanceToolId = $this->upsertTool($getAssistanceToolId, ['type' => 'function', 'function' => ['name' => 'get_assistance_types', 'description' => 'Ottiene reparti.', 'parameters' => ['type' => 'object', 'properties' => (object)[]]], 'server' => ['url' => $webhookUrl]]);
             $saveTicketToolId = $this->upsertTool($saveTicketToolId, ['type' => 'function', 'function' => ['name' => 'save_ticket', 'description' => 'Salva ticket.', 'parameters' => ['type' => 'object', 'properties' => ['assistance_type' => ['type' => 'string', 'enum' => $departments], 'company_name' => ['type' => 'string'], 'customer_name' => ['type' => 'string'], 'email' => ['type' => 'string'], 'phone' => ['type' => 'string'], 'description' => ['type' => 'string']], 'required' => ['assistance_type', 'company_name', 'customer_name', 'phone', 'description']]], 'server' => ['url' => $webhookUrl]]);
             $checkAvailabilityToolId = $this->upsertTool($checkAvailabilityToolId, ['type' => 'function', 'function' => ['name' => 'check_availability', 'description' => 'Verifica disponibilità.', 'parameters' => ['type' => 'object', 'properties' => ['department_name' => ['type' => 'string', 'enum' => $departments], 'date' => ['type' => 'string']], 'required' => ['department_name', 'date']]], 'server' => ['url' => $webhookUrl]]);
@@ -149,7 +167,8 @@ class VapiService
                 $getCustomerContextToolId, 
                 $updateContactInfoToolId, 
                 $cancelAppointmentToolId,
-                $transferCallToolId
+                $transferCallToolId,
+                $registerSmsToolId
             ]);
 
             if (!empty($fileIds)) {

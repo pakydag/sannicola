@@ -125,6 +125,9 @@
                     <a href="{{ route('admin.vapi.tickets.index') }}" class="{{ request()->routeIs('admin.vapi.tickets.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                         <span class="ml-7">Ticket Ricevuti</span>
                     </a>
+                    <a href="{{ route('admin.vapi.sms.index') }}" class="{{ request()->routeIs('admin.vapi.sms.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">SMS Ricevuti</span>
+                    </a>
                 </div>
             </div>
             @endif
@@ -240,6 +243,7 @@
                     <a href="{{ route('admin.vapi.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Agente AI</a>
                     <a href="{{ route('admin.departments.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Gestione Reparti</a>
                     <a href="{{ route('admin.vapi.tickets.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Ticket Ricevuti</a>
+                    <a href="{{ route('admin.vapi.sms.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">SMS Ricevuti</a>
                 </div>
                 @endif
 

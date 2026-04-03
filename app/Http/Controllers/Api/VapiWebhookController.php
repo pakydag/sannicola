@@ -159,9 +159,42 @@ class VapiWebhookController extends Controller
                 Log::info("Vapi Tool Call: book_appointment invoked", ['args' => $args, 'payload_call_id' => $this->getCallIdFromPayload($payload)]);
                 $results[] = $this->bookAppointmentTool($toolCall, $args, $payload);
             }
+
+            if ($functionName === 'register_sms') {
+                Log::info("Vapi Tool Call: register_sms invoked", ['args' => $args]);
+                $results[] = $this->registerSmsTool($toolCall, $args, $payload);
+            }
         }
 
         return response()->json(['results' => $results]);
+    }
+
+    private function registerSmsTool($toolCall, $args, $payload)
+    {
+        $content = $args['content'] ?? '';
+        $phone = $args['phone'] ?? '';
+        
+        if ($content && $phone) {
+            $cleanPhone = substr(preg_replace('/[^0-9]/', '', $phone), -10);
+            $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
+                ->orWhere('mobile', 'like', "%{$cleanPhone}")
+                ->first();
+                
+            \App\Models\VapiSms::create([
+                'vapi_id' => $this->getCallIdFromPayload($payload),
+                'phone_number' => $phone,
+                'content' => $content,
+                'received_at' => now(),
+                'contact_id' => $contact ? $contact->id : null,
+            ]);
+
+            Log::info("Vapi SMS Logged: from {$phone}");
+        }
+
+        return [
+            'toolCallId' => $toolCall['id'] ?? 'default',
+            'result'     => "SMS archiviato."
+        ];
     }
 
     private function getCustomerContextTool($toolCall, $args, $payload)
