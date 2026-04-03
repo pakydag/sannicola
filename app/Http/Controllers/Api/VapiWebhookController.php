@@ -49,15 +49,31 @@ class VapiWebhookController extends Controller
     {
         $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null);
         
-        if (!$customerPhone) {
-            return response()->json([]);
-        }
-
-        // Cerca contatto nel CRM (confronto sulle ultime 10 cifre)
+        // --- DEBUG RICONOSCIMENTO ---
         $cleanPhone = substr(preg_replace('/[^0-9]/', '', $customerPhone), -10);
+        $debugMsg = "\n[" . now()->format('Y-m-d H:i:s') . "] --- VAPI CALLER DEBUG ---\n";
+        $debugMsg .= "RAW PHONE RECEIVED: '{$customerPhone}'\n";
+        $debugMsg .= "CLEAN PHONE (last 10): '{$cleanPhone}'\n";
+
         $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
             ->orWhere('mobile', 'like', "%{$cleanPhone}")
             ->first();
+
+        if ($contact) {
+            $debugMsg .= "MATCH FOUND: ID #{$contact->id} ({$contact->first_name} {$contact->last_name})\n";
+            $debugMsg .= "DB PHONE: '{$contact->phone}', DB MOBILE: '{$contact->mobile}'\n";
+        } else {
+            $debugMsg .= "MATCH FOUND: NO\n";
+            // Prendiamo i primi 3 contatti per vedere come sono salvati i numeri nel DB
+            $samples = Contact::limit(3)->get();
+            $debugMsg .= "CRM SAMPLES:\n";
+            foreach($samples as $s) {
+                $debugMsg .= "- ID #{$s->id}: Phone='{$s->phone}', Mobile='{$s->mobile}'\n";
+            }
+        }
+        $debugMsg .= "-----------------------------\n";
+        file_put_contents(storage_path('logs/vapi_caller_debug.log'), $debugMsg, FILE_APPEND);
+        // ----------------------------
 
         if ($contact) {
             Log::info("Vapi AssistantRequest: riconosciuto contatto #{$contact->id} ({$contact->first_name})");
