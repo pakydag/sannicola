@@ -21,21 +21,35 @@ class VapiWebhookController extends Controller
         $payload = $request->all();
         $messageType = $payload['message']['type'] ?? null;
         $callId = $this->getCallIdFromPayload($payload);
+        $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null);
         
-        // --- LOG DI EMERGENZA PER DEBUG ---
-        $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? 'N/D');
-        $debugMsg = "\n[" . now()->format('Y-m-d H:i:s') . "] --- VAPI WEBHOOK HIT ---\n";
-        $debugMsg .= "MESSAGE TYPE: '{$messageType}'\n";
-        $debugMsg .= "CALL ID: '{$callId}'\n";
-        $debugMsg .= "RAW PHONE: '{$customerPhone}'\n";
-        file_put_contents(storage_path('logs/vapi_caller_debug.log'), $debugMsg, FILE_APPEND);
-        // ----------------------------------
+        // --- IDENTIFICAZIONE CLIENTE (LAST 10 DIGITS) ---
+        $contact = null;
+        if ($customerPhone) {
+            $cleanPhone = substr(preg_replace('/[^0-9]/', '', $customerPhone), -10);
+            $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
+                ->orWhere('mobile', 'like', "%{$cleanPhone}")
+                ->first();
+
+            // LOG DI DEBUG
+            $debugMsg = "\n[" . now()->format('Y-m-d H:i:s') . "] --- VAPI CALL START ---\n";
+            $debugMsg .= "RAW PHONE: '{$customerPhone}' | CLEAN: '{$cleanPhone}'\n";
+            $debugMsg .= "MESSAGE TYPE: '{$messageType}'\n";
+            if ($contact) {
+                $debugMsg .= "RESULT: MATCH FOUND (#{$contact->id} - {$contact->first_name})\n";
+            } else {
+                $debugMsg .= "RESULT: NO MATCH\n";
+            }
+            $debugMsg .= "-----------------------------\n";
+            file_put_contents(storage_path('logs/vapi_caller_debug.log'), $debugMsg, FILE_APPEND);
+        }
+        // ------------------------------------------------
 
         Log::info('Vapi Webhook received:', ['type' => $messageType, 'callId' => $callId]);
 
         // 1. GESTIONE PERSONALIZZAZIONE CHIAMATA (ASSISTANT REQUEST)
-        if ($messageType === 'assistant-request') {
-            return $this->handleAssistantRequest($payload);
+        if ($messageType === 'assistant-request' || $messageType === 'assistant.started') {
+            return $this->handleAssistantRequest($payload, $contact);
         }
 
         // 2. GESTIONE TOOL CALLS (SAVE TICKET / GET DEPARTMENTS)
@@ -54,46 +68,21 @@ class VapiWebhookController extends Controller
     /**
      * Personalizza la risposta iniziale in base al numero di telefono
      */
-    private function handleAssistantRequest($payload)
+    private function handleAssistantRequest($payload, $contact = null)
     {
-        $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null);
-        
-        // --- DEBUG RICONOSCIMENTO ---
-        $cleanPhone = substr(preg_replace('/[^0-9]/', '', $customerPhone), -10);
-        $debugMsg = "\n[" . now()->format('Y-m-d H:i:s') . "] --- VAPI CALLER DEBUG ---\n";
-        $debugMsg .= "RAW PHONE RECEIVED: '{$customerPhone}'\n";
-        $debugMsg .= "CLEAN PHONE (last 10): '{$cleanPhone}'\n";
-
-        $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
-            ->orWhere('mobile', 'like', "%{$cleanPhone}")
-            ->first();
-
-        if ($contact) {
-            $debugMsg .= "MATCH FOUND: ID #{$contact->id} ({$contact->first_name} {$contact->last_name})\n";
-            $debugMsg .= "DB PHONE: '{$contact->phone}', DB MOBILE: '{$contact->mobile}'\n";
-        } else {
-            $debugMsg .= "MATCH FOUND: NO\n";
-            // Prendiamo i primi 3 contatti per vedere come sono salvati i numeri nel DB
-            $samples = Contact::limit(3)->get();
-            $debugMsg .= "CRM SAMPLES:\n";
-            foreach($samples as $s) {
-                $debugMsg .= "- ID #{$s->id}: Phone='{$s->phone}', Mobile='{$s->mobile}'\n";
-            }
-        }
-        $debugMsg .= "-----------------------------\n";
-        file_put_contents(storage_path('logs/vapi_caller_debug.log'), $debugMsg, FILE_APPEND);
-        // ----------------------------
-
         if ($contact) {
             Log::info("Vapi AssistantRequest: riconosciuto contatto #{$contact->id} ({$contact->first_name})");
 
             $msg = "Ciao " . $contact->first_name . ", ben tornato!";
 
             // 1. Verifica Ticket Aperti
+            $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null);
             $openTicket = AiTicket::where('status', 'open')
                 ->where(function($query) use ($contact, $customerPhone) {
-                    $query->where('contact_id', $contact->id)
-                          ->orWhere('phone', 'like', "%{$customerPhone}%");
+                    $query->where('contact_id', $contact->id);
+                    if ($customerPhone) {
+                        $query->orWhere('phone', 'like', "%{$customerPhone}%");
+                    }
                 })->first();
 
             if ($openTicket) {
@@ -103,9 +92,7 @@ class VapiWebhookController extends Controller
             // 2. Verifica Appuntamenti Futuri
             $futureAppointment = \App\Models\Appointment::where('status', 'confirmed')
                 ->where('start_time', '>', now())
-                ->where(function($query) use ($contact) {
-                    $query->where('contact_id', $contact->id);
-                })
+                ->where('contact_id', $contact->id)
                 ->orderBy('start_time', 'asc')
                 ->first();
 
