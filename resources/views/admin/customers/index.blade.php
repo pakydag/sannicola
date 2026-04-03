@@ -16,7 +16,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="mb-6">
                         <form action="{{ route('admin.customers.index') }}" method="GET" class="flex gap-4">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cerca per nome, cognome o email..." class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cerca per nome, email o telefono..." class="flex-1 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                             <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Cerca</button>
                             @if(request('search'))
                                 <a href="{{ route('admin.customers.index') }}" class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300">Resetta</a>
