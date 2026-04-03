@@ -53,9 +53,10 @@ class VapiWebhookController extends Controller
             return response()->json([]);
         }
 
-        // Cerca contatto nel CRM
-        $contact = Contact::where('phone', 'like', "%{$customerPhone}%")
-            ->orWhere('mobile', 'like', "%{$customerPhone}%")
+        // Cerca contatto nel CRM (confronto sulle ultime 10 cifre)
+        $cleanPhone = substr(preg_replace('/[^0-9]/', '', $customerPhone), -10);
+        $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
+            ->orWhere('mobile', 'like', "%{$cleanPhone}")
             ->first();
 
         if ($contact) {
@@ -151,7 +152,10 @@ class VapiWebhookController extends Controller
             return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Nessun numero di telefono fornito."];
         }
 
-        $contact = Contact::where('phone', 'like', "%$phone%")->orWhere('mobile', 'like', "%$phone%")->first();
+        $cleanPhone = substr(preg_replace('/[^0-9]/', '', $phone), -10);
+        $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
+            ->orWhere('mobile', 'like', "%{$cleanPhone}")
+            ->first();
         
         if (!$contact) {
             return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Cliente non trovato nel CRM."];
@@ -202,7 +206,10 @@ class VapiWebhookController extends Controller
         $contactId = null;
 
         if ($phone) {
-            $contact = Contact::where('phone', 'like', "%$phone%")->orWhere('mobile', 'like', "%$phone%")->first();
+            $cleanPhone = substr(preg_replace('/[^0-9]/', '', $phone), -10);
+            $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
+                ->orWhere('mobile', 'like', "%{$cleanPhone}")
+                ->first();
             if ($contact) {
                 $contactId = $contact->id;
                 if (isset($args['email']) && empty($contact->email)) $contact->update(['email' => $args['email']]);
@@ -365,9 +372,13 @@ class VapiWebhookController extends Controller
             return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Reparto non trovato."];
         }
 
-        // Cerca o crea contatto
-        $contact = Contact::where('phone', 'like', "%$phone%")->orWhere('mobile', 'like', "%$phone%")->first();
-        $customerName = $args['customer_name'] ?? ($contact ? $contact->name : 'Cliente');
+        // Cerca o crea contatto (confronto sulle ultime 10 cifre)
+        $cleanPhone = substr(preg_replace('/[^0-9]/', '', $phone), -10);
+        $contact = Contact::where('phone', 'like', "%{$cleanPhone}")
+            ->orWhere('mobile', 'like', "%{$cleanPhone}")
+            ->first();
+
+        $customerName = $args['customer_name'] ?? ($contact ? $contact->full_name : 'Cliente');
 
         if (!$contact && isset($args['customer_name'])) {
             $nameParts = explode(' ', $args['customer_name'], 2);

@@ -14,13 +14,22 @@ class CustomerController extends Controller
 
         if ($request->has('search')) {
             $search = $request->get('search');
-            $query->where(function($q) use ($search) {
+            $cleanSearch = preg_replace('/[^0-9]/', '', $search);
+            
+            $query->where(function($q) use ($search, $cleanSearch) {
                 $q->where('first_name', 'like', "%{$search}%")
                   ->orWhere('last_name', 'like', "%{$search}%")
                   ->orWhere('company_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%")
-                  ->orWhere('mobile', 'like', "%{$search}%");
+                  ->orWhere('email', 'like', "%{$search}%");
+                
+                if (strlen($cleanSearch) >= 6) {
+                    $lastDigits = substr($cleanSearch, -10);
+                    $q->orWhere('phone', 'like', "%{$lastDigits}")
+                      ->orWhere('mobile', 'like', "%{$lastDigits}");
+                } else {
+                    $q->orWhere('phone', 'like', "%{$search}%")
+                      ->orWhere('mobile', 'like', "%{$search}%");
+                }
             });
         }
 
