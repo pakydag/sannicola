@@ -91,9 +91,11 @@ class VapiService
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
-                'firstMessage' => $finalWelcome,
-                'firstMessageMode' => 'assistant-speaks-first', // Forza Vanessa a parlare per prima
-                'serverUrl' => $webhookUrl,
+                'firstMessage' => null, // Forza Vapi a chiedere il primo messaggio al Webhook (assistant-request)
+                'firstMessageMode' => 'assistant-speaks-first', 
+                'server' => [
+                    'url' => $webhookUrl,
+                ],
             ];
 
             $response = Http::timeout(10)->withHeaders([
