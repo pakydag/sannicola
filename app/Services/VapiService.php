@@ -91,8 +91,8 @@ class VapiService
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
-                'firstMessage' => $finalWelcome, // Ripristiniamo un messaggio per innescare la voce proattiva
-                'firstMessageMode' => 'assistant-speaks-first', 
+                'firstMessage' => null, 
+                'firstMessageMode' => 'assistant-speaks-first-with-model-generated-message', // L'AI genera il primo messaggio basandosi sul prompt (e sul riconoscimento)
                 'server' => [
                     'url' => $webhookUrl,
                 ],
