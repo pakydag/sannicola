@@ -63,6 +63,8 @@ class VapiService
             $checkAvailabilityToolId = collect($allTools)->firstWhere('function.name', 'check_availability')['id'] ?? null;
             $bookAppointmentToolId = collect($allTools)->firstWhere('function.name', 'book_appointment')['id'] ?? null;
             $getCustomerContextToolId = collect($allTools)->firstWhere('function.name', 'get_customer_context')['id'] ?? null;
+            $updateContactInfoToolId = collect($allTools)->firstWhere('function.name', 'update_contact_info')['id'] ?? null;
+            $cancelAppointmentToolId = collect($allTools)->firstWhere('function.name', 'cancel_appointment')['id'] ?? null;
 
             $departments = Department::where('is_active', true)->pluck('name')->toArray() ?: ['Generico'];
             $webhookUrl = $this->webhookUrl;
@@ -89,9 +91,40 @@ class VapiService
                 'server' => ['url' => $webhookUrl]
             ]);
 
+            $updateContactInfoToolId = $this->upsertTool($updateContactInfoToolId, [
+                'type' => 'function', 
+                'function' => [
+                    'name' => 'update_contact_info', 
+                    'description' => 'Aggiorna i dati anagrafici del contatto (nome, email, azienda, indirizzo, città). Usa questo tool se l\'utente ti comunica nuovi dati.', 
+                    'parameters' => [
+                        'type' => 'object', 
+                        'properties' => [
+                            'first_name' => ['type' => 'string'],
+                            'last_name' => ['type' => 'string'],
+                            'email' => ['type' => 'string'],
+                            'company_name' => ['type' => 'string'],
+                            'address' => ['type' => 'string'],
+                            'city' => ['type' => 'string'],
+                            'phone' => ['type' => 'string', 'description' => 'Opzionale, se cambia numero di telefono']
+                        ]
+                    ]
+                ], 
+                'server' => ['url' => $webhookUrl]
+            ]);
+
+            $cancelAppointmentToolId = $this->upsertTool($cancelAppointmentToolId, [
+                'type' => 'function', 
+                'function' => [
+                    'name' => 'cancel_appointment', 
+                    'description' => 'Annulla l\'ultimo appuntamento futuro confermato del cliente.', 
+                    'parameters' => ['type' => 'object', 'properties' => (object)[]]
+                ], 
+                'server' => ['url' => $webhookUrl]
+            ]);
+
             $modelConfig = $assistant['model'];
             $modelConfig['messages'] = [['role' => 'system', 'content' => $this->preparePrompt($finalPrompt)]];
-            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId, $getCustomerContextToolId]);
+            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId, $getCustomerContextToolId, $updateContactInfoToolId, $cancelAppointmentToolId]);
 
             if (!empty($fileIds)) {
                 $modelConfig['knowledgeBase'] = ['provider' => 'vapi', 'fileIds' => $fileIds];

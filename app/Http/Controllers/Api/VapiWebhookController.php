@@ -85,10 +85,6 @@ class VapiWebhookController extends Controller
                     }
                 })->first();
 
-            if ($openTicket) {
-                $msg .= " Ti informo che se chiami per il tuo ticket relativo a '" . $openTicket->assistance_type . "', lo stesso è ancora in corso e riceverai una risposta quanto prima.";
-            }
-
             // 2. Verifica Appuntamenti Futuri
             $futureAppointment = \App\Models\Appointment::where('status', 'confirmed')
                 ->where('start_time', '>', now())
@@ -96,9 +92,12 @@ class VapiWebhookController extends Controller
                 ->orderBy('start_time', 'asc')
                 ->first();
 
-            if ($futureAppointment) {
+            if ($openTicket) {
+                $msg .= " Ti confermo che il tuo ticket per '" . $openTicket->assistance_type . "' è in corso e presto riceverai comunicazioni in merito.";
+                $msg .= " Desideri aprire un altro ticket o fissare un appuntamento?";
+            } elseif ($futureAppointment) {
                 $dateFormatted = date('d/m/Y \a\l\l\e H:i', strtotime($futureAppointment->start_time));
-                $msg .= " Ho visto che hai già un appuntamento fissato per il " . $dateFormatted . ". Chiami per modificare o annullare questo appuntamento, oppure per altro?";
+                $msg .= " Ho visto che hai già un appuntamento fissato per il " . $dateFormatted . ". Desideri modificarlo, annullarlo oppure vuoi aprire un ticket o fissare un altro appuntamento?";
             } else {
                 $msg .= " Come posso aiutarti oggi? Vuoi aprire un ticket o fissare un appuntamento?";
             }
@@ -137,6 +136,10 @@ class VapiWebhookController extends Controller
 
             if ($functionName === 'get_customer_context') {
                 $results[] = $this->getCustomerContextTool($toolCall, $args, $payload);
+            } elseif ($functionName === 'update_contact_info') {
+                $results[] = $this->updateContactInfoTool($toolCall, $args, $payload);
+            } elseif ($functionName === 'cancel_appointment') {
+                $results[] = $this->cancelAppointmentTool($toolCall, $args, $payload);
             }
 
             if ($functionName === 'save_ticket') {
@@ -533,5 +536,75 @@ class VapiWebhookController extends Controller
         if (isset($payload['message']['call']->id)) return $payload['message']['call']->id;
         
         return null;
+    }
+
+    /**
+     * Tool: Aggiorna informazioni contatto
+     */
+    private function updateContactInfoTool($toolCall, $args, $payload)
+    {
+        $customerPhone = $this->getCallIdFromPayload($payload); // Metafora: recuperiamo il numero dalla chiamata
+        $phone = $args['phone'] ?? null;
+        
+        // Cerchiamo il contatto
+        $contact = \App\Models\Contact::where('phone', 'like', "%{$phone}%")->first();
+        if (!$contact && isset($payload['message']['call']['customer']['number'])) {
+            $rawPhone = $payload['message']['call']['customer']['number'];
+            $cleanPhone = substr(preg_replace('/[^0-9]/', '', $rawPhone), -10);
+            $contact = \App\Models\Contact::where('phone', 'like', "%{$cleanPhone}%")->first();
+        }
+
+        if ($contact) {
+            $contact->update(array_filter([
+                'first_name'   => $args['first_name'] ?? null,
+                'last_name'    => $args['last_name'] ?? null,
+                'email'         => $args['email'] ?? null,
+                'company_name'  => $args['company_name'] ?? null,
+                'address'       => $args['address'] ?? null,
+                'city'          => $args['city'] ?? null,
+            ]));
+
+            return [
+                'toolCallId' => $toolCall['id'] ?? ($toolCall['toolCallId'] ?? ''),
+                'result' => "Informazioni di {$contact->first_name} aggiornate correttamente nel CRM."
+            ];
+        }
+
+        return [
+            'toolCallId' => $toolCall['id'] ?? ($toolCall['toolCallId'] ?? ''),
+            'result' => "Errore: Contatto non trovato nel sistema per l'aggiornamento."
+        ];
+    }
+
+    /**
+     * Tool: Annulla appuntamento
+     */
+    private function cancelAppointmentTool($toolCall, $args, $payload)
+    {
+        $rawPhone = $payload['message']['call']['customer']['number'] ?? null;
+        $cleanPhone = $rawPhone ? substr(preg_replace('/[^0-9]/', '', $rawPhone), -10) : null;
+        
+        $contact = $cleanPhone ? \App\Models\Contact::where('phone', 'like', "%{$cleanPhone}%")->first() : null;
+
+        if ($contact) {
+            $appointment = \App\Models\Appointment::where('contact_id', $contact->id)
+                ->where('status', 'confirmed')
+                ->where('start_time', '>', now())
+                ->orderBy('start_time', 'asc')
+                ->first();
+
+            if ($appointment) {
+                $appointment->update(['status' => 'cancelled']);
+                return [
+                    'toolCallId' => $toolCall['id'] ?? ($toolCall['toolCallId'] ?? ''),
+                    'result' => "L'appuntamento del " . date('d/m/Y H:i', strtotime($appointment->start_time)) . " è stato annullato."
+                ];
+            }
+        }
+
+        return [
+            'toolCallId' => $toolCall['id'] ?? ($toolCall['toolCallId'] ?? ''),
+            'result' => "Non ho trovato appuntamenti futuri confermati da annullare."
+        ];
     }
 }
