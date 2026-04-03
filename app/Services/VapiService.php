@@ -77,7 +77,6 @@ class VapiService
             $modelConfig = $assistant['model'];
             $modelConfig['messages'] = [['role' => 'system', 'content' => $this->preparePrompt($finalPrompt)]];
             $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId, $getCustomerContextToolId]);
-            $modelConfig['fillerMessagesEnabled'] = false; // Disabilita il "Ci vorrà solo un secondo"
 
             if (!empty($fileIds)) {
                 $modelConfig['knowledgeBase'] = ['provider' => 'vapi', 'fileIds' => $fileIds];
@@ -89,11 +88,13 @@ class VapiService
             $voiceConfig['voiceId'] = $voiceId;
             $voiceConfig['stability'] = $stability;
             $voiceConfig['similarityBoost'] = $similarity;
+            $voiceConfig['speed'] = $speed;
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
                 'firstMessage' => null, 
-                'firstMessageMode' => 'assistant-speaks-first-with-model-generated-message', // L'AI genera il primo messaggio basandosi sul prompt (e sul riconoscimento)
+                'firstMessageMode' => 'assistant-speaks-first-with-model-generated-message', 
+                'fillerMessagesEnabled' => false, // Disabilita il "Ci vorrà solo un secondo" (alla radice)
                 'server' => [
                     'url' => $webhookUrl,
                 ],
