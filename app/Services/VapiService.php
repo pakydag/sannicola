@@ -91,7 +91,7 @@ class VapiService
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
-                'firstMessage' => null, // Forza Vapi a chiedere il primo messaggio al Webhook (assistant-request)
+                'firstMessage' => $finalWelcome, // Ripristiniamo un messaggio per innescare la voce proattiva
                 'firstMessageMode' => 'assistant-speaks-first', 
                 'server' => [
                     'url' => $webhookUrl,
