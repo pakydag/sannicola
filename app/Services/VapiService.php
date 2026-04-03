@@ -90,10 +90,9 @@ class VapiService
             $voiceConfig['similarityBoost'] = $similarity;
             $voiceConfig['speed'] = $speed;
             
-            $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
-                'firstMessage' => $finalWelcome,
+                'firstMessage' => null, // Forziamo Vapi a chiedere il messaggio al Webhook (assistant-request)
                 'serverUrl' => $webhookUrl,
             ];
 
