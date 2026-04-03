@@ -64,12 +64,29 @@ class VapiService
             $bookAppointmentToolId = collect($allTools)->firstWhere('function.name', 'book_appointment')['id'] ?? null;
             $getCustomerContextToolId = collect($allTools)->firstWhere('function.name', 'get_customer_context')['id'] ?? null;
             $updateContactInfoToolId = collect($allTools)->firstWhere('function.name', 'update_contact_info')['id'] ?? null;
+            $transferCallToolId = collect($allTools)->firstWhere('function.name', 'transfer_call')['id'] ?? null;
             $cancelAppointmentToolId = collect($allTools)->firstWhere('function.name', 'cancel_appointment')['id'] ?? null;
 
             $departments = Department::where('is_active', true)->pluck('name')->toArray() ?: ['Generico'];
             $webhookUrl = $this->webhookUrl;
 
             // Inizializza i Tool (Upsert)
+            
+            // Tool di trasferimento chiamata
+            $transferCallToolId = $this->upsertTool($transferCallToolId, [
+                'type' => 'transferCall',
+                'destinations' => [
+                    [
+                        'type' => 'number',
+                        'number' => '+393290952802',
+                        'message' => 'Ti sto trasferendo un cliente, resta in linea.'
+                    ]
+                ],
+                'function' => [
+                    'name' => 'transfer_call',
+                    'description' => 'Trasferisce la chiamata all\'amministratore (Pasquale).'
+                ]
+            ]);
             $getAssistanceToolId = $this->upsertTool($getAssistanceToolId, ['type' => 'function', 'function' => ['name' => 'get_assistance_types', 'description' => 'Ottiene reparti.', 'parameters' => ['type' => 'object', 'properties' => (object)[]]], 'server' => ['url' => $webhookUrl]]);
             $saveTicketToolId = $this->upsertTool($saveTicketToolId, ['type' => 'function', 'function' => ['name' => 'save_ticket', 'description' => 'Salva ticket.', 'parameters' => ['type' => 'object', 'properties' => ['assistance_type' => ['type' => 'string', 'enum' => $departments], 'company_name' => ['type' => 'string'], 'customer_name' => ['type' => 'string'], 'email' => ['type' => 'string'], 'phone' => ['type' => 'string'], 'description' => ['type' => 'string']], 'required' => ['assistance_type', 'company_name', 'customer_name', 'phone', 'description']]], 'server' => ['url' => $webhookUrl]]);
             $checkAvailabilityToolId = $this->upsertTool($checkAvailabilityToolId, ['type' => 'function', 'function' => ['name' => 'check_availability', 'description' => 'Verifica disponibilità.', 'parameters' => ['type' => 'object', 'properties' => ['department_name' => ['type' => 'string', 'enum' => $departments], 'date' => ['type' => 'string']], 'required' => ['department_name', 'date']]], 'server' => ['url' => $webhookUrl]]);
@@ -124,7 +141,16 @@ class VapiService
 
             $modelConfig = $assistant['model'];
             $modelConfig['messages'] = [['role' => 'system', 'content' => $this->preparePrompt($finalPrompt)]];
-            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId, $getCustomerContextToolId, $updateContactInfoToolId, $cancelAppointmentToolId]);
+            $modelConfig['toolIds'] = array_filter([
+                $getAssistanceToolId, 
+                $saveTicketToolId, 
+                $checkAvailabilityToolId, 
+                $bookAppointmentToolId, 
+                $getCustomerContextToolId, 
+                $updateContactInfoToolId, 
+                $cancelAppointmentToolId,
+                $transferCallToolId
+            ]);
 
             if (!empty($fileIds)) {
                 $modelConfig['knowledgeBase'] = ['provider' => 'vapi', 'fileIds' => $fileIds];
