@@ -50,7 +50,7 @@ class VapiWebhookController extends Controller
         $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null);
         
         if (!$customerPhone) {
-            return response()->json([]); // Nessuna modifica, usa default
+            return response()->json([]);
         }
 
         // Cerca contatto nel CRM
@@ -59,9 +59,11 @@ class VapiWebhookController extends Controller
             ->first();
 
         if ($contact) {
-            Log::info("Vapi: riconosciuto contatto #{$contact->id} ({$contact->first_name})");
+            Log::info("Vapi AssistantRequest: riconosciuto contatto #{$contact->id} ({$contact->first_name})");
 
-            // Cerca ticket aperti
+            $msg = "Ciao " . $contact->first_name . ", ben tornato!";
+
+            // 1. Verifica Ticket Aperti
             $openTicket = AiTicket::where('status', 'open')
                 ->where(function($query) use ($contact, $customerPhone) {
                     $query->where('contact_id', $contact->id)
@@ -69,16 +71,23 @@ class VapiWebhookController extends Controller
                 })->first();
 
             if ($openTicket) {
-                // Aggiungi sollecito al ticket
-                $sollecito = "\n⚠️ SOLLECITO TELEFONICO (" . now()->format('d/m/Y H:i') . ")";
-                $openTicket->update([
-                    'description' => $openTicket->description . $sollecito
-                ]);
-                Log::info("Vapi: aggiunto sollecito a ticket #{$openTicket->id}");
+                $msg .= " Ti informo che se chiami per il tuo ticket relativo a '" . $openTicket->assistance_type . "', lo stesso è ancora in corso e riceverai una risposta quanto prima.";
+            }
 
-                $msg = "Ciao " . $contact->first_name . ", ti informo che il tuo ticket relativo a '" . $openTicket->assistance_type . "' è in fase di risoluzione e sarai ricontattato a breve. Oltre a questo, c'è altro per cui posso aiutarti oggi?";
+            // 2. Verifica Appuntamenti Futuri
+            $futureAppointment = \App\Models\Appointment::where('status', 'confirmed')
+                ->where('start_time', '>', now())
+                ->where(function($query) use ($contact) {
+                    $query->where('contact_id', $contact->id);
+                })
+                ->orderBy('start_time', 'asc')
+                ->first();
+
+            if ($futureAppointment) {
+                $dateFormatted = date('d/m/Y \a\l\l\e H:i', strtotime($futureAppointment->start_time));
+                $msg .= " Ho visto che hai già un appuntamento fissato per il " . $dateFormatted . ". Chiami per modificare o annullare questo appuntamento, oppure per altro?";
             } else {
-                $msg = "Ciao " . $contact->first_name . ", benvenuto! Come posso aiutarti oggi?";
+                $msg .= " Come posso aiutarti oggi? Vuoi aprire un ticket o fissare un appuntamento?";
             }
 
             return response()->json([
@@ -88,7 +97,7 @@ class VapiWebhookController extends Controller
             ]);
         }
 
-        return response()->json([]); // Nessun contatto trovato, usa default
+        return response()->json([]);
     }
 
     /**
@@ -107,6 +116,10 @@ class VapiWebhookController extends Controller
             $functionName = $toolCall['function']['name'] ?? '';
             $args = $toolCall['function']['arguments'] ?? [];
             if (is_string($args)) $args = json_decode($args, true);
+
+            if ($functionName === 'get_customer_context') {
+                $results[] = $this->getCustomerContextTool($toolCall, $args, $payload);
+            }
 
             if ($functionName === 'save_ticket') {
                 Log::info("Vapi Tool Call: save_ticket invoked", ['args' => $args, 'payload_call_id' => $this->getCallIdFromPayload($payload)]);
@@ -128,6 +141,45 @@ class VapiWebhookController extends Controller
         }
 
         return response()->json(['results' => $results]);
+    }
+
+    private function getCustomerContextTool($toolCall, $args, $payload)
+    {
+        $phone = $args['phone'] ?? ($payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null));
+        
+        if (!$phone) {
+            return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Nessun numero di telefono fornito."];
+        }
+
+        $contact = Contact::where('phone', 'like', "%$phone%")->orWhere('mobile', 'like', "%$phone%")->first();
+        
+        if (!$contact) {
+            return ['toolCallId' => $toolCall['id'] ?? 'default', 'result' => "Cliente non trovato nel CRM."];
+        }
+
+        // 1. Ticket Aperti
+        $openTicket = AiTicket::where('status', 'open')->where('contact_id', $contact->id)->first();
+        
+        // 2. Prossimo Appuntamento
+        $futureApp = \App\Models\Appointment::where('status', 'confirmed')
+            ->where('start_time', '>', now())
+            ->where('contact_id', $contact->id)
+            ->orderBy('start_time', 'asc')
+            ->first();
+
+        $context = [
+            'customer_name' => $contact->first_name,
+            'is_known' => true,
+            'has_open_ticket' => !empty($openTicket),
+            'ticket_details' => $openTicket ? "Ticket #{$openTicket->id} ({$openTicket->assistance_type}) aperto il " . $openTicket->created_at->format('d/m/Y') : null,
+            'has_appointment' => !empty($futureApp),
+            'appointment_details' => $futureApp ? "Appuntamento il " . date('d/m/Y H:i', strtotime($futureApp->start_time)) : null,
+        ];
+
+        return [
+            'toolCallId' => $toolCall['id'] ?? 'default',
+            'result'     => $context
+        ];
     }
 
     private function saveTicketTool($toolCall, $args, $payload)

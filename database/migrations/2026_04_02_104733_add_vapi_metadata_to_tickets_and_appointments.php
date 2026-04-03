@@ -13,18 +13,34 @@ return new class extends Migration
     {
         // Update ai_tickets
         Schema::table('ai_tickets', function (Blueprint $table) {
-            $table->string('vapi_call_id')->nullable()->after('id')->index();
-            $table->decimal('cost', 10, 4)->nullable()->after('description');
-            $table->integer('duration')->nullable()->after('cost'); // in seconds
-            $table->string('recording_url')->nullable()->after('duration');
+            if (!Schema::hasColumn('ai_tickets', 'vapi_call_id')) {
+                $table->string('vapi_call_id')->nullable()->after('id')->index();
+            }
+            if (!Schema::hasColumn('ai_tickets', 'cost')) {
+                $table->decimal('cost', 10, 4)->nullable()->after('description');
+            }
+            if (!Schema::hasColumn('ai_tickets', 'duration')) {
+                $table->integer('duration')->nullable()->after('cost');
+            }
+            if (!Schema::hasColumn('ai_tickets', 'recording_url')) {
+                $table->string('recording_url')->nullable()->after('duration');
+            }
         });
 
         // Update appointments
         Schema::table('appointments', function (Blueprint $table) {
-            $table->string('vapi_call_id')->nullable()->after('id')->index();
-            $table->decimal('cost', 10, 4)->nullable()->after('reason');
-            $table->integer('duration')->nullable()->after('cost'); // in seconds
-            $table->string('recording_url')->nullable()->after('duration');
+            if (!Schema::hasColumn('appointments', 'vapi_call_id')) {
+                $table->string('vapi_call_id')->nullable()->after('id')->index();
+            }
+            if (!Schema::hasColumn('appointments', 'cost')) {
+                $table->decimal('cost', 10, 4)->nullable()->after('description');
+            }
+            if (!Schema::hasColumn('appointments', 'duration')) {
+                $table->integer('duration')->nullable()->after('cost');
+            }
+            if (!Schema::hasColumn('appointments', 'recording_url')) {
+                $table->string('recording_url')->nullable()->after('duration');
+            }
         });
     }
 

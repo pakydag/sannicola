@@ -62,6 +62,7 @@ class VapiService
             $saveTicketToolId = collect($allTools)->firstWhere('function.name', 'save_ticket')['id'] ?? null;
             $checkAvailabilityToolId = collect($allTools)->firstWhere('function.name', 'check_availability')['id'] ?? null;
             $bookAppointmentToolId = collect($allTools)->firstWhere('function.name', 'book_appointment')['id'] ?? null;
+            $getCustomerContextToolId = collect($allTools)->firstWhere('function.name', 'get_customer_context')['id'] ?? null;
 
             $departments = Department::where('is_active', true)->pluck('name')->toArray() ?: ['Generico'];
             $webhookUrl = $this->webhookUrl;
@@ -71,12 +72,11 @@ class VapiService
             $saveTicketToolId = $this->upsertTool($saveTicketToolId, ['type' => 'function', 'function' => ['name' => 'save_ticket', 'description' => 'Salva ticket.', 'parameters' => ['type' => 'object', 'properties' => ['assistance_type' => ['type' => 'string', 'enum' => $departments], 'company_name' => ['type' => 'string'], 'customer_name' => ['type' => 'string'], 'email' => ['type' => 'string'], 'phone' => ['type' => 'string'], 'description' => ['type' => 'string']], 'required' => ['assistance_type', 'company_name', 'customer_name', 'phone', 'description']]], 'server' => ['url' => $webhookUrl]]);
             $checkAvailabilityToolId = $this->upsertTool($checkAvailabilityToolId, ['type' => 'function', 'function' => ['name' => 'check_availability', 'description' => 'Verifica disponibilità.', 'parameters' => ['type' => 'object', 'properties' => ['department_name' => ['type' => 'string', 'enum' => $departments], 'date' => ['type' => 'string']], 'required' => ['department_name', 'date']]], 'server' => ['url' => $webhookUrl]]);
             $bookAppointmentToolId = $this->upsertTool($bookAppointmentToolId, ['type' => 'function', 'function' => ['name' => 'book_appointment', 'description' => 'Prenota appuntamento.', 'parameters' => ['type' => 'object', 'properties' => ['department_name' => ['type' => 'string', 'enum' => $departments], 'customer_name' => ['type' => 'string'], 'phone' => ['type' => 'string'], 'date' => ['type' => 'string'], 'time' => ['type' => 'string'], 'reason' => ['type' => 'string']], 'required' => ['department_name', 'customer_name', 'phone', 'date', 'time', 'reason']]], 'server' => ['url' => $webhookUrl]]);
+            $getCustomerContextToolId = $this->upsertTool($getCustomerContextToolId, ['type' => 'function', 'function' => ['name' => 'get_customer_context', 'description' => 'Ottiene contesto cliente (ticket e appuntamenti). Usa questo tool all\'inizio della chiamata se riconosci l\'utente.', 'parameters' => ['type' => 'object', 'properties' => ['phone' => ['type' => 'string']], 'required' => ['phone']]], 'server' => ['url' => $webhookUrl]]);
 
-            // 3. Preparazione Payload Aggiornato
             $modelConfig = $assistant['model'];
             $modelConfig['messages'] = [['role' => 'system', 'content' => $this->preparePrompt($finalPrompt)]];
-            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId]);
-            $modelConfig['transcriber'] = ['provider' => 'deepgram', 'language' => $language, 'model' => 'nova-2'];
+            $modelConfig['toolIds'] = array_filter([$getAssistanceToolId, $saveTicketToolId, $checkAvailabilityToolId, $bookAppointmentToolId, $getCustomerContextToolId]);
 
             if (!empty($fileIds)) {
                 $modelConfig['knowledgeBase'] = ['provider' => 'vapi', 'fileIds' => $fileIds];
@@ -90,15 +90,6 @@ class VapiService
             $voiceConfig['similarityBoost'] = $similarity;
             $voiceConfig['speed'] = $speed;
             
-            // Additional Configuration
-            $voiceConfig['backgroundSound'] = $bgSound;
-            if ($bgSound === 'custom' && $bgSoundUrl) {
-                $voiceConfig['backgroundSoundUrl'] = $bgSoundUrl;
-            } else {
-                unset($voiceConfig['backgroundSoundUrl']);
-            }
-            $voiceConfig['inputMinCharacters'] = $inputMinChars;
-
             $payload = [
                 'model' => $modelConfig,
                 'voice' => $voiceConfig,
