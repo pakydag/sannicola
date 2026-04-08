@@ -64,7 +64,7 @@
                 </figure>
             @endif
 
-            <div class="prose prose-lg prose-indigo mx-auto text-gray-600 max-w-prose">
+            <div class="prose prose-lg prose-indigo {{ $alignment === 'center' ? 'mx-auto max-w-prose' : 'max-w-none' }} text-gray-600">
                 {!! $articolo->descrizione !!}
             </div>
 
