@@ -171,104 +171,123 @@
 
                 <!-- Colonna Destra: Prenotazione -->
                 <div class="lg:col-span-1">
-                    <div class="sticky top-8 bg-white rounded-3xl p-8 shadow-2xl border border-gray-100" x-data="bookingForm()">
-                        <div class="flex justify-between items-end mb-8">
-                            <div>
-                                @if($structure->tipo_prezzo === 'fisso')
-                                    <p class="text-xl font-extrabold text-gray-900">Prenota Soggiorno</p>
-                                @else
-                                    <p class="text-xl font-extrabold text-gray-900">Prezzo per persona</p>
-                                    <p class="text-gray-500 text-sm">per periodo</p>
-                                @endif
+                    <div class="sticky top-8 bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
+                        @if($structure->prenotabile)
+                        <div x-data="bookingForm()">
+                            <div class="flex justify-between items-end mb-8">
+                                <div>
+                                    @if($structure->tipo_prezzo === 'fisso')
+                                        <p class="text-xl font-extrabold text-gray-900">Prenota Soggiorno</p>
+                                    @else
+                                        <p class="text-xl font-extrabold text-gray-900">Prezzo per persona</p>
+                                        <p class="text-gray-500 text-sm">per periodo</p>
+                                    @endif
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-yellow-400">★★★★★</span>
+                                    <p class="text-xs text-gray-400 font-bold uppercase">5.0 Recensioni</p>
+                                </div>
                             </div>
-                            <div class="text-right">
-                                <span class="text-yellow-400">★★★★★</span>
-                                <p class="text-xs text-gray-400 font-bold uppercase">5.0 Recensioni</p>
-                            </div>
-                        </div>
 
-                        <form @submit.prevent="submitBooking" class="space-y-6">
-                            <div class="grid grid-cols-2 gap-0 border rounded-xl overflow-hidden shadow-sm">
-                                <div class="border-b p-3 bg-gray-50">
-                                    <label class="block text-[10px] font-bold uppercase text-gray-400">Arrivo</label>
-                                    <input type="date" x-model="startDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" min="{{ date('Y-m-d') }}">
-                                </div>
-                                <div class="border-b border-l p-3 bg-gray-50">
-                                    <label class="block text-[10px] font-bold uppercase text-gray-400">Partenza</label>
-                                    <input type="date" x-model="endDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" :min="startDate">
-                                </div>
-                                @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
-                                    <div class="col-span-2 p-3 bg-gray-50 border-t">
-                                        <label class="block text-[10px] font-bold uppercase text-gray-400">Ospiti</label>
-                                        <div class="grid grid-cols-2 gap-4 mt-2">
-                                            @foreach($structure->variants as $variant)
-                                                <div class="flex items-center justify-between bg-white p-2 rounded-lg border shadow-sm">
-                                                    <span class="text-xs font-bold">{{ $variant->nome }}</span>
-                                                    <select x-model.number="ospiti['{{ $variant->id }}']" @change="checkDates" class="bg-transparent border-0 p-0 text-sm focus:ring-0 font-extrabold w-12 text-right">
-                                                        @for($i=0; $i<=$structure->posti_totali; $i++)
-                                                            <option value="{{ $i }}">{{ $i }}</option>
-                                                        @endfor
-                                                    </select>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                            <form @submit.prevent="submitBooking" class="space-y-6">
+                                <div class="grid grid-cols-2 gap-0 border rounded-xl overflow-hidden shadow-sm">
+                                    <div class="border-b p-3 bg-gray-50">
+                                        <label class="block text-[10px] font-bold uppercase text-gray-400">Arrivo</label>
+                                        <input type="date" x-model="startDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" min="{{ date('Y-m-d') }}">
                                     </div>
-                                @endif
-                                @if($structure->extras->count() > 0)
-                                    <div class="col-span-2 p-3 bg-gray-50 border-t">
-                                        <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Servizi Extra</label>
-                                        <div class="space-y-2">
-                                            @foreach($structure->extras as $extra)
-                                                <label class="flex items-center justify-between p-2 rounded-lg border bg-white cursor-pointer hover:border-indigo-300 transition-colors">
-                                                    <div class="flex items-center gap-2">
-                                                        <input type="checkbox" x-model="selectedExtras" value="{{ $extra->id }}" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <span class="text-xs font-bold text-gray-700">{{ $extra->nome }}</span>
+                                    <div class="border-b border-l p-3 bg-gray-50">
+                                        <label class="block text-[10px] font-bold uppercase text-gray-400">Partenza</label>
+                                        <input type="date" x-model="endDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" :min="startDate">
+                                    </div>
+                                    @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
+                                        <div class="col-span-2 p-3 bg-gray-50 border-t">
+                                            <label class="block text-[10px] font-bold uppercase text-gray-400">Ospiti</label>
+                                            <div class="grid grid-cols-2 gap-4 mt-2">
+                                                @foreach($structure->variants as $variant)
+                                                    <div class="flex items-center justify-between bg-white p-2 rounded-lg border shadow-sm">
+                                                        <span class="text-xs font-bold">{{ $variant->nome }}</span>
+                                                        <select x-model.number="ospiti['{{ $variant->id }}']" @change="checkDates" class="bg-transparent border-0 p-0 text-sm focus:ring-0 font-extrabold w-12 text-right">
+                                                            @for($i=0; $i<=$structure->posti_totali; $i++)
+                                                                <option value="{{ $i }}">{{ $i }}</option>
+                                                            @endfor
+                                                        </select>
                                                     </div>
-                                                    <span class="text-xs font-bold text-gray-500">€{{ number_format($extra->prezzo, 2) }}/g</span>
-                                                </label>
-                                            @endforeach
+                                                @endforeach
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
-                            </div>
+                                    @endif
+                                    @if($structure->extras->count() > 0)
+                                        <div class="col-span-2 p-3 bg-gray-50 border-t">
+                                            <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Servizi Extra</label>
+                                            <div class="space-y-2">
+                                                @foreach($structure->extras as $extra)
+                                                    <label class="flex items-center justify-between p-2 rounded-lg border bg-white cursor-pointer hover:border-indigo-300 transition-colors">
+                                                        <div class="flex items-center gap-2">
+                                                            <input type="checkbox" x-model="selectedExtras" value="{{ $extra->id }}" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                            <span class="text-xs font-bold text-gray-700">{{ $extra->nome }}</span>
+                                                        </div>
+                                                        <span class="text-xs font-bold text-gray-500">€{{ number_format($extra->prezzo, 2) }}/g</span>
+                                                    </label>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
 
-                            <div x-show="totalDays > 0" x-transition class="space-y-3 py-4 text-sm" :class="isChecking ? 'animate-pulse opacity-50' : ''">
-                                <template x-if="isAvailable">
-                                    <div class="space-y-3">
-                                        <div class="flex justify-between items-center text-gray-600">
-                                            <span>Soggiorno di <span x-text="totalDays"></span> notti</span>
-                                            <span class="font-bold text-gray-900">€<span x-text="totalPrice"></span></span>
+                                <div x-show="totalDays > 0" x-transition class="space-y-3 py-4 text-sm" :class="isChecking ? 'animate-pulse opacity-50' : ''">
+                                    <template x-if="isAvailable">
+                                        <div class="space-y-3">
+                                            <div class="flex justify-between items-center text-gray-600">
+                                                <span>Soggiorno di <span x-text="totalDays"></span> notti</span>
+                                                <span class="font-bold text-gray-900">€<span x-text="totalPrice"></span></span>
+                                            </div>
+                                            <div class="flex justify-between items-center pt-3 border-t text-base">
+                                                <span class="font-extrabold text-gray-900">Totale</span>
+                                                <span class="font-extrabold text-indigo-700 text-xl">€<span x-text="totalPrice"></span></span>
+                                            </div>
                                         </div>
-                                        <div class="flex justify-between items-center pt-3 border-t text-base">
-                                            <span class="font-extrabold text-gray-900">Totale</span>
-                                            <span class="font-extrabold text-indigo-700 text-xl">€<span x-text="totalPrice"></span></span>
+                                    </template>
+                                    <template x-if="!isAvailable && !isChecking && totalGuests <= {{ $structure->posti_totali }}">
+                                        <div class="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-center font-bold">
+                                            Le date selezionate non sono disponibili.
                                         </div>
-                                    </div>
-                                </template>
-                                <template x-if="!isAvailable && !isChecking && totalGuests <= {{ $structure->posti_totali }}">
-                                    <div class="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-center font-bold">
-                                        Le date selezionate non sono disponibili.
-                                    </div>
-                                </template>
-                                <template x-if="totalGuests > {{ $structure->posti_totali }}">
-                                    <div class="p-3 bg-orange-50 border border-orange-200 text-orange-600 rounded-xl text-center font-bold">
-                                        Il numero totale di ospiti riservati (<span x-text="totalGuests"></span>) supera la capacità della struttura ({{ $structure->posti_totali }}).
-                                    </div>
-                                </template>
-                            </div>
+                                    </template>
+                                    <template x-if="totalGuests > {{ $structure->posti_totali }}">
+                                        <div class="p-3 bg-orange-50 border border-orange-200 text-orange-600 rounded-xl text-center font-bold">
+                                            Il numero totale di ospiti riservati (<span x-text="totalGuests"></span>) supera la capacità della struttura ({{ $structure->posti_totali }}).
+                                        </div>
+                                    </template>
+                                </div>
 
-                            <button type="submit" 
-                                    :disabled="!isAvailable || totalDays <= 0 || isChecking || parseFloat(totalPrice) <= 0 || totalGuests > {{ $structure->posti_totali }}"
-                                    x-show="totalDays > 0 && (isAvailable || totalGuests > {{ $structure->posti_totali }}) && (parseFloat(totalPrice) > 0 || totalGuests > {{ $structure->posti_totali }})"
-                                    class="w-full py-4 rounded-2xl font-extrabold text-lg shadow-lg transition-all duration-300 transform active:scale-95 bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
-                                <span x-show="!isChecking">Prenota Ora</span>
-                                <span x-show="isChecking">Verifica in corso...</span>
-                            </button>
-                        </form>
-                        
-                        <p class="text-center text-[11px] text-gray-400 mt-6 px-4">
-                            Non ti verrà addebitato nulla in questo momento. Verrai reindirizzato alla pagina di pagamento.
-                        </p>
+                                <button type="submit" 
+                                        :disabled="!isAvailable || totalDays <= 0 || isChecking || parseFloat(totalPrice) <= 0 || totalGuests > {{ $structure->posti_totali }}"
+                                        x-show="totalDays > 0 && (isAvailable || totalGuests > {{ $structure->posti_totali }}) && (parseFloat(totalPrice) > 0 || totalGuests > {{ $structure->posti_totali }})"
+                                        class="w-full py-4 rounded-2xl font-extrabold text-lg shadow-lg transition-all duration-300 transform active:scale-95 bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span x-show="!isChecking">Prenota Ora</span>
+                                    <span x-show="isChecking">Verifica in corso...</span>
+                                </button>
+                            </form>
+                            
+                            <p class="text-center text-[11px] text-gray-400 mt-6 px-4">
+                                Non ti verrà addebitato nulla in questo momento. Verrai reindirizzato alla pagina di pagamento.
+                            </p>
+                        </div>
+                        @else
+                            <div class="text-center py-6">
+                                <div class="h-16 w-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                                    <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <h3 class="text-xl font-extrabold text-gray-900 mb-2">Disponibilità su Richiesta</h3>
+                                <p class="text-gray-500 text-sm mb-8 leading-relaxed">
+                                    Questa struttura non è al momento prenotabile direttamente online, ma potrebbe essere disponibile per le tue date.
+                                </p>
+                                <a href="https://wa.me/393282436423?text=Salve, vorrei ricevere informazioni sulla disponibilità della struttura {{ urlencode($structure->nome) }}" target="_blank" class="block w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-extrabold text-lg shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-3">
+                                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.891 11.891-11.891 3.181 0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.232 3.48 8.413 0 6.556-5.334 11.89-11.89 11.89-.001 0-.001 0 0 0-2.001 0-3.967-.512-5.722-1.479l-6.271 1.688zm6.095-4.225c1.551.921 3.197 1.408 4.896 1.408.001 0 .001 0 0 0 5.438 0 9.863-4.425 9.863-9.863-.001-2.646-1.033-5.132-2.903-7.004-1.871-1.872-4.358-2.902-7.004-2.902-5.438 0-9.863 4.425-9.863 9.863 0 1.83.513 3.618 1.482 5.161l-1.001 3.652 3.73-.915zm10.971-6.864c-.201-.101-1.192-.588-1.376-.655-.185-.067-.319-.101-.454.101-.135.202-.522.655-.64.789-.118.135-.235.151-.437.051-.202-.101-.852-.314-1.623-1.002-.6-.535-1.004-1.196-1.121-1.397-.118-.201-.013-.31.088-.41.09-.09.202-.235.303-.353.101-.118.135-.202.202-.336.067-.135.034-.252-.017-.353-.05-.101-.454-1.093-.623-1.496-.164-.393-.331-.339-.454-.345l-.386-.006c-.135 0-.353.05-.538.252-.185.202-.706.69-.706 1.682s.723 1.951.824 2.085c.101.135 1.423 2.172 3.447 3.046.482.208.857.332 1.151.426.484.154.924.132 1.272.08.388-.058 1.192-.487 1.36-.957.168-.47.168-.874.118-.957-.05-.084-.185-.135-.386-.236z"/></svg>
+                                    Chiedi su WhatsApp
+                                </a>
+                                <p class="mt-4 text-[10px] text-gray-400 uppercase font-black tracking-widest">Risposta rapida garantita</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

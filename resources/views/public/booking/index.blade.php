@@ -48,7 +48,11 @@
 
                             <div class="mt-auto">
                                 <a href="{{ route('public.booking.show', $s->id) }}" class="block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all">
-                                    Scopri e Prenota
+                                    @if($s->prenotabile)
+                                        Scopri e Prenota
+                                    @else
+                                        Scopri di più
+                                    @endif
                                 </a>
                             </div>
                         </div>

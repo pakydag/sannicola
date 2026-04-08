@@ -48,10 +48,20 @@
                                     <input type="number" name="posti_totali" value="{{ old('posti_totali', $structure->posti_totali) }}" min="1" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
                                 </div>
                             </div>
-                            <div class="mt-4">
+                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-indigo-50 p-4 rounded-xl border border-indigo-100">
                                 <label class="inline-flex items-center">
                                     <input type="checkbox" name="attivo" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm" {{ old('attivo', $structure->attivo) ? 'checked' : '' }}>
-                                    <span class="ml-2 font-bold text-gray-700">Attiva e Prenotabile</span>
+                                    <div class="ml-2">
+                                        <span class="block font-bold text-gray-700">Visibile sul sito</span>
+                                        <span class="text-xs text-gray-500">Se disattivato, la struttura non apparirà nell'elenco pubblico.</span>
+                                    </div>
+                                </label>
+                                <label class="inline-flex items-center">
+                                    <input type="checkbox" name="prenotabile" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm" {{ old('prenotabile', $structure->prenotabile) ? 'checked' : '' }}>
+                                    <div class="ml-2">
+                                        <span class="block font-bold text-gray-700">Prenotabile online</span>
+                                        <span class="text-xs text-gray-500">Se disattivato, il modulo di prenotazione verrà nascosto.</span>
+                                    </div>
                                 </label>
                             </div>
                         </div>

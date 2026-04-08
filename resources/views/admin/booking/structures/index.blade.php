@@ -29,7 +29,7 @@
                                     <th class="py-2 px-4 border-b text-center">Bagni/Camere</th>
                                     <th class="py-2 px-4 border-b text-center">Posti</th>
                                     <th class="py-2 px-4 border-b text-right">Costo/Giorno</th>
-                                    <th class="py-2 px-4 border-b text-center">Attivo</th>
+                                    <th class="py-2 px-4 border-b text-center">Stato</th>
                                     <th class="py-2 px-4 border-b text-right">Azioni</th>
                                 </tr>
                             </thead>
@@ -53,11 +53,17 @@
                                         <td class="py-2 px-4 border-b text-right font-mono">
                                             {{ $s->tipo_prezzo === 'fisso' ? 'Fisso' : 'Per persona' }}
                                         </td>
-                                        <td class="py-2 px-4 border-b text-center">
+                                        <td class="py-2 px-4 border-b text-center space-y-1">
                                             @if($s->attivo)
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Si</span>
+                                                <span class="px-2 block text-[10px] leading-5 font-semibold rounded-full bg-green-100 text-green-800">VISIBILE</span>
                                             @else
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">No</span>
+                                                <span class="px-2 block text-[10px] leading-5 font-semibold rounded-full bg-red-100 text-red-800">NASCOSTO</span>
+                                            @endif
+                                            
+                                            @if($s->prenotabile)
+                                                <span class="px-2 block text-[10px] leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">PRENOTABILE</span>
+                                            @else
+                                                <span class="px-2 block text-[10px] leading-5 font-semibold rounded-full bg-amber-100 text-amber-800">SOLO INFO</span>
                                             @endif
                                         </td>
                                         <td class="py-2 px-4 border-b text-right">

@@ -141,6 +141,15 @@ class PublicBookingController extends Controller
 
         $structure = \App\Models\BookingStructure::with(['prices', 'variants'])->findOrFail($request->structure_id);
     
+        if (!$structure->prenotabile) {
+            return response()->json([
+                'available' => false,
+                'error' => "Questa struttura non è prenotabile online.",
+                'total_price' => 0,
+                'details' => []
+            ]);
+        }
+    
         // Validate guest capacity
         $totalGuests = array_sum($request->ospiti ?: []);
         if ($totalGuests > $structure->posti_totali) {
@@ -233,6 +242,10 @@ class PublicBookingController extends Controller
         }
 
         $structure = \App\Models\BookingStructure::findOrFail($request->structure_id);
+
+        if (!$structure->prenotabile) {
+            return redirect()->back()->with('error', 'Questa struttura non è prenotabile online.');
+        }
 
     // Validate guest capacity
     $totalGuests = array_sum($request->ospiti ?: []);

@@ -58,6 +58,7 @@ class BookingStructureController extends Controller
             'posti_totali' => 'required|integer|min:1',
             'tipo_prezzo' => 'required|string|in:fisso,persona',
             'attivo' => 'boolean',
+            'prenotabile' => 'boolean',
             'photos' => 'nullable|array',
             'photos.*' => 'nullable|string',
             'varianti' => 'nullable|array',
@@ -94,6 +95,7 @@ class BookingStructureController extends Controller
         }
 
         $validated['attivo'] = $request->has('attivo');
+        $validated['prenotabile'] = $request->has('prenotabile');
         $validated['costo_al_giorno'] = 0;
 
         $structure = \App\Models\BookingStructure::create($validated);
@@ -171,6 +173,7 @@ class BookingStructureController extends Controller
             'posti_totali' => 'required|integer|min:1',
             'tipo_prezzo' => 'required|string|in:fisso,persona',
             'attivo' => 'boolean',
+            'prenotabile' => 'boolean',
             'photos' => 'nullable|array',
             'photos.*' => 'nullable|string',
             'varianti' => 'nullable|array',
@@ -184,6 +187,7 @@ class BookingStructureController extends Controller
         ]);
 
         $validated['attivo'] = $request->has('attivo');
+        $validated['prenotabile'] = $request->has('prenotabile');
         $structure->update($validated);
 
         // 1. Sync Photos
