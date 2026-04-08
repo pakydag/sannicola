@@ -342,7 +342,7 @@
                 
                 const photosData = galleryEl.__x.$data;
                 
-                // Funzione di pulizia URL (estratta dalla tua versione precedente)
+                // Funzione di pulizia URL
                 const cleanUrl = (url) => {
                     let relativeUrl = url;
                     try {
@@ -372,5 +372,4 @@
             }
         </script>
     @endpush
-</x-app-layout>
 </x-app-layout>
