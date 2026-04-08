@@ -356,8 +356,15 @@
                         relativeUrl = relativeUrl.replace('/public', '');
                     } catch(e) {}
                     if (!relativeUrl.startsWith('/')) relativeUrl = '/' + relativeUrl;
+                    
+                    // Fix per l'assenza della cartella /storage/ dai percorsi diretti
+                    if (!relativeUrl.startsWith('/storage/')) {
+                        relativeUrl = '/storage' + relativeUrl;
+                    }
+                    
                     return relativeUrl;
                 };
+
 
                 // Se $url è un array (selezione multipla) o una stringa singola
                 if (Array.isArray($url)) {
