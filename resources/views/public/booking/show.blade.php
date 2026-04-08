@@ -154,24 +154,13 @@
                         @if($structure->services->count() > 0)
                             <div class="mt-12 border-t pt-12">
                                 <h3 class="text-2xl font-extrabold text-gray-900 mb-8">Servizi e Dotazioni</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
-                                    @foreach($structure->services->groupBy('booking_service_category_id') as $catId => $services)
-                                        @php $category = $services->first()->category; @endphp
-                                        <div class="space-y-4">
-                                            <div class="flex items-center gap-3 mb-2">
-                                                <span class="text-2xl" aria-hidden="true">{{ $category->icona }}</span>
-                                                <h4 class="text-lg font-bold text-gray-900 uppercase tracking-wide">{{ $category->nome }}</h4>
+                                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                    @foreach($structure->services as $service)
+                                        <div class="flex items-center gap-3">
+                                            <div class="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-sm border border-indigo-100">
+                                                {{ $service->icona ?: '✨' }}
                                             </div>
-                                            <ul class="grid grid-cols-1 gap-2">
-                                                @foreach($services as $service)
-                                                    <li class="flex items-start gap-3 text-gray-600 text-sm">
-                                                        <svg class="h-5 w-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                                        </svg>
-                                                        <span>{{ $service->nome }}</span>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
+                                            <span class="text-gray-800 font-bold text-sm leading-tight">{{ $service->nome }}</span>
                                         </div>
                                     @endforeach
                                 </div>

@@ -257,32 +257,24 @@
 
                         <!-- TAB: SERVIZI -->
                         <div x-show="tab === 'servizi'" class="space-y-6" style="display:none;">
-                            <p class="text-sm text-gray-500 mb-4">Seleziona i servizi disponibili per questa struttura. <a href="{{ route('admin.booking.services.index') }}" class="text-indigo-600 font-bold hover:underline">Gestisci categorie e servizi →</a></p>
-                            @if(isset($serviceCategories) && $serviceCategories->count() > 0)
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    @foreach($serviceCategories as $cat)
-                                        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100">
-                                            <h4 class="font-extrabold text-gray-900 flex items-center gap-2 mb-4">
-                                                <span class="text-xl">{{ $cat->icona }}</span>
-                                                {{ $cat->nome }}
-                                            </h4>
-                                            <div class="space-y-2">
-                                                @foreach($cat->services as $service)
-                                                    <label class="flex items-center gap-2 cursor-pointer hover:bg-white p-1.5 rounded-lg transition-colors">
-                                                        <input type="checkbox" name="services[]" value="{{ $service->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ (is_array(old('services')) && in_array($service->id, old('services'))) ? 'checked' : '' }}>
-                                                        <span class="text-sm text-gray-700">{{ $service->nome }}</span>
-                                                    </label>
-                                                @endforeach
-                                                @if($cat->services->count() === 0)
-                                                    <p class="text-xs text-gray-400 italic">Nessun servizio in questa categoria.</p>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    @endforeach
+                            <p class="text-sm text-gray-500 mb-4">Seleziona i servizi disponibili per questa struttura. <a href="{{ route('admin.booking.services.index') }}" class="text-indigo-600 font-bold hover:underline">Gestisci servizi →</a></p>
+                            @if(isset($services) && $services->count() > 0)
+                                <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        @foreach($services as $service)
+                                            <label class="flex items-center gap-3 cursor-pointer bg-white p-3 rounded-xl border border-gray-200 hover:border-indigo-300 transition-all shadow-sm">
+                                                <input type="checkbox" name="services[]" value="{{ $service->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 shrink-0" {{ (is_array(old('services')) && in_array($service->id, old('services'))) ? 'checked' : '' }}>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-xl shrink-0">{{ $service->icona ?: '✨' }}</span>
+                                                    <span class="text-sm font-bold text-gray-700 leading-tight">{{ $service->nome }}</span>
+                                                </div>
+                                            </label>
+                                        @endforeach
+                                    </div>
                                 </div>
                             @else
                                 <div class="text-center py-10 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                                    <p class="text-sm text-gray-400 italic">Nessuna categoria di servizi definita. <a href="{{ route('admin.booking.services.index') }}" class="text-indigo-600 font-bold hover:underline">Crea la prima categoria →</a></p>
+                                    <p class="text-sm text-gray-400 italic">Nessun servizio definito in archivio. <a href="{{ route('admin.booking.services.index') }}" class="text-indigo-600 font-bold hover:underline">Crea il primo servizio →</a></p>
                                 </div>
                             @endif
                         </div>

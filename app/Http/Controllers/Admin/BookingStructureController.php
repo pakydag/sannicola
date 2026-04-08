@@ -43,9 +43,9 @@ class BookingStructureController extends Controller
 
     public function create()
     {
-        $serviceCategories = \App\Models\BookingServiceCategory::with('services')->orderBy('ordine')->get();
+        $services = \App\Models\BookingService::orderBy('ordine')->get();
         $availableExtras = \App\Models\BookingExtra::orderBy('ordine')->get();
-        return view('admin.booking.structures.create', compact('serviceCategories', 'availableExtras'));
+        return view('admin.booking.structures.create', compact('services', 'availableExtras'));
     }
 
     public function store(Request $request)
@@ -156,9 +156,9 @@ class BookingStructureController extends Controller
         $structure->load(['photos' => function($q) {
             $q->orderBy('ordine');
         }, 'prices', 'variants', 'services', 'extras']);
-        $serviceCategories = \App\Models\BookingServiceCategory::with('services')->orderBy('ordine')->get();
+        $services = \App\Models\BookingService::orderBy('ordine')->get();
         $availableExtras = \App\Models\BookingExtra::orderBy('ordine')->get();
-        return view('admin.booking.structures.edit', compact('structure', 'serviceCategories', 'availableExtras'));
+        return view('admin.booking.structures.edit', compact('structure', 'services', 'availableExtras'));
     }
 
     public function update(Request $request, \App\Models\BookingStructure $structure)

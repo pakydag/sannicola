@@ -80,13 +80,11 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
         Route::resource('structures', \App\Http\Controllers\Admin\BookingStructureController::class);
         Route::resource('customers', \App\Http\Controllers\Admin\BookingCustomerController::class); // Added this line
 
-        // Booking Services
+        // Booking Services (Flat Structure)
         Route::get('services', [\App\Http\Controllers\Admin\BookingServiceController::class, 'index'])->name('services.index');
-        Route::post('services/categories', [\App\Http\Controllers\Admin\BookingServiceController::class, 'storeCategory'])->name('services.store-category');
-        Route::put('services/categories/{category}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'updateCategory'])->name('services.update-category');
-        Route::delete('services/categories/{category}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'destroyCategory'])->name('services.destroy-category');
-        Route::post('services/categories/{category}/services', [\App\Http\Controllers\Admin\BookingServiceController::class, 'storeService'])->name('services.store-service');
-        Route::delete('services/{service}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'destroyService'])->name('services.destroy-service');
+        Route::post('services', [\App\Http\Controllers\Admin\BookingServiceController::class, 'store'])->name('services.store');
+        Route::put('services/{service}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'update'])->name('services.update');
+        Route::delete('services/{service}', [\App\Http\Controllers\Admin\BookingServiceController::class, 'destroy'])->name('services.destroy');
         
         // Booking Extras
         Route::resource('extras', \App\Http\Controllers\Admin\BookingExtraController::class)->except(['create', 'edit', 'show']);

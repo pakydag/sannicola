@@ -11,66 +11,45 @@ class BookingServiceController extends Controller
 {
     public function index()
     {
-        $categories = BookingServiceCategory::with('services')->orderBy('ordine')->get();
-        return view('admin.booking.services.index', compact('categories'));
+        $services = BookingService::orderBy('ordine')->get();
+        return view('admin.booking.services.index', compact('services'));
     }
 
-    public function storeCategory(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'nome' => 'required|string|max:255',
             'icona' => 'required|string|max:10',
         ]);
 
-        $maxOrdine = BookingServiceCategory::max('ordine') ?? 0;
+        $maxOrdine = BookingService::max('ordine') ?? 0;
 
-        BookingServiceCategory::create([
+        BookingService::create([
             'nome' => $request->nome,
             'icona' => $request->icona,
             'ordine' => $maxOrdine + 1,
+            'booking_service_category_id' => null // Deprecated field
         ]);
 
-        return back()->with('success', 'Categoria creata con successo.');
+        return back()->with('success', 'Servizio creato con successo.');
     }
 
-    public function updateCategory(Request $request, BookingServiceCategory $category)
+    public function update(Request $request, BookingService $service)
     {
         $request->validate([
             'nome' => 'required|string|max:255',
             'icona' => 'required|string|max:10',
         ]);
 
-        $category->update([
+        $service->update([
             'nome' => $request->nome,
             'icona' => $request->icona,
         ]);
 
-        return back()->with('success', 'Categoria aggiornata con successo.');
+        return back()->with('success', 'Servizio aggiornato con successo.');
     }
 
-    public function destroyCategory(BookingServiceCategory $category)
-    {
-        $category->delete();
-        return back()->with('success', 'Categoria eliminata con successo.');
-    }
-
-    public function storeService(Request $request, BookingServiceCategory $category)
-    {
-        $request->validate([
-            'nome' => 'required|string|max:255',
-        ]);
-
-        $maxOrdine = $category->services()->max('ordine') ?? 0;
-
-        $category->services()->create([
-            'nome' => $request->nome,
-            'ordine' => $maxOrdine + 1,
-        ]);
-
-        return back()->with('success', 'Servizio aggiunto con successo.');
-    }
-
-    public function destroyService(BookingService $service)
+    public function destroy(BookingService $service)
     {
         $service->delete();
         return back()->with('success', 'Servizio eliminato con successo.');
