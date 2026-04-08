@@ -199,7 +199,7 @@
                             <div class="flex justify-between items-center mb-4">
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-800">Galleria Immagini</h3>
-                                    <p class="text-sm text-gray-500">Trascina le foto per ordinarle. La prima sarà la copertina.</p>
+                                    <p class="text-sm text-gray-500">Trascina le foto per ordinarle. <span class="text-indigo-600 font-bold">Consiglio:</span> Nel File Manager, usa l'icona <svg class="inline h-4 w-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> per confermare.</p>
                                 </div>
                                 <button type="button" @click="window.openFmPhoto(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -211,16 +211,19 @@
 
                             <div x-ref="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-gray-50 p-6 rounded-3xl border-2 border-dashed border-gray-200">
                                 <template x-for="(foto, index) in photos" :key="index">
-                                    <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300">
-                                        <!-- Drag Handle -->
-                                        <div class="drag-handle absolute top-2 left-2 z-10 p-1 bg-black/50 text-white rounded-lg cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300 cursor-grab active:cursor-grabbing">
+                                        <!-- Drag Handle Overlay -->
+                                        <div class="absolute inset-0 z-0 rounded-2xl"></div>
+
+                                        <!-- Drag Icon (Visual indicator) -->
+                                        <div class="absolute top-2 left-2 z-10 p-1 bg-black/30 text-white rounded-lg opacity-40 group-hover:opacity-100 transition-opacity">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
                                             </svg>
                                         </div>
 
                                         <!-- Delete Button -->
-                                        <button type="button" @click="photos.splice(index, 1)" class="absolute top-2 right-2 z-10 p-1 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm">
+                                        <button type="button" @click.stop="photos.splice(index, 1)" class="absolute top-2 right-2 z-20 p-1 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                             </svg>
@@ -230,12 +233,12 @@
                                         <input type="hidden" name="photos[]" :value="foto">
 
                                         <!-- Thumbnail -->
-                                        <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
+                                        <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100 pointer-events-none">
                                             <img :src="foto" class="h-full w-full object-cover">
                                         </div>
 
                                         <!-- Label/Index -->
-                                        <div class="mt-2 text-center">
+                                        <div class="mt-2 text-center pointer-events-none">
                                             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter" x-text="index === 0 ? 'Copertina' : 'Foto ' + (index + 1)"></span>
                                         </div>
                                     </div>
@@ -334,7 +337,8 @@
                 const galleryEl = document.querySelector('[x-show="tab === \'foto\'"]');
                 if (!galleryEl) return;
                 
-                const photosData = galleryEl.__x.$data;
+                // Per Alpine v3 usiamo Alpine.$data
+                const photosData = window.Alpine ? window.Alpine.$data(galleryEl) : galleryEl.__x.$data;
                 
                 // Funzione di pulizia URL
                 const cleanUrl = (url) => {
