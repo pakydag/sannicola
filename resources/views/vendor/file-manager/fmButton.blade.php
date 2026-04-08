@@ -53,22 +53,37 @@
       window.close();
     });
 
-    // Custom Multi-Select Callback
+    // Custom Multi-Select Callback Infallibile
     document.getElementById('custom-confirm-btn').addEventListener('click', function() {
         let store = window.fm.$store;
         let paths = [];
         
-        let selectedItems = store.state.fm.left.selectedItems || [];
-        let selectedFiles = store.state.fm.left.selectedFiles || [];
-        
-        if (selectedItems.length > 0) {
-            paths = selectedItems.map(i => i.path);
-        } else if (selectedFiles.length > 0) {
-            paths = selectedFiles.map(i => i.path);
+        try {
+            // Metodo 1: Accesso diretto allo state di Alexusmai v3
+            let active = store.state.fm.activeManager || 'left';
+            let selectedFiles = store.state.fm[active].selected.files;
+            
+            if (selectedFiles && selectedFiles.length > 0) {
+                paths = selectedFiles;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        // Metodo 2: Fallback Scrape dal DOM se lo state Vuex cambia in futuro
+        if (paths.length === 0) {
+            let active = store.state.fm.activeManager || 'left';
+            let currentPath = store.state.fm[active].selectedDirectory || '';
+            let selectedRows = document.querySelectorAll('tr.table-info, tr.-selected');
+            
+            selectedRows.forEach(row => {
+                let nameStr = row.innerText.trim().split('\n')[0]; // Prende il nome del file dalla tabella
+                if (nameStr) paths.push(currentPath + '/' + nameStr);
+            });
         }
 
         if (paths.length === 0) {
-            alert('Per favore, seleziona almeno un\'immagine prima di confermare.');
+            alert('Per favore, seleziona almeno un\'immagine prima di confermare. Se il problema persiste, la struttura interna è variata.');
             return;
         }
 
