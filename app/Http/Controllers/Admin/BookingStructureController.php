@@ -99,9 +99,12 @@ class BookingStructureController extends Controller
         $structure = \App\Models\BookingStructure::create($validated);
 
         if ($request->has('photos')) {
-            foreach ($request->photos as $photoPath) {
+            foreach ($request->photos as $index => $photoPath) {
                 if ($photoPath) {
-                    $structure->photos()->create(['path' => $this->stripDomain($photoPath)]);
+                    $structure->photos()->create([
+                        'path' => $this->stripDomain($photoPath),
+                        'ordine' => $index,
+                    ]);
                 }
             }
         }
@@ -150,7 +153,9 @@ class BookingStructureController extends Controller
 
     public function edit(\App\Models\BookingStructure $structure)
     {
-        $structure->load(['photos', 'prices', 'variants', 'services', 'extras']);
+        $structure->load(['photos' => function($q) {
+            $q->orderBy('ordine');
+        }, 'prices', 'variants', 'services', 'extras']);
         $serviceCategories = \App\Models\BookingServiceCategory::with('services')->orderBy('ordine')->get();
         $availableExtras = \App\Models\BookingExtra::orderBy('ordine')->get();
         return view('admin.booking.structures.edit', compact('structure', 'serviceCategories', 'availableExtras'));
@@ -184,9 +189,12 @@ class BookingStructureController extends Controller
         // 1. Sync Photos
         $structure->photos()->delete(); // Reset photos
         if ($request->has('photos')) {
-            foreach ($request->photos as $photoPath) {
+            foreach ($request->photos as $index => $photoPath) {
                 if ($photoPath) {
-                    $structure->photos()->create(['path' => $this->stripDomain($photoPath)]);
+                    $structure->photos()->create([
+                        'path' => $this->stripDomain($photoPath),
+                        'ordine' => $index
+                    ]);
                 }
             }
         }

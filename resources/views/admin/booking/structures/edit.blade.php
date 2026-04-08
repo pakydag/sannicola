@@ -78,7 +78,7 @@
                             },
                             removeVariant(index) {
                                 if(confirm('Sei sicuro? Rimuovendo la variante verranno rimosse anche le relative fasce di prezzo.')) {
-                                    const id = String(this.varianti[index].id);
+                                     const id = String(this.varianti[index].id);
                                     this.varianti.splice(index, 1);
                                     this.prezzi = this.prezzi.filter(p => String(p.variant_temp_id) !== id);
                                 }
@@ -187,23 +187,70 @@
                         </div>
 
                         <!-- TAB: FOTO -->
-                        <div x-show="tab === 'foto'" class="space-y-4" style="display:none;" x-data="{ photos: {{ json_encode($structure->photos->pluck('path')) }} }">
-                            <label class="block text-gray-700 font-bold mb-2">Galleria Immagini</label>
-                            <button type="button" @click="photos.push('')" class="mb-4 bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-3 rounded text-sm">+ Aggiungi Immagine</button>
-                            <template x-for="(foto, index) in photos" :key="index">
-                                <div class="flex items-center mb-2 gap-2">
-                                    <div class="flex-1">
-                                        <div class="flex items-center gap-2">
-                                            <input type="text" x-model="photos[index]" name="photos[]" class="shadow border rounded w-full py-2 px-3 text-gray-700 readonly-foto" placeholder="URL Immagine" readonly>
-                                            <button type="button" @click="window.openFmPhoto(index)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded font-bold">Sfoglia</button>
-                                            <button type="button" @click="photos.splice(index, 1)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded font-bold">X</button>
+                        <div x-show="tab === 'foto'" class="space-y-6" style="display:none;" x-data="{ 
+                            photos: {{ json_encode($structure->photos->pluck('path')) }},
+                            initSortable() {
+                                Sortable.create(this.$refs.grid, {
+                                    animation: 150,
+                                    handle: '.drag-handle',
+                                    onEnd: (evt) => {
+                                        const items = [...this.photos];
+                                        const [movedItem] = items.splice(evt.oldIndex, 1);
+                                        items.splice(evt.newIndex, 0, movedItem);
+                                        this.photos = items;
+                                    }
+                                });
+                            }
+                        }" x-init="initSortable()">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 class="text-lg font-bold text-gray-800">Galleria Immagini</h3>
+                                    <p class="text-sm text-gray-500">Trascina le foto per ordinarle. La prima sarà la copertina.</p>
+                                </div>
+                                <button type="button" @click="window.openFmPhoto(null)" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                    </svg>
+                                    Aggiungi Foto
+                                </button>
+                            </div>
+
+                            <div x-ref="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-gray-50 p-6 rounded-3xl border-2 border-dashed border-gray-200">
+                                <template x-for="(foto, index) in photos" :key="index">
+                                    <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300">
+                                        <!-- Drag Handle -->
+                                        <div class="drag-handle absolute top-2 left-2 z-10 p-1 bg-black/50 text-white rounded-lg cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                                            </svg>
                                         </div>
-                                        <div class="mt-2" x-show="photos[index]">
-                                            <img :src="photos[index]" class="h-20 w-32 object-cover rounded shadow-sm border">
+
+                                        <!-- Delete Button -->
+                                        <button type="button" @click="photos.splice(index, 1)" class="absolute top-2 right-2 z-10 p-1 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
+
+                                        <!-- Hidden Input -->
+                                        <input type="hidden" name="photos[]" :value="foto">
+
+                                        <!-- Thumbnail -->
+                                        <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
+                                            <img :src="foto" class="h-full w-full object-cover">
+                                        </div>
+
+                                        <!-- Label/Index -->
+                                        <div class="mt-2 text-center">
+                                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter" x-text="index === 0 ? 'Copertina' : 'Foto ' + (index + 1)"></span>
                                         </div>
                                     </div>
+                                </template>
+
+                                <div x-show="photos.length === 0" class="col-span-full py-10 text-center">
+                                    <p class="text-sm text-gray-400 italic">Nessuna foto presente. Clicca su 'Aggiungi Foto' per iniziare.</p>
                                 </div>
-                            </template>
+                            </div>
                         </div>
 
                         <!-- TAB: SERVIZI -->
@@ -276,6 +323,7 @@
 
     @push('scripts')
         <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
         <script>
             // CKEditor
             CKEDITOR.replace('descrizione');
@@ -286,34 +334,43 @@
                 currentFmIndex = index;
                 window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
             };
+            
             function fmSetLink($url) {
-                if (currentFmIndex !== null) {
-                    let inputs = document.querySelectorAll('.readonly-foto');
-                    if(inputs[currentFmIndex]) {
-                        let relativeUrl = $url;
-                        try {
-                            // Estrae il path dall'URL completo
-                            let urlObj = new URL($url);
-                            relativeUrl = urlObj.pathname;
-                            
-                            // Pulizia prefissi comuni
-                            relativeUrl = relativeUrl.replace('/baseweb/public', '');
-                            relativeUrl = relativeUrl.replace('/public', '');
-                        } catch(e) {
-                            // Se non è un URL valido, lo lasciamo così com'è
-                        }
+                // Cerchiamo l'elemento Alpine
+                const galleryEl = document.querySelector('[x-show="tab === \'foto\'"]');
+                if (!galleryEl) return;
+                
+                const photosData = galleryEl.__x.$data;
+                
+                // Funzione di pulizia URL (estratta dalla tua versione precedente)
+                const cleanUrl = (url) => {
+                    let relativeUrl = url;
+                    try {
+                        let urlObj = new URL(url);
+                        relativeUrl = urlObj.pathname;
+                        relativeUrl = relativeUrl.replace('/baseweb/public', '');
+                        relativeUrl = relativeUrl.replace('/public', '');
+                    } catch(e) {}
+                    if (!relativeUrl.startsWith('/')) relativeUrl = '/' + relativeUrl;
+                    return relativeUrl;
+                };
 
-                        // Garantisce che inizi sempre con una barra /
-                        if (!relativeUrl.startsWith('/')) {
-                            relativeUrl = '/' + relativeUrl;
-                        }
-
-                        inputs[currentFmIndex].value = relativeUrl;
-                        inputs[currentFmIndex].dispatchEvent(new Event('input', { bubbles: true }));
+                // Se $url è un array (selezione multipla) o una stringa singola
+                if (Array.isArray($url)) {
+                    $url.forEach(u => {
+                        photosData.photos.push(cleanUrl(u));
+                    });
+                } else {
+                    if (currentFmIndex !== null) {
+                        photosData.photos[currentFmIndex] = cleanUrl($url);
+                    } else {
+                        photosData.photos.push(cleanUrl($url));
                     }
-                    currentFmIndex = null;
                 }
+                
+                currentFmIndex = null;
             }
         </script>
     @endpush
+</x-app-layout>
 </x-app-layout>
