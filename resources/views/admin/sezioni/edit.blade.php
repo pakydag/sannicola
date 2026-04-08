@@ -14,6 +14,16 @@
                         @csrf
                         @method('PUT')
 
+                        @if($sezione->modulo)
+                            <input type="hidden" name="modulo" value="{{ $sezione->modulo }}">
+                            <input type="hidden" name="tipo" value="{{ $sezione->tipo }}">
+                            <input type="hidden" name="slug" value="{{ $sezione->slug }}">
+                            
+                            <div class="mb-6 p-4 bg-gray-50 border-l-4 border-gray-400 rounded">
+                                <p class="text-sm text-gray-700">Questa è una <strong>Sezione di Sistema</strong> (Modulo {{ strtoupper($sezione->modulo) }}). Puoi cambiarne il nome nel menu, l'ordine di apparizione e la visibilità, ma non l'URL o il tipo di contenuto.</p>
+                            </div>
+                        @endif
+
                         <!-- Nome -->
                         <div class="mb-4">
                             <label for="nome" class="block text-gray-700 text-sm font-bold mb-2">Nome Sezione (Es. Chi Siamo) *</label>
@@ -22,14 +32,16 @@
                             @error('nome') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- URL Custom (Slug) -->
-                        <div class="mb-4">
-                            <label for="slug" class="block text-gray-700 text-sm font-bold mb-2">URL Personalizzato (Opzionale)</label>
-                            <input type="text" name="slug" id="slug" value="{{ old('slug', $sezione->slug) }}" placeholder="Lascia vuoto per autogenerare (es. 5-it)"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            <p class="text-xs text-gray-500 mt-1">Senza spazi, usa i trattini. Es: chi-siamo</p>
-                            @error('slug') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
-                        </div>
+                        @if(!$sezione->modulo)
+                            <!-- URL Custom (Slug) -->
+                            <div class="mb-4">
+                                <label for="slug" class="block text-gray-700 text-sm font-bold mb-2">URL Personalizzato (Opzionale)</label>
+                                <input type="text" name="slug" id="slug" value="{{ old('slug', $sezione->slug) }}" placeholder="Lascia vuoto per autogenerare (es. 5-it)"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <p class="text-xs text-gray-500 mt-1">Senza spazi, usa i trattini. Es: chi-siamo</p>
+                                @error('slug') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
 
                         <!-- Ordine -->
                         <div class="mb-4">
@@ -40,21 +52,23 @@
                             @error('ordine') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Tipo di Sezione -->
-                        <div class="mb-4">
-                            <span class="block text-gray-700 text-sm font-bold mb-2">Comportamento della Sezione *</span>
-                            <div class="flex items-center gap-6 mt-2">
-                                <label class="flex items-center">
-                                    <input type="radio" name="tipo" value="pagina" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" {{ old('tipo', $sezione->tipo) == 'pagina' ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-700"><strong>Pagina</strong> (Mostra solo il testo, nessun articolo)</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="tipo" value="archivio" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" {{ old('tipo', $sezione->tipo) == 'archivio' ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-700"><strong>Archivio</strong> (Mostra l'elenco degli articoli)</span>
-                                </label>
+                        @if(!$sezione->modulo)
+                            <!-- Tipo di Sezione -->
+                            <div class="mb-4">
+                                <span class="block text-gray-700 text-sm font-bold mb-2">Comportamento della Sezione *</span>
+                                <div class="flex items-center gap-6 mt-2">
+                                    <label class="flex items-center">
+                                        <input type="radio" name="tipo" value="pagina" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" {{ old('tipo', $sezione->tipo) == 'pagina' ? 'checked' : '' }}>
+                                        <span class="ml-2 text-sm text-gray-700"><strong>Pagina</strong> (Mostra solo il testo, nessun articolo)</span>
+                                    </label>
+                                    <label class="flex items-center">
+                                        <input type="radio" name="tipo" value="archivio" class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out" {{ old('tipo', $sezione->tipo) == 'archivio' ? 'checked' : '' }}>
+                                        <span class="ml-2 text-sm text-gray-700"><strong>Archivio</strong> (Mostra l'elenco degli articoli)</span>
+                                    </label>
+                                </div>
+                                @error('tipo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                             </div>
-                            @error('tipo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
-                        </div>
+                        @endif
 
                         <!-- Visibilità Checkboxes -->
                         <div class="mb-4 bg-indigo-50 p-4 rounded border border-indigo-100 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -96,18 +110,25 @@
                             @error('colonne_griglia') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Contenuto testuale/HTML -->
-                        <div class="mb-8">
-                            <div class="flex items-center justify-between mb-2">
-                                <label for="contenuto" class="block text-gray-700 text-sm font-bold">Contenuto (Testo o HTML)</label>
-                                <button type="button" id="fm-button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-1 px-3 rounded inline-flex items-center">
-                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    Inserisci Immagine dal File Manager
-                                </button>
+                        @if(!$sezione->modulo)
+                            <!-- Contenuto testuale/HTML -->
+                            <div class="mb-8">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="contenuto" class="block text-gray-700 text-sm font-bold">Contenuto (Testo o HTML)</label>
+                                    <button type="button" id="fm-button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-bold py-1 px-3 rounded inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        Inserisci Immagine dal File Manager
+                                    </button>
+                                </div>
+                                <textarea name="contenuto" id="contenuto" rows="8"
+                                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-mono text-sm">{{ old('contenuto', $sezione->contenuto) }}</textarea>
+                                @error('contenuto') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                             </div>
-                            <textarea name="contenuto" id="contenuto" rows="8"
-                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-mono text-sm">{{ old('contenuto', $sezione->contenuto) }}</textarea>
-                            @error('contenuto') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        @else
+                            <div class="hidden">
+                                <textarea name="contenuto" id="contenuto">{{ $sezione->contenuto }}</textarea>
+                            </div>
+                        @endif
                         <!-- ======== Pannello SEO & Condivisione ======== -->
                         <div class="mt-10 mb-8 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                             <div class="bg-gray-200 px-4 py-3 border-b border-gray-300">

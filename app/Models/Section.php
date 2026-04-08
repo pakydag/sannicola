@@ -12,6 +12,7 @@ class Section extends Model
         'ordine',
         'visibile',
         'tipo',
+        'modulo',
         'menu_a_tendina',
         'colonne_griglia',
         'mostra_nel_menu',

@@ -34,24 +34,24 @@
                         Home
                     </a>
                     
-                    @if($shopEnabled == '1')
-                        <a href="{{ route('public.shop.index') }}" :class="scrolled ? 'text-gray-500 hover:text-black border-transparent hover:border-black' : 'text-white/60 hover:text-white border-transparent hover:border-white'" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out">
-                            Shop
-                        </a>
-                    @endif
-
-                    @if($bookingEnabled == '1')
-                        <a href="{{ route('public.booking.index') }}"  :class="scrolled ? 'text-gray-500 hover:text-black border-transparent hover:border-black' : 'text-white/60 hover:text-white border-transparent hover:border-white'" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 transition duration-150 ease-in-out">
-                            Booking
-                        </a>
-                    @endif
-                    
                     @if(isset($shared_sezioni))
                         @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
-                            @if($sez->tipo == 'archivio' && $sez->menu_a_tendina)
-                                <!-- Dropdown per Archivio -->
+                            @php
+                                $url = route('public.sezione', $sez->slug ?? $sez->id.'-it');
+                                if ($sez->modulo === 'shop') $url = route('public.shop.index');
+                                if ($sez->modulo === 'booking') $url = route('public.booking.index');
+                                if ($sez->modulo === 'b2b') $url = route('agent.dashboard');
+                                
+                                $isActive = request()->is($sez->slug ?? $sez->id.'-it') || 
+                                            ($sez->modulo === 'shop' && request()->routeIs('public.shop.*')) ||
+                                            ($sez->modulo === 'booking' && request()->routeIs('public.booking.*')) ||
+                                            ($sez->modulo === 'b2b' && request()->routeIs('agent.*'));
+                            @endphp
+
+                            @if($sez->tipo == 'archivio' && $sez->menu_a_tendina && !$sez->modulo)
+                                <!-- Dropdown per Archivio (Solo per sezioni CMS normali) -->
                                 <div class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent" x-data="{ open: false }" @click.away="open = false" @mouseenter="open = true" @mouseleave="open = false">
-                                    <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" :class="scrolled ? 'text-gray-500 hover:text-black' : 'text-white/60 hover:text-white'" class="text-sm font-medium leading-5 transition duration-150 ease-in-out inline-block">{{ $sez->nome }} <svg class="ml-1 h-4 w-4 inline-block transform transition-transform duration-200" :class="{'rotate-180': open, 'text-gray-400': scrolled, 'text-white/50': !scrolled}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
+                                    <a href="{{ $url }}" :class="scrolled ? 'text-gray-500 hover:text-black' : 'text-white/60 hover:text-white'" class="text-sm font-medium leading-5 transition duration-150 ease-in-out inline-block">{{ $sez->nome }} <svg class="ml-1 h-4 w-4 inline-block transform transition-transform duration-200" :class="{'rotate-180': open, 'text-gray-400': scrolled, 'text-white/50': !scrolled}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
                                     
                                     <div x-show="open" 
                                          x-transition:enter="transition ease-out duration-100" 
@@ -63,11 +63,9 @@
                                          class="origin-top-left absolute left-0 top-12 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 divide-y divide-gray-100 focus:outline-none" style="display: none;">
                                         
                                         <div class="py-1">
-                                            <!-- Link a "Vai all'archivio principale" -->
-                                            <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-semibold border-b">
+                                            <a href="{{ $url }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-semibold border-b">
                                                 Tutti gli articoli
                                             </a>
-                                            <!-- Singoli Articoli -->
                                             @foreach($sez->articles()->where('visibile', true)->latest()->get() as $articolo)
                                                 <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 border-l-2 border-transparent hover:border-indigo-500">
                                                     {{ Str::limit($articolo->titolo, 30) }}
@@ -77,8 +75,8 @@
                                     </div>
                                 </div>
                             @else
-                                <!-- Link Semplice -->
-                                <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" :class="scrolled ? '{{ request()->is($sez->slug ?? $sez->id.'-it') ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}' : '{{ request()->is($sez->slug ?? $sez->id.'-it') ? 'border-white text-white' : 'border-transparent text-white/60 hover:text-white hover:border-white' }}'" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <!-- Link Semplice (Module o Pagina) -->
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/60 hover:text-white hover:border-white' }}'" class="inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
@@ -145,21 +143,21 @@
                 Home
             </a>
             
-            @if($shopEnabled == '1')
-                <a href="{{ route('public.shop.index') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('public.shop.*') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
-                    Shop
-                </a>
-            @endif
-
-            @if($bookingEnabled == '1')
-                <a href="{{ route('public.booking.index') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('public.booking.*') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
-                    Booking
-                </a>
-            @endif
-            
             @if(isset($shared_sezioni))
-                @foreach($shared_sezioni as $sez)
-                    @if($sez->tipo == 'archivio' && $sez->menu_a_tendina)
+                @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
+                    @php
+                        $url = route('public.sezione', $sez->slug ?? $sez->id.'-it');
+                        if ($sez->modulo === 'shop') $url = route('public.shop.index');
+                        if ($sez->modulo === 'booking') $url = route('public.booking.index');
+                        if ($sez->modulo === 'b2b') $url = route('agent.dashboard');
+                        
+                        $isActive = request()->is($sez->slug ?? $sez->id.'-it') || 
+                                    ($sez->modulo === 'shop' && request()->routeIs('public.shop.*')) ||
+                                    ($sez->modulo === 'booking' && request()->routeIs('public.booking.*')) ||
+                                    ($sez->modulo === 'b2b' && request()->routeIs('agent.*'));
+                    @endphp
+
+                    @if($sez->tipo == 'archivio' && $sez->menu_a_tendina && !$sez->modulo)
                         <div x-data="{ openSub: false }">
                             <button @click="openSub = !openSub" class="w-full flex justify-between items-center text-left pl-3 pr-4 py-2 border-l-4 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300 text-base font-medium transition duration-150 ease-in-out">
                                 {{ $sez->nome }}
@@ -168,7 +166,7 @@
                                 </svg>
                             </button>
                             <div x-show="openSub" class="bg-gray-50 pl-6 pr-4 py-2 space-y-1" style="display: none;">
-                                <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" class="block py-2 text-sm text-gray-700 font-semibold hover:text-indigo-600">
+                                <a href="{{ $url }}" class="block py-2 text-sm text-gray-700 font-semibold hover:text-indigo-600">
                                     Tutti gli articoli
                                 </a>
                                 @foreach($sez->articles()->where('visibile', true)->latest()->get() as $articolo)
@@ -179,7 +177,7 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->is($sez->slug ?? $sez->id.'-it') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
+                        <a href="{{ $url }}" class="block pl-3 pr-4 py-2 border-l-4 {{ $isActive ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
                             {{ $sez->nome }}
                         </a>
                     @endif

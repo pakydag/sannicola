@@ -21,6 +21,12 @@
                         </div>
                     @endif
 
+                    @if(session('error'))
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <span class="block sm:inline">{{ session('error') }}</span>
+                        </div>
+                    @endif
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200">
                             <thead>
@@ -40,9 +46,16 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                                             </svg>
                                         </td>
-                                        <td class="py-2 px-4 border-b font-bold">{{ $sezione->nome }}</td>
+                                        <td class="py-2 px-4 border-b font-bold">
+                                            {{ $sezione->nome }}
+                                            @if($sezione->modulo)
+                                                <span class="ml-2 px-2 inline-flex text-[10px] leading-4 font-bold rounded bg-gray-100 text-gray-500 uppercase tracking-tighter border border-gray-200">Modulo: {{ strtoupper($sezione->modulo) }}</span>
+                                            @endif
+                                        </td>
                                         <td class="py-2 px-4 border-b text-center">
-                                            @if($sezione->tipo == 'pagina')
+                                            @if($sezione->modulo)
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-gray-600 text-white">Sistema</span>
+                                            @elseif($sezione->tipo == 'pagina')
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-blue-100 text-blue-800">Pagina</span>
                                             @else
                                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded bg-purple-100 text-purple-800">Archivio</span>
@@ -57,11 +70,13 @@
                                         </td>
                                         <td class="py-2 px-4 border-b text-right">
                                             <a href="{{ route('admin.sezioni.edit', $sezione) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Modifica</a>
-                                            <form action="{{ route('admin.sezioni.destroy', $sezione) }}" method="POST" class="inline-block" onsubmit="return confirm('Sei sicuro di voler eliminare questa sezione?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-600 hover:text-red-900">Elimina</button>
-                                            </form>
+                                            @if(!$sezione->modulo)
+                                                <form action="{{ route('admin.sezioni.destroy', $sezione) }}" method="POST" class="inline-block" onsubmit="return confirm('Sei sicuro di voler eliminare questa sezione?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Elimina</button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

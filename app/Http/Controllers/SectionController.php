@@ -17,8 +17,49 @@ class SectionController extends Controller
 
     public function index()
     {
+        $this->syncModules();
         $sezioni = Section::orderBy('ordine')->get();
         return view('admin.sezioni.index', compact('sezioni'));
+    }
+
+    private function syncModules()
+    {
+        $modules = [
+            'shop' => [
+                'setting' => 'shop_enabled',
+                'name' => 'Shop',
+                'slug' => 'shop'
+            ],
+            'booking' => [
+                'setting' => 'booking_enabled',
+                'name' => 'Booking',
+                'slug' => 'booking'
+            ],
+            'b2b' => [
+                'setting' => 'shop_enabled', // Using shop_enabled for B2B as well or assuming it's available
+                'name' => 'Shop B2B',
+                'slug' => 'b2b-shop'
+            ],
+        ];
+
+        foreach ($modules as $key => $mod) {
+            $isEnabled = \App\Models\Setting::where('key', $mod['setting'])->value('value') == '1';
+            
+            if ($isEnabled) {
+                Section::firstOrCreate(
+                    ['modulo' => $key],
+                    [
+                        'nome' => $mod['name'],
+                        'slug' => $mod['slug'],
+                        'tipo' => 'pagina',
+                        'visibile' => true,
+                        'mostra_nel_menu' => true,
+                        'ordine' => Section::max('ordine') + 1,
+                        'colonne_griglia' => 3
+                    ]
+                );
+            }
+        }
     }
 
     public function create()
@@ -38,6 +79,7 @@ class SectionController extends Controller
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
             'tipo' => 'required|in:pagina,archivio',
+            'modulo' => 'nullable|string|max:50',
             'menu_a_tendina' => 'boolean',
             'mostra_nel_menu' => 'boolean',
             'mostra_nel_footer' => 'boolean',
@@ -84,6 +126,7 @@ class SectionController extends Controller
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
             'tipo' => 'required|in:pagina,archivio',
+            'modulo' => 'nullable|string|max:50',
             'menu_a_tendina' => 'boolean',
             'mostra_nel_menu' => 'boolean',
             'mostra_nel_footer' => 'boolean',
@@ -116,6 +159,9 @@ class SectionController extends Controller
 
     public function destroy(Section $sezioni)
     {
+        if ($sezioni->modulo) {
+            return redirect()->back()->with('error', 'Non è possibile eliminare sezioni di sistema. Puoi però nasconderle disattivando il flag "Visibile".');
+        }
         $sezioni->delete();
         return redirect()->route('admin.sezioni.index')->with('success', 'Sezione eliminata con successo.');
     }
