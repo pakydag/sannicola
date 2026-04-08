@@ -62,7 +62,7 @@
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
                     <div class="relative h-64">
                         @if($structure->photos->count() > 0)
-                            <img src="{{ asset('storage/' . $structure->photos->first()->percorso) }}" alt="{{ $structure->nome }}" class="w-full h-full object-cover">
+                            <img src="{{ asset($structure->photos->first()->path) }}" alt="{{ $structure->nome }}" class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
                                 <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -75,7 +75,7 @@
                     
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $structure->nome }}</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2 text-sm">{{ $structure->descrizione }}</p>
+                        <p class="text-gray-600 mb-4 line-clamp-2 text-sm">{!! strip_tags($structure->descrizione) !!}</p>
                         
                         <div class="flex items-center text-sm text-gray-500 mb-6 gap-4">
                             <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> {{ $structure->camere_letto }} Camere</span>
@@ -83,19 +83,23 @@
                         </div>
                         
                         <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                            <div>
-                                <span class="block text-xs text-gray-500 uppercase font-semibold">Preventivo Est.</span>
-                                <span class="text-2xl font-black text-indigo-600">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
-                            </div>
-                            
-                            <!-- 
-                                Form invisibile che rimanda alla pagina della singola struttura, 
-                                passandogli le date cercate e il numero totale di ospiti (come adulto) per precompilare il riepilogo lì
-                            -->
-                            <a href="{{ route('public.booking.show', $structure->id) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}" 
-                               class="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold transition shadow-md">
-                                Prenota
-                            </a>
+                            @if($structure->prenotabile)
+                                <div>
+                                    <span class="block text-xs text-gray-500 uppercase font-semibold">Preventivo Est.</span>
+                                    <span class="text-2xl font-black text-indigo-600">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
+                                </div>
+                                
+                                <a href="{{ route('public.booking.show', $structure->id) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}" 
+                                   class="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold transition shadow-md">
+                                    Prenota
+                                </a>
+                            @else
+                                <div class="w-full text-center py-2">
+                                    <span class="inline-block w-full bg-red-100 text-red-700 px-6 py-3 rounded-xl font-bold uppercase text-sm">
+                                        Non Disponibile
+                                    </span>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
