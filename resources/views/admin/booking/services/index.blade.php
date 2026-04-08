@@ -32,7 +32,7 @@
                                         <span class="text-3xl" x-text="selected"></span>
                                         <span class="text-sm font-medium text-gray-500">Icona selezionata</span>
                                     </div>
-                                    <div class="grid grid-cols-6 sm:grid-cols-8 gap-1 p-2 bg-gray-50 rounded-xl border border-gray-100">
+                                    <div class="flex flex-wrap gap-2 p-2 bg-gray-50 rounded-xl border border-gray-100">
                                         @php
                                             $icons = ['🍽️','🏊','🅿️','📶','🛏️','🚿','🏠','🌿','🎯','🔒','🚗','🧹','👶','🌐','♿','🏋️','💆','🎵','🍳','☕','🏖️','🧺','🌡️','📺','🛎️','🎿','🐾','🏇','⛵','🎭','🧖','🚭','❄️','🔥','🪴','🧊','🫧','🎲'];
                                         @endphp
@@ -102,7 +102,7 @@
                                                 <input type="text" name="nome" value="{{ $service->nome }}" class="flex-1 rounded-lg border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm font-bold shadow-sm" required placeholder="Nome servizio">
                                             </div>
 
-                                            <div x-show="showPicker" @click.away="showPicker = false" class="absolute top-12 left-0 z-[100] bg-white border border-gray-200 rounded-xl shadow-xl p-2 grid grid-cols-6 gap-1 w-64 max-h-48 overflow-y-auto">
+                                            <div x-show="showPicker" @click.away="showPicker = false" class="absolute top-12 left-0 z-[100] bg-white border border-gray-200 rounded-xl shadow-xl p-3 flex flex-wrap gap-2 w-72 max-h-48 overflow-y-auto">
                                                 @foreach($icons as $icon)
                                                     <button type="button" @click="editIcon = '{{ $icon }}'; showPicker = false" class="h-8 w-8 text-lg flex items-center justify-center rounded hover:bg-gray-100 hover:scale-110 transition-transform">{{ $icon }}</button>
                                                 @endforeach
