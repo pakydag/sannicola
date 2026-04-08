@@ -10,16 +10,28 @@ class BookingStructureController extends Controller
     private function stripDomain($url)
     {
         if (empty($url)) return $url;
-        $baseUrl = config('app.url');
         
-        // Rimuove il dominio di base
-        $path = str_replace($baseUrl, '', $url);
+        // Se inizia già con / ed è chiaramente relativo, lo lasciamo
+        if (str_starts_with($url, '/') && !str_contains($url, '://')) return $url;
         
-        // Rimuove l'eventuale '/public' se presente nel path (comune in ambiente localhost/xampp)
-        if (str_starts_with($path, '/public')) {
+        // Estrae solo il path dall'URL (rimuovendo protocollo e dominio)
+        $path = parse_url($url, PHP_URL_PATH);
+        
+        if (!$path) $path = $url;
+
+        // Pulizia di prefissi comuni in ambiente di sviluppo (es. /baseweb/public)
+        $path = str_replace('/baseweb/public', '', $path);
+        
+        // Se il path inizia con /public (senza baseweb), lo puliamo
+        if (str_starts_with($path, '/public/')) {
             $path = substr($path, 7);
         }
         
+        // Garantisce che il percorso inizi sempre con una singola barra /
+        if (!str_starts_with($path, '/')) {
+            $path = '/' . $path;
+        }
+
         return $path;
     }
 

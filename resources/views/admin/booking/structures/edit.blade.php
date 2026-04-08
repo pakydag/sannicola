@@ -290,23 +290,22 @@
                 if (currentFmIndex !== null) {
                     let inputs = document.querySelectorAll('.readonly-foto');
                     if(inputs[currentFmIndex]) {
-                        // Logica per pulire l'URL e renderlo relativo
                         let relativeUrl = $url;
-                        let baseUrl = window.location.origin; // es. http://localhost
-                        
-                        // Rimuove il dominio
-                        relativeUrl = relativeUrl.replace(baseUrl, '');
-                        
-                        // Rimuove l'eventuale sottocartella del progetto (es. /baseweb) 
-                        // e la cartella /public se presenti
-                        const projectPath = '{{ url('/') }}'.replace(baseUrl, '');
-                        if (projectPath && relativeUrl.startsWith(projectPath)) {
-                            relativeUrl = relativeUrl.replace(projectPath, '');
-                        }
-                        
-                        // Se dopo aver rimosso il projectPath inizia ancora con /public, lo togliamo
-                        if (relativeUrl.startsWith('/public')) {
+                        try {
+                            // Estrae il path dall'URL completo
+                            let urlObj = new URL($url);
+                            relativeUrl = urlObj.pathname;
+                            
+                            // Pulizia prefissi comuni
+                            relativeUrl = relativeUrl.replace('/baseweb/public', '');
                             relativeUrl = relativeUrl.replace('/public', '');
+                        } catch(e) {
+                            // Se non è un URL valido, lo lasciamo così com'è
+                        }
+
+                        // Garantisce che inizi sempre con una barra /
+                        if (!relativeUrl.startsWith('/')) {
+                            relativeUrl = '/' + relativeUrl;
                         }
 
                         inputs[currentFmIndex].value = relativeUrl;
