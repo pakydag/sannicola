@@ -290,7 +290,26 @@
                 if (currentFmIndex !== null) {
                     let inputs = document.querySelectorAll('.readonly-foto');
                     if(inputs[currentFmIndex]) {
-                        inputs[currentFmIndex].value = $url;
+                        // Logica per pulire l'URL e renderlo relativo
+                        let relativeUrl = $url;
+                        let baseUrl = window.location.origin; // es. http://localhost
+                        
+                        // Rimuove il dominio
+                        relativeUrl = relativeUrl.replace(baseUrl, '');
+                        
+                        // Rimuove l'eventuale sottocartella del progetto (es. /baseweb) 
+                        // e la cartella /public se presenti
+                        const projectPath = '{{ url('/') }}'.replace(baseUrl, '');
+                        if (projectPath && relativeUrl.startsWith(projectPath)) {
+                            relativeUrl = relativeUrl.replace(projectPath, '');
+                        }
+                        
+                        // Se dopo aver rimosso il projectPath inizia ancora con /public, lo togliamo
+                        if (relativeUrl.startsWith('/public')) {
+                            relativeUrl = relativeUrl.replace('/public', '');
+                        }
+
+                        inputs[currentFmIndex].value = relativeUrl;
                         inputs[currentFmIndex].dispatchEvent(new Event('input', { bubbles: true }));
                     }
                     currentFmIndex = null;

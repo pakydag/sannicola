@@ -7,6 +7,22 @@ use Illuminate\Http\Request;
 
 class BookingStructureController extends Controller
 {
+    private function stripDomain($url)
+    {
+        if (empty($url)) return $url;
+        $baseUrl = config('app.url');
+        
+        // Rimuove il dominio di base
+        $path = str_replace($baseUrl, '', $url);
+        
+        // Rimuove l'eventuale '/public' se presente nel path (comune in ambiente localhost/xampp)
+        if (str_starts_with($path, '/public')) {
+            $path = substr($path, 7);
+        }
+        
+        return $path;
+    }
+
     public function index()
     {
         $structures = \App\Models\BookingStructure::with('photos')->get();
@@ -73,7 +89,7 @@ class BookingStructureController extends Controller
         if ($request->has('photos')) {
             foreach ($request->photos as $photoPath) {
                 if ($photoPath) {
-                    $structure->photos()->create(['path' => $photoPath]);
+                    $structure->photos()->create(['path' => $this->stripDomain($photoPath)]);
                 }
             }
         }
@@ -153,7 +169,17 @@ class BookingStructureController extends Controller
         $validated['attivo'] = $request->has('attivo');
         $structure->update($validated);
 
-        // 1. Sync Variants
+        // 1. Sync Photos
+        $structure->photos()->delete(); // Reset photos
+        if ($request->has('photos')) {
+            foreach ($request->photos as $photoPath) {
+                if ($photoPath) {
+                    $structure->photos()->create(['path' => $this->stripDomain($photoPath)]);
+                }
+            }
+        }
+
+        // 2. Sync Variants
         $variantMap = [];
         $keepVariantIds = [];
         if ($request->tipo_prezzo === 'persona' && $request->has('varianti')) {
@@ -178,7 +204,7 @@ class BookingStructureController extends Controller
         }
         $structure->variants()->whereNotIn('id', $keepVariantIds)->delete();
 
-        // 2. Validation: Overlapping dates for the same variant
+        // 3. Validation: Overlapping dates for the same variant
         if ($request->has('prezzi')) {
             $prezzi = $request->prezzi;
             foreach ($prezzi as $i => $p1) {
@@ -202,7 +228,7 @@ class BookingStructureController extends Controller
             }
         }
 
-        // 3. Sync Seasonal Prices
+        // 4. Sync Seasonal Prices
         $structure->prices()->delete();
         if ($request->has('prezzi')) {
             foreach ($request->prezzi as $p) {
@@ -231,10 +257,10 @@ class BookingStructureController extends Controller
             }
         }
 
-        // 4. Sync Services
+        // 5. Sync Services
         $structure->services()->sync($request->input('services', []));
 
-        // 5. Sync Extras
+        // 6. Sync Extras
         $structure->extras()->sync($request->input('extras', []));
 
         return back()->with('success', 'Struttura aggiornata con successo.');
