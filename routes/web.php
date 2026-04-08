@@ -26,9 +26,16 @@ Route::get('/admin-emergency-migrate', function () {
             \Illuminate\Support\Facades\Schema::table('booking_services', function (\Illuminate\Database\Schema\Blueprint $table) {
                 $table->string('icona', 20)->nullable()->after('nome');
             });
-            $msg = "Colonna 'icona' aggiunta con successo!";
+            $msg = "Colonna 'icona' aggiunta con successo! ";
         } else {
-            $msg = "La colonna 'icona' esiste già.";
+            $msg = "La colonna 'icona' esiste già. ";
+        }
+        
+        try {
+            \Illuminate\Support\Facades\DB::statement("ALTER TABLE booking_services MODIFY booking_service_category_id BIGINT UNSIGNED NULL;");
+            $msg .= "Colonna 'booking_service_category_id' resa opzionale.";
+        } catch (\Exception $e) {
+            $msg .= "Errore nel rendere la categoria opzionale: " . $e->getMessage();
         }
         
         \Illuminate\Support\Facades\Artisan::call('view:clear');
