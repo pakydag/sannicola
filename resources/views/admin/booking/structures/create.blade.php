@@ -211,21 +211,18 @@
 
                             <div x-ref="grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-gray-50 p-6 rounded-3xl border-2 border-dashed border-gray-200">
                                 <template x-for="(foto, index) in photos" :key="index">
-                                    <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300 cursor-grab active:cursor-grabbing">
-                                        <!-- Drag Handle Overlay -->
-                                        <div class="absolute inset-0 z-0 rounded-2xl"></div>
-
-                                        <!-- Drag Icon (Visual indicator) -->
-                                        <div class="absolute top-2 left-2 z-10 p-1 bg-black/30 text-white rounded-lg opacity-40 group-hover:opacity-100 transition-opacity">
+                                    <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300 overflow-hidden">
+                                        <!-- Drag Handle (Top Left) -->
+                                        <div class="drag-handle absolute top-0 left-0 z-20 p-2 bg-indigo-500 text-white rounded-br-xl cursor-grab active:cursor-grabbing opacity-90 hover:opacity-100 transition-opacity shadow-sm">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
                                             </svg>
                                         </div>
 
-                                        <!-- Delete Button -->
-                                        <button type="button" @click.stop="photos.splice(index, 1)" class="absolute top-2 right-2 z-20 p-1 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-sm">
+                                        <!-- Delete Button (Bottom Right) -->
+                                        <button type="button" @click.stop="photos.splice(index, 1)" class="absolute bottom-2 right-2 z-20 p-2 bg-red-500 text-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 shadow-md transform hover:scale-110 active:scale-95">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
                                         </button>
 
@@ -233,13 +230,13 @@
                                         <input type="hidden" name="photos[]" :value="foto">
 
                                         <!-- Thumbnail -->
-                                        <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100 pointer-events-none">
+                                        <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
                                             <img :src="foto" class="h-full w-full object-cover">
                                         </div>
 
                                         <!-- Label/Index -->
-                                        <div class="mt-2 text-center pointer-events-none">
-                                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-tighter" x-text="index === 0 ? 'Copertina' : 'Foto ' + (index + 1)"></span>
+                                        <div class="mt-2 text-center pb-2">
+                                            <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-tighter" x-text="index === 0 ? 'Copertina' : 'Foto ' + (index + 1)"></span>
                                         </div>
                                     </div>
                                 </template>
@@ -329,7 +326,7 @@
             let currentFmIndex = null;
             window.openFmPhoto = function(index) {
                 currentFmIndex = index;
-                window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                window.open('{{ url('file-manager/fm-button') }}?id=multi', 'fm', 'width=1400,height=800');
             };
             
             function fmSetLink($url) {
