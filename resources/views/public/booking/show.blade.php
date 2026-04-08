@@ -26,15 +26,56 @@
                     </style>
                     <div x-data="{ 
                             activePhoto: '{{ $structure->photos->count() > 0 ? asset($structure->photos->first()->path) : '' }}',
-                            scrollThumbs(dir) {
-                                if(this.$refs.thumbnails) {
-                                    this.$refs.thumbnails.scrollBy({ left: dir * 300, behavior: 'smooth' });
-                                }
+                            photos: {{ json_encode($structure->photos->pluck('path')->map(fn($path) => asset($path))) }},
+                            currentIndex: 0,
+                            init() {
+                                this.currentIndex = this.photos.indexOf(this.activePhoto);
+                                if (this.currentIndex === -1) this.currentIndex = 0;
+                            },
+                            next() {
+                                this.currentIndex = (this.currentIndex + 1) % this.photos.length;
+                                this.activePhoto = this.photos[this.currentIndex];
+                                this.scrollToThumb();
+                            },
+                            prev() {
+                                this.currentIndex = (this.currentIndex - 1 + this.photos.length) % this.photos.length;
+                                this.activePhoto = this.photos[this.currentIndex];
+                                this.scrollToThumb();
+                            },
+                            setActive(idx) {
+                                this.currentIndex = idx;
+                                this.activePhoto = this.photos[idx];
+                                this.scrollToThumb();
+                            },
+                            scrollToThumb() {
+                                this.$nextTick(() => {
+                                    if (this.$refs.thumbArray && this.$refs.thumbArray.children[this.currentIndex]) {
+                                        this.$refs.thumbArray.children[this.currentIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                                    }
+                                });
                             }
                         }" class="space-y-4">
-                        <div class="h-[500px] w-full rounded-3xl overflow-hidden shadow-xl bg-gray-100">
+                        
+                        <!-- PHOTo PRINCIPALE CON FRECCE -->
+                        <div class="relative h-[500px] w-full rounded-3xl overflow-hidden shadow-xl bg-gray-100 group">
                             @if($structure->photos->count() > 0)
                                 <img :src="activePhoto" class="w-full h-full object-cover transition-opacity duration-300">
+                                
+                                @if($structure->photos->count() > 1)
+                                    <!-- Freccia Sinistra Copertina -->
+                                    <button type="button" @click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg text-gray-800 transition-all opacity-0 group-hover:opacity-100 transform hover:scale-110 focus:outline-none" style="z-index: 20;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                        </svg>
+                                    </button>
+                                    <!-- Freccia Destra Copertina -->
+                                    <button type="button" @click="next" class="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg text-gray-800 transition-all opacity-0 group-hover:opacity-100 transform hover:scale-110 focus:outline-none" style="z-index: 20;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </button>
+                                @endif
+                                
                             @else
                                 <div class="w-full h-full flex items-center justify-center">
                                     <svg class="h-20 w-20 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -42,29 +83,30 @@
                             @endif
                         </div>
                         
+                        <!-- RIGA MINIATURE -->
                         @if($structure->photos->count() > 1)
-                            <div class="relative flex items-center">
-                                <!-- Freccia Sinistra -->
-                                <button type="button" @click="scrollThumbs(-1)" class="absolute left-0 z-10 -ml-4 bg-white p-2 rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 focus:outline-none transition-all transform hover:scale-105 active:scale-95 hidden md:block" aria-label="Foto precedente">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                                    </svg>
+                            <div class="relative flex items-center pt-1 group/thumbs">
+                                <!-- Scroll Thumb Sinistra -->
+                                <button type="button" @click="if($refs.thumbArray) $refs.thumbArray.scrollBy({left: -200, behavior: 'smooth'})" class="absolute left-0 z-10 bg-gradient-to-r from-white via-white to-transparent h-full px-2 flex items-center focus:outline-none transition-opacity opacity-0 group-hover/thumbs:opacity-100" style="width: 60px; margin-left: -4px;">
+                                    <div class="bg-white p-1.5 rounded-full shadow-md hover:scale-110 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                                    </div>
                                 </button>
 
-                                <!-- Carosello Miniature -->
-                                <div x-ref="thumbnails" class="hide-scroll flex gap-4 overflow-x-auto py-2 px-1 scroll-smooth w-full relative">
-                                    @foreach($structure->photos as $photo)
-                                        <button @click="activePhoto = '{{ asset($photo->path) }}'" class="flex-shrink-0 h-24 w-36 rounded-xl overflow-hidden border-2 transition-all hover:opacity-80" :class="activePhoto === '{{ asset($photo->path) }}' ? 'border-indigo-600 shadow-md scale-105' : 'border-transparent'">
+                                <!-- Contenitore Miniature -->
+                                <div x-ref="thumbArray" class="hide-scroll flex gap-2 overflow-x-auto scroll-smooth w-full px-8 py-1 snap-x snap-mandatory">
+                                    @foreach($structure->photos as $index => $photo)
+                                        <button @click="setActive({{ $index }})" class="flex-shrink-0 h-16 w-24 sm:h-20 sm:w-28 rounded-xl overflow-hidden transition-all hover:opacity-100 snap-center" :class="currentIndex === {{ $index }} ? 'ring-4 ring-indigo-600 opacity-100 scale-105 shadow-md' : 'opacity-60 grayscale-[30%]'">
                                             <img src="{{ asset($photo->path) }}" class="w-full h-full object-cover">
                                         </button>
                                     @endforeach
                                 </div>
 
-                                <!-- Freccia Destra -->
-                                <button type="button" @click="scrollThumbs(1)" class="absolute right-0 z-10 -mr-4 bg-white p-2 rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 focus:outline-none transition-all transform hover:scale-105 active:scale-95 hidden md:block" aria-label="Foto successiva">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                    </svg>
+                                <!-- Scroll Thumb Destra -->
+                                <button type="button" @click="if($refs.thumbArray) $refs.thumbArray.scrollBy({left: +200, behavior: 'smooth'})" class="absolute right-0 z-10 bg-gradient-to-l from-white via-white to-transparent h-full px-2 flex items-center justify-end focus:outline-none transition-opacity opacity-0 group-hover/thumbs:opacity-100" style="width: 60px; margin-right: -4px;">
+                                    <div class="bg-white p-1.5 rounded-full shadow-md hover:scale-110 transition-transform">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                                    </div>
                                 </button>
                             </div>
                         @endif
