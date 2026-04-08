@@ -294,8 +294,8 @@
 <script>
     function bookingForm() {
         return {
-            startDate: '',
-            endDate: '',
+            startDate: '{{ request('start_date', '') }}',
+            endDate: '{{ request('end_date', '') }}',
             ospiti: {!! json_encode($structure->variants->pluck('id')->mapWithKeys(fn($id) => [(string)$id => 0])) !!},
             totalDays: 0,
             totalPrice: 0,
@@ -304,6 +304,37 @@
             isAvailable: true,
             bookedDates: @json($bookedDates),
             tipoPrezzo: '{{ $structure->tipo_prezzo }}',
+
+            init() {
+                // Pre-fill guests from request if available
+                const reqAdulti = parseInt('{{ request('adulti', 0) }}');
+                const reqBambini = parseInt('{{ request('bambini', 0) }}');
+                
+                if (reqAdulti > 0 || reqBambini > 0) {
+                    const variants = @json($structure->variants);
+                    if (variants.length > 0) {
+                        // Attempt to find "Adulto" and "Bambino" variants
+                        let adultVariant = variants.find(v => v.nome.toLowerCase().includes('adult'));
+                        let childVariant = variants.find(v => v.nome.toLowerCase().includes('bambin') || v.nome.toLowerCase().includes('child'));
+                        
+                        if (reqAdulti > 0) {
+                            const vId = adultVariant ? adultVariant.id : variants[0].id;
+                            this.ospiti[vId] = reqAdulti;
+                        }
+                        if (reqBambini > 0 && childVariant) {
+                            this.ospiti[childVariant.id] = reqBambini;
+                        } else if (reqBambini > 0 && !adultVariant && variants.length > 1) {
+                            // If no child variant found but 2nd variant exists, maybe it's the child one
+                            this.ospiti[variants[1].id] = reqBambini;
+                        }
+                    }
+                }
+                
+                // Trigger check if dates are present
+                if (this.startDate && this.endDate) {
+                    this.checkDates();
+                }
+            },
 
             get totalGuests() {
                 return Object.values(this.ospiti).reduce((a, b) => (parseInt(a) || 0) + (parseInt(b) || 0), 0);
