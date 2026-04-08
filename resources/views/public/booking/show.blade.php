@@ -20,7 +20,18 @@
                 <div class="lg:col-span-2 space-y-8">
                     
                     <!-- Gallery -->
-                    <div x-data="{ activePhoto: '{{ $structure->photos->count() > 0 ? asset($structure->photos->first()->path) : '' }}' }" class="space-y-4">
+                    <style>
+                        .hide-scroll::-webkit-scrollbar { display: none; }
+                        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+                    </style>
+                    <div x-data="{ 
+                            activePhoto: '{{ $structure->photos->count() > 0 ? asset($structure->photos->first()->path) : '' }}',
+                            scrollThumbs(dir) {
+                                if(this.$refs.thumbnails) {
+                                    this.$refs.thumbnails.scrollBy({ left: dir * 300, behavior: 'smooth' });
+                                }
+                            }
+                        }" class="space-y-4">
                         <div class="h-[500px] w-full rounded-3xl overflow-hidden shadow-xl bg-gray-100">
                             @if($structure->photos->count() > 0)
                                 <img :src="activePhoto" class="w-full h-full object-cover transition-opacity duration-300">
@@ -32,12 +43,29 @@
                         </div>
                         
                         @if($structure->photos->count() > 1)
-                            <div class="flex gap-4 overflow-x-auto pb-2">
-                                @foreach($structure->photos as $photo)
-                                    <button @click="activePhoto = '{{ asset($photo->path) }}'" class="flex-shrink-0 h-24 w-36 rounded-xl overflow-hidden border-2 transition-all hover:opacity-80" :class="activePhoto === '{{ asset($photo->path) }}' ? 'border-indigo-600 scale-105' : 'border-transparent'">
-                                        <img src="{{ asset($photo->path) }}" class="w-full h-full object-cover">
-                                    </button>
-                                @endforeach
+                            <div class="relative flex items-center">
+                                <!-- Freccia Sinistra -->
+                                <button type="button" @click="scrollThumbs(-1)" class="absolute left-0 z-10 -ml-4 bg-white p-2 rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 focus:outline-none transition-all transform hover:scale-105 active:scale-95 hidden md:block" aria-label="Foto precedente">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+
+                                <!-- Carosello Miniature -->
+                                <div x-ref="thumbnails" class="hide-scroll flex gap-4 overflow-x-auto py-2 px-1 scroll-smooth w-full relative">
+                                    @foreach($structure->photos as $photo)
+                                        <button @click="activePhoto = '{{ asset($photo->path) }}'" class="flex-shrink-0 h-24 w-36 rounded-xl overflow-hidden border-2 transition-all hover:opacity-80" :class="activePhoto === '{{ asset($photo->path) }}' ? 'border-indigo-600 shadow-md scale-105' : 'border-transparent'">
+                                            <img src="{{ asset($photo->path) }}" class="w-full h-full object-cover">
+                                        </button>
+                                    @endforeach
+                                </div>
+
+                                <!-- Freccia Destra -->
+                                <button type="button" @click="scrollThumbs(1)" class="absolute right-0 z-10 -mr-4 bg-white p-2 rounded-full shadow-lg border border-gray-100 text-gray-600 hover:text-indigo-600 hover:bg-gray-50 focus:outline-none transition-all transform hover:scale-105 active:scale-95 hidden md:block" aria-label="Foto successiva">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
                             </div>
                         @endif
                     </div>
