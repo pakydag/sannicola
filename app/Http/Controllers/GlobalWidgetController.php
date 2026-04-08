@@ -26,10 +26,12 @@ class GlobalWidgetController extends Controller
             'data' => 'nullable|array',
         ]);
 
+        $data = $this->sanitizeData($validated['data'] ?? []);
+
         GlobalWidget::create([
             'titolo' => $validated['titolo'],
             'tipo' => $validated['tipo'],
-            'data' => $validated['data'] ?? [],
+            'data' => $data,
         ]);
 
         return redirect()->route('admin.global-widgets.index')->with('success', 'Widget Globale creato con successo.');
@@ -47,12 +49,25 @@ class GlobalWidgetController extends Controller
             'data' => 'nullable|array',
         ]);
 
+        $data = $this->sanitizeData($validated['data'] ?? []);
+
         $globalWidget->update([
             'titolo' => $validated['titolo'],
-            'data' => $validated['data'] ?? [],
+            'data' => $data,
         ]);
 
         return redirect()->route('admin.global-widgets.index')->with('success', 'Widget Globale aggiornato con successo.');
+    }
+
+    private function sanitizeData(array $data)
+    {
+        array_walk_recursive($data, function (&$value) {
+            if (is_string($value) && str_contains($value, '/storage/')) {
+                // Rimuove protocollo e dominio se presenti
+                $value = preg_replace('/^https?:\/\/[^\/]+/', '', $value);
+            }
+        });
+        return $data;
     }
 
     public function destroy(GlobalWidget $globalWidget)

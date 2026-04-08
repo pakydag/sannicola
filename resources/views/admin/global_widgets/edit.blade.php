@@ -374,11 +374,8 @@
 
             function fmSetLink($url) {
                 if (fmActiveInput) {
-                    // Fix absolute URL: Rimuove l'URL di base (es. http://localhost/baseweb/public) per avere il percorso relativo (/storage/...)
-                    let baseUrl = '{{ app('url')->to('/') }}'.replace(/\/$/, "");
-                    if ($url.startsWith(baseUrl)) {
-                        $url = $url.slice(baseUrl.length);
-                    }
+                    // Fix absolute URL: Rimuove protocollo e dominio per avere il percorso relativo (/storage/...)
+                    $url = $url.replace(/^https?:\/\/[^\/]+/, "");
                     fmActiveInput.value = $url;
                 }
             }
