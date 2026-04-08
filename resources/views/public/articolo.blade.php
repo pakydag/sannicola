@@ -64,13 +64,13 @@
                 </figure>
             @endif
 
-            @if($alignment !== 'center')
-                <div class="clear-both"></div>
-            @endif
-
             <div class="prose prose-lg prose-indigo mx-auto text-gray-600 max-w-prose">
                 {!! $articolo->descrizione !!}
             </div>
+
+            @if($alignment !== 'center')
+                <div class="clear-both"></div>
+            @endif
 
             @if($articolo->hasMedia('allegati') || $articolo->link)
                 <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-center items-center">
