@@ -165,11 +165,26 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo Blocco (HEX)</label>
-                                <div class="flex items-center space-x-2">
-                                    <input type="color" name="data[bg_color]" value="#ffffff" class="h-10 w-10 border rounded cursor-pointer">
-                                    <span class="text-sm text-gray-500">Scegli un colore di sfondo per il testo e/o il contenitore.</span>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <div class="col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo Blocco (HEX)</label>
+                                    <div class="flex items-center space-x-2">
+                                        <input type="color" name="data[bg_color]" value="#ffffff" class="h-10 w-10 border rounded cursor-pointer">
+                                        <span class="text-sm text-gray-500">Scegli un colore di sfondo.</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Disposizione Contenuto</label>
+                                    <div class="flex flex-col space-y-2">
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="data[layout]" value="side" checked class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-sm text-gray-700 font-medium">Foto a sinistra (Full)</span>
+                                        </label>
+                                        <label class="flex items-center cursor-pointer">
+                                            <input type="radio" name="data[layout]" value="stacked" class="form-radio h-4 w-4 text-indigo-600">
+                                            <span class="ml-2 text-sm text-gray-700 font-medium">Foto sopra (Stacked)</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="text-right mt-4">
