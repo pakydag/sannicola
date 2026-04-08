@@ -21,8 +21,23 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/admin-emergency-migrate', function () {
-    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-    return "Migrazione eseguita con successo: <br><br>" . nl2br(\Illuminate\Support\Facades\Artisan::output());
+    try {
+        if (!\Illuminate\Support\Facades\Schema::hasColumn('booking_services', 'icona')) {
+            \Illuminate\Support\Facades\Schema::table('booking_services', function (\Illuminate\Database\Schema\Blueprint $table) {
+                $table->string('icona', 20)->nullable()->after('nome');
+            });
+            $msg = "Colonna 'icona' aggiunta con successo!";
+        } else {
+            $msg = "La colonna 'icona' esiste già.";
+        }
+        
+        \Illuminate\Support\Facades\Artisan::call('view:clear');
+        \Illuminate\Support\Facades\Artisan::call('cache:clear');
+        
+        return "Installazione Forzata completata: <br><br><strong>" . $msg . "</strong><br><br>Adesso puoi tornare indietro e salvare il tuo servizio.";
+    } catch (\Exception $e) {
+        return "Errore: " . $e->getMessage();
+    }
 });
 
 Route::middleware('auth')->group(function () {
