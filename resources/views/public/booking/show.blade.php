@@ -273,19 +273,14 @@
                             </p>
                         </div>
                         @else
-                            <div class="text-center py-6">
-                                <div class="h-16 w-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                            <div class="text-center py-12">
+                                <div class="h-16 w-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                     <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 </div>
-                                <h3 class="text-xl font-extrabold text-gray-900 mb-2">Disponibilità su Richiesta</h3>
-                                <p class="text-gray-500 text-sm mb-8 leading-relaxed">
-                                    Questa struttura non è al momento prenotabile direttamente online, ma potrebbe essere disponibile per le tue date.
+                                <h3 class="text-xl font-extrabold text-gray-900 mb-2">Non Prenotabile</h3>
+                                <p class="text-gray-500 font-bold leading-relaxed">
+                                    Questa struttura non è al momento prenotabile.
                                 </p>
-                                <a href="https://wa.me/393282436423?text=Salve, vorrei ricevere informazioni sulla disponibilità della struttura {{ urlencode($structure->nome) }}" target="_blank" class="block w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-extrabold text-lg shadow-lg shadow-green-100 transition-all flex items-center justify-center gap-3">
-                                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.588-5.946 0-6.556 5.332-11.891 11.891-11.891 3.181 0 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.232 3.48 8.413 0 6.556-5.334 11.89-11.89 11.89-.001 0-.001 0 0 0-2.001 0-3.967-.512-5.722-1.479l-6.271 1.688zm6.095-4.225c1.551.921 3.197 1.408 4.896 1.408.001 0 .001 0 0 0 5.438 0 9.863-4.425 9.863-9.863-.001-2.646-1.033-5.132-2.903-7.004-1.871-1.872-4.358-2.902-7.004-2.902-5.438 0-9.863 4.425-9.863 9.863 0 1.83.513 3.618 1.482 5.161l-1.001 3.652 3.73-.915zm10.971-6.864c-.201-.101-1.192-.588-1.376-.655-.185-.067-.319-.101-.454.101-.135.202-.522.655-.64.789-.118.135-.235.151-.437.051-.202-.101-.852-.314-1.623-1.002-.6-.535-1.004-1.196-1.121-1.397-.118-.201-.013-.31.088-.41.09-.09.202-.235.303-.353.101-.118.135-.202.202-.336.067-.135.034-.252-.017-.353-.05-.101-.454-1.093-.623-1.496-.164-.393-.331-.339-.454-.345l-.386-.006c-.135 0-.353.05-.538.252-.185.202-.706.69-.706 1.682s.723 1.951.824 2.085c.101.135 1.423 2.172 3.447 3.046.482.208.857.332 1.151.426.484.154.924.132 1.272.08.388-.058 1.192-.487 1.36-.957.168-.47.168-.874.118-.957-.05-.084-.185-.135-.386-.236z"/></svg>
-                                    Chiedi su WhatsApp
-                                </a>
-                                <p class="mt-4 text-[10px] text-gray-400 uppercase font-black tracking-widest">Risposta rapida garantita</p>
                             </div>
                         @endif
                     </div>
