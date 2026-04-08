@@ -175,8 +175,7 @@
                         <div class="flex justify-between items-end mb-8">
                             <div>
                                 @if($structure->tipo_prezzo === 'fisso')
-                                    <p class="text-xl font-extrabold text-gray-900">Prezzo fisso</p>
-                                    <p class="text-gray-500 text-sm">per periodo</p>
+                                    <p class="text-xl font-extrabold text-gray-900">Prenota Soggiorno</p>
                                 @else
                                     <p class="text-xl font-extrabold text-gray-900">Prezzo per persona</p>
                                     <p class="text-gray-500 text-sm">per periodo</p>
@@ -198,9 +197,9 @@
                                     <label class="block text-[10px] font-bold uppercase text-gray-400">Partenza</label>
                                     <input type="date" x-model="endDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" :min="startDate">
                                 </div>
-                                <div class="col-span-2 p-3 bg-gray-50">
-                                    <label class="block text-[10px] font-bold uppercase text-gray-400">Ospiti</label>
-                                    @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
+                                @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
+                                    <div class="col-span-2 p-3 bg-gray-50 border-t">
+                                        <label class="block text-[10px] font-bold uppercase text-gray-400">Ospiti</label>
                                         <div class="grid grid-cols-2 gap-4 mt-2">
                                             @foreach($structure->variants as $variant)
                                                 <div class="flex items-center justify-between bg-white p-2 rounded-lg border shadow-sm">
@@ -213,8 +212,8 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                    @endif
-                                </div>
+                                    </div>
+                                @endif
                                 @if($structure->extras->count() > 0)
                                     <div class="col-span-2 p-3 bg-gray-50 border-t">
                                         <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Servizi Extra</label>
