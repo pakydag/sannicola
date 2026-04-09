@@ -105,7 +105,7 @@ class SettingController extends Controller
         }
 
         // Process Checkboxes
-        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings, ['spoki_enabled', 'cookie_consent_enabled']);
+        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings, ['spoki_enabled', 'cookie_consent_enabled', 'accessibility_panel_enabled']);
         foreach ($checkboxes as $chk) {
             $canEdit = false;
             
@@ -118,6 +118,7 @@ class SettingController extends Controller
                 elseif (in_array($chk, $shopSettings) && $user->can_manage_shop) $canEdit = true;
                 elseif (in_array($chk, $bookingSettings) && $user->can_manage_booking) $canEdit = true;
                 elseif (in_array($chk, $b2bSettings) && $user->can_manage_agents) $canEdit = true;
+                elseif (in_array($chk, ['cookie_consent_enabled', 'accessibility_panel_enabled'])) $canEdit = true;
             }
 
             if ($canEdit) {
