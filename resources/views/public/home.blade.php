@@ -57,6 +57,16 @@
                             @if($widget->titolo)<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.booking_structures', ['widget' => $widget])</div>
+                    @elseif($widget->tipo === 'map')
+                        @php $fullWidth = $widget->data['full_width'] ?? 0; @endphp
+                        <div class="{{ $fullWidth ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' }} mb-12 widget-block">
+                            @if($widget->titolo)
+                                <div class="max-w-7xl mx-auto mb-6">
+                                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">{{ $widget->titolo }}</h2>
+                                </div>
+                            @endif
+                            @include('public.partials.widgets.map', ['widget' => $widget])
+                        </div>
                     @endif
                 
             @endif

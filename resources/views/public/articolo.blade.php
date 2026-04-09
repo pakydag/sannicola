@@ -121,6 +121,8 @@
                                 @include('public.partials.widgets.info_blocks', ['widget' => $actualWidget])
                             @elseif($actualWidget->tipo === 'booking_structures')
                                 @include('public.partials.widgets.booking_structures', ['widget' => $actualWidget])
+                            @elseif($actualWidget->tipo === 'map')
+                                @include('public.partials.widgets.map', ['widget' => $actualWidget])
                             @endif
                         </div>
                     @endif

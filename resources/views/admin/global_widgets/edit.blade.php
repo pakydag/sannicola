@@ -346,6 +346,24 @@
                                     </select>
                                 </div>
                             </div>
+                        @elseif($globalWidget->tipo === 'map')
+                            <div class="mb-4 mt-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Codice Embed Google Maps (iframe) *</label>
+                                <textarea name="data[embed_code]" required rows="6" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-sm">{{ old('data.embed_code', $globalWidget->data['embed_code'] ?? '') }}</textarea>
+                                <p class="text-xs text-gray-500 mt-1">Puoi trovare questo codice su Google Maps -> Condividi -> Incorpora mappa.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Altezza (px)</label>
+                                    <input type="number" name="data[height]" value="{{ old('data.height', $globalWidget->data['height'] ?? 450) }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                </div>
+                                <div class="flex items-center mt-6">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="data[full_width]" value="1" {{ old('data.full_width', $globalWidget->data['full_width'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600">
+                                        <span class="ml-2 text-gray-700 text-sm font-bold">Tutta Larghezza (Full Width)</span>
+                                    </label>
+                                </div>
+                            </div>
                         @endif
 
                         <div class="text-right mt-8 pt-4 border-t">

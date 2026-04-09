@@ -29,6 +29,7 @@
                         <button @click="activeTab = 'info_blocks'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'info_blocks', 'text-gray-600 hover:text-indigo-600': activeTab !== 'info_blocks'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🧱 Blocchi Info</button>
                         <button @click="activeTab = 'image_text_image'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'image_text_image', 'text-gray-600 hover:text-indigo-600': activeTab !== 'image_text_image'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🖼️ Foto-Testo-Foto</button>
                         <button @click="activeTab = 'booking_structures'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'booking_structures', 'text-gray-600 hover:text-indigo-600': activeTab !== 'booking_structures'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🏨 Strutture</button>
+                        <button @click="activeTab = 'map'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'map', 'text-gray-600 hover:text-indigo-600': activeTab !== 'map'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">📍 Mappa</button>
                         @if(config('app.booking_enabled') === '1' || \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1')
                             <button @click="activeTab = 'booking_search'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'booking_search', 'text-gray-600 hover:text-indigo-600': activeTab !== 'booking_search'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🔎 Ricerca Booking</button>
                         @endif
@@ -225,6 +226,37 @@
                             </div>
                             <div class="text-right mt-4">
                                 <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Strutture</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Form Map -->
+                    <div x-show="activeTab === 'map'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
+                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="tipo" value="map">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
+                                <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. La nostra posizione">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Codice Embed Google Maps (iframe) *</label>
+                                <textarea name="data[embed_code]" required rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder='Incolla qui il codice <iframe src="..."></iframe>'></textarea>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Altezza (px)</label>
+                                    <input type="number" name="data[height]" value="450" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                </div>
+                                <div class="flex items-center mt-6">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="data[full_width]" value="1" class="form-checkbox h-5 w-5 text-indigo-600">
+                                        <span class="ml-2 text-gray-700 text-sm font-bold">Tutta Larghezza (Full Width)</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="text-right mt-4">
+                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Mappa</button>
                             </div>
                         </form>
                     </div>
