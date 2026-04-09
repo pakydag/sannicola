@@ -4,10 +4,8 @@
 @endphp
 
 @if($consentEnabled)
-<!-- MASTER OVERLAY WRAPPER: Forced to the top of all stacking contexts -->
+<!-- Wrapper dello Stato (Senza posizionamento fisso per non bloccare i click) -->
 <div id="cookie-consent-master-wrapper" 
-     class="fixed inset-0 pointer-events-none z-[2147483647]" 
-     style="position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 2147483647 !important; pointer-events: none !important;"
      x-data="{ 
         visible: false,
         showSettings: false,
@@ -17,10 +15,8 @@
             marketing: true
         },
         init() {
-            // Check cookie immediately
             if (!this.hasCookie) {
-                // Show banner with a slight delay to ensure Alpine is ready
-                setTimeout(() => { this.visible = true; }, 300);
+                setTimeout(() => { this.visible = true; }, 400);
             }
         },
         acceptAll() {
@@ -42,7 +38,6 @@
         close() {
             this.visible = false;
             this.showSettings = false;
-            // Delay reload to let UI updates finish
             setTimeout(() => { window.location.reload(); }, 100);
         }
     }"
@@ -52,10 +47,10 @@
          x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0 translate-y-10"
          x-transition:enter-end="opacity-100 translate-y-0"
-         class="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:max-w-md pointer-events-auto"
-         style="display: none; position: fixed !important; bottom: 1.5rem !important; right: 2rem !important; z-index: 2147483647 !important;"
+         class="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:max-w-md z-[2147483647]"
+         style="display: none; position: fixed !important; bottom: 1.5rem !important; right: 2rem !important; z-index: 2147483647 !important; pointer-events: auto !important;"
     >
-        <div class="bg-white rounded-3xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)] ring-1 ring-gray-900/10 p-6 sm:p-8 border-t-8 border-indigo-600 relative overflow-hidden">
+        <div class="bg-white rounded-3xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.5)] ring-1 ring-gray-900/10 p-6 sm:p-8 border-t-8 border-indigo-600 relative overflow-hidden pointer-events-auto">
             <div class="absolute top-2 right-2">
                 <button @click="visible = false" class="text-gray-300 hover:text-gray-500 p-2 transition-colors">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
