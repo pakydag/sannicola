@@ -40,9 +40,6 @@
     <!-- Tracking Scripts (Body) -->
     @include('public.partials.tracking_scripts_body')
     
-    <!-- Cookie Consent Banner -->
-    @include('public.partials.cookie_consent')
-    
     @include('public.partials.header')
 
     <!-- Page Content -->
@@ -55,5 +52,8 @@
     <x-accessibility-widget />
 
     @stack('scripts')
+
+    <!-- Cookie Consent Banner (BOTTOM) -->
+    @include('public.partials.cookie_consent')
 </body>
 </html>

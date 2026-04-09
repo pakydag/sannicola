@@ -41,13 +41,13 @@
         }
     }"
 >
-    <!-- 1. Banner Principale (Solo se non sto personalizzando) -->
+    <!-- 1. Banner Principale -->
     <div x-show="visible && !showSettings"
          x-transition:enter="transition ease-out duration-500"
-         x-transition:enter-start="opacity-0 translate-y-20"
+         x-transition:enter-start="opacity-0 translate-y-10"
          x-transition:enter-end="opacity-100 translate-y-0"
-         class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-lg z-[2147483647]"
-         style="display: none;"
+         class="fixed !bottom-6 !left-4 !right-4 md:!left-auto md:!right-6 md:!max-w-lg z-[2147483647]"
+         style="display: none; bottom: 1.5rem !important; right: 1.5rem !important;"
     >
         <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-gray-900/10 p-6 border-l-4 border-indigo-600 relative overflow-hidden pointer-events-auto">
             <div class="absolute top-0 right-0 p-2">
