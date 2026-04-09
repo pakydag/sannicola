@@ -327,6 +327,25 @@
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi un altro blocco
                                 </button>
                             </div>
+                        @elseif($globalWidget->tipo === 'booking_structures')
+                            <div class="grid grid-cols-2 gap-4 mb-4 mt-6">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero di Strutture *</label>
+                                    <select name="data[limit]" required class="shadow border rounded w-full py-2 px-3">
+                                        @for($i=1; $i<=12; $i++)
+                                            <option value="{{ $i }}" {{ old('data.limit', $globalWidget->data['limit'] ?? 3) == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Elementi per riga *</label>
+                                    <select name="data[columns]" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        @foreach([1, 2, 3, 4] as $col)
+                                            <option value="{{ $col }}" {{ old('data.columns', $globalWidget->data['columns'] ?? 3) == $col ? 'selected' : '' }}>{{ $col }} Colonn{{ $col > 1 ? 'e' : 'a' }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         @endif
 
                         <div class="text-right mt-8 pt-4 border-t">

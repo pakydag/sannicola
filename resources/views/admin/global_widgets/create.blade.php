@@ -28,6 +28,7 @@
                         <button @click="activeTab = 'grid'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'grid', 'text-gray-600 hover:text-indigo-600': activeTab !== 'grid'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🔲 Griglia Sezione</button>
                         <button @click="activeTab = 'info_blocks'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'info_blocks', 'text-gray-600 hover:text-indigo-600': activeTab !== 'info_blocks'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🧱 Blocchi Info</button>
                         <button @click="activeTab = 'image_text_image'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'image_text_image', 'text-gray-600 hover:text-indigo-600': activeTab !== 'image_text_image'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🖼️ Foto-Testo-Foto</button>
+                        <button @click="activeTab = 'booking_structures'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'booking_structures', 'text-gray-600 hover:text-indigo-600': activeTab !== 'booking_structures'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🏨 Strutture</button>
                         @if(config('app.booking_enabled') === '1' || \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1')
                             <button @click="activeTab = 'booking_search'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'booking_search', 'text-gray-600 hover:text-indigo-600': activeTab !== 'booking_search'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🔎 Ricerca Booking</button>
                         @endif
@@ -190,6 +191,40 @@
                             </div>
                             <div class="text-right mt-4">
                                 <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Blocco Singolo</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Form Booking Structures -->
+                    <div x-show="activeTab === 'booking_structures'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
+                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="tipo" value="booking_structures">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
+                                <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero di Strutture *</label>
+                                    <select name="data[limit]" required class="shadow border rounded w-full py-2 px-3">
+                                        @for($i=1; $i<=12; $i++)
+                                            <option value="{{ $i }}" {{ $i == 3 ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Elementi per riga *</label>
+                                    <select name="data[columns]" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        <option value="1">1 Colonna</option>
+                                        <option value="2">2 Colonne</option>
+                                        <option value="3" selected>3 Colonne</option>
+                                        <option value="4">4 Colonne</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-right mt-4">
+                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Strutture</button>
                             </div>
                         </form>
                     </div>

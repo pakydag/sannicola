@@ -285,8 +285,9 @@
                             <button @click="activeTab = 'mirror'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'mirror', 'text-gray-600 hover:text-indigo-600': activeTab !== 'mirror'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">☯️ Blocchi Specchio</button>
                             <button @click="activeTab = 'info_blocks'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'info_blocks', 'text-gray-600 hover:text-indigo-600': activeTab !== 'info_blocks'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🧱 Blocchi Info</button>
                             <button @click="activeTab = 'single'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'single', 'text-gray-600 hover:text-indigo-600': activeTab !== 'single'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🟦 Blocco Singolo</button>
-                            <button @click="activeTab = 'grid'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'grid', 'text-gray-600 hover:text-indigo-600': activeTab !== 'grid'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🔲 Griglia</button>
-                            <button @click="activeTab = 'global'" :class="{'bg-green-50 border-t border-l border-r border-green-200 text-green-700 font-bold': activeTab === 'global', 'text-gray-600 hover:text-green-600': activeTab !== 'global'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto mr-1 text-sm">🌍 Globale</button>
+                             <button @click="activeTab = 'grid'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'grid', 'text-gray-600 hover:text-indigo-600': activeTab !== 'grid'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🔲 Griglia</button>
+                             <button @click="activeTab = 'booking_structures'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'booking_structures', 'text-gray-600 hover:text-indigo-600': activeTab !== 'booking_structures'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🏨 Strutture</button>
+                             <button @click="activeTab = 'global'" :class="{'bg-green-50 border-t border-l border-r border-green-200 text-green-700 font-bold': activeTab === 'global', 'text-gray-600 hover:text-green-600': activeTab !== 'global'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto mr-1 text-sm">🌍 Globale</button>
                         </div>
 
                         <!-- Form Gallery -->
@@ -432,6 +433,40 @@
                                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi un altro blocco
                                 </button>
                                 <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Widget Blocchi</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Form Booking Structures -->
+                    <div x-show="activeTab === 'booking_structures'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
+                        <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="tipo" value="booking_structures">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Sezione (Opzionale)</label>
+                                <input type="text" name="titolo" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero di Strutture *</label>
+                                    <select name="data[limit]" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        @for($i=1; $i<=12; $i++)
+                                            <option value="{{ $i }}" {{ $i == 3 ? 'selected' : '' }}>{{ $i }} Strutture</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Strutture per riga *</label>
+                                    <select name="data[columns]" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        <option value="1">1 Colonna</option>
+                                        <option value="2">2 Colonne</option>
+                                        <option value="3" selected>3 Colonne</option>
+                                        <option value="4">4 Colonne</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-right mt-4">
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Widget Strutture</button>
                             </div>
                         </form>
                     </div>
