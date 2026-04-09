@@ -7,9 +7,16 @@
 <div x-data="{ 
         visible: false,
         showSettings: false,
+        hasCookie: false,
         prefs: {
             analytics: true,
             marketing: true
+        },
+        init() {
+            this.hasCookie = document.cookie.includes('cookie_consent=');
+            setTimeout(() => {
+                if (!this.hasCookie) this.visible = true;
+            }, 1000);
         },
         acceptAll() {
             this.setCookie('accepted');
@@ -25,6 +32,7 @@
         },
         setCookie(val) {
             document.cookie = 'cookie_consent=' + val + '; expires=Fri, 31 Dec 2030 23:59:59 GMT; path=/; SameSite=Lax';
+            this.hasCookie = true;
         },
         close() {
             this.visible = false;
@@ -32,7 +40,6 @@
             window.location.reload();
         }
     }"
-    x-init="setTimeout(() => { if (!document.cookie.includes('cookie_consent=')) visible = true }, 1000)"
 >
     <!-- 1. Banner Principale (Solo se non sto personalizzando) -->
     <div x-show="visible && !showSettings"
@@ -144,7 +151,7 @@
     </template>
 
     <!-- 3. Trigger Flottante (Per riaprire) -->
-    <div x-show="!visible && !showSettings && document.cookie.includes('cookie_consent=')" 
+    <div x-show="!visible && !showSettings && hasCookie" 
          class="fixed bottom-6 left-20 z-[2147483646]"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-50"
