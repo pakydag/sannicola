@@ -1,22 +1,21 @@
 @php
     $consentEnabled = ($global_settings['cookie_consent_enabled'] ?? '0') === '1';
-    $consentText = $global_settings['cookie_consent_text'] ?? 'Utilizziamo i cookie per migliorare la tua esperienza.';
+    $consentText = $global_settings['cookie_consent_text'] ?? 'Questo sito utilizza i cookie per migliorare l\'esperienza di navigazione.';
 @endphp
 
 @if($consentEnabled)
 <div x-data="{ 
         visible: false,
         showSettings: false,
-        hasCookie: false,
+        hasCookie: document.cookie.includes('cookie_consent='),
         prefs: {
             analytics: true,
             marketing: true
         },
         init() {
-            this.hasCookie = document.cookie.includes('cookie_consent=');
-            setTimeout(() => {
-                if (!this.hasCookie) this.visible = true;
-            }, 1000);
+            if (!this.hasCookie) {
+                setTimeout(() => { this.visible = true; }, 500);
+            }
         },
         acceptAll() {
             this.setCookie('accepted');
@@ -37,41 +36,44 @@
         close() {
             this.visible = false;
             this.showSettings = false;
-            window.location.reload();
+            setTimeout(() => { window.location.reload(); }, 100);
         }
     }"
+    id="cookie-consent-root"
 >
     <!-- 1. Banner Principale -->
     <div x-show="visible && !showSettings"
          x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0 translate-y-10"
          x-transition:enter-end="opacity-100 translate-y-0"
-         class="fixed !bottom-6 !left-4 !right-4 md:!left-auto md:!right-6 md:!max-w-lg z-[2147483647]"
-         style="display: none; bottom: 1.5rem !important; right: 1.5rem !important;"
+         class="fixed bottom-6 left-4 right-4 md:left-auto md:right-8 md:max-w-md z-[2147483647]"
+         style="display: none; position: fixed !important; bottom: 1.5rem !important; right: 2rem !important; z-index: 2147483647 !important;"
     >
-        <div class="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] ring-1 ring-gray-900/10 p-6 border-l-4 border-indigo-600 relative overflow-hidden pointer-events-auto">
-            <div class="absolute top-0 right-0 p-2">
-                <button @click="visible = false" class="text-gray-400 hover:text-gray-600 p-1">
-                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        <div class="bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.4)] ring-1 ring-gray-900/10 p-6 sm:p-8 border-t-8 border-indigo-600 relative overflow-hidden pointer-events-auto">
+            <div class="absolute top-2 right-2">
+                <button @click="visible = false" class="text-gray-300 hover:text-gray-500 p-2 transition-colors">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
 
-            <div class="flex items-start gap-4">
-                <div class="flex-shrink-0 bg-indigo-50 p-2.5 rounded-xl border border-indigo-100">
-                    <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            <div class="flex flex-col gap-4">
+                <div class="bg-indigo-50 w-12 h-12 rounded-2xl flex items-center justify-center border border-indigo-100 shadow-inner">
+                    <svg class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
                     </svg>
                 </div>
-                <div class="flex-1">
-                    <h4 class="text-sm font-bold text-gray-900 mb-1">Monitoraggio Cookies</h4>
-                    <p class="text-xs leading-relaxed text-gray-600 mb-4">
-                        {{ $consentText }} Selezionando 'Accetto tutti', consenti l'uso di tecnologie per marketing e analisi. 
-                        <button @click="showSettings = true" class="text-indigo-600 font-bold underline underline-offset-2 hover:text-indigo-800">Personalizza le tue scelte</button>.
+                
+                <div>
+                    <h4 class="text-lg font-black text-gray-900 mb-2 leading-tight">Privacy & Cookies</h4>
+                    <p class="text-sm leading-relaxed text-gray-500 mb-6">
+                        {{ $consentText }} Utilizziamo tecnologie per migliorare la tua navigazione. 
+                        <button @click="showSettings = true" class="text-indigo-600 font-bold hover:underline">Impostazioni</button>.
                     </p>
                     
-                    <div class="flex items-center justify-end gap-3 font-bold text-[10px] tracking-wider uppercase">
-                        <button @click="rejectAll()" class="px-3 py-2 text-gray-400 hover:text-gray-700 transition-colors">Rifiuta tutti</button>
-                        <button @click="acceptAll()" class="bg-gray-900 text-white px-5 py-2.5 rounded-xl hover:bg-indigo-600 transition-all shadow-lg">Accetta tutti</button>
+                    <div class="flex flex-col gap-2">
+                        <button @click="acceptAll()" class="w-full bg-gray-900 text-white py-4 rounded-2xl font-bold text-sm uppercase tracking-widest hover:bg-indigo-600 shadow-xl shadow-indigo-100 transition-all active:scale-[0.98]">Accetta tutto</button>
+                        <button @click="rejectAll()" class="w-full text-gray-400 py-2 font-bold text-[10px] uppercase tracking-widest hover:text-gray-600 transition-colors">Rifiuta non necessari</button>
                     </div>
                 </div>
             </div>
@@ -80,91 +82,124 @@
 
     <!-- 2. Modal Personalizzazione -->
     <template x-if="showSettings">
-        <div class="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-            <!-- Overlay -->
+        <div class="fixed inset-0 z-[2147483647] flex items-center justify-center p-4 sm:p-6">
             <div x-transition:enter="ease-out duration-300" 
                  x-transition:enter-start="opacity-0" 
                  x-transition:enter-end="opacity-100" 
-                 class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm"
+                 class="fixed inset-0 bg-gray-900/80 backdrop-blur-md"
                  @click="showSettings = false"></div>
 
-            <!-- Modal Card -->
             <div x-transition:enter="transition ease-out duration-300"
-                 x-transition:enter-start="opacity-0 scale-95"
-                 x-transition:enter-end="opacity-100 scale-100"
-                 class="bg-white rounded-3xl shadow-2xl p-6 sm:p-10 w-full max-w-2xl relative z-10 pointer-events-auto"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-10"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 class="bg-white rounded-[2.5rem] shadow-2xl p-8 sm:p-12 w-full max-w-2xl relative z-10 pointer-events-auto border border-white/20"
             >
-                <div class="flex items-center justify-between mb-8">
-                    <h3 class="text-xl font-bold text-gray-900">Preferenze Cookie</h3>
-                    <button @click="showSettings = false" class="text-gray-400 hover:text-gray-900 p-2">
-                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                <div class="flex items-center justify-between mb-10">
+                    <div>
+                        <h3 class="text-3xl font-black text-gray-900 tracking-tight">Centro Privacy</h3>
+                        <p class="text-gray-400 text-xs mt-1">Gestisci come i tuoi dati vengono utilizzati</p>
+                    </div>
+                    <button @click="showSettings = false" class="bg-gray-100 text-gray-500 hover:text-gray-900 p-3 rounded-full transition-all">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
 
-                <div class="space-y-4 sm:space-y-6">
+                <div class="space-y-4 sm:space-y-5 max-h-[50vh] overflow-y-auto px-1 custom-scrollbar">
                     <!-- Necessari -->
-                    <div class="p-4 rounded-2xl bg-gray-50 border border-gray-100">
-                        <div class="flex items-center justify-between mb-1">
-                            <label class="font-bold text-gray-800 text-sm flex items-center gap-2">
-                                <span>🍪 Cookie necessari</span>
-                                <span class="text-[9px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full uppercase">Sempre ON</span>
+                    <div class="p-5 rounded-3xl bg-gray-50 border border-gray-100">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="font-bold text-gray-900 flex items-center gap-3">
+                                <span class="bg-white p-2 rounded-xl shadow-sm text-lg">🛡️</span>
+                                <div>
+                                    <span class="block">Cookie Tecnici</span>
+                                    <span class="block text-[10px] text-indigo-600 uppercase font-black tracking-widest">Sempre Attivi</span>
+                                </div>
                             </label>
-                            <div class="w-11 h-6 bg-indigo-600/30 rounded-full relative"><div class="absolute left-6 top-1 bg-white w-4 h-4 rounded-full shadow-sm"></div></div>
+                            <div class="w-12 h-6 bg-indigo-600/20 rounded-full relative opacity-50"><div class="absolute right-1 top-1 bg-indigo-600 w-4 h-4 rounded-full"></div></div>
                         </div>
-                        <p class="text-[11px] text-gray-500 leading-relaxed">Essenziali per navigazione e sicurezza.</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed ml-11">Indispensabili per il login, la sicurezza e le funzioni base del sito.</p>
                     </div>
 
                     <!-- Analitici -->
-                    <div class="p-4 rounded-2xl bg-white border border-gray-100 hover:border-indigo-100 transition-colors">
-                        <div class="flex items-center justify-between mb-1">
-                            <label class="font-bold text-gray-800 text-sm">📊 Performance e Analytics</label>
+                    <div class="p-5 rounded-3xl bg-white border border-gray-100 hover:border-indigo-100 transition-all group">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="font-bold text-gray-900 flex items-center gap-3">
+                                <span class="bg-gray-50 p-2 rounded-xl shadow-sm group-hover:bg-indigo-50 text-lg transition-colors">📈</span>
+                                <span>Statistiche</span>
+                            </label>
                             <button @click="prefs.analytics = !prefs.analytics" 
-                                    :class="prefs.analytics ? 'bg-indigo-600' : 'bg-gray-200'"
-                                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200">
-                                <span :class="prefs.analytics ? 'translate-x-5' : 'translate-x-0'" class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200"></span>
+                                    :class="prefs.analytics ? 'bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.3)]' : 'bg-gray-200'"
+                                    class="relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300">
+                                <span :class="prefs.analytics ? 'translate-x-5' : 'translate-x-0'" class="inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition duration-300 ease-in-out"></span>
                             </button>
                         </div>
-                        <p class="text-[11px] text-gray-500 leading-relaxed">Senza questi cookie non possiamo misurare le visite al sito.</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed ml-11">Ci permettono di capire quante persone visitano il sito e quali sono le pagine più amate.</p>
                     </div>
 
                     <!-- Marketing -->
-                    <div class="p-4 rounded-2xl bg-white border border-gray-100 hover:border-indigo-100 transition-colors">
-                        <div class="flex items-center justify-between mb-1">
-                            <label class="font-bold text-gray-800 text-sm">🎯 Marketing & Target</label>
+                    <div class="p-5 rounded-3xl bg-white border border-gray-100 hover:border-indigo-100 transition-all group">
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="font-bold text-gray-900 flex items-center gap-3">
+                                <span class="bg-gray-50 p-2 rounded-xl shadow-sm group-hover:bg-indigo-50 text-lg transition-colors">🎯</span>
+                                <span>Marketing & Pixel</span>
+                            </label>
                             <button @click="prefs.marketing = !prefs.marketing" 
-                                    :class="prefs.marketing ? 'bg-indigo-600' : 'bg-gray-200'"
-                                    class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200">
-                                <span :class="prefs.marketing ? 'translate-x-5' : 'translate-x-0'" class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition duration-200"></span>
+                                    :class="prefs.marketing ? 'bg-indigo-600 shadow-[0_0_15px_rgba(79,70,229,0.3)]' : 'bg-gray-200'"
+                                    class="relative inline-flex h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300">
+                                <span :class="prefs.marketing ? 'translate-x-5' : 'translate-x-0'" class="inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition duration-300 ease-in-out"></span>
                             </button>
                         </div>
-                        <p class="text-[11px] text-gray-500 leading-relaxed">Permettono pubblicità mirata e profilazione.</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed ml-11">Utilizzati per mostrarti pubblicità pertinente ai tuoi interessi su altre piattaforme.</p>
                     </div>
                 </div>
 
-                <div class="mt-10 pt-6 border-t flex flex-col sm:flex-row items-center justify-end gap-3 text-[10px] font-bold uppercase tracking-widest">
-                    <button @click="rejectAll()" class="text-gray-400 hover:text-gray-800 p-2">Rifiuta tutti</button>
-                    <button @click="acceptAll()" class="border-2 border-gray-900 text-gray-900 px-5 py-2.5 rounded-xl hover:bg-gray-50">Accetta tutti</button>
-                    <button @click="savePrefs()" class="bg-gray-900 text-white px-7 py-3 rounded-xl hover:bg-indigo-600 shadow-xl shadow-indigo-100">Salva Scelte</button>
+                <div class="mt-12 pt-8 border-t flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <button @click="rejectAll()" class="text-xs font-black text-gray-300 hover:text-gray-900 uppercase tracking-[0.2em] transition-colors">Rifiuta tutti</button>
+                    <div class="flex gap-4 w-full sm:w-auto">
+                        <button @click="acceptAll()" class="flex-1 sm:flex-none text-gray-900 px-8 py-4 rounded-2xl font-black text-xs uppercase tracking-widest border-2 border-gray-900 hover:bg-gray-50 transition-all">Accetta tutti</button>
+                        <button @click="savePrefs()" class="flex-1 sm:flex-none bg-indigo-600 text-white px-10 py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 shadow-[0_15px_35px_rgba(79,70,229,0.4)] transition-all">Salva scelte</button>
+                    </div>
                 </div>
             </div>
         </div>
     </template>
 
-    <!-- 3. Trigger Flottante (Per riaprire) - SPOSTATO A DESTRA -->
+    <!-- 3. Trigger Flottante (Revoca) - SEMPRE VISIBILE SE ACCETTATO -->
     <div x-show="!visible && !showSettings && hasCookie" 
-         class="fixed bottom-6 right-6 z-[2147483646]"
-         x-transition:enter="transition ease-out duration-300"
+         class="fixed bottom-8 right-8 z-[2147483647]"
+         x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0 scale-50"
          x-transition:enter-end="opacity-100 scale-100"
-         style="display: none;"
+         style="display: none; position: fixed !important; bottom: 2rem !important; right: 2rem !important; z-index: 2147483647 !important;"
     >
         <button @click="visible = true; showSettings = true" 
-                class="bg-white/95 backdrop-blur-md p-3 rounded-full shadow-2xl border border-gray-200 hover:bg-white transition-all group hover:scale-110 active:scale-95 pointer-events-auto"
+                class="bg-indigo-600 text-white p-4 rounded-full shadow-[0_15px_40px_rgba(79,70,229,0.5)] hover:bg-indigo-700 hover:scale-110 active:scale-90 transition-all pointer-events-auto border-4 border-white"
                 title="Gestisci preferenze cookie">
-            <svg class="h-6 w-6 text-indigo-600 group-hover:text-indigo-800 transition-colors" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
             </svg>
         </button>
     </div>
+
+    <!-- Funzione Globale di Apertura -->
+    <script>
+        window.openCookiePreferences = function() {
+            const root = document.getElementById('cookie-consent-root');
+            if (root) {
+                // Cerchiamo di accedere ai dati Alpine
+                const data = window.Alpine?.$data(root);
+                if (data) {
+                    data.visible = true;
+                    data.showSettings = true;
+                } else if (root.__x_data_stack) {
+                    // Fallback per Alpine 2 o stack interno
+                    root.__x_data_stack[0].visible = true;
+                    root.__x_data_stack[0].showSettings = true;
+                }
+            }
+        };
+    </script>
+
 </div>
 @endif

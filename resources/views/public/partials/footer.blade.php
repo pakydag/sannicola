@@ -11,7 +11,7 @@
                     @endforeach
                 @endif
                 <a href="#" class="text-gray-400 hover:text-white transition">Privacy Policy</a>
-                <a href="#" class="text-gray-400 hover:text-white transition">Cookie Policy</a>
+                <a href="javascript:void(0)" onclick="openCookiePreferences()" class="text-gray-400 hover:text-white transition">Cookie Policy</a>
                 <a href="{{ route('login') }}" class="text-gray-400 hover:text-white transition">Area Riservata</a>
             </div>
         </div>
