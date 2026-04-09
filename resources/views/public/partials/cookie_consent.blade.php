@@ -21,8 +21,8 @@
     x-transition:enter="transition ease-out duration-500"
     x-transition:enter-start="opacity-0 translate-y-20"
     x-transition:enter-end="opacity-100 translate-y-0"
-    class="fixed bottom-0 left-0 right-0 p-4 z-[9999] pointer-events-none"
-    style="display: none;"
+    class="fixed bottom-0 left-0 right-0 p-4 pointer-events-none"
+    style="z-index: 2147483647 !important; display: none;"
 >
     <div class="bg-white rounded-2xl shadow-2xl ring-1 ring-gray-900/10 p-6 border-l-4 border-indigo-600 pointer-events-auto mx-auto max-w-2xl">
         <div class="flex items-start gap-4">
