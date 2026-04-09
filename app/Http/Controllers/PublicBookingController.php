@@ -22,9 +22,9 @@ class PublicBookingController extends Controller
         $section = \App\Models\Section::where('modulo', 'booking')->first();
         
         $seo = [
-            'title' => ($section->seo_title ?? 'Prenota') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
-            'description' => $section->seo_description ?? ($this->global_seo['home_seo_description'] ?? 'Prenota il tuo soggiorno presso la nostra struttura.'),
-            'image' => ($section->seo_image ?? ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'title' => ($section->seo_title ?: 'Prenota') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $section->seo_description ?: ($this->global_seo['home_seo_description'] ?? 'Prenota il tuo soggiorno presso la nostra struttura.'),
+            'image' => ($section->seo_image ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
             'url' => url()->current()
         ];
 

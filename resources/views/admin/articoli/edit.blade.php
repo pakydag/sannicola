@@ -823,9 +823,13 @@
 
             // Callback function expected by FileManager popup
             function fmSetLink($url) {
-                const baseUrl = '{{ config('app.url') }}';
-                // Rimuoviamo il baseUrl se presente per salvare il percorso relativo
-                const relativeUrl = $url.replace(baseUrl, '');
+                let relativeUrl = $url;
+                try {
+                    const urlObj = new URL($url);
+                    relativeUrl = urlObj.pathname;
+                } catch (e) {
+                    console.error("Invalid URL passed to fmSetLink:", $url);
+                }
                 
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {

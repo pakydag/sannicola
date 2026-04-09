@@ -25,9 +25,9 @@ class PublicShopController extends Controller
         $section = \App\Models\Section::where('modulo', 'shop')->first();
         
         $seo = [
-            'title' => ($section->seo_title ?? 'Shop') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
-            'description' => $section->seo_description ?? ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro shop online.'),
-            'image' => ($section->seo_image ?? ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'title' => ($section->seo_title ?: 'Shop') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $section->seo_description ?: ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro shop online.'),
+            'image' => ($section->seo_image ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
             'url' => url()->current()
         ];
 

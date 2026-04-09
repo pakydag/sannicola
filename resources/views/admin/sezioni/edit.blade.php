@@ -219,8 +219,13 @@
 
             // Callback function expected by FileManager
             function fmSetLink($url) {
-                const baseUrl = '{{ config('app.url') }}';
-                const relativeUrl = $url.replace(baseUrl, '');
+                let relativeUrl = $url;
+                try {
+                    const urlObj = new URL($url);
+                    relativeUrl = urlObj.pathname;
+                } catch (e) {
+                    console.error("Invalid URL passed to fmSetLink:", $url);
+                }
 
                 if(fmActiveTarget === 'editor') {
                     if(editorInstance) {
