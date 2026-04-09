@@ -20,7 +20,7 @@ class SectionController extends Controller
         $this->syncModules();
         
         // Verifica quali moduli sono abilitati
-        $settings = \App\Models\Setting::getSettings();
+        $settings = \App\Models\Setting::pluck('value', 'key')->all();
         $disabledModules = [];
         
         if (!isset($settings['shop_enabled']) || $settings['shop_enabled'] != '1') {

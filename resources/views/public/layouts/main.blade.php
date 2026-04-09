@@ -50,7 +50,7 @@
     @include('public.partials.footer')
 
     @php
-        $globalSettings = \App\Models\Setting::getSettings();
+        $globalSettings = \App\Models\Setting::pluck('value', 'key')->all();
         $accessibilityEnabled = !isset($globalSettings['accessibility_panel_enabled']) || $globalSettings['accessibility_panel_enabled'] == '1';
     @endphp
 
