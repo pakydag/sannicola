@@ -78,6 +78,10 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
         return view('admin.filemanager');
     })->name('filemanager');
 
+    Route::get('/file-manager/fm-button', function () {
+        return view('admin.filemanager_button');
+    })->name('filemanager.button');
+
     // Configurazione Sito
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'edit'])->name('settings.edit');
     Route::post('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'update'])->name('settings.update');

@@ -6,10 +6,30 @@ use Illuminate\Http\Request;
 
 class PublicBookingController extends Controller
 {
+    protected $global_seo;
+
+    public function __construct()
+    {
+        $this->global_seo = [
+            'home_seo_title' => \App\Models\Setting::where('key', 'home_seo_title')->value('value'),
+            'home_seo_description' => \App\Models\Setting::where('key', 'home_seo_description')->value('value'),
+            'home_seo_image' => \App\Models\Setting::where('key', 'home_seo_image')->value('value'),
+        ];
+    }
+
     public function index()
     {
+        $section = \App\Models\Section::where('modulo', 'booking')->first();
+        
+        $seo = [
+            'title' => ($section->seo_title ?? 'Prenota') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $section->seo_description ?? ($this->global_seo['home_seo_description'] ?? 'Prenota il tuo soggiorno presso la nostra struttura.'),
+            'image' => ($section->seo_image ?? ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'url' => url()->current()
+        ];
+
         $structures = \App\Models\BookingStructure::where('attivo', true)->with('photos')->get();
-        return view('public.booking.index', compact('structures'));
+        return view('public.booking.index', compact('structures', 'seo'));
     }
 
     public function search(Request $request)
@@ -116,7 +136,14 @@ class PublicBookingController extends Controller
             }
         }
 
-        return view('public.booking.show', compact('structure', 'bookedDates'));
+        $seo = [
+            'title' => ($structure->seo_title ?: $structure->nome) . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $structure->seo_description ?: \Illuminate\Support\Str::limit(strip_tags($structure->descrizione), 160),
+            'image' => $structure->seo_image ?: ($structure->photos->first() ? asset($structure->photos->first()->foto) : ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'url' => url()->current()
+        ];
+
+        return view('public.booking.show', compact('structure', 'bookedDates', 'seo'));
     }
 
     public function checkAvailability(Request $request)

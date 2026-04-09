@@ -9,10 +9,30 @@ use Illuminate\Http\Request;
 
 class PublicShopController extends Controller
 {
+    protected $global_seo;
+
+    public function __construct()
+    {
+        $this->global_seo = [
+            'home_seo_title' => \App\Models\Setting::where('key', 'home_seo_title')->value('value'),
+            'home_seo_description' => \App\Models\Setting::where('key', 'home_seo_description')->value('value'),
+            'home_seo_image' => \App\Models\Setting::where('key', 'home_seo_image')->value('value'),
+        ];
+    }
+
     public function index()
     {
+        $section = \App\Models\Section::where('modulo', 'shop')->first();
+        
+        $seo = [
+            'title' => ($section->seo_title ?? 'Shop') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $section->seo_description ?? ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro shop online.'),
+            'image' => ($section->seo_image ?? ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'url' => url()->current()
+        ];
+
         $collezioni = ShopCollection::where('visibile', true)->orderBy('ordine')->get();
-        return view('public.shop.index', compact('collezioni'));
+        return view('public.shop.index', compact('collezioni', 'seo'));
     }
 
     public function collezione($slug)
@@ -34,8 +54,15 @@ class PublicShopController extends Controller
             ->orderBy('ordine');
             
         $prodotti = $query->get();
+        
+        $seo = [
+            'title' => ($collezione->seo_title ?: $collezione->nome) . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $collezione->seo_description ?: \Illuminate\Support\Str::limit(strip_tags($collezione->descrizione), 160),
+            'image' => $collezione->seo_image ?: ($collezione->foto ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'url' => url()->current()
+        ];
 
-        return view('public.shop.collezione', compact('collezione', 'prodotti'));
+        return view('public.shop.collezione', compact('collezione', 'prodotti', 'seo'));
     }
 
     public function categoria($slug)
@@ -63,7 +90,14 @@ class PublicShopController extends Controller
 
         \Illuminate\Support\Facades\Log::info("Products Count: " . $prodotti->count());
 
-        return view('public.shop.categoria', compact('categoria', 'prodotti'));
+        $seo = [
+            'title' => ($categoria->seo_title ?: $categoria->nome) . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $categoria->seo_description ?: \Illuminate\Support\Str::limit(strip_tags($categoria->descrizione), 160),
+            'image' => $categoria->seo_image ?: ($categoria->foto ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'url' => url()->current()
+        ];
+
+        return view('public.shop.categoria', compact('categoria', 'prodotti', 'seo'));
     }
 
     public function prodotto($collezione_slug, $prodotto_slug)
@@ -75,6 +109,13 @@ class PublicShopController extends Controller
 
         $collezione = ShopCollection::where('slug', $collezione_slug)->first();
 
-        return view('public.shop.prodotto', compact('prodotto', 'collezione'));
+        $seo = [
+            'title' => ($prodotto->seo_title ?: $prodotto->nome) . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $prodotto->seo_description ?: \Illuminate\Support\Str::limit(strip_tags($prodotto->descrizione), 160),
+            'image' => $prodotto->seo_image ?: ($prodotto->foto ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'url' => url()->current()
+        ];
+
+        return view('public.shop.prodotto', compact('prodotto', 'collezione', 'seo'));
     }
 }
