@@ -49,7 +49,14 @@
 
     @include('public.partials.footer')
 
-    <x-accessibility-widget />
+    @php
+        $globalSettings = \App\Models\Setting::getSettings();
+        $accessibilityEnabled = !isset($globalSettings['accessibility_panel_enabled']) || $globalSettings['accessibility_panel_enabled'] == '1';
+    @endphp
+
+    @if($accessibilityEnabled)
+        <x-accessibility-widget />
+    @endif
 
     @stack('scripts')
 

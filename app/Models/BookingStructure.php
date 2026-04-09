@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BookingStructure extends Model
 {
     protected $fillable = [
-        'nome', 'descrizione', 'bagni', 'camere_letto', 'posti_totali', 'costo_al_giorno', 'attivo', 'prenotabile', 'tipo_prezzo'
+        'nome', 'descrizione', 'bagni', 'camere_letto', 'posti_totali', 'costo_al_giorno', 'attivo', 'prenotabile', 'tipo_prezzo', 'seo_title', 'seo_description', 'seo_image'
     ];
 
     public function photos()

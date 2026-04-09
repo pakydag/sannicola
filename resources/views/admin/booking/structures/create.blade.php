@@ -22,6 +22,7 @@
                         <button type="button" @click="tab = 'foto'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'foto', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'foto' }" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">Galleria Foto</button>
                         <button type="button" @click="tab = 'servizi'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'servizi', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'servizi' }" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">Servizi</button>
                         <button type="button" @click="tab = 'extra'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'extra', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'extra' }" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">Extra</button>
+                        <button type="button" @click="tab = 'seo'" :class="{ 'border-indigo-500 text-indigo-600': tab === 'seo', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': tab !== 'seo' }" class="whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">SEO & Social</button>
                     </div>
 
                     <form action="{{ route('admin.booking.structures.store') }}" method="POST">
@@ -291,7 +292,7 @@
 
                         <!-- TAB: EXTRA -->
                         <div x-show="tab === 'extra'" class="space-y-6" style="display:none;">
-                            <p class="text-sm text-gray-500 mb-4">Seleziona i servizi extra a pagamento disponibili per questa struttura. <a href="{{ route('admin.booking.extras.index') }}" class="text-indigo-600 font-bold hover:underline">Gestisci servizi extra →</a></p>
+                            <p class="text-sm text-gray-500 mb-4">Seleziona i servizi extra a pagamento disponibili per questa struttura. <a href="{{ route('admin.booking.extras.index') }}" class="text-indigo-600 font-bold hover:underline">Gestisci servizi extra &rarr;</a></p>
                             @if(isset($availableExtras) && $availableExtras->count() > 0)
                                 <div class="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -301,7 +302,7 @@
                                                     <input type="checkbox" name="extras[]" value="{{ $extra->id }}" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ (is_array(old('extras')) && in_array($extra->id, old('extras'))) ? 'checked' : '' }}>
                                                     <div>
                                                         <span class="block font-bold text-gray-900">{{ $extra->nome }}</span>
-                                                        <span class="text-xs text-gray-500">€{{ number_format($extra->prezzo, 2) }} / giorno</span>
+                                                        <span class="text-xs text-gray-500">&euro;{{ number_format($extra->prezzo, 2) }} / giorno</span>
                                                     </div>
                                                 </div>
                                             </label>
@@ -310,9 +311,37 @@
                                 </div>
                             @else
                                 <div class="text-center py-10 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-                                    <p class="text-sm text-gray-400 italic">Nessun servizio extra definito. <a href="{{ route('admin.booking.extras.index') }}" class="text-indigo-600 font-bold hover:underline">Crea il primo extra →</a></p>
+                                    <p class="text-sm text-gray-400 italic">Nessun servizio extra definito. <a href="{{ route('admin.booking.extras.index') }}" class="text-indigo-600 font-bold hover:underline">Crea il primo extra &rarr;</a></p>
                                 </div>
                             @endif
+                        </div>
+
+                        <!-- TAB: SEO -->
+                        <div x-show="tab === 'seo'" class="space-y-6" style="display:none;">
+                            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <h3 class="font-bold text-gray-700 mb-4">SEO & Condivisione Social</h3>
+                                <div class="mb-4">
+                                    <label for="seo_title" class="block text-gray-700 text-sm font-bold mb-2">Titolo per Motori di Ricerca/Social</label>
+                                    <input type="text" name="seo_title" id="seo_title" value="{{ old('seo_title') }}" placeholder="Titolo personalizzato..." class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                    @error('seo_title') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="mb-4">
+                                    <label for="seo_description" class="block text-gray-700 text-sm font-bold mb-2">Descrizione/Riassunto Social</label>
+                                    <textarea name="seo_description" id="seo_description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('seo_description') }}</textarea>
+                                    @error('seo_description') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                </div>
+                                <div class="mb-4">
+                                    <label for="seo_image" class="block text-gray-700 text-sm font-bold mb-2">Immagine Anteprima Social</label>
+                                    <div class="flex items-stretch">
+                                        <input type="text" name="seo_image" id="seo_image" value="{{ old('seo_image') }}" readonly placeholder="Seleziona Immagine da File Manager..." class="shadow appearance-none border rounded-l flex-1 py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                        <button type="button" id="fm-seo-image-button" class="bg-gray-600 hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0">
+                                            Scegli Immagine
+                                        </button>
+                                        <button type="button" id="fm-seo-image-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
+                                    </div>
+                                    @error('seo_image') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
                         </div>
 
                         <div class="mt-8 pt-6 border-t border-gray-200 flex justify-between">
@@ -383,6 +412,37 @@
                 
                 currentFmIndex = null;
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                if(document.getElementById('fm-seo-image-button')) {
+                    document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
+                        event.preventDefault();
+                        window.open('{{ route('admin.filemanager.button') }}?target=seo_image', 'fm', 'width=1400,height=800');
+                    });
+                }
+
+                if(document.getElementById('fm-seo-image-clear')) {
+                    document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
+                        event.preventDefault();
+                        document.getElementById('seo_image').value = '';
+                    });
+                }
+            });
+
+            // Fallback for single image callback when opened with ?target=seo_image
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.type === 'filemanager_select') {
+                    const url = event.data.url;
+                    if (event.data.target === 'seo_image') {
+                        let relativeUrl = url;
+                        try {
+                            const urlObj = new URL(url);
+                            relativeUrl = urlObj.pathname;
+                        } catch (e) {}
+                        document.getElementById('seo_image').value = relativeUrl;
+                    }
+                }
+            });
         </script>
     @endpush
 </x-app-layout>

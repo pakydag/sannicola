@@ -321,6 +321,22 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="mt-8 border-t pt-6 border-gray-100">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                    </svg>
+                                    Accessibilità
+                                </h3>
+                                <div class="bg-gray-50 p-4 border rounded-md">
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="accessibility_panel_enabled" value="1" class="sr-only peer" {{ (!isset($settings['accessibility_panel_enabled']) || $settings['accessibility_panel_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Abilita Widget Accessibilità sul Sito</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Chiavi API (Visibili se almeno un modulo ha Stripe/PayPal attivo) -->
@@ -397,7 +413,7 @@
                     document.getElementById('btn-sfoglia-logo').addEventListener('click', (e) => {
                         e.preventDefault();
                         fmActiveInput = document.getElementById('site_logo');
-                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
             });

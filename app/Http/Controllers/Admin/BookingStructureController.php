@@ -69,7 +69,13 @@ class BookingStructureController extends Controller
             'prezzi.*.start_date' => 'required|date',
             'prezzi.*.end_date' => 'required|date|after_or_equal:prezzi.*.start_date',
             'prezzi.*.prezzo' => 'required|numeric|min:0',
+            'seo_title' => 'nullable|string|max:255',
+            'seo_description' => 'nullable|string',
+            'seo_image' => 'nullable|string',
         ]);
+
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image'] ?? null);
+
 
         if ($request->has('prezzi')) {
             $prezzi = $request->prezzi;
@@ -184,7 +190,13 @@ class BookingStructureController extends Controller
             'prezzi.*.start_date' => 'required|date',
             'prezzi.*.end_date' => 'required|date|after_or_equal:prezzi.*.start_date',
             'prezzi.*.prezzo' => 'required|numeric|min:0',
+            'seo_title' => 'nullable|string|max:255',
+            'seo_description' => 'nullable|string',
+            'seo_image' => 'nullable|string',
         ]);
+
+        $validated['seo_image'] = $this->stripDomain($validated['seo_image'] ?? null);
+
 
         $validated['attivo'] = $request->has('attivo');
         $validated['prenotabile'] = $request->has('prenotabile');

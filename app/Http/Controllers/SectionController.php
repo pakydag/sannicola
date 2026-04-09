@@ -18,7 +18,30 @@ class SectionController extends Controller
     public function index()
     {
         $this->syncModules();
-        $sezioni = Section::orderBy('ordine')->get();
+        
+        // Verifica quali moduli sono abilitati
+        $settings = \App\Models\Setting::getSettings();
+        $disabledModules = [];
+        
+        if (!isset($settings['shop_enabled']) || $settings['shop_enabled'] != '1') {
+            $disabledModules[] = 'shop';
+            // Se shop è disabilitato, b2b dovrebbe essersi disabilitato, o se ha una sua chiave
+            $disabledModules[] = 'b2b'; 
+        } else {
+            // Se lo shop è abilitato, controlliamo se b2b è abilitato
+            if (!isset($settings['b2b_enabled']) || $settings['b2b_enabled'] != '1') {
+                $disabledModules[] = 'b2b';
+            }
+        }
+        
+        if (!isset($settings['booking_enabled']) || $settings['booking_enabled'] != '1') {
+            $disabledModules[] = 'booking';
+        }
+
+        $sezioni = Section::where(function($q) use ($disabledModules) {
+            $q->whereNull('modulo')->orWhereNotIn('modulo', $disabledModules);
+        })->orderBy('ordine')->get();
+        
         return view('admin.sezioni.index', compact('sezioni'));
     }
 
