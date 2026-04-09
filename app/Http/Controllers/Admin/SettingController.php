@@ -61,6 +61,11 @@ class SettingController extends Controller
             'bonifico_intestazione', 'bonifico_banca', 'bonifico_iban'
         ];
 
+        $trackingSettings = [
+            'tracking_ga_analytics', 'tracking_gtm', 'tracking_facebook_pixel',
+            'cookie_consent_enabled', 'cookie_consent_text'
+        ];
+
         $generalSettings = [
             'site_logo', 'mail_mailer', 'mail_host', 'mail_port', 
             'mail_username', 'mail_password', 'mail_encryption', 
@@ -89,6 +94,10 @@ class SettingController extends Controller
             'vapi_key' => 'nullable|string',
             'vapi_assistant_id' => 'nullable|string',
             'spoki_key' => 'nullable|string',
+            'tracking_ga_analytics' => 'nullable|string',
+            'tracking_gtm' => 'nullable|string',
+            'tracking_facebook_pixel' => 'nullable|string',
+            'cookie_consent_text' => 'nullable|string',
         ]);
 
         if (isset($validated['site_logo'])) {
@@ -96,7 +105,7 @@ class SettingController extends Controller
         }
 
         // Process Checkboxes
-        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings);
+        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings, ['spoki_enabled', 'cookie_consent_enabled']);
         foreach ($checkboxes as $chk) {
             $canEdit = false;
             
@@ -126,6 +135,8 @@ class SettingController extends Controller
             } elseif (in_array($key, $paymentParams)) {
                 // I parametri API possono essere salvati se si ha accesso a Shop, Booking o B2B
                 if ($user->can_manage_shop || $user->can_manage_booking || $user->can_manage_agents) $canEdit = true;
+            } elseif (in_array($key, $trackingSettings)) {
+                $canEdit = true;
             }
 
             if ($canEdit) {

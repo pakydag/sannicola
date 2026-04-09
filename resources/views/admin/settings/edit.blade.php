@@ -65,6 +65,10 @@
                         <button @click="activeTab = 'ai_spoki'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'ai_spoki', 'text-gray-600 hover:text-indigo-600': activeTab !== 'ai_spoki'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
                             🤖 AI & Spoki
                         </button>
+
+                        <button @click="activeTab = 'pixels'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pixels', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pixels'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
+                            📊 Pixel & Cookie
+                        </button>
                     </div>
 
                     <form action="{{ route('admin.settings.update') }}" method="POST">
@@ -269,6 +273,52 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Spoki API Key</label>
                                     <input type="password" name="spoki_key" value="{{ old('spoki_key', $settings['spoki_key'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Spoki API Key...">
                                     <p class="text-xs text-gray-500 mt-1">Chiave API per inviare messaggi e sincronizzare contatti su Spoki.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: Pixel & Cookie -->
+                        <div x-show="activeTab === 'pixels'" style="display: none;" class="space-y-6">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Tracking & Tracciamento</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Google Analytics ID (GT-XXXXX o G-XXXXX)</label>
+                                    <input type="text" name="tracking_ga_analytics" value="{{ old('tracking_ga_analytics', $settings['tracking_ga_analytics'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. G-XXXXXXXXXX">
+                                    <p class="text-xs text-gray-500 mt-1">Inserisci solo l'ID di tracciamento o l'ID della proprietà (es: G-XXXXX).</p>
+                                </div>
+                                
+                                <div class="col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Google Tag Manager ID (GTM)</label>
+                                    <input type="text" name="tracking_gtm" value="{{ old('tracking_gtm', $settings['tracking_gtm'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. GTM-XXXXXXX">
+                                    <p class="text-xs text-gray-500 mt-1">Inserisci solo l'ID del contenitore GTM.</p>
+                                </div>
+                                
+                                <div class="col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Facebook Pixel ID</label>
+                                    <input type="text" name="tracking_facebook_pixel" value="{{ old('tracking_facebook_pixel', $settings['tracking_facebook_pixel'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. 1234567890">
+                                    <p class="text-xs text-gray-500 mt-1">Inserisci solo l'ID del Pixel di Facebook.</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 border-t pt-6 border-gray-100">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4 flex items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.647.166 1.317.166 2 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.683.057-1.353.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    Gestione Consenso Cookie (GDPR)
+                                </h3>
+                                <div class="bg-gray-50 p-4 border rounded-md">
+                                    <label class="inline-flex items-center cursor-pointer mb-4">
+                                        <input type="checkbox" name="cookie_consent_enabled" value="1" class="sr-only peer" {{ (isset($settings['cookie_consent_enabled']) && $settings['cookie_consent_enabled'] == '1') ? 'checked' : '' }}>
+                                        <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <span class="ms-3 text-sm font-medium text-gray-900">Abilita Banner Cookie Consent</span>
+                                    </label>
+                                    
+                                    <div class="mt-4">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Testo Banner Informativo</label>
+                                        <textarea name="cookie_consent_text" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-sm">{{ old('cookie_consent_text', $settings['cookie_consent_text'] ?? 'Questo sito utilizza i cookie per migliorare l\'esperienza di navigazione. Continuando accetti il loro utilizzo.') }}</textarea>
+                                    </div>
                                 </div>
                             </div>
                         </div>

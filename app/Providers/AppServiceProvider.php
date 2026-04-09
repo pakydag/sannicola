@@ -23,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
             // Se le impostazioni esistono nel filesystem o db, carichiamo la conf mail
             if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
                 $settings = \App\Models\Setting::pluck('value', 'key')->toArray();
+                \Illuminate\Support\Facades\View::share('global_settings', $settings);
 
                 if (!empty($settings['mail_host'])) {
                     config([
