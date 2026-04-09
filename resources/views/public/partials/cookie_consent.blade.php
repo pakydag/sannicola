@@ -150,18 +150,18 @@
         </div>
     </template>
 
-    <!-- 3. Trigger Flottante (Per riaprire) -->
+    <!-- 3. Trigger Flottante (Per riaprire) - SPOSTATO A DESTRA -->
     <div x-show="!visible && !showSettings && hasCookie" 
-         class="fixed bottom-6 left-20 z-[2147483646]"
+         class="fixed bottom-6 right-6 z-[2147483646]"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 scale-50"
          x-transition:enter-end="opacity-100 scale-100"
          style="display: none;"
     >
         <button @click="visible = true; showSettings = true" 
-                class="bg-white/90 backdrop-blur-md p-2.5 rounded-full shadow-2xl border border-gray-200 hover:bg-white transition-all group hover:scale-110 active:scale-95 pointer-events-auto"
+                class="bg-white/95 backdrop-blur-md p-3 rounded-full shadow-2xl border border-gray-200 hover:bg-white transition-all group hover:scale-110 active:scale-95 pointer-events-auto"
                 title="Gestisci preferenze cookie">
-            <svg class="h-5 w-5 text-gray-500 group-hover:text-indigo-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <svg class="h-6 w-6 text-indigo-600 group-hover:text-indigo-800 transition-colors" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
             </svg>
         </button>
