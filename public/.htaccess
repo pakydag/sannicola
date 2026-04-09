@@ -8,7 +8,7 @@
     RewriteEngine On
     
     # Reindirizza le immagini della storage al server di produzione
-    RewriteRule ^storage/(.*)$ http://185.56.170.138/storage/$1 [L,R=301]
+    # RewriteRule ^storage/(.*)$ http://185.56.170.138/storage/$1 [L,R=301]
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .

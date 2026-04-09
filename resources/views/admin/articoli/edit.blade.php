@@ -283,6 +283,7 @@
                             <button @click="activeTab = 'gallery'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'gallery', 'text-gray-600 hover:text-indigo-600': activeTab !== 'gallery'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm">📸 Gallery Foto</button>
                             <button @click="activeTab = 'video'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'video', 'text-gray-600 hover:text-indigo-600': activeTab !== 'video'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🎥 Video</button>
                             <button @click="activeTab = 'mirror'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'mirror', 'text-gray-600 hover:text-indigo-600': activeTab !== 'mirror'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">☯️ Blocchi Specchio</button>
+                            <button @click="activeTab = 'info_blocks'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'info_blocks', 'text-gray-600 hover:text-indigo-600': activeTab !== 'info_blocks'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🧱 Blocchi Info</button>
                             <button @click="activeTab = 'single'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'single', 'text-gray-600 hover:text-indigo-600': activeTab !== 'single'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🟦 Blocco Singolo</button>
                             <button @click="activeTab = 'grid'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'grid', 'text-gray-600 hover:text-indigo-600': activeTab !== 'grid'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">🔲 Griglia</button>
                             <button @click="activeTab = 'global'" :class="{'bg-green-50 border-t border-l border-r border-green-200 text-green-700 font-bold': activeTab === 'global', 'text-gray-600 hover:text-green-600': activeTab !== 'global'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 ml-auto mr-1 text-sm">🌍 Globale</button>
@@ -380,6 +381,58 @@
                                 <div class="text-right mt-4">
                                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Blocchi a Specchio</button>
                                 </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Form Info Blocks -->
+                    <div x-show="activeTab === 'info_blocks'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
+                        <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="tipo" value="info_blocks">
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Sezione (Opzionale)</label>
+                                <input type="text" name="titolo" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Numero Colonne (Desktop) *</label>
+                                <select name="data[columns]" required class="shadow border rounded w-full md:w-1/4 py-2 px-3 focus:outline-none">
+                                    <option value="1">1 Colonna</option>
+                                    <option value="2">2 Colonne</option>
+                                    <option value="3" selected>3 Colonne</option>
+                                    <option value="4">4 Colonne</option>
+                                    <option value="6">6 Colonne</option>
+                                </select>
+                            </div>
+                            
+                            <div id="info-blocks-container" class="space-y-4 mb-4">
+                                <div class="bg-white p-4 rounded border border-gray-200 shadow-sm info-block-row">
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                        <div class="md:col-span-4">
+                                            <label class="block text-gray-700 text-xs font-bold mb-1">Icona / Immagine</label>
+                                            <div class="flex">
+                                                <input type="text" name="data[items][0][image]" readonly placeholder="Scegli icona..." class="shadow border rounded-l w-full py-2 px-3 bg-gray-50 focus:outline-none text-xs">
+                                                <button type="button" class="btn-sfoglia-block bg-gray-200 hover:bg-gray-300 px-3 rounded-r border border-l-0 text-xs">📸</button>
+                                            </div>
+                                        </div>
+                                        <div class="md:col-span-7">
+                                            <label class="block text-gray-700 text-xs font-bold mb-1">Testo del blocco (Accetta HTML)</label>
+                                            <textarea name="data[items][0][text]" rows="2" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder="Inserisci testo..."></textarea>
+                                        </div>
+                                        <div class="md:col-span-1 flex items-center justify-center">
+                                            <button type="button" class="btn-red-100 opacity-20 pointer-events-none" title="Non eliminabile">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center justify-between mt-4">
+                                <button type="button" id="btn-aggiungi-block" class="text-indigo-600 font-bold hover:text-indigo-800 text-sm flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi un altro blocco
+                                </button>
+                                <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Widget Blocchi</button>
+                            </div>
                         </form>
                     </div>
 
@@ -510,6 +563,7 @@
             let fmActiveTarget = 'editor';
             let fmActiveInput = null; // Used for dynamic gallery/video inputs
             let photoIndex = 1; // Initialize index for new gallery photos
+            let blockIndex = 1; // Initialize index for new info blocks
             
             ClassicEditor
                 .create( document.querySelector( '#descrizione' ) )
@@ -645,6 +699,57 @@
                         }
                         return;
                     }
+
+                    // --- Widget Info Blocks: Dynamic Rows ---
+                    const btnAddBlock = e.target.closest('#btn-aggiungi-block');
+                    if (btnAddBlock) {
+                        e.preventDefault();
+                        const blockContainer = document.getElementById('info-blocks-container');
+                        if (!blockContainer) return;
+                        const row = document.createElement('div');
+                        row.className = 'bg-white p-4 rounded border border-gray-200 shadow-sm info-block-row mt-4';
+                        row.innerHTML = `
+                            <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                                <div class="md:col-span-4">
+                                    <label class="block text-gray-700 text-xs font-bold mb-1">Icona / Immagine</label>
+                                    <div class="flex">
+                                        <input type="text" name="data[items][${blockIndex}][image]" readonly placeholder="Scegli icona..." class="shadow border rounded-l w-full py-2 px-3 bg-gray-50 focus:outline-none text-xs">
+                                        <button type="button" class="btn-sfoglia-block bg-gray-200 hover:bg-gray-300 px-3 rounded-r border border-l-0 text-xs">📸</button>
+                                    </div>
+                                </div>
+                                <div class="md:col-span-7">
+                                    <label class="block text-gray-700 text-xs font-bold mb-1">Testo del blocco (Accetta HTML)</label>
+                                    <textarea name="data[items][${blockIndex}][text]" rows="2" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder="Inserisci testo..."></textarea>
+                                </div>
+                                <div class="md:col-span-1 flex items-center justify-center">
+                                    <button type="button" class="btn-rimuovi-block text-red-500 hover:text-red-700" title="Rimuovi Block">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        blockContainer.appendChild(row);
+                        blockIndex++;
+                        return;
+                    }
+
+                    // Sfoglia block button (Delegated)
+                    const btnSfogliaBlock = e.target.closest('.btn-sfoglia-block');
+                    if(btnSfogliaBlock) {
+                        e.preventDefault();
+                        fmActiveTarget = 'widget_info_block';
+                        fmActiveInput = btnSfogliaBlock.previousElementSibling;
+                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        return;
+                    }
+
+                    // Rimuovi block button (Delegated)
+                    const btnRimuoviBlock = e.target.closest('.btn-rimuovi-block');
+                    if(btnRimuoviBlock) {
+                        e.preventDefault();
+                        btnRimuoviBlock.closest('.info-block-row').remove();
+                        return;
+                    }
                 });
             });
 
@@ -671,7 +776,7 @@
                     document.getElementById('allegato').value = relativeUrl;
                 } else if (fmActiveTarget === 'seo_image') {
                     document.getElementById('seo_image').value = relativeUrl;
-                } else if (fmActiveTarget === 'widget_video' || fmActiveTarget === 'widget_gallery' || fmActiveTarget === 'widget_single' || fmActiveTarget === 'widget_single_video' || fmActiveTarget === 'widget_gallery_video') {
+                } else if (fmActiveTarget === 'widget_video' || fmActiveTarget === 'widget_gallery' || fmActiveTarget === 'widget_single' || fmActiveTarget === 'widget_single_video' || fmActiveTarget === 'widget_gallery_video' || fmActiveTarget === 'widget_info_block') {
                     if(fmActiveInput) {
                         fmActiveInput.value = relativeUrl;
                     }

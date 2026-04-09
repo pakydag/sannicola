@@ -117,6 +117,8 @@
                                 @include('public.partials.widgets.single_block', ['widget' => $actualWidget])
                             @elseif($actualWidget->tipo === 'section_grid')
                                 @include('public.partials.widgets.section_grid', ['widget' => $actualWidget])
+                            @elseif($actualWidget->tipo === 'info_blocks')
+                                @include('public.partials.widgets.info_blocks', ['widget' => $actualWidget])
                             @endif
                         </div>
                     @endif
