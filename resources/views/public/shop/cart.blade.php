@@ -41,7 +41,7 @@
                 </div>
             </div>
         @else
-            <div class="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start" x-data="cartSummary()">
                 
                 <div class="lg:col-span-8">
                     <ul role="list" class="border-t border-b border-gray-200 divide-y divide-gray-200 bg-white shadow rounded-lg px-6">
@@ -114,33 +114,102 @@
                 </div>
 
                 <!-- Riepilogo Ordine -->
-                <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow">
-                    <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Riepilogo Ordine</h2>
+                <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow border-t-2 border-indigo-500 sticky top-6">
+                    <h2 id="summary-heading" class="text-xl font-bold text-gray-900 border-b pb-4 mb-6">Riepilogo Ordine</h2>
+
+                    <div class="mb-6">
+                        <label for="estimate_nation" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Destinazione per la stima</label>
+                        <select id="estimate_nation" x-model="nazione" @change="updateShipping()" class="w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all p-3">
+                            <option value="">Seleziona nazione...</option>
+                            @foreach($shippingCosts as $cost)
+                                <option value="{{ $cost->nazione }}">{{ $cost->nazione }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <dl class="mt-6 space-y-4">
                         <div class="flex items-center justify-between">
                             <dt class="text-sm text-gray-600">Subtotale Prodotti</dt>
-                            <dd class="text-sm font-medium text-gray-900">€ {{ number_format($totale, 2, ',', '.') }}</dd>
+                            <dd class="text-sm font-bold text-gray-900">€ <span x-text="formatPrice(subtotal)"></span></dd>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-gray-100 pt-4 group relative">
+                            <dt class="text-sm text-gray-600 flex items-center">
+                                Spedizione stimata
+                                <svg class="w-3 h-3 ml-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </dt>
+                            <dd class="text-sm font-bold text-gray-900">
+                                <span x-show="shippingCost > 0">€ <span x-text="formatPrice(shippingCost)"></span></span>
+                                <span x-show="shippingCost == 0" class="text-emerald-600 uppercase tracking-widest text-xs">Gratis</span>
+                            </dd>
+
+                            <template x-if="freeThreshold > 0 && subtotal < freeThreshold">
+                                <div class="absolute -top-10 right-0 bg-slate-800 text-white text-[10px] px-2 py-2 rounded shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all z-20">
+                                    Aggiungi € <span x-text="formatPrice(freeThreshold - subtotal)"></span> per la spedizione <span class="text-emerald-400 font-bold">Gratis</span>!
+                                </div>
+                            </template>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-                            <dt class="text-sm text-gray-600">Spedizione stimata</dt>
-                            <dd class="text-sm font-medium text-gray-900">€ 5,00</dd>
-                        </div>
-                        <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-                            <dt class="text-base font-medium text-gray-900">Totale Ordine</dt>
-                            <dd class="text-xl font-bold text-gray-900">€ {{ number_format($totale + 5, 2, ',', '.') }}</dd>
+                            <dt class="text-base font-bold text-gray-900">Totale Ordine</dt>
+                            <dd class="text-2xl font-black text-indigo-600">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
                         </div>
                     </dl>
 
-                    <div class="mt-6">
-                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-50 flex justify-center items-center">
+                    <div class="mt-8">
+                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full bg-indigo-600 border border-transparent rounded-xl shadow-lg py-4 px-4 text-lg font-bold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all flex justify-center items-center h-14 uppercase tracking-widest">
                             Procedi al Checkout
                         </a>
                     </div>
+
+                    @if($freeThreshold > 0)
+                    <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                            <span>Soglia Gratuita</span>
+                            <span>€ <span x-text="formatPrice(freeThreshold)"></span></span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-1.5 mb-1 overflow-hidden">
+                            <div class="bg-indigo-500 h-1.5 rounded-full transition-all duration-700" :style="'width: ' + Math.min((subtotal / freeThreshold) * 100, 100) + '%'"></div>
+                        </div>
+                    </div>
+                    @endif
                 </section>
             </div>
         @endif
         
     </div>
 </div>
+@push('scripts')
+<script>
+    function cartSummary() {
+        return {
+            nazione: 'Italia',
+            subtotal: {{ $totale }},
+            shippingCost: 0,
+            freeThreshold: {{ $freeThreshold }},
+            costs: @json($shippingCosts->pluck('costo', 'nazione')),
+            
+            init() {
+                this.updateShipping();
+            },
+            
+            updateShipping() {
+                if (!this.nazione) {
+                    this.shippingCost = 0;
+                    return;
+                }
+                let cost = this.costs[this.nazione] !== undefined ? parseFloat(this.costs[this.nazione]) : 5.00;
+                
+                if (this.freeThreshold > 0 && this.subtotal >= this.freeThreshold) {
+                    this.shippingCost = 0;
+                } else {
+                    this.shippingCost = cost;
+                }
+            },
+            
+            formatPrice(price) {
+                return parseFloat(price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+        }
+    }
+</script>
+@endpush
 @endsection

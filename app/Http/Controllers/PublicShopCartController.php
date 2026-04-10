@@ -9,7 +9,10 @@ class PublicShopCartController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
-        return view('public.shop.cart', compact('cart'));
+        $shippingCosts = \App\Models\ShopShippingCost::orderBy('nazione')->get();
+        $freeThreshold = \App\Models\Setting::where('key', 'shop_free_shipping_threshold')->value('value') ?? 0;
+        
+        return view('public.shop.cart', compact('cart', 'shippingCosts', 'freeThreshold'));
     }
 
     public function add(Request $request)
