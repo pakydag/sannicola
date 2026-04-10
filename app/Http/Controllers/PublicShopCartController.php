@@ -74,7 +74,11 @@ class PublicShopCartController extends Controller
         if (empty($cart)) {
             return redirect()->route('public.shop.index')->with('error', 'Il tuo carrello è vuoto.');
         }
-        return view('public.shop.checkout', compact('cart'));
+
+        $shippingCosts = \App\Models\ShopShippingCost::orderBy('nazione')->get();
+        $freeThreshold = \App\Models\Setting::where('key', 'shop_free_shipping_threshold')->value('value') ?? 0;
+
+        return view('public.shop.checkout', compact('cart', 'shippingCosts', 'freeThreshold'));
     }
 
     public function processCheckout(Request $request)
@@ -155,10 +159,18 @@ class PublicShopCartController extends Controller
         foreach ($cart as $item) {
             $totaleImponibile += $item['prezzo'] * $item['quantita'];
         }
-        $costoSpedizione = 5.00;
+
+        // Calcolo Dinamico Spedizione
+        $costoSpedizione = \App\Models\ShopShippingCost::where('nazione', $request->nazione)->value('costo') ?? 5.00;
+        $freeThreshold = \App\Models\Setting::where('key', 'shop_free_shipping_threshold')->value('value') ?? 0;
+
+        if ($freeThreshold > 0 && $totaleImponibile >= $freeThreshold) {
+            $costoSpedizione = 0;
+        }
+
         $totaleOrdine = $totaleImponibile + $costoSpedizione;
 
-        // 5. Create Order
+        // 5. Create the Order record
         $order = new \App\Models\ShopOrder();
         $order->customer_id = $customer->id;
         $order->numero_ordine = 'ORD-' . strtoupper(uniqid());
@@ -170,6 +182,7 @@ class PublicShopCartController extends Controller
         $order->totale_imponibile = $totaleImponibile;
         $order->totale_iva = 0; // Se c'è IVA specifica da calcolare, aggiungerla
         $order->totale_ordine = $totaleOrdine;
+        $order->costo_spedizione = $costoSpedizione;
 
         $order->spedizione_nome = $request->nome . ' ' . $request->cognome;
         $order->spedizione_indirizzo = $request->indirizzo;

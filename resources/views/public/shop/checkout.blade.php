@@ -188,13 +188,11 @@
                             <div class="sm:col-span-2">
                                 <label for="nazione" class="block text-sm font-medium text-gray-700">Nazione *</label>
                                 <div class="mt-1">
-                                    <select id="nazione" name="nazione" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <option value="Italia" selected>Italia</option>
-                                        <option value="San Marino">San Marino</option>
-                                        <option value="Svizzera">Svizzera</option>
-                                        <option value="Francia">Francia</option>
-                                        <option value="Germania">Germania</option>
-                                        <option value="Spagna">Spagna</option>
+                                    <select id="nazione" name="nazione" required x-model="nazione" @change="updateShipping()" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                        <option value="">Seleziona una nazione...</option>
+                                        @foreach($shippingCosts as $cost)
+                                            <option value="{{ $cost->nazione }}">{{ $cost->nazione }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -344,15 +342,24 @@
                     <dl class="mt-6 space-y-4 border-t border-gray-200 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <dt class="text-gray-600">Subtotale</dt>
-                            <dd class="font-medium text-gray-900">€ {{ number_format($totale, 2, ',', '.') }}</dd>
+                            <dd class="font-medium text-gray-900">€ <span x-text="formatPrice(subtotal)"></span></dd>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <dt class="text-gray-600">Spedizione</dt>
-                            <dd class="font-medium text-gray-900">€ 5,00</dd>
+                            <dd class="font-medium text-gray-900 group relative">
+                                <span x-show="shippingCost > 0">€ <span x-text="formatPrice(shippingCost)"></span></span>
+                                <span x-show="shippingCost == 0" class="text-emerald-600 font-bold uppercase tracking-wider text-xs">Gratis</span>
+                                
+                                <template x-if="freeThreshold > 0 && subtotal < freeThreshold">
+                                    <div class="absolute -top-10 right-0 bg-slate-800 text-white text-[10px] px-2 py-1 rounded shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                                        Gratis con altri € <span x-text="formatPrice(freeThreshold - subtotal)"></span>
+                                    </div>
+                                </template>
+                            </dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="text-base font-bold text-gray-900">Totale Da Pagare</dt>
-                            <dd class="text-2xl font-extrabold text-indigo-600">€ {{ number_format($totale + 5, 2, ',', '.') }}</dd>
+                            <dd class="text-2xl font-extrabold text-indigo-600">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
                         </div>
                     </dl>
 
@@ -374,6 +381,29 @@
         return {
             checkoutMode: '{{ Auth::check() ? 'login' : 'guest' }}',
             isAzienda: {{ old('is_azienda') ? 'true' : 'false' }},
+            nazione: '{{ old('nazione', 'Italia') }}',
+            subtotal: {{ $totale }},
+            shippingCost: 0,
+            freeThreshold: {{ $freeThreshold }},
+            costs: @json($shippingCosts->pluck('costo', 'nazione')),
+            
+            init() {
+                this.updateShipping();
+            },
+            
+            updateShipping() {
+                let cost = this.costs[this.nazione] !== undefined ? parseFloat(this.costs[this.nazione]) : 5.00;
+                
+                if (this.freeThreshold > 0 && this.subtotal >= this.freeThreshold) {
+                    this.shippingCost = 0;
+                } else {
+                    this.shippingCost = cost;
+                }
+            },
+            
+            formatPrice(price) {
+                return parseFloat(price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
         }
     }
 </script>

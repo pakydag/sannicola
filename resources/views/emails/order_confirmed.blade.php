@@ -23,7 +23,7 @@
                 @foreach($order->items as $item)
                 <tr>
                     <td style="padding: 10px; border-bottom: 1px solid #eee;">
-                        {{ $item->product_name }}<br>
+                        {{ $item->nome_prodotto }}<br>
                         <small style="color: #666;">
                             @if($item->colore) {{ $item->colore }} @endif
                             @if($item->taglia) / {{ $item->taglia }} @endif
@@ -41,7 +41,13 @@
                 </tr>
                 <tr>
                     <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold;">Spedizione:</td>
-                    <td style="padding: 10px; text-align: right;">€ 5,00</td>
+                    <td style="padding: 10px; text-align: right;">
+                        @if($order->costo_spedizione > 0)
+                            € {{ number_format($order->costo_spedizione, 2, ',', '.') }}
+                        @else
+                            Gratis
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold; font-size: 1.1em; border-top: 2px solid #ddd;">Totale Ordine:</td>

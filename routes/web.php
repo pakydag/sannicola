@@ -102,6 +102,13 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
         // Configurazione Avanzata Shop
         Route::get('configurazione', [\App\Http\Controllers\ShopConfigurationController::class, 'edit'])->name('configuration');
         Route::post('configurazione', [\App\Http\Controllers\ShopConfigurationController::class, 'update'])->name('configuration.update');
+        
+        // Gestione Spedizioni
+        Route::get('shipping-costs', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'index'])->name('shipping_costs.index');
+        Route::post('shipping-costs', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'store'])->name('shipping_costs.store');
+        Route::patch('shipping-costs/threshold', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'updateThreshold'])->name('shipping_costs.threshold');
+        Route::delete('shipping-costs/{shippingCost}', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'destroy'])->name('shipping_costs.destroy');
+
         Route::resource('tags', \App\Http\Controllers\TagController::class);
     });
 

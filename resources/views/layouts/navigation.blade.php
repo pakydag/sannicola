@@ -76,7 +76,10 @@
                         Gestione Ordini
                     </a>
                     <a href="{{ route('admin.shop.configuration') }}" class="{{ request()->routeIs('admin.shop.configuration') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
-                        <span class="ml-7">Configurazione</span>
+                        <span class="ml-7">Configurazione Generali</span>
+                    </a>
+                    <a href="{{ route('admin.shop.shipping_costs.index') }}" class="{{ request()->routeIs('admin.shop.shipping_costs.index') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Spese di Spedizione</span>
                     </a>
                 </div>
             </div>
@@ -229,6 +232,7 @@
                     <a href="{{ route('admin.shop.prodotti.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Prodotti & Inventario</a>
                     <a href="{{ route('admin.shop.ordini.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Gestione Ordini</a>
                     <a href="{{ route('admin.shop.configuration') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Configurazione Shop</a>
+                    <a href="{{ route('admin.shop.shipping_costs.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Spese di Spedizione</a>
                 </div>
                 @endif
 
