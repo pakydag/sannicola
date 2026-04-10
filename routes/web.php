@@ -102,7 +102,6 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
         // Configurazione Avanzata Shop
         Route::get('configurazione', [\App\Http\Controllers\ShopConfigurationController::class, 'edit'])->name('configuration');
         Route::post('configurazione', [\App\Http\Controllers\ShopConfigurationController::class, 'update'])->name('configuration.update');
-    });
         Route::resource('tags', \App\Http\Controllers\TagController::class);
     });
 
