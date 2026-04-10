@@ -125,7 +125,22 @@
                         </div>
 
                         <!-- VARIANTI -->
-                        <div x-show="tab === 'varianti'" class="space-y-4" style="display:none;" x-data="{ variants: {{ json_encode(old('variants', $prodotto->variants->count() ? $prodotto->variants->toArray() : [['sku'=>'', 'ean'=>'', 'colore'=>'', 'taglia'=>'', 'prezzo'=>'0.00', 'prezzo_scontato'=>'', 'quantita'=>0, 'foto'=>'']])) }} }">
+                        <div x-show="tab === 'varianti'" class="space-y-4" style="display:none;" 
+                            x-data="{ 
+                                variants: {{ json_encode(old('variants', $prodotto->variants->count() ? $prodotto->variants->toArray() : [['sku'=>'', 'ean'=>'', 'colore'=>'', 'taglia'=>'', 'prezzo'=>'0.00', 'prezzo_scontato'=>'', 'quantita'=>0, 'foto'=>'']])) }},
+                                updateSku(v) {
+                                    if (v.sku && v.sku.includes('_') && !v.sku.startsWith(document.querySelector('input[name=sku_padre]').value)) {
+                                        // Se lo SKU è già stato personalizzato pesantemente, non lo sovrascriviamo? 
+                                        // In realtà l'utente ha chiesto che si compili in automatico ma possa modificarlo.
+                                    }
+                                    let base = document.querySelector('input[name=sku_padre]').value.trim();
+                                    if(!base) return;
+                                    let parts = [base];
+                                    if(v.colore && v.colore.trim()) parts.push(v.colore.trim());
+                                    if(v.taglia && v.taglia.trim()) parts.push(v.taglia.trim());
+                                    v.sku = parts.join('_').toLowerCase().replace(/ /g, '_').replace(/[^a-z0-9_]/g, '');
+                                }
+                            }">
                             <label class="block text-gray-700 font-bold mb-2">Combinazioni B2B</label>
                             <div class="overflow-x-auto">
                                 <table class="min-w-full text-sm">
@@ -148,8 +163,8 @@
                                                 <input type="hidden" :name="`variants[${index}][id]`" x-model="v.id">
                                                 <td class="p-1 border"><input type="text" :name="`variants[${index}][sku]`" x-model="v.sku" class="w-full text-xs p-1 border rounded"></td>
                                                 <td class="p-1 border"><input type="text" :name="`variants[${index}][ean]`" x-model="v.ean" class="w-full text-xs p-1 border rounded"></td>
-                                                <td class="p-1 border"><input type="text" :name="`variants[${index}][colore]`" x-model="v.colore" class="w-full text-xs p-1 border rounded"></td>
-                                                <td class="p-1 border"><input type="text" :name="`variants[${index}][taglia]`" x-model="v.taglia" class="w-full text-xs p-1 border rounded"></td>
+                                                <td class="p-1 border"><input type="text" :name="`variants[${index}][colore]`" x-model="v.colore" @input="updateSku(v)" class="w-full text-xs p-1 border rounded"></td>
+                                                <td class="p-1 border"><input type="text" :name="`variants[${index}][taglia]`" x-model="v.taglia" @input="updateSku(v)" class="w-full text-xs p-1 border rounded"></td>
                                                 <td class="p-1 border"><input type="number" step="0.01" :name="`variants[${index}][prezzo]`" x-model="v.prezzo" required class="w-full text-xs p-1 border rounded text-right"></td>
                                                 <td class="p-1 border"><input type="number" step="0.01" :name="`variants[${index}][prezzo_scontato]`" x-model="v.prezzo_scontato" class="w-full text-xs p-1 border rounded text-right"></td>
                                                 <td class="p-1 border"><input type="number" step="1" :name="`variants[${index}][quantita]`" x-model="v.quantita" class="w-full text-xs p-1 border rounded text-right"></td>

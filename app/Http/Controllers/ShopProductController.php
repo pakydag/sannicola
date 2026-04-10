@@ -104,7 +104,7 @@ class ShopProductController extends Controller
             }
         }
 
-        return redirect()->route('admin.shop.prodotti.index')->with('success', 'Prodotto creato con successo.');
+        return redirect()->route('admin.shop.prodotti.edit', $prodotto)->with('success', 'Prodotto creato con successo.');
     }
 
     public function edit(ShopProduct $prodotto)
@@ -192,7 +192,7 @@ class ShopProductController extends Controller
         }
         $prodotto->variants()->whereNotIn('id', $keptVariantIds)->delete();
 
-        return redirect()->route('admin.shop.prodotti.index')->with('success', 'Prodotto aggiornato con successo.');
+        return redirect()->route('admin.shop.prodotti.edit', $prodotto)->with('success', 'Prodotto aggiornato con successo.');
     }
 
     public function destroy(ShopProduct $prodotto)
