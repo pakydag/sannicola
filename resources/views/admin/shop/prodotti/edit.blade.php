@@ -52,7 +52,9 @@
                                                     $cats = $categorie->where('parent_id', $macro->id);
                                                 @endphp
                                                 @foreach($cats as $cat)
-                                                    <option disabled class="font-bold text-gray-400">-- {{ $cat->nome }} --</option>
+                                                    <option value="{{ $cat->id }}" {{ old('shop_category_id', $prodotto->shop_category_id) == $cat->id ? 'selected' : '' }} class="font-bold">
+                                                        {{ $cat->nome }}
+                                                    </option>
                                                     @php
                                                         $subs = $categorie->where('parent_id', $cat->id);
                                                     @endphp
