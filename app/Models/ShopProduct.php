@@ -35,4 +35,22 @@ class ShopProduct extends Model
     {
         return $this->belongsToMany(Tag::class, 'shop_product_tags');
     }
+
+    public function getLowestPrice()
+    {
+        $minPrice = $this->variants->min('prezzo');
+        $minDiscounted = $this->variants->where('prezzo_scontato', '>', 0)->min('prezzo_scontato');
+
+        if ($minDiscounted && $minDiscounted < $minPrice) {
+            return [
+                'prezzo' => $minPrice,
+                'prezzo_scontato' => $minDiscounted
+            ];
+        }
+
+        return [
+            'prezzo' => $minPrice,
+            'prezzo_scontato' => null
+        ];
+    }
 }

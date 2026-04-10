@@ -25,13 +25,15 @@ class PublicShopCartController extends Controller
         
         $cartKey = $variant->id;
         
-        // Verifica disponibilità in magazzino (opzionale ma consigliato)
         $qtyRichiesta = $request->quantita;
         if (isset($cart[$cartKey])) {
             $qtyRichiesta += $cart[$cartKey]['quantita'];
         }
-        
-        if ($qtyRichiesta > $variant->quantita) {
+
+        $settings = \App\Models\Setting::pluck('value', 'key')->all();
+        $isInfinite = ($settings['shop_stock_infinite'] ?? '0') == '1';
+
+        if (!$isInfinite && $qtyRichiesta > $variant->quantita) {
              return redirect()->back()->with('error', 'Quantità richiesta superiore alla disponibilità in magazzino.');
         }
 
@@ -220,9 +222,12 @@ class PublicShopCartController extends Controller
 
             // Aggiorna Magazzino
             if ($variant) {
-                // Previene che la quantità vada sotto 0 se possibile
-                $variant->quantita = max(0, $variant->quantita - $item['quantita']);
-                $variant->save();
+                $isInfinite = \App\Models\Setting::where('key', 'shop_stock_infinite')->value('value') == '1';
+                if (!$isInfinite) {
+                    // Previene che la quantità vada sotto 0 se possibile
+                    $variant->quantita = max(0, $variant->quantita - $item['quantita']);
+                    $variant->save();
+                }
             }
         }
 

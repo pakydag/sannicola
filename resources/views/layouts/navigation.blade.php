@@ -75,6 +75,9 @@
                         <svg class="text-indigo-400 mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                         Gestione Ordini
                     </a>
+                    <a href="{{ route('admin.shop.configuration') }}" class="{{ request()->routeIs('admin.shop.configuration') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
+                        <span class="ml-7">Configurazione</span>
+                    </a>
                 </div>
             </div>
             @endif
@@ -225,6 +228,7 @@
                     <a href="{{ route('admin.shop.collezioni.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Collezioni</a>
                     <a href="{{ route('admin.shop.prodotti.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Prodotti & Inventario</a>
                     <a href="{{ route('admin.shop.ordini.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Gestione Ordini</a>
+                    <a href="{{ route('admin.shop.configuration') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Configurazione Shop</a>
                 </div>
                 @endif
 

@@ -61,7 +61,7 @@
 
         <!-- Dettagli e Carrello -->
         <div class="mt-10 px-4 sm:px-0 lg:mt-0" 
-             x-data='productB2C(@json($prodotto->variants))'>
+             x-data='productB2C(@json($prodotto->variants), @json(($settings["shop_stock_infinite"] ?? "0") == "1"))'>
             <h2 class="text-3xl tracking-tight text-gray-900 font-extrabold">{{ $prodotto->nome }}</h2>
             @if($prodotto->sku_padre)
                 <p class="text-sm text-gray-500 mt-2">SKU: {{ $prodotto->sku_padre }}</p>
@@ -144,11 +144,18 @@
                             
                             <!-- Check Disponibilità stock -->
                             <template x-if="currentVariant">
-                                <span class="ml-4 text-sm" :class="currentVariant.quantita > 0 ? 'text-green-600' : 'text-red-600'">
-                                    <span x-show="currentVariant.quantita > 0">
-                                        Disponibile (<span x-text="currentVariant.quantita"></span>)
-                                    </span>
-                                    <span x-show="currentVariant.quantita <= 0">Esaurito</span>
+                                <span class="ml-4 text-sm" :class="(infiniteStock || (currentVariant && currentVariant.quantita > 0)) ? 'text-green-600' : 'text-red-600'">
+                                    <template x-if="infiniteStock">
+                                        <span>Disponibile</span>
+                                    </template>
+                                    <template x-if="!infiniteStock">
+                                        <span>
+                                            <span x-show="currentVariant && currentVariant.quantita > 0">
+                                                Disponibile (<span x-text="currentVariant.quantita"></span>)
+                                            </span>
+                                            <span x-show="!currentVariant || currentVariant.quantita <= 0">Esaurito</span>
+                                        </span>
+                                    </template>
                                 </span>
                             </template>
                         </div>
@@ -161,12 +168,12 @@
 
                     <div class="mt-6 flex">
                         <button type="submit" 
-                                :disabled="selectedVariantId === null || (currentVariant && currentVariant.quantita <= 0)"
+                                :disabled="selectedVariantId === null || (!infiniteStock && currentVariant && currentVariant.quantita <= 0)"
                                 class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
-                            <span x-text="currentVariant && currentVariant.quantita > 0 ? 'Aggiungi al Carrello' : 'Prodotto Esaurito'"></span>
+                            <span x-text="(infiniteStock || (currentVariant && currentVariant.quantita > 0)) ? 'Aggiungi al Carrello' : 'Prodotto Esaurito'"></span>
                         </button>
                     </div>
                 </form>
@@ -191,8 +198,9 @@
 @push('scripts')
 <script>
     document.addEventListener('alpine:init', () => {
-        Alpine.data('productB2C', (variantsRaw) => ({
+        Alpine.data('productB2C', (variantsRaw, infiniteStock = false) => ({
             variants: variantsRaw,
+            infiniteStock: infiniteStock,
             selectedColor: null,
             selectedSize: null,
             selectedVariantId: null,

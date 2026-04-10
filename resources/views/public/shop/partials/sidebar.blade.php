@@ -37,8 +37,15 @@
     <div class="p-2">
         <nav class="space-y-1">
             @foreach($displayCategories as $item)
-                <div x-data="{ open: false }" class="group">
-                    <div class="flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-all cursor-pointer @if(isset($categoria) && ($categoria->id == $item->id || $categoria->parent_id == $item->id)) bg-indigo-50/50 @endif">
+                @php
+                    $isOpen = isset($categoria) && (
+                        $categoria->id == $item->id || 
+                        $categoria->parent_id == $item->id || 
+                        ($categoria->parent && $categoria->parent->parent_id == $item->id)
+                    );
+                @endphp
+                <div x-data="{ open: {{ $isOpen ? 'true' : 'false' }} }" class="group">
+                    <div class="flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-all cursor-pointer @if($isOpen) bg-indigo-50/50 @endif">
                         <a href="{{ route('public.shop.categoria', $item->slug) }}" class="flex-grow text-sm font-semibold @if(isset($categoria) && $categoria->id == $item->id) text-indigo-600 @else text-gray-700 @endif group-hover:text-indigo-600 transition-colors">
                             {{ $item->nome }}
                         </a>
@@ -54,7 +61,13 @@
                     @if($item->children->count() > 0)
                         <div x-show="open" x-cloak x-collapse class="pl-4 pr-2 pb-2 space-y-1">
                             @foreach($item->children as $child)
-                                <div x-data="{ subOpen: false }">
+                                @php
+                                    $isSubOpen = isset($categoria) && (
+                                        $categoria->id == $child->id || 
+                                        $categoria->parent_id == $child->id
+                                    );
+                                @endphp
+                                <div x-data="{ subOpen: {{ $isSubOpen ? 'true' : 'false' }} }">
                                     <div class="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-white hover:shadow-sm transition-all @if(isset($categoria) && $categoria->id == $child->id) bg-white shadow-sm ring-1 ring-indigo-100 @endif">
                                         <a href="{{ route('public.shop.categoria', $child->slug) }}" class="flex-grow text-xs @if(isset($categoria) && $categoria->id == $child->id) text-indigo-600 font-bold @else text-gray-500 @endif hover:text-indigo-600">
                                             {{ $child->nome }}

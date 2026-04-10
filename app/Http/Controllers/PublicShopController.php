@@ -9,14 +9,15 @@ use Illuminate\Http\Request;
 
 class PublicShopController extends Controller
 {
-    protected $global_seo;
+    protected $settings;
 
     public function __construct()
     {
+        $this->settings = \App\Models\Setting::pluck('value', 'key')->all();
         $this->global_seo = [
-            'home_seo_title' => \App\Models\Setting::where('key', 'home_seo_title')->value('value'),
-            'home_seo_description' => \App\Models\Setting::where('key', 'home_seo_description')->value('value'),
-            'home_seo_image' => \App\Models\Setting::where('key', 'home_seo_image')->value('value'),
+            'home_seo_title' => $this->settings['home_seo_title'] ?? null,
+            'home_seo_description' => $this->settings['home_seo_description'] ?? null,
+            'home_seo_image' => $this->settings['home_seo_image'] ?? null,
         ];
     }
 
@@ -32,7 +33,8 @@ class PublicShopController extends Controller
         ];
 
         $collezioni = ShopCollection::where('visibile', true)->orderBy('ordine')->get();
-        return view('public.shop.index', compact('collezioni', 'seo'));
+        $settings = $this->settings;
+        return view('public.shop.index', compact('collezioni', 'seo', 'settings'));
     }
 
     public function collezione($slug)
@@ -62,7 +64,8 @@ class PublicShopController extends Controller
             'url' => url()->current()
         ];
 
-        return view('public.shop.collezione', compact('collezione', 'prodotti', 'seo'));
+        $settings = $this->settings;
+        return view('public.shop.collezione', compact('collezione', 'prodotti', 'seo', 'settings'));
     }
 
     public function categoria($slug)
@@ -97,7 +100,8 @@ class PublicShopController extends Controller
             'url' => url()->current()
         ];
 
-        return view('public.shop.categoria', compact('categoria', 'prodotti', 'seo'));
+        $settings = $this->settings;
+        return view('public.shop.categoria', compact('categoria', 'prodotti', 'seo', 'settings'));
     }
 
     public function prodotto($collezione_slug, $prodotto_slug)
@@ -116,6 +120,7 @@ class PublicShopController extends Controller
             'url' => url()->current()
         ];
 
-        return view('public.shop.prodotto', compact('prodotto', 'collezione', 'seo'));
+        $settings = $this->settings;
+        return view('public.shop.prodotto', compact('prodotto', 'collezione', 'seo', 'settings'));
     }
 }
