@@ -1,13 +1,15 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">Gestione Spedizioni Shop</h2>
+    </x-slot>
 
-@section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        
-        <div class="mb-8 flex items-center justify-between">
-            <h2 class="text-3xl font-extrabold text-slate-900">Gestione Spedizioni Shop</h2>
-            <a href="{{ route('admin.shop.configuration') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">&larr; Torna alla Configurazione</a>
-        </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            
+            <div class="mb-8 flex items-center justify-between">
+                <h3 class="text-2xl font-extrabold text-slate-900">Configurazione Costi Spedizione</h3>
+                <a href="{{ route('admin.shop.configuration') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">&larr; Torna alla Configurazione</a>
+            </div>
 
         @if(session('success'))
             <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-400 p-4 rounded-md shadow-sm">
@@ -130,4 +132,4 @@
 
     </div>
 </div>
-@endsection
+</x-app-layout>
