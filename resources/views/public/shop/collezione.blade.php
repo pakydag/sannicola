@@ -79,23 +79,27 @@
                                 @endphp
                                 
                                 <div class="flex flex-col">
-                                    @if($prezzo_scontato > 0)
-                                        <div class="flex flex-col">
-                                            @if($showPreview && $prodotto->variants->count() > 1)
-                                                <span class="text-[10px] text-gray-400 uppercase font-bold mb-1">A partire da</span>
-                                            @endif
-                                            <span class="text-lg font-black text-red-600 leading-none">€ {{ number_format($prezzo_scontato, 2, ',', '.') }}</span>
-                                            <span class="text-xs line-through text-gray-400 mt-1">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
-                                        </div>
-                                    @elseif($prezzo > 0)
-                                        <div class="flex flex-col">
-                                            @if($showPreview && $prodotto->variants->count() > 1)
-                                                <span class="text-[10px] text-gray-400 uppercase font-bold mb-1">A partire da</span>
-                                            @endif
-                                            <span class="text-lg font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
-                                        </div>
+                                    @if($showPreview)
+                                        @if($prezzo_scontato > 0)
+                                            <div class="flex flex-col">
+                                                @if($prodotto->variants->count() > 1)
+                                                    <span class="text-[10px] text-gray-400 uppercase font-bold mb-1">A partire da</span>
+                                                @endif
+                                                <span class="text-lg font-black text-red-600 leading-none">€ {{ number_format($prezzo_scontato, 2, ',', '.') }}</span>
+                                                <span class="text-xs line-through text-gray-400 mt-1">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                            </div>
+                                        @elseif($prezzo > 0)
+                                            <div class="flex flex-col">
+                                                @if($prodotto->variants->count() > 1)
+                                                    <span class="text-[10px] text-gray-400 uppercase font-bold mb-1">A partire da</span>
+                                                @endif
+                                                <span class="text-lg font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                            </div>
+                                        @else
+                                            <span class="text-sm font-bold text-gray-400 italic">Prezzo su richiesta</span>
+                                        @endif
                                     @else
-                                        <span class="text-sm font-bold text-gray-400 italic">Dettagli</span>
+                                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest text-indigo-500">Vedi Dettagli</span>
                                     @endif
                                 </div>
                                 
