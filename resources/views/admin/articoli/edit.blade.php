@@ -391,6 +391,16 @@
                                     </div>
                                     <span class="text-xs font-bold uppercase" :class="activeTab === 'shop_brands' ? 'text-orange-700' : 'text-gray-600'">Shop Marche</span>
                                 </button>
+                                
+                                <!-- Annuncio (Top Announcement) -->
+                                <button @click="activeTab = 'announcement'" 
+                                    :class="{'ring-2 ring-indigo-500 bg-indigo-50 border-indigo-200': activeTab === 'announcement', 'bg-white border-gray-200 hover:border-indigo-300': activeTab !== 'announcement'}"
+                                    class="flex flex-col items-center justify-center p-4 rounded-xl border transition-all duration-200 group">
+                                    <div :class="activeTab === 'announcement' ? 'bg-indigo-600' : 'bg-gray-100 group-hover:bg-indigo-100'" class="w-12 h-12 rounded-lg flex items-center justify-center mb-2 transition-colors">
+                                        <svg class="w-6 h-6" :class="activeTab === 'announcement' ? 'text-white' : 'text-gray-500 group-hover:text-indigo-600'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.167M12 13h1m8-7V5a2 2 0 00-2-2H9a2 2 0 00-2 2v1h10a2 2 0 012 2v3m2 4h-2.343M11 13v9m0-9a3 3 0 013-3h3a3 3 0 013 3v9m-9 0h9"></path></svg>
+                                    </div>
+                                    <span class="text-xs font-bold" :class="activeTab === 'announcement' ? 'text-indigo-700' : 'text-gray-600'">Annuncio Top</span>
+                                </button>
                              @endif
 
                             <!-- Global Widget Selector (Special) -->
@@ -436,6 +446,51 @@
                                         <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi un'altra foto
                                     </button>
                                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Gallery</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Form Top Announcement -->
+                        <div x-show="activeTab === 'announcement'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
+                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="tipo" value="top_announcement">
+                                <div class="mb-4">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin *</label>
+                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Messaggio Comunicazione *</label>
+                                        <input type="text" name="data[message]" required placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo</label>
+                                        <select name="data[bg_color]" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                            <option value="bg-indigo-600">Indaco (Default)</option>
+                                            <option value="bg-gray-900">Nero</option>
+                                            <option value="bg-red-600">Rosso (Emergenza)</option>
+                                            <option value="bg-yellow-500">Giallo (Avviso)</option>
+                                            <option value="bg-green-600">Verde (Successo)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Icona (Emoji)</label>
+                                        <input type="text" name="data[icon]" placeholder="Es: 📣 o 🚚" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Testo Bottone (Opzionale)</label>
+                                        <input type="text" name="data[button_text]" placeholder="Es: Scopri di più" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Link Bottone</label>
+                                        <input type="text" name="data[button_url]" placeholder="Es: /shop o https://..." class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="text-right mt-4">
+                                    <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Annuncio</button>
                                 </div>
                             </form>
                         </div>

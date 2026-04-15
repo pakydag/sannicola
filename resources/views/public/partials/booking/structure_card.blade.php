@@ -6,7 +6,14 @@
     <!-- Immagine -->
     <div class="relative h-64">
         @if($s->photos->count() > 0)
-            <img src="{{ asset($s->photos->first()->path) }}" alt="{{ $s->nome }}" class="w-full h-full object-cover">
+            @php
+                $photoPath = $s->photos->first()->path;
+                if ($photoPath && !Str::startsWith($photoPath, ['http://', 'https://'])) {
+                    $cleanPath = Str::startsWith($photoPath, 'storage/') ? Str::after($photoPath, 'storage/') : $photoPath;
+                    $photoPath = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                }
+            @endphp
+            <img src="{{ $photoPath }}" alt="{{ $s->nome }}" class="w-full h-full object-cover">
         @else
             <div class="w-full h-full bg-indigo-50 flex items-center justify-center">
                 <svg class="h-16 w-16 text-indigo-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -184,8 +184,6 @@
                                     @endif
                                 </div>
                                 <div class="text-right">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <p class="text-xs text-gray-400 font-bold uppercase">5.0 Recensioni</p>
                                 </div>
                             </div>
 

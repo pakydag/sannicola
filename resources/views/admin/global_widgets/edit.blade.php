@@ -446,6 +446,48 @@
                                     <option value="carousel" {{ (old('data.style', $globalWidget->data['style'] ?? 'grid') == 'carousel') ? 'selected' : '' }}>Slider Carosello</option>
                                 </select>
                             </div>
+
+                        <!-- Top Announcement -->
+                        @elseif($globalWidget->tipo === 'top_announcement')
+                            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mt-6">
+                                <h4 class="font-bold text-indigo-900 mb-4 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Configurazione Annuncio
+                                </h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Messaggio Comunicazione *</label>
+                                        <input type="text" name="data[message]" value="{{ old('data.message', $globalWidget->data['message'] ?? '') }}" required placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo</label>
+                                        <select name="data[bg_color]" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                            <option value="bg-indigo-600" {{ (old('data.bg_color', $globalWidget->data['bg_color'] ?? '') == 'bg-indigo-600') ? 'selected' : '' }}>Indaco (Default)</option>
+                                            <option value="bg-gray-900" {{ (old('data.bg_color', $globalWidget->data['bg_color'] ?? '') == 'bg-gray-900') ? 'selected' : '' }}>Nero</option>
+                                            <option value="bg-red-600" {{ (old('data.bg_color', $globalWidget->data['bg_color'] ?? '') == 'bg-red-600') ? 'selected' : '' }}>Rosso (Emergenza)</option>
+                                            <option value="bg-yellow-500" {{ (old('data.bg_color', $globalWidget->data['bg_color'] ?? '') == 'bg-yellow-500') ? 'selected' : '' }}>Giallo (Avviso)</option>
+                                            <option value="bg-green-600" {{ (old('data.bg_color', $globalWidget->data['bg_color'] ?? '') == 'bg-green-600') ? 'selected' : '' }}>Verde (Successo)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Icona (Emoji)</label>
+                                        <input type="text" name="data[icon]" value="{{ old('data.icon', $globalWidget->data['icon'] ?? '') }}" placeholder="Es: 📣 o 🚚" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Testo Bottone (Opzionale)</label>
+                                        <input type="text" name="data[button_text]" value="{{ old('data.button_text', $globalWidget->data['button_text'] ?? '') }}" placeholder="Es: Scopri di più" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Link Bottone</label>
+                                        <input type="text" name="data[button_url]" value="{{ old('data.button_url', $globalWidget->data['button_url'] ?? '') }}" placeholder="Es: /shop o https://..." class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
                         @endif
 
                         <div class="text-right mt-8 pt-4 border-t">

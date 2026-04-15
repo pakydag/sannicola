@@ -22,14 +22,28 @@
             <!-- Layout Stacked (Foto Sopra) -->
             <div class="flex flex-col">
                 @if(!empty($widget->data['video']))
+                    @php
+                        $videoUrl = $widget->data['video'];
+                        if ($videoUrl && !Str::startsWith($videoUrl, ['http://', 'https://'])) {
+                            $cleanPath = Str::startsWith($videoUrl, 'storage/') ? Str::after($videoUrl, 'storage/') : $videoUrl;
+                            $videoUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                        }
+                    @endphp
                     <div class="h-64 md:h-96 relative bg-black">
                         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
-                            <source src="{{ asset($widget->data['video']) }}" type="video/mp4">
+                            <source src="{{ $videoUrl }}" type="video/mp4">
                         </video>
                     </div>
                 @elseif(!empty($widget->data['image']))
+                    @php
+                        $imageUrl = $widget->data['image'];
+                        if ($imageUrl && !Str::startsWith($imageUrl, ['http://', 'https://'])) {
+                            $cleanPath = Str::startsWith($imageUrl, 'storage/') ? Str::after($imageUrl, 'storage/') : $imageUrl;
+                            $imageUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                        }
+                    @endphp
                     <div class="h-64 md:h-96 relative bg-gray-200">
-                        <img src="{{ asset($widget->data['image']) }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
+                        <img src="{{ $imageUrl }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
                     </div>
                 @endif
 
@@ -54,14 +68,28 @@
             <!-- Layout Side (Foto a Sinistra) - Default -->
             <div class="flex flex-col md:flex-row items-stretch">
                 @if(!empty($widget->data['video']))
+                    @php
+                        $videoUrl = $widget->data['video'];
+                        if ($videoUrl && !Str::startsWith($videoUrl, ['http://', 'https://'])) {
+                            $cleanPath = Str::startsWith($videoUrl, 'storage/') ? Str::after($videoUrl, 'storage/') : $videoUrl;
+                            $videoUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                        }
+                    @endphp
                     <div class="md:w-1/2 relative min-h-[300px] bg-black">
                         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
-                            <source src="{{ asset($widget->data['video']) }}" type="video/mp4">
+                            <source src="{{ $videoUrl }}" type="video/mp4">
                         </video>
                     </div>
                 @elseif(!empty($widget->data['image']))
+                    @php
+                        $imageUrl = $widget->data['image'];
+                        if ($imageUrl && !Str::startsWith($imageUrl, ['http://', 'https://'])) {
+                            $cleanPath = Str::startsWith($imageUrl, 'storage/') ? Str::after($imageUrl, 'storage/') : $imageUrl;
+                            $imageUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                        }
+                    @endphp
                     <div class="md:w-1/2 relative min-h-[300px] bg-gray-200">
-                        <img src="{{ asset($widget->data['image']) }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
+                        <img src="{{ $imageUrl }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
                     </div>
                 @endif
                 

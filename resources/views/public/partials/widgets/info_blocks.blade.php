@@ -17,9 +17,16 @@
             @if(!empty($item['image']) || !empty($item['text']))
                 <div class="flex flex-col items-center text-center group">
                     @if(!empty($item['image']))
+                        @php
+                            $iUrl = $item['image'];
+                            if ($iUrl && !Str::startsWith($iUrl, ['http://', 'https://'])) {
+                                $cleanPath = Str::startsWith($iUrl, 'storage/') ? Str::after($iUrl, 'storage/') : $iUrl;
+                                $iUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                            }
+                        @endphp
                         <div class="mb-5 relative">
                             <div class="absolute -inset-2 bg-indigo-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            <img src="{{ asset($item['image']) }}" alt="Icon" class="h-16 w-16 object-contain relative transition-transform duration-300 group-hover:scale-110">
+                            <img src="{{ $iUrl }}" alt="Icon" class="h-16 w-16 object-contain relative transition-transform duration-300 group-hover:scale-110">
                         </div>
                     @endif
                     @if(!empty($item['text']))

@@ -6,7 +6,14 @@
         preload="metadata"
         {{ !empty($widget->data['autoplay']) ? 'autoplay muted playsinline' : '' }}
         {{ !empty($widget->data['loop']) ? 'loop' : '' }}>
-        <source src="{{ asset($widget->data['video_url'] ?? '') }}" type="video/mp4">
+        @php
+            $videoUrl = $widget->data['video_url'] ?? '';
+            if ($videoUrl && !Str::startsWith($videoUrl, ['http://', 'https://'])) {
+                $cleanPath = Str::startsWith($videoUrl, 'storage/') ? Str::after($videoUrl, 'storage/') : $videoUrl;
+                $videoUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+            }
+        @endphp
+        <source src="{{ $videoUrl }}" type="video/mp4">
         
         Il tuo browser non supporta il tag video.
     </video>

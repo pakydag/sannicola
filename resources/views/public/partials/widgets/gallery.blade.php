@@ -29,16 +29,30 @@
                     @if(!empty($photo['url']) || !empty($photo['video_url']))
                         <div class="swiper-slide h-64 sm:h-96 md:h-[500px]">
                             @if(!empty($photo['video_url']))
+                                @php
+                                    $vUrl = $photo['video_url'];
+                                    if ($vUrl && !Str::startsWith($vUrl, ['http://', 'https://'])) {
+                                        $cleanPath = Str::startsWith($vUrl, 'storage/') ? Str::after($vUrl, 'storage/') : $vUrl;
+                                        $vUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                                    }
+                                @endphp
                                 <video autoplay loop muted playsinline class="w-full h-full object-cover">
-                                    <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
+                                    <source src="{{ $vUrl }}" type="video/mp4">
                                 </video>
                             @elseif(!empty($photo['url']))
+                                @php
+                                    $iUrl = $photo['url'];
+                                    if ($iUrl && !Str::startsWith($iUrl, ['http://', 'https://'])) {
+                                        $cleanPath = Str::startsWith($iUrl, 'storage/') ? Str::after($iUrl, 'storage/') : $iUrl;
+                                        $iUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                                    }
+                                @endphp
                                 @if(!empty($photo['link']))
                                     <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
-                                        <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
+                                        <img src="{{ $iUrl }}" class="w-full h-full object-cover" alt="Image">
                                     </a>
                                 @else
-                                    <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
+                                    <img src="{{ $iUrl }}" class="w-full h-full object-cover" alt="Image">
                                 @endif
                             @endif
                         </div>

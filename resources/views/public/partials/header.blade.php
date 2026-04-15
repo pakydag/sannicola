@@ -3,7 +3,7 @@
     $shopEnabled = \App\Models\Setting::where('key', 'shop_enabled')->value('value');
     $bookingEnabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value');
 @endphp
-<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" :class="scrolled ? 'bg-white shadow-md border-gray-200' : 'bg-gradient-to-b from-black/60 to-transparent border-white/50 shadow-none'" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b">
+<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" :class="scrolled ? 'bg-white shadow-md border-gray-200' : 'bg-gradient-to-b from-black/60 to-transparent border-white/50 shadow-none'" class="sticky top-0 z-50 transition-all duration-300 border-b">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -20,8 +20,15 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
-                        @if($siteLogo)
-                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" class="h-10 w-auto object-contain">
+                        @php
+                            $logoUrl = $siteLogo;
+                            if ($logoUrl && !Str::startsWith($logoUrl, ['http://', 'https://'])) {
+                                $cleanPath = Str::startsWith($logoUrl, 'storage/') ? Str::after($logoUrl, 'storage/') : $logoUrl;
+                                $logoUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
+                            }
+                        @endphp
+                        @if($logoUrl)
+                            <img src="{{ $logoUrl }}" alt="{{ config('app.name') }}" class="h-10 w-auto object-contain">
                         @else
                             {{ config('app.name', 'Il Mio Sito') }}
                         @endif

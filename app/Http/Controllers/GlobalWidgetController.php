@@ -33,7 +33,7 @@ class GlobalWidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'required|string|max:255',
-            'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid,image_text_image,booking_search,info_blocks,booking_structures,map,shop_collection,shop_featured_products,shop_brands',
+            'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid,image_text_image,booking_search,info_blocks,booking_structures,map,shop_collection,shop_featured_products,shop_brands,top_announcement',
             'data' => 'nullable|array',
         ]);
 

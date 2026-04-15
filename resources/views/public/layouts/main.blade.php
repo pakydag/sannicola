@@ -39,6 +39,17 @@
 <body class="font-sans antialiased text-gray-900 bg-gray-50 flex flex-col min-h-screen">
     <!-- Tracking Scripts (Body) -->
     @include('public.partials.tracking_scripts_body')
+
+    @php
+        // Recupera il primo widget di tipo "top_announcement" creato
+        $topAnnouncement = \App\Models\GlobalWidget::where('tipo', 'top_announcement')->first();
+    @endphp
+
+    @if($topAnnouncement)
+        <div id="top-announcement-container" class="relative z-[60]">
+            @include('public.partials.widgets.top_announcement', ['widget' => $topAnnouncement])
+        </div>
+    @endif
     
     @include('public.partials.header')
 
