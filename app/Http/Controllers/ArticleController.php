@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Section;
+use App\Models\ShopCollection;
+use App\Models\ShopCategory;
+use App\Models\ShopProduct;
+use App\Models\ShopBrand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -156,7 +160,22 @@ class ArticleController extends Controller
     public function edit(Article $articoli) // Laravel route model binding usa il singolare o quello definito nella rotta
     {
         $sezioni = Section::orderBy('ordine')->get();
-        return view('admin.articoli.edit', ['articolo' => $articoli, 'sezioni' => $sezioni]);
+        
+        // Dati per i widget dello Shop (se presenti/abilitati)
+        $shop_enabled = \App\Models\Setting::where('key', 'shop_enabled')->value('value') == '1';
+        $shop_collections = $shop_enabled ? ShopCollection::orderBy('nome')->get() : collect();
+        $shop_categories = $shop_enabled ? ShopCategory::with('children')->whereNull('parent_id')->orderBy('nome')->get() : collect();
+        $shop_products = $shop_enabled ? ShopProduct::orderBy('nome')->get() : collect();
+        $shop_brands = $shop_enabled ? ShopBrand::orderBy('nome')->get() : collect();
+
+        return view('admin.articoli.edit', [
+            'articolo' => $articoli, 
+            'sezioni' => $sezioni,
+            'shop_collections' => $shop_collections,
+            'shop_categories' => $shop_categories,
+            'shop_products' => $shop_products,
+            'shop_brands' => $shop_brands
+        ]);
     }
 
     /**

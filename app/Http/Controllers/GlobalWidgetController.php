@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\GlobalWidget;
+use App\Models\ShopCollection;
+use App\Models\ShopCategory;
+use App\Models\ShopProduct;
+use App\Models\ShopBrand;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class GlobalWidgetController extends Controller
@@ -15,14 +20,20 @@ class GlobalWidgetController extends Controller
 
     public function create()
     {
-        return view('admin.global_widgets.create');
+        $shop_enabled = Setting::where('key', 'shop_enabled')->value('value') == '1';
+        $shop_collections = $shop_enabled ? ShopCollection::orderBy('nome')->get() : collect();
+        $shop_categories = $shop_enabled ? ShopCategory::with('children')->whereNull('parent_id')->orderBy('nome')->get() : collect();
+        $shop_products = $shop_enabled ? ShopProduct::orderBy('nome')->get() : collect();
+        $shop_brands = $shop_enabled ? ShopBrand::orderBy('nome')->get() : collect();
+
+        return view('admin.global_widgets.create', compact('shop_collections', 'shop_categories', 'shop_products', 'shop_brands', 'shop_enabled'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'titolo' => 'required|string|max:255',
-            'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid,image_text_image,booking_search,info_blocks,booking_structures,map',
+            'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid,image_text_image,booking_search,info_blocks,booking_structures,map,shop_collection,shop_featured_products,shop_brands',
             'data' => 'nullable|array',
         ]);
 
@@ -39,7 +50,13 @@ class GlobalWidgetController extends Controller
 
     public function edit(GlobalWidget $globalWidget)
     {
-        return view('admin.global_widgets.edit', compact('globalWidget'));
+        $shop_enabled = Setting::where('key', 'shop_enabled')->value('value') == '1';
+        $shop_collections = $shop_enabled ? ShopCollection::orderBy('nome')->get() : collect();
+        $shop_categories = $shop_enabled ? ShopCategory::with('children')->whereNull('parent_id')->orderBy('nome')->get() : collect();
+        $shop_products = $shop_enabled ? ShopProduct::orderBy('nome')->get() : collect();
+        $shop_brands = $shop_enabled ? ShopBrand::orderBy('nome')->get() : collect();
+
+        return view('admin.global_widgets.edit', compact('globalWidget', 'shop_collections', 'shop_categories', 'shop_products', 'shop_brands', 'shop_enabled'));
     }
 
     public function update(Request $request, GlobalWidget $globalWidget)

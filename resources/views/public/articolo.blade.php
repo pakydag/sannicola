@@ -123,6 +123,12 @@
                                 @include('public.partials.widgets.booking_structures', ['widget' => $actualWidget])
                             @elseif($actualWidget->tipo === 'map')
                                 @include('public.partials.widgets.map', ['widget' => $actualWidget])
+                            @elseif($actualWidget->tipo === 'shop_collection')
+                                @include('public.partials.widgets.shop_collection', ['widget' => $actualWidget])
+                            @elseif($actualWidget->tipo === 'shop_featured_products')
+                                @include('public.partials.widgets.shop_featured_products', ['widget' => $actualWidget])
+                            @elseif($actualWidget->tipo === 'shop_brands')
+                                @include('public.partials.widgets.shop_brands', ['widget' => $actualWidget])
                             @endif
                         </div>
                     @endif

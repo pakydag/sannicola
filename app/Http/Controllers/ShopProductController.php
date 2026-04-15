@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ShopProduct;
 use App\Models\ShopCategory;
 use App\Models\ShopCollection;
+use App\Models\ShopBrand;
 use App\Models\ShopVariant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -35,8 +36,9 @@ class ShopProductController extends Controller
     {
         $categorie = ShopCategory::with(['children', 'parent'])->orderBy('ordine')->get();
         $collezioni = ShopCollection::orderBy('ordine')->get();
+        $marche = ShopBrand::where('visibile', true)->orderBy('ordine')->orderBy('nome')->get();
         $tags = \App\Models\Tag::orderBy('nome')->get();
-        return view('admin.shop.prodotti.create', compact('categorie', 'collezioni', 'tags'));
+        return view('admin.shop.prodotti.create', compact('categorie', 'collezioni', 'marche', 'tags'));
     }
 
     public function store(Request $request)
@@ -55,6 +57,7 @@ class ShopProductController extends Controller
             'slug' => 'required|string|max:255|unique:shop_products,slug',
             'shop_category_id' => 'nullable|exists:shop_categories,id',
             'shop_collection_id' => 'nullable|exists:shop_collections,id',
+            'shop_brand_id' => 'nullable|exists:shop_brands,id',
             'marca' => 'nullable|string|max:255',
             'descrizione' => 'nullable|string',
             'sku_padre' => 'nullable|string|max:255',
@@ -111,9 +114,10 @@ class ShopProductController extends Controller
     {
         $categorie = ShopCategory::with(['children', 'parent'])->orderBy('ordine')->get();
         $collezioni = ShopCollection::orderBy('ordine')->get();
+        $marche = ShopBrand::orderBy('ordine')->orderBy('nome')->get();
         $tags = \App\Models\Tag::orderBy('nome')->get();
         $prodotto->load('variants', 'tags');
-        return view('admin.shop.prodotti.edit', compact('prodotto', 'categorie', 'collezioni', 'tags'));
+        return view('admin.shop.prodotti.edit', compact('prodotto', 'categorie', 'collezioni', 'marche', 'tags'));
     }
 
     public function update(Request $request, ShopProduct $prodotto)
@@ -132,6 +136,7 @@ class ShopProductController extends Controller
             'slug' => 'required|string|max:255|unique:shop_products,slug,' . $prodotto->id,
             'shop_category_id' => 'nullable|exists:shop_categories,id',
             'shop_collection_id' => 'nullable|exists:shop_collections,id',
+            'shop_brand_id' => 'nullable|exists:shop_brands,id',
             'marca' => 'nullable|string|max:255',
             'descrizione' => 'nullable|string',
             'sku_padre' => 'nullable|string|max:255',

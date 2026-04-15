@@ -27,9 +27,10 @@
                             
                             <div id="libreria-widget" class="space-y-3 min-h-[100px] bg-gray-50 p-3 rounded border border-dashed border-gray-300">
                                 @foreach($globalWidgets as $widget)
+                                    @php $isShop = str_starts_with($widget->tipo, 'shop_'); @endphp
                                     <div class="widget-item bg-white p-3 rounded shadow-sm border border-gray-200 cursor-move hover:border-indigo-300 hover:shadow flex items-center justify-between" data-id="{{ $widget->id }}">
                                         <div>
-                                            <span class="inline-block bg-indigo-100 text-indigo-800 text-[10px] px-1.5 py-0.5 rounded uppercase font-bold mr-2">{{ $widget->tipo }}</span>
+                                            <span class="inline-block {{ $isShop ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800' }} text-[10px] px-1.5 py-0.5 rounded uppercase font-bold mr-2">{{ $widget->tipo }}</span>
                                             <strong class="text-gray-800 text-sm">{{ $widget->titolo }}</strong>
                                         </div>
                                         <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
@@ -66,7 +67,8 @@
                                             <div class="flex-grow pr-8">
                                                 <div class="mb-3 flex items-center justify-between border-b border-indigo-100 pb-2">
                                                     <div>
-                                                        <span class="inline-block bg-indigo-200 text-indigo-900 text-xs px-2 py-0.5 rounded uppercase font-bold mr-2">{{ $block->globalWidget->tipo ?? 'Eliminato' }}</span>
+                                                        @php $isShop = $block->globalWidget && str_starts_with($block->globalWidget->tipo, 'shop_'); @endphp
+                                                        <span class="inline-block {{ $isShop ? 'bg-orange-200 text-orange-900' : 'bg-indigo-200 text-indigo-900' }} text-xs px-2 py-0.5 rounded uppercase font-bold mr-2">{{ $block->globalWidget->tipo ?? 'Eliminato' }}</span>
                                                         <strong class="text-gray-900">{{ $block->globalWidget->titolo ?? 'Widget Non Trovato' }}</strong>
                                                     </div>
                                                 </div>
@@ -81,6 +83,14 @@
                                                             @include('public.partials.widgets.video', ['widget' => $widget, 'adminPreview' => true])
                                                         @elseif($widget->tipo === 'mirror_blocks')
                                                             @include('public.partials.widgets.mirror', ['widget' => $widget, 'adminPreview' => true])
+                                                        @elseif($widget->tipo === 'shop_collection')
+                                                            @include('public.partials.widgets.shop_collection', ['widget' => $widget, 'adminPreview' => true])
+                                                        @elseif($widget->tipo === 'shop_featured_products')
+                                                            @include('public.partials.widgets.shop_featured_products', ['widget' => $widget, 'adminPreview' => true])
+                                                        @elseif($widget->tipo === 'shop_brands')
+                                                            @include('public.partials.widgets.shop_brands', ['widget' => $widget, 'adminPreview' => true])
+                                                        @else
+                                                            <div class="p-4 bg-gray-50 text-gray-400 text-xs italic">Anteprima non disponibile per questo tipo di widget</div>
                                                         @endif
                                                     @else
                                                         <p class="text-red-500">Widget originale cancellato o mancante.</p>

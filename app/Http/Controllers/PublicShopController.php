@@ -21,20 +21,63 @@ class PublicShopController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $section = \App\Models\Section::where('modulo', 'shop')->first();
+        $settings = $this->settings;
         
+        $marca_slug = $request->get('marca');
+        $categoria_slug = $request->get('categoria');
+        
+        $prodotti = collect();
+        $marca = null;
+        $categoria = null;
+        $filtered = false;
+        
+        $seoTitle = $section->seo_title ?: 'Shop';
+        $seoDesc = $section->seo_description ?: ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro shop online.');
+        $seoImage = ($section->seo_image ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg'));
+
+        if ($marca_slug) {
+            $marca = \App\Models\ShopBrand::where('slug', $marca_slug)->firstOrFail();
+            $prodotti = ShopProduct::where('shop_brand_id', $marca->id)
+                        ->where('visibile', true)
+                        ->with(['variants', 'collection'])
+                        ->orderBy('ordine')
+                        ->get();
+            $filtered = true;
+            $seoTitle = $marca->nome . ' - ' . $seoTitle;
+            if($marca->foto) $seoImage = $marca->foto;
+        } elseif ($categoria_slug) {
+            $categoria = ShopCategory::where('slug', $categoria_slug)->where('visibile', true)->firstOrFail();
+            
+            // Reusing recursive logic for categories
+            $categoryIds = [$categoria->id];
+            $childrenIds = $categoria->children()->pluck('id')->toArray();
+            $categoryIds = array_merge($categoryIds, $childrenIds);
+            foreach ($categoria->children as $child) {
+                $categoryIds = array_merge($categoryIds, $child->children()->pluck('id')->toArray());
+            }
+            $categoryIds = array_unique($categoryIds);
+            
+            $prodotti = ShopProduct::where('visibile', true)
+                ->whereIn('shop_category_id', $categoryIds)
+                ->with(['variants', 'collection'])
+                ->orderBy('ordine')
+                ->get();
+            $filtered = true;
+            $seoTitle = $categoria->nome . ' - ' . $seoTitle;
+        }
+
         $seo = [
-            'title' => ($section->seo_title ?: 'Shop') . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
-            'description' => $section->seo_description ?: ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro shop online.'),
-            'image' => ($section->seo_image ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'title' => $seoTitle . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
+            'description' => $seoDesc,
+            'image' => $seoImage,
             'url' => url()->current()
         ];
 
         $collezioni = ShopCollection::where('visibile', true)->orderBy('ordine')->get();
-        $settings = $this->settings;
-        return view('public.shop.index', compact('collezioni', 'seo', 'settings'));
+        return view('public.shop.index', compact('collezioni', 'prodotti', 'marca', 'categoria', 'filtered', 'seo', 'settings'));
     }
 
     public function collezione($slug)

@@ -95,6 +95,7 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     Route::prefix('shop')->name('shop.')->group(function () {
         Route::resource('categorie', \App\Http\Controllers\ShopCategoryController::class)->parameters(['categorie' => 'categoria']);
         Route::resource('collezioni', \App\Http\Controllers\ShopCollectionController::class)->parameters(['collezioni' => 'collezione']);
+        Route::resource('marche', \App\Http\Controllers\ShopBrandController::class)->parameters(['marche' => 'marca']);
         Route::resource('prodotti', \App\Http\Controllers\ShopProductController::class)->parameters(['prodotti' => 'prodotto']);
         Route::resource('clienti', \App\Http\Controllers\CustomerController::class)->parameters(['clienti' => 'cliente']);
         Route::resource('ordini', \App\Http\Controllers\ShopOrderController::class)->parameters(['ordini' => 'ordine']);

@@ -67,6 +67,18 @@
                             @endif
                             @include('public.partials.widgets.map', ['widget' => $widget])
                         </div>
+                    @elseif($widget->tipo === 'shop_collection')
+                        <div class="max-w-full w-screen mx-auto widget-block">
+                            @include('public.partials.widgets.shop_collection', ['widget' => $widget])
+                        </div>
+                    @elseif($widget->tipo === 'shop_featured_products')
+                        <div class="max-w-full w-screen mx-auto widget-block">
+                            @include('public.partials.widgets.shop_featured_products', ['widget' => $widget])
+                        </div>
+                    @elseif($widget->tipo === 'shop_brands')
+                        <div class="max-w-full w-screen mx-auto widget-block">
+                            @include('public.partials.widgets.shop_brands', ['widget' => $widget])
+                        </div>
                     @endif
                 
             @endif

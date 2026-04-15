@@ -40,7 +40,20 @@
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-bold mb-2">Marca</label>
-                                    <input type="text" name="marca" value="{{ old('marca', $prodotto->marca) }}" class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                                    <select name="shop_brand_id" class="shadow border rounded w-full py-2 px-3 text-gray-700">
+                                        <option value="">— Nessuna marca —</option>
+                                        @foreach($marche as $m)
+                                            <option value="{{ $m->id }}" {{ old('shop_brand_id', $prodotto->shop_brand_id) == $m->id ? 'selected' : '' }}>
+                                                {{ $m->nome }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @if($marche->isEmpty())
+                                        <p class="text-xs text-amber-600 mt-1">
+                                            Nessuna marca disponibile.
+                                            <a href="{{ route('admin.shop.marche.create') }}" target="_blank" class="underline">Crea una marca →</a>
+                                        </p>
+                                    @endif
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 font-bold mb-2">Categoria</label>

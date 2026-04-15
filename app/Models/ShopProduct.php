@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ShopProduct extends Model
 {
     protected $fillable = [
-        'nome', 'slug', 'shop_category_id', 'shop_collection_id', 
+        'nome', 'slug', 'shop_category_id', 'shop_collection_id', 'shop_brand_id',
         'marca', 'descrizione', 'foto_aggiuntive', 'sku_padre', 'visibile', 'ordine'
     ];
 
@@ -24,6 +24,11 @@ class ShopProduct extends Model
     public function collection()
     {
         return $this->belongsTo(ShopCollection::class, 'shop_collection_id');
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(ShopBrand::class, 'shop_brand_id');
     }
 
     public function variants()

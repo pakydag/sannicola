@@ -9,6 +9,8 @@
         ->orderBy('ordine')
         ->get();
 
+    $marche = \App\Models\ShopBrand::where('visibile', true)->orderBy('ordine')->get();
+
     $displayCategories = $macros;
     $currentLevel = 'macro';
 
@@ -95,6 +97,24 @@
                         </div>
                     @endif
                 </div>
+            @endforeach
+        </nav>
+    </div>
+</div>
+
+<div class="mt-6 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest">Marche</h3>
+    </div>
+    <div class="p-2">
+        <nav class="space-y-1">
+            @foreach($marche as $m)
+                @php
+                    $isActive = request('marca') == $m->slug;
+                @endphp
+                <a href="{{ route('public.shop.index', ['marca' => $m->slug]) }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all @if($isActive) bg-indigo-50 text-indigo-600 @else text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 @endif">
+                    {{ $m->nome }}
+                </a>
             @endforeach
         </nav>
     </div>

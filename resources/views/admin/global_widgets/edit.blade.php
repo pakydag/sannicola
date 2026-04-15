@@ -21,7 +21,8 @@
                     @endif
 
                     <div class="mb-4">
-                        <span class="inline-block bg-indigo-100 text-indigo-800 text-sm px-3 py-1 rounded uppercase font-bold">Tipo: {{ $globalWidget->tipo }}</span>
+                        @php $isShop = str_starts_with($globalWidget->tipo, 'shop_'); @endphp
+                        <span class="inline-block {{ $isShop ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800' }} text-sm px-3 py-1 rounded uppercase font-bold">Tipo: {{ $globalWidget->tipo }}</span>
                     </div>
 
                     <form action="{{ route('admin.global-widgets.update', $globalWidget) }}" method="POST">
@@ -363,6 +364,87 @@
                                         <span class="ml-2 text-gray-700 text-sm font-bold">Tutta Larghezza (Full Width)</span>
                                     </label>
                                 </div>
+                            </div>
+
+                        <!-- Shop Collection -->
+                        @elseif($globalWidget->tipo === 'shop_collection')
+                            <div class="grid grid-cols-2 gap-4 mb-4 mt-6">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Seleziona Collezione *</label>
+                                    <select name="data[shop_collection_id]" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        <option value="">-- Seleziona una Collezione --</option>
+                                        @foreach($shop_collections as $col)
+                                            <option value="{{ $col->id }}" {{ old('data.shop_collection_id', $globalWidget->data['shop_collection_id'] ?? '') == $col->id ? 'selected' : '' }}>{{ $col->nome }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Limite Prodotti *</label>
+                                    <input type="number" name="data[limit]" value="{{ old('data.limit', $globalWidget->data['limit'] ?? 4) }}" min="1" max="20" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                </div>
+                            </div>
+
+                        <!-- Shop Featured Products -->
+                        @elseif($globalWidget->tipo === 'shop_featured_products')
+                            @php $mode = old('data.mode', $globalWidget->data['mode'] ?? 'manual'); @endphp
+                            <div class="mt-6" x-data="{ selectionMode: '{{ $mode }}' }">
+                                <div class="mb-6">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Modalità di selezione</label>
+                                    <div class="flex space-x-4">
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" x-model="selectionMode" name="data[mode]" value="manual" class="form-radio text-indigo-600">
+                                            <span class="ml-2 text-sm">Selezione Manuale</span>
+                                        </label>
+                                        <label class="inline-flex items-center">
+                                            <input type="radio" x-model="selectionMode" name="data[mode]" value="category" class="form-radio text-indigo-600">
+                                            <span class="ml-2 text-sm">Per Categoria</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Selezione Manuale -->
+                                <div x-show="selectionMode === 'manual'" class="mb-4">
+                                    @php $selectedIds = old('data.product_ids', $globalWidget->data['product_ids'] ?? []); @endphp
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Seleziona i Prodotti da mostrare:</label>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 bg-gray-50 p-4 rounded border max-h-60 overflow-y-auto shadow-inner">
+                                        @foreach($shop_products as $p)
+                                            <label class="flex items-center p-1 hover:bg-white rounded cursor-pointer transition-colors">
+                                                <input type="checkbox" name="data[product_ids][]" value="{{ $p->id }}" {{ in_array($p->id, $selectedIds) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600">
+                                                <span class="ml-2 text-xs text-gray-700 truncate" title="{{ $p->nome }}">{{ $p->nome }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <!-- Selezione Categoria -->
+                                <div x-show="selectionMode === 'category'" class="grid grid-cols-2 gap-4 mb-4" style="display: none;">
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Categoria/Sottocategoria *</label>
+                                        <select name="data[shop_category_id]" x-bind:required="selectionMode === 'category'" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                            <option value="">-- Scegli Categoria --</option>
+                                            @foreach($shop_categories as $cat)
+                                                <option value="{{ $cat->id }}" {{ old('data.shop_category_id', $globalWidget->data['shop_category_id'] ?? '') == $cat->id ? 'selected' : '' }}>{{ $cat->nome }}</option>
+                                                @foreach($cat->children as $sub)
+                                                    <option value="{{ $sub->id }}" {{ old('data.shop_category_id', $globalWidget->data['shop_category_id'] ?? '') == $sub->id ? 'selected' : '' }}>-- {{ $sub->nome }}</option>
+                                                @endforeach
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Numero Prodotti *</label>
+                                        <input type="number" name="data[cat_limit]" value="{{ old('data.cat_limit', $globalWidget->data['cat_limit'] ?? 4) }}" min="1" max="20" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                        <!-- Shop Brands -->
+                        @elseif($globalWidget->tipo === 'shop_brands')
+                            <div class="mb-4 mt-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Stile Visualizzazione</label>
+                                <select name="data[style]" class="shadow border rounded w-full md:w-1/4 py-2 px-3 focus:outline-none">
+                                    <option value="grid" {{ (old('data.style', $globalWidget->data['style'] ?? 'grid') == 'grid') ? 'selected' : '' }}>Griglia Loghi</option>
+                                    <option value="carousel" {{ (old('data.style', $globalWidget->data['style'] ?? 'grid') == 'carousel') ? 'selected' : '' }}>Slider Carosello</option>
+                                </select>
                             </div>
                         @endif
 

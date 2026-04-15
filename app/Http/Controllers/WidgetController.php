@@ -31,7 +31,7 @@ class WidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'nullable|string|max:255',
-            'tipo' => 'required|string|in:gallery,video,mirror_blocks,global_widget,single_block,section_grid,info_blocks,booking_structures,map',
+            'tipo' => 'required|string|in:gallery,video,mirror_blocks,global_widget,single_block,section_grid,info_blocks,booking_structures,map,shop_collection,shop_featured_products,shop_brands',
             'data' => 'nullable|array',
         ]);
 
