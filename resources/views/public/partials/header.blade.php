@@ -20,15 +20,8 @@
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
-                        @php
-                            $logoUrl = $siteLogo;
-                            if ($logoUrl && !Str::startsWith($logoUrl, ['http://', 'https://'])) {
-                                $cleanPath = Str::startsWith($logoUrl, 'storage/') ? Str::after($logoUrl, 'storage/') : $logoUrl;
-                                $logoUrl = rtrim(env('STORAGE_URL', asset('storage')), '/') . '/' . ltrim($cleanPath, '/');
-                            }
-                        @endphp
-                        @if($logoUrl)
-                            <img src="{{ $logoUrl }}" alt="{{ config('app.name') }}" class="h-10 w-auto object-contain">
+                        @if($siteLogo)
+                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" class="h-10 w-auto object-contain">
                         @else
                             {{ config('app.name', 'Il Mio Sito') }}
                         @endif
