@@ -70,7 +70,10 @@ class SettingController extends Controller
             'site_logo', 'mail_mailer', 'mail_host', 'mail_port', 
             'mail_username', 'mail_password', 'mail_encryption', 
             'mail_from_address', 'mail_from_name',
-            'vapi_key', 'vapi_assistant_id', 'spoki_key'
+            'vapi_key', 'vapi_assistant_id', 'spoki_key',
+            'company_address', 'company_phone', 'company_email_public', 'company_vat',
+            'social_facebook', 'social_instagram', 'social_linkedin', 'social_youtube',
+            'footer_description'
         ];
 
         $validated = $request->validate([
@@ -98,6 +101,15 @@ class SettingController extends Controller
             'tracking_gtm' => 'nullable|string',
             'tracking_facebook_pixel' => 'nullable|string',
             'cookie_consent_text' => 'nullable|string',
+            'company_address' => 'nullable|string',
+            'company_phone' => 'nullable|string',
+            'company_email_public' => 'nullable|email',
+            'company_vat' => 'nullable|string',
+            'social_facebook' => 'nullable|string',
+            'social_instagram' => 'nullable|string',
+            'social_linkedin' => 'nullable|string',
+            'social_youtube' => 'nullable|string',
+            'footer_description' => 'nullable|string',
         ]);
 
         if (isset($validated['site_logo'])) {

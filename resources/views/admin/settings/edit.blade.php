@@ -69,6 +69,10 @@
                         <button @click="activeTab = 'pixels'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'pixels', 'text-gray-600 hover:text-indigo-600': activeTab !== 'pixels'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
                             📊 Pixel & Cookie
                         </button>
+
+                        <button @click="activeTab = 'contatti'" :class="{'bg-indigo-50 border-t border-l border-r border-indigo-200 text-indigo-700 font-bold': activeTab === 'contatti', 'text-gray-600 hover:text-indigo-600': activeTab !== 'contatti'}" class="py-2 px-4 rounded-t-lg transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 ml-1 text-sm">
+                            📱 Contatti & Social
+                        </button>
                     </div>
 
                     <form action="{{ route('admin.settings.update') }}" method="POST">
@@ -335,6 +339,62 @@
                                         <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         <span class="ms-3 text-sm font-medium text-gray-900">Abilita Widget Accessibilità sul Sito</span>
                                     </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: Contatti & Social -->
+                        <div x-show="activeTab === 'contatti'" style="display: none;" class="space-y-6">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Informazioni Aziendali & Social</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Indirizzo Sede</label>
+                                    <input type="text" name="company_address" value="{{ old('company_address', $settings['company_address'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Via Roma 1, 00100 Roma (RM)">
+                                </div>
+                                
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Telefono Contatto</label>
+                                    <input type="text" name="company_phone" value="{{ old('company_phone', $settings['company_phone'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="+39 06 1234567">
+                                </div>
+
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Email Pubblica (Footer)</label>
+                                    <input type="email" name="company_email_public" value="{{ old('company_email_public', $settings['company_email_public'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="info@azienda.it">
+                                </div>
+
+                                <div class="col-span-2 md:col-span-1">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Partita IVA / Codice Fiscale</label>
+                                    <input type="text" name="company_vat" value="{{ old('company_vat', $settings['company_vat'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="01234567890">
+                                </div>
+
+                                <div class="col-span-2">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Breve Descrizione Footer</label>
+                                    <textarea name="footer_description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-sm" placeholder="Siamo un'azienda leader nel settore... (max 200 caratteri)">{{ old('footer_description', $settings['footer_description'] ?? '') }}</textarea>
+                                </div>
+
+                                <div class="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                                    <h4 class="col-span-2 text-md font-bold text-gray-800">Link Social Network</h4>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 text-xs font-bold mb-1">Facebook URL</label>
+                                        <input type="text" name="social_facebook" value="{{ old('social_facebook', $settings['social_facebook'] ?? '') }}" class="shadow appearance-none border rounded w-full py-1 px-2 focus:outline-none text-sm" placeholder="https://facebook.com/box">
+                                    </div>
+                                    
+                                    <div>
+                                        <label class="block text-gray-700 text-xs font-bold mb-1">Instagram URL</label>
+                                        <input type="text" name="social_instagram" value="{{ old('social_instagram', $settings['social_instagram'] ?? '') }}" class="shadow appearance-none border rounded w-full py-1 px-2 focus:outline-none text-sm" placeholder="https://instagram.com/box">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-gray-700 text-xs font-bold mb-1">LinkedIn URL</label>
+                                        <input type="text" name="social_linkedin" value="{{ old('social_linkedin', $settings['social_linkedin'] ?? '') }}" class="shadow appearance-none border rounded w-full py-1 px-2 focus:outline-none text-sm" placeholder="https://linkedin.com/company/box">
+                                    </div>
+
+                                    <div>
+                                        <label class="block text-gray-700 text-xs font-bold mb-1">YouTube URL</label>
+                                        <input type="text" name="social_youtube" value="{{ old('social_youtube', $settings['social_youtube'] ?? '') }}" class="shadow appearance-none border rounded w-full py-1 px-2 focus:outline-none text-sm" placeholder="https://youtube.com/c/box">
+                                    </div>
                                 </div>
                             </div>
                         </div>
