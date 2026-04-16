@@ -36,7 +36,7 @@
     <!-- Tracking Scripts (Head) -->
     @include('public.partials.tracking_scripts_head')
 </head>
-<body class="font-sans antialiased text-gray-900 bg-gray-50 flex flex-col min-h-screen">
+<body class="font-sans antialiased text-gray-900 bg-white flex flex-col min-h-screen">
     <!-- Tracking Scripts (Body) -->
     @include('public.partials.tracking_scripts_body')
 
