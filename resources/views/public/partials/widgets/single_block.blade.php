@@ -1,7 +1,7 @@
-<div class="mb-12">
+<div>
     @php
-        $bgColor = $widget->data['bg_color'] ?? '#ffffff';
-        $textColor = '#333333';
+        $bgColor = 'transparent';
+        $textColor = '#000000';
         
         // Simple logic to set text to white on dark backgrounds
         $hex = str_replace('#', '', $bgColor);
@@ -12,15 +12,15 @@
             // Luminance formula
             $luminance = (0.299 * $r + 0.587 * $g + 0.114 * $b) / 255;
             if ($luminance < 0.5) {
-                $textColor = '#ffffff';
+                $textColor = '#dedede';
             }
         }
     @endphp
 
-    <div class="rounded-xl overflow-hidden shadow-lg transition-transform hover:-translate-y-1" style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
+    <div class="overflow-hidden" style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
         @if(($widget->data['layout'] ?? 'side') == 'stacked')
             <!-- Layout Stacked (Foto Sopra) -->
-            <div class="flex flex-col">
+            <div class="flex flex-col bg-gray-100">
                 @if(!empty($widget->data['video']))
                     <div class="h-64 md:h-96 relative bg-black">
                         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
@@ -42,8 +42,8 @@
                     
                     @if(!empty($widget->data['link']))
                         <div class="mt-4">
-                            <a href="{{ $widget->data['link'] }}" class="inline-block px-8 py-4 rounded-full font-bold transition-transform hover:scale-105" 
-                               style="background-color: {{ $textColor }}; color: {{ $bgColor }}; border: 1px solid {{ $textColor }};">
+                            <a href="{{ $widget->data['link'] }}" class="inline-block px-11 py-5 uppercase font-thin transition-transform duration-200 ease-linear hover:-translate-y-1" 
+                               style="background-color: {{ $bgColor }}; color: {{ $textColor }}; border: 1px solid {{ $textColor }};">
                                 Scopri di più
                             </a>
                         </div>

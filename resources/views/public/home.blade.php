@@ -29,7 +29,7 @@
                             @endif
                             @include('public.partials.widgets.mirror', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'single_block')
-                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white rounded-2xl shadow-sm ring-gray-800 overflow-hidden">
+                        <div class="max-w-7xl mx-auto mb-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-4 mt-12 pb-4">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.single_block', ['widget' => $widget])</div>
