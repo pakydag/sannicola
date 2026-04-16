@@ -44,7 +44,7 @@
                             @endif
                             @include('public.partials.widgets.image_text_image', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'booking_search' && (config('app.booking_enabled') === '1' || \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1'))
-                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-20 widget-block">
+                        <div class="max-w-7xl mx-auto -mt-16 relative z-20 widget-block">
                             @include('public.partials.widgets.booking_search', ['widget' => $widget])
                         </div>
                     @elseif($widget->tipo === 'info_blocks')
