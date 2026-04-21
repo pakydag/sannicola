@@ -1096,7 +1096,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_info_block';
                         fmActiveInput = btnSfogliaBlock.previousElementSibling;
-                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                         return;
                     }
 

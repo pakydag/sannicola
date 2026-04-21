@@ -473,7 +473,7 @@
                     document.getElementById('btn-sfoglia-logo').addEventListener('click', (e) => {
                         e.preventDefault();
                         fmActiveInput = document.getElementById('site_logo');
-                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
             });

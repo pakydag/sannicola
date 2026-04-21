@@ -208,7 +208,7 @@
                 document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'seo_image';
-                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
+                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {

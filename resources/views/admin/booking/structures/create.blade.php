@@ -417,7 +417,7 @@
                 if(document.getElementById('fm-seo-image-button')) {
                     document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
                         event.preventDefault();
-                        window.open('{{ route('admin.filemanager.button') }}?target=seo_image', 'fm', 'width=1400,height=800');
+                        window.open('{{ url('file-manager/fm-button') }}?target=seo_image', 'fm', 'width=1400,height=800');
                     });
                 }
 
