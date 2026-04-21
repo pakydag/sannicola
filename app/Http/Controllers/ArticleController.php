@@ -171,6 +171,7 @@ class ArticleController extends Controller
         return view('admin.articoli.edit', [
             'articolo' => $articoli, 
             'sezioni' => $sezioni,
+            'shop_enabled' => $shop_enabled,
             'shop_collections' => $shop_collections,
             'shop_categories' => $shop_categories,
             'shop_products' => $shop_products,
