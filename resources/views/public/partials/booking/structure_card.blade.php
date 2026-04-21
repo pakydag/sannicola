@@ -2,7 +2,7 @@
     $s = $structure;
 @endphp
 
-<div class="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 flex flex-col h-full border border-gray-100">
+<div class="overflow-hidden bg-gray-100 hover:shadow-2xl transition-shadow duration-300 flex flex-col h-full border border-gray-100">
     <!-- Immagine -->
     <div class="relative h-64">
         @if($s->photos->count() > 0)
@@ -39,7 +39,7 @@
 
         <div class="mt-auto">
             @if($s->prenotabile)
-                <a href="{{ route('public.booking.show', $s->id) }}" class="block w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-md transition-all">
+                <a href="{{ route('public.booking.show', $s->id) }}" class="inline-block border border-black px-11 py-5 text-black mb-5">
                     Scopri e Prenota
                 </a>
             @else
