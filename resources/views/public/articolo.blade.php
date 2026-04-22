@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="relative bg-gray-50 h-64 md:h-32 flex items-end bg-cover bg-center bg-fixed" style="background-image: url('http://185.56.170.138/file-manager/preview?disk=public&path=section.jpg&v=1776845090');">
-    <div class="mx-auto max-w-7xl w-full bg-cover bg-center bg-fixed p-14" style="background-image: url('http://185.56.170.138/file-manager/preview?disk=public&path=trulli.png&v=1776848703');">
+    <div class="mx-auto max-w-7xl w-full bg-cover bg-center bg-fixed xl:p-14 p-8" style="background-image: url('http://185.56.170.138/file-manager/preview?disk=public&path=trulli.png&v=1776848703');">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex mt-8 mb-8 items-center text-sm font-medium text-gray-500">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
