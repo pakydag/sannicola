@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="relative bg-gray-50 h-64 md:h-32 flex items-end bg-cover bg-center bg-fixed" style="background-image: url('http://185.56.170.138/file-manager/preview?disk=public&path=section.jpg&v=1776845090');">
-    <div class="mx-auto max-w-7xl w-full bg-white text-center">
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <!-- Breadcrumb / Back link -->
-        <nav class=" flex mt-6 items-center justify-center text-sm font-medium text-gray-500">
+        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
             @if($articolo->section && $articolo->section->visibile)
@@ -19,7 +19,7 @@
 </div>
 <div class="bg-gray-50 pb-16">
 
-    <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-7xl rounded-b-lg">
 
         <article class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative">
             
