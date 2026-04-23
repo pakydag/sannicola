@@ -3,7 +3,7 @@
 @section('title', $sezione->nome . ' - ' . config('app.name'))
 
 @section('content')
-<div class="bg-white shadow">
+<div class="bg-gray-50 shadow">
     <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <div class="text-center">
             <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-sm">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 shadow-sm">
 
     @if($sezione->contenuto)
     <div class="prose prose-indigo prose-lg mx-auto text-gray-500 mb-16 max-w-none">
@@ -40,7 +40,7 @@
 
                 <div class="grid {{ $gridClass }} gap-8">
                     @foreach($articoli as $articolo)
-                        <div class="bg-white rounded-lg shadow-sm border overflow-hidden flex flex-col transition hover:shadow-md">
+                        <div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col transition hover:shadow-md">
                             @if($articolo->hasMedia('foto'))
                                 <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block p-4 border-b">
                                     <img src="{{ $articolo->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $articolo->titolo }}" class="w-full h-48 object-cover rounded">
@@ -55,7 +55,7 @@
                                 </a>
                             </div>
                             <div class="pb-6 px-6 text-center">
-                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="text-indigo-600 hover:text-indigo-800 font-medium">Leggi di più &rarr;</a>
+                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="inline-block border border-black px-11 py-5 text-black mb-5">Leggi di più &rarr;</a>
                             </div>
                         </div>
                     @endforeach

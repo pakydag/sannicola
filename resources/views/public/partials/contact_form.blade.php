@@ -1,4 +1,4 @@
-<div class="bg-gray-50 border border-gray-200 rounded-lg p-6 md:p-10 my-10 shadow-sm" id="contatti">
+<div class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative" id="contatti">
     <div class="text-center mb-8">
         <h3 class="text-2xl font-bold text-gray-900 mb-2">Contattaci</h3>
         <p class="text-gray-600">Compila il modulo sottostante per inviarci una richiesta. Ti risponderemo al più presto.</p>

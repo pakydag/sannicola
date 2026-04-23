@@ -1,7 +1,7 @@
 @extends('public.layouts.main')
 
 @section('content')
-    <div class="bg-white py-12">
+    <div class="bg-gray-50 py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <nav class="flex mb-8 text-gray-500 text-sm" aria-label="Breadcrumb">
@@ -57,7 +57,7 @@
                         }" class="space-y-4">
                         
                         <!-- PHOTo PRINCIPALE CON FRECCE -->
-                        <div class="relative h-[500px] w-full rounded-3xl overflow-hidden shadow-xl bg-gray-100 group">
+                        <div class="relative h-[500px] w-full rounded-lg overflow-hidden shadow-xl bg-gray-100 group">
                             @if($structure->photos->count() > 0)
                                 <img :src="activePhoto" class="w-full h-full object-cover transition-opacity duration-300">
                                 
@@ -96,7 +96,7 @@
                                 <!-- Contenitore Miniature -->
                                 <div x-ref="thumbArray" class="hide-scroll flex gap-2 overflow-x-auto scroll-smooth w-full px-8 py-1 snap-x snap-mandatory">
                                     @foreach($structure->photos as $index => $photo)
-                                        <button @click="setActive({{ $index }})" class="flex-shrink-0 h-16 w-24 sm:h-20 sm:w-28 rounded-xl overflow-hidden transition-all hover:opacity-100 snap-center" :class="currentIndex === {{ $index }} ? 'ring-4 ring-indigo-600 opacity-100 scale-105 shadow-md' : 'opacity-60 grayscale-[30%]'">
+                                        <button @click="setActive({{ $index }})" class="flex-shrink-0 h-16 w-24 sm:h-20 sm:w-28 rounded-lg overflow-hidden transition-all hover:opacity-100 snap-center" :class="currentIndex === {{ $index }} ? 'ring-4 ring-indigo-600 opacity-100 scale-105 shadow-md' : 'opacity-60 grayscale-[30%]'">
                                             <img src="{{ asset($photo->path) }}" class="w-full h-full object-cover">
                                         </button>
                                     @endforeach
@@ -113,7 +113,7 @@
                     </div>
 
                     <!-- Details -->
-                    <div class="bg-gray-50 rounded-3xl p-8 border border-gray-100">
+                    <div class="bg-white rounded-lg p-8 border border-gray-100">
                         <h1 class="text-4xl font-extrabold text-gray-900 mb-6">{{ $structure->nome }}</h1>
                         
                         <div class="flex flex-wrap gap-8 mb-8 pb-8 border-b border-gray-200">
@@ -171,7 +171,7 @@
 
                 <!-- Colonna Destra: Prenotazione -->
                 <div class="lg:col-span-1">
-                    <div class="sticky top-8 bg-white rounded-3xl p-8 shadow-2xl border border-gray-100">
+                    <div class="sticky top-8 bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                         @if($structure->prenotabile)
                         <div x-data="bookingForm()">
                             <div class="flex justify-between items-end mb-8">

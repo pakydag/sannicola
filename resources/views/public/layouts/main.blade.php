@@ -54,7 +54,7 @@
     @include('public.partials.header')
 
     <!-- Page Content -->
-    <main class="flex-grow">
+    <main class="flex-grow bg-gray-50">
         @yield('content')
     </main>
 
