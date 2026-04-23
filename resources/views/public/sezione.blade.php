@@ -13,7 +13,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-sm">
 
     @if($sezione->contenuto)
     <div class="prose prose-indigo prose-lg mx-auto text-gray-500 mb-16 max-w-none">
