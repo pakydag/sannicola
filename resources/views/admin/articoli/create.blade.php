@@ -115,6 +115,7 @@
                                         <button type="button" id="fm-foto-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0 text-sm">
                                             Scegli
                                         </button>
+                                        <button type="button" id="fm-foto-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
                                     </div>
                                 </div>
 
@@ -127,6 +128,7 @@
                                         <button type="button" id="fm-video-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0 text-sm">
                                             Scegli
                                         </button>
+                                        <button type="button" id="fm-video-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
                                     </div>
                                 </div>
                             </div>
@@ -151,6 +153,7 @@
                                     <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                                     Scegli file
                                 </button>
+                                <button type="button" id="fm-allegato-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 ml-2 rounded shadow" title="Rimuovi">X</button>
                             </div>
                             @error('allegato') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         <!-- ======== Pannello SEO & Condivisione ======== -->
@@ -247,6 +250,21 @@
                     document.getElementById('seo_image').value = '';
                 });
 
+                document.getElementById('fm-foto-clear').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    document.getElementById('foto').value = '';
+                });
+
+                document.getElementById('fm-video-clear').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    document.getElementById('video').value = '';
+                });
+
+                document.getElementById('fm-allegato-clear').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    document.getElementById('allegato').value = '';
+                });
+
                 document.getElementById('fm-video-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'video';
@@ -257,7 +275,16 @@
             // Callback function expected by FileManager
              function fmSetLink($url) {
                 const baseUrl = '{{ config('app.url') }}';
-                const relativeUrl = $url.replace(baseUrl, '');
+                let relativeUrl = $url.replace(baseUrl, '');
+                
+                if (!relativeUrl.startsWith('http')) {
+                    let cleanPath = relativeUrl.replace(/^\/+/, '');
+                    if (!cleanPath.startsWith('storage/')) {
+                        relativeUrl = '/storage/' + cleanPath;
+                    } else {
+                        relativeUrl = '/' + cleanPath;
+                    }
+                }
 
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {

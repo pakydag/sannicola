@@ -21,6 +21,7 @@ class Section extends Model
         'seo_title',
         'seo_description',
         'seo_image',
+        'immagine',
     ];
 
     public function articles()

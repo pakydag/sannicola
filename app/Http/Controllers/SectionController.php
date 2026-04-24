@@ -11,8 +11,19 @@ class SectionController extends Controller
     private function stripDomain($url)
     {
         if (empty($url)) return $url;
-        $baseUrl = config('app.url');
-        return str_replace($baseUrl, '', $url);
+        $baseUrl = rtrim(config('app.url'), '/');
+        $url = str_replace($baseUrl, '', $url);
+        
+        // Se non è un URL assoluto, assicuriamoci che inizi con /storage/ (una sola volta)
+        if (!empty($url) && !str_starts_with($url, 'http') && !str_starts_with($url, 'mailto') && !str_starts_with($url, 'tel')) {
+            $cleanPath = ltrim($url, '/');
+            if (!str_starts_with($cleanPath, 'storage/')) {
+                $url = '/storage/' . $cleanPath;
+            } else {
+                $url = '/' . $cleanPath;
+            }
+        }
+        return $url;
     }
 
     public function index()
@@ -101,7 +112,7 @@ class SectionController extends Controller
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
-            'tipo' => 'required|in:pagina,archivio',
+            'tipo' => 'required|in:pagina,archivio,sistema',
             'modulo' => 'nullable|string|max:50',
             'menu_a_tendina' => 'boolean',
             'mostra_nel_menu' => 'boolean',
@@ -111,9 +122,11 @@ class SectionController extends Controller
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
+            'immagine' => 'nullable|string',
         ]);
 
         $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
+        $validated['immagine'] = $this->stripDomain($validated['immagine'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
@@ -148,7 +161,8 @@ class SectionController extends Controller
             'nome' => 'required|string|max:255',
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
-            'tipo' => 'required|in:pagina,archivio',
+            'visibile' => 'boolean',
+            'tipo' => 'required|in:pagina,archivio,sistema',
             'modulo' => 'nullable|string|max:50',
             'menu_a_tendina' => 'boolean',
             'mostra_nel_menu' => 'boolean',
@@ -158,9 +172,11 @@ class SectionController extends Controller
             'seo_title' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
+            'immagine' => 'nullable|string',
         ]);
 
         $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
+        $validated['immagine'] = $this->stripDomain($validated['immagine'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');

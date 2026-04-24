@@ -77,7 +77,7 @@ class PublicShopController extends Controller
         ];
 
         $collezioni = ShopCollection::where('visibile', true)->orderBy('ordine')->get();
-        return view('public.shop.index', compact('collezioni', 'prodotti', 'marca', 'categoria', 'filtered', 'seo', 'settings'));
+        return view('public.shop.index', compact('collezioni', 'prodotti', 'marca', 'categoria', 'filtered', 'seo', 'settings', 'section'));
     }
 
     public function collezione($slug)

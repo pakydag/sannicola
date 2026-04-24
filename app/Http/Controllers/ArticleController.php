@@ -17,10 +17,17 @@ class ArticleController extends Controller
     private function stripDomain($url)
     {
         if (empty($url)) return $url;
-        $url = str_replace(config('app.url'), '', $url);
-        // Assicuriamoci che inizi con / solo se non è già un URL assoluto (es. esterno)
-        if (!empty($url) && $url[0] !== '/' && !str_starts_with($url, 'http')) {
-            $url = '/' . $url;
+        $baseUrl = rtrim(config('app.url'), '/');
+        $url = str_replace($baseUrl, '', $url);
+        
+        // Se non è un URL assoluto, assicuriamoci che inizi con /storage/ (una sola volta)
+        if (!empty($url) && !str_starts_with($url, 'http') && !str_starts_with($url, 'mailto') && !str_starts_with($url, 'tel')) {
+            $cleanPath = ltrim($url, '/');
+            if (!str_starts_with($cleanPath, 'storage/')) {
+                $url = '/storage/' . $cleanPath;
+            } else {
+                $url = '/' . $cleanPath;
+            }
         }
         return $url;
     }
@@ -226,14 +233,26 @@ class ArticleController extends Controller
             $articoli->update(['slug' => $articoli->id . '-it']);
         }
 
-        if ($request->filled('foto')) {
-            $articoli->clearMediaCollection('foto');
-            $this->addSmartMedia($articoli, $request->foto, 'foto');
+        if ($request->has('foto')) {
+            if ($request->filled('foto')) {
+                if ($articoli->wasChanged('foto') || $articoli->getMedia('foto')->isEmpty()) {
+                    $articoli->clearMediaCollection('foto');
+                    $this->addSmartMedia($articoli, $request->foto, 'foto');
+                }
+            } else {
+                $articoli->clearMediaCollection('foto');
+            }
         }
 
-        if ($request->filled('allegato')) {
-            $articoli->clearMediaCollection('allegati');
-            $this->addSmartMedia($articoli, $request->allegato, 'allegati');
+        if ($request->has('allegato')) {
+            if ($request->filled('allegato')) {
+                if ($articoli->wasChanged('allegato') || $articoli->getMedia('allegati')->isEmpty()) {
+                    $articoli->clearMediaCollection('allegati');
+                    $this->addSmartMedia($articoli, $request->allegato, 'allegati');
+                }
+            } else {
+                $articoli->clearMediaCollection('allegati');
+            }
         }
 
         return redirect()->route('admin.articoli.index')->with('success', 'Articolo aggiornato con successo.');

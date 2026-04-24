@@ -10,6 +10,17 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 border-b border-gray-200">
                     
+                    @if ($errors->any())
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <strong class="font-bold">Attenzione!</strong>
+                            <ul class="mt-2 list-disc list-inside text-sm">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <form action="{{ route('admin.sezioni.update', $sezione) }}" method="POST">
                         @csrf
                         @method('PUT')
@@ -129,6 +140,27 @@
                                 <textarea name="contenuto" id="contenuto">{{ $sezione->contenuto }}</textarea>
                             </div>
                         @endif
+
+                        <!-- Immagine di Copertina -->
+                        <div class="mb-8 mt-4">
+                            <label for="immagine" class="block text-gray-700 text-sm font-bold mb-2">Immagine di Copertina (Header Sezione)</label>
+                            <div class="flex items-stretch">
+                                <input type="text" name="immagine" id="immagine" value="{{ old('immagine', $sezione->immagine) }}" readonly placeholder="Seleziona Immagine da File Manager..."
+                                    class="shadow appearance-none border rounded-l flex-1 py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <button type="button" id="fm-immagine-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0">
+                                    Scegli Immagine
+                                </button>
+                                <button type="button" id="fm-immagine-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
+                            </div>
+                            @if($sezione->immagine)
+                                <div class="mt-2 text-sm text-gray-600">
+                                    <img src="{{ asset($sezione->immagine) }}" class="h-20 w-auto object-cover mt-1 border rounded shadow-sm">
+                                </div>
+                            @endif
+                            <p class="text-xs text-gray-500 mt-1">Questa immagine verrà visualizzata in alto nella pagina della sezione e negli articoli ad essa collegati.</p>
+                            @error('immagine') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         <!-- ======== Pannello SEO & Condivisione ======== -->
                         <div class="mt-10 mb-8 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                             <div class="bg-gray-200 px-4 py-3 border-b border-gray-300">
@@ -199,32 +231,62 @@
                 } );
 
             document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById('fm-button').addEventListener('click', (event) => {
-                    event.preventDefault();
-                    fmActiveTarget = 'editor';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
-                });
+                const fmButton = document.getElementById('fm-button');
+                if (fmButton) {
+                    fmButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveTarget = 'editor';
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                }
 
-                document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
-                    event.preventDefault();
-                    fmActiveTarget = 'seo_image';
-                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
-                });
+                const fmSeoImageButton = document.getElementById('fm-seo-image-button');
+                if (fmSeoImageButton) {
+                    fmSeoImageButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveTarget = 'seo_image';
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                }
 
-                document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
-                    event.preventDefault();
-                    document.getElementById('seo_image').value = '';
-                });
+                const fmImmagineButton = document.getElementById('fm-immagine-button');
+                if (fmImmagineButton) {
+                    fmImmagineButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveTarget = 'immagine';
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                }
+
+                const fmImmagineClear = document.getElementById('fm-immagine-clear');
+                if (fmImmagineClear) {
+                    fmImmagineClear.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        document.getElementById('immagine').value = '';
+                    });
+                }
+
+                const fmSeoImageClear = document.getElementById('fm-seo-image-clear');
+                if (fmSeoImageClear) {
+                    fmSeoImageClear.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        document.getElementById('seo_image').value = '';
+                    });
+                }
             });
 
             // Callback function expected by FileManager
             function fmSetLink($url) {
-                let relativeUrl = $url;
-                try {
-                    const urlObj = new URL($url);
-                    relativeUrl = urlObj.pathname;
-                } catch (e) {
-                    console.error("Invalid URL passed to fmSetLink:", $url);
+                const baseUrl = '{{ config('app.url') }}';
+                let relativeUrl = $url.replace(baseUrl, '');
+                
+                if (!relativeUrl.startsWith('http')) {
+                    let cleanPath = relativeUrl.replace(/^\/+/, '');
+                    if (!cleanPath.startsWith('storage/')) {
+                        relativeUrl = '/storage/' + cleanPath;
+                    } else {
+                        relativeUrl = '/' + cleanPath;
+                    }
                 }
 
                 if(fmActiveTarget === 'editor') {
@@ -238,6 +300,8 @@
                     }
                 } else if(fmActiveTarget === 'seo_image') {
                     document.getElementById('seo_image').value = relativeUrl;
+                } else if(fmActiveTarget === 'immagine') {
+                    document.getElementById('immagine').value = relativeUrl;
                 }
             }
 

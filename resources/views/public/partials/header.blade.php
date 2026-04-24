@@ -30,19 +30,26 @@
 
                 <!-- Navigation Links -->
                 <nav class="tracking-tight hidden gap-7 sm:-my-px sm:flex justify-center items-center">
-                    <a href="{{ route('public.home') }}" :class="scrolled ? 'text-gray-500 hover:text-black border-transparent hover:border-black' : 'text-white/80 hover:text-white border-transparent hover:border-white'" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out font-serif italic text-base">
-                        Home
-                    </a>
+
                     
                     @if(isset($shared_sezioni))
                         @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
+                            @if(
+                                ($sez->modulo === 'shop' && $shopEnabled != '1') ||
+                                ($sez->modulo === 'b2b' && $shopEnabled != '1') ||
+                                ($sez->modulo === 'booking' && $bookingEnabled != '1')
+                            )
+                                @continue
+                            @endif
                             @php
                                 $url = route('public.sezione', $sez->slug ?? $sez->id.'-it');
+                                if ($sez->modulo === 'home') $url = route('public.home');
                                 if ($sez->modulo === 'shop') $url = route('public.shop.index');
                                 if ($sez->modulo === 'booking') $url = route('public.booking.index');
                                 if ($sez->modulo === 'b2b') $url = route('agent.dashboard');
                                 
                                 $isActive = request()->is($sez->slug ?? $sez->id.'-it') || 
+                                            ($sez->modulo === 'home' && request()->routeIs('public.home')) ||
                                             ($sez->modulo === 'shop' && request()->routeIs('public.shop.*')) ||
                                             ($sez->modulo === 'booking' && request()->routeIs('public.booking.*')) ||
                                             ($sez->modulo === 'b2b' && request()->routeIs('agent.*'));
@@ -139,19 +146,26 @@
          x-transition:leave-start="transform opacity-100 scale-100" 
          x-transition:leave-end="transform opacity-0 scale-95">
         <div class="pt-2 pb-3 space-y-1">
-            <a href="{{ route('public.home') }}" class="block pl-3 pr-4 py-2 border-l-4 {{ request()->routeIs('public.home') ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
-                Home
-            </a>
+
             
             @if(isset($shared_sezioni))
                 @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
+                    @if(
+                        ($sez->modulo === 'shop' && $shopEnabled != '1') ||
+                        ($sez->modulo === 'b2b' && $shopEnabled != '1') ||
+                        ($sez->modulo === 'booking' && $bookingEnabled != '1')
+                    )
+                        @continue
+                    @endif
                     @php
                         $url = route('public.sezione', $sez->slug ?? $sez->id.'-it');
+                        if ($sez->modulo === 'home') $url = route('public.home');
                         if ($sez->modulo === 'shop') $url = route('public.shop.index');
                         if ($sez->modulo === 'booking') $url = route('public.booking.index');
                         if ($sez->modulo === 'b2b') $url = route('agent.dashboard');
                         
                         $isActive = request()->is($sez->slug ?? $sez->id.'-it') || 
+                                    ($sez->modulo === 'home' && request()->routeIs('public.home')) ||
                                     ($sez->modulo === 'shop' && request()->routeIs('public.shop.*')) ||
                                     ($sez->modulo === 'booking' && request()->routeIs('public.booking.*')) ||
                                     ($sez->modulo === 'b2b' && request()->routeIs('agent.*'));

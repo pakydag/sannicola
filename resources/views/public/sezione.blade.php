@@ -3,17 +3,23 @@
 @section('title', $sezione->nome . ' - ' . config('app.name'))
 
 @section('content')
-<div class="bg-gray-50 shadow">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                {{ $sezione->nome }}
-            </h1>
-        </div>
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+        <!-- Breadcrumb / Back link -->
+        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
+            <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <span class="text-gray-900">{{ $sezione->nome }}</span>
+        </nav>
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-gray-50 shadow-sm">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12">
+    <header class="text-center mb-10">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+            {{ $sezione->nome }}
+        </h1>
+    </header>
 
     @if($sezione->contenuto)
     <div class="prose prose-indigo prose-lg mx-auto text-gray-500 mb-16 max-w-none">

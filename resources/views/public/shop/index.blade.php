@@ -3,6 +3,27 @@
 @section('title', 'Shop - ' . config('app.name'))
 
 @section('content')
+@if(isset($section) && $section->immagine)
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" style="background-image: url('{{ asset($section->immagine) }}');">
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
+            <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <span class="text-gray-900">Shop</span>
+        </nav>
+    </div>
+</div>
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+    <div class="text-center">
+        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+            Il Nostro Shop
+        </h1>
+        <p class="mt-4 text-gray-500 max-w-2xl mx-auto">
+            Esplora le nostre collezioni e categorie per trovare i migliori prodotti.
+        </p>
+    </div>
+</div>
+@else
 <div class="bg-white shadow-sm border-b">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div class="text-center">
@@ -15,6 +36,7 @@
         </div>
     </div>
 </div>
+@endif
 
 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col lg:flex-row gap-8">

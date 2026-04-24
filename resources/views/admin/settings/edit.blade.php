@@ -481,7 +481,17 @@
             // Callback richiamata dal pacchetto File Manager alexusmai
             function fmSetLink($url) {
                 const baseUrl = '{{ config('app.url') }}';
-                const relativeUrl = $url.replace(baseUrl, '');
+                let relativeUrl = $url.replace(baseUrl, '');
+                
+                if (!relativeUrl.startsWith('http')) {
+                    let cleanPath = relativeUrl.replace(/^\/+/, '');
+                    if (!cleanPath.startsWith('storage/')) {
+                        relativeUrl = '/storage/' + cleanPath;
+                    } else {
+                        relativeUrl = '/' + cleanPath;
+                    }
+                }
+
                 if (fmActiveInput) {
                     fmActiveInput.value = relativeUrl;
                 }

@@ -3,7 +3,7 @@
 @section('title', $articolo->titolo . ' - ' . config('app.name'))
 
 @section('content')
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" style="background-image: url('https://web.eyukka.it/storage/section.jpg');">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" @if($articolo->section && $articolo->section->immagine) style="background-image: url('{{ asset($articolo->section->immagine) }}');" @endif>
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">

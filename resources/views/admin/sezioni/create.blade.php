@@ -107,6 +107,23 @@
                             <textarea name="contenuto" id="contenuto" rows="8"
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-mono text-sm">{{ old('contenuto') }}</textarea>
                             @error('contenuto') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <!-- Immagine di Copertina -->
+                        <div class="mb-8">
+                            <label for="immagine" class="block text-gray-700 text-sm font-bold mb-2">Immagine di Copertina (Header Sezione)</label>
+                            <div class="flex items-stretch">
+                                <input type="text" name="immagine" id="immagine" value="{{ old('immagine') }}" readonly placeholder="Seleziona Immagine da File Manager..."
+                                    class="shadow appearance-none border rounded-l flex-1 py-2 px-3 bg-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <button type="button" id="fm-immagine-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0">
+                                    Scegli Immagine
+                                </button>
+                                <button type="button" id="fm-immagine-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Questa immagine verrà visualizzata in alto nella pagina della sezione e negli articoli ad essa collegati.</p>
+                            @error('immagine') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         <!-- ======== Pannello SEO & Condivisione ======== -->
                         <div class="mt-10 mb-8 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                             <div class="bg-gray-200 px-4 py-3 border-b border-gray-300">
@@ -184,6 +201,17 @@
                     window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                 });
 
+                document.getElementById('fm-immagine-button').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    fmActiveTarget = 'immagine';
+                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                });
+
+                document.getElementById('fm-immagine-clear').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    document.getElementById('immagine').value = '';
+                });
+
                 document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
                     event.preventDefault();
                     document.getElementById('seo_image').value = '';
@@ -192,6 +220,18 @@
 
             // Callback function expected by FileManager
             function fmSetLink($url) {
+                const baseUrl = '{{ config('app.url') }}';
+                let relativeUrl = $url.replace(baseUrl, '');
+                
+                if (!relativeUrl.startsWith('http')) {
+                    let cleanPath = relativeUrl.replace(/^\/+/, '');
+                    if (!cleanPath.startsWith('storage/')) {
+                        relativeUrl = '/storage/' + cleanPath;
+                    } else {
+                        relativeUrl = '/' + cleanPath;
+                    }
+                }
+
                 if(fmActiveTarget === 'editor') {
                     if(editorInstance) {
                         editorInstance.model.change( writer => {
@@ -203,6 +243,8 @@
                     }
                 } else if(fmActiveTarget === 'seo_image') {
                     document.getElementById('seo_image').value = $url;
+                } else if(fmActiveTarget === 'immagine') {
+                    document.getElementById('immagine').value = $url;
                 }
             }
 

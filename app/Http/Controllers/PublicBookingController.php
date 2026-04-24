@@ -29,7 +29,7 @@ class PublicBookingController extends Controller
         ];
 
         $structures = \App\Models\BookingStructure::where('attivo', true)->with('photos')->get();
-        return view('public.booking.index', compact('structures', 'seo'));
+        return view('public.booking.index', compact('structures', 'seo', 'section'));
     }
 
     public function search(Request $request)
