@@ -15,6 +15,19 @@ nav a:hover p,
 }
 header nav .border-indigo-500, header nav .border-gray-300{border-color: rgb(55 164 178) !important}
 a p.text-gray-500, header .text-gray-900{color: rgb(55 164 178) !important;}
+a[title="Accedi Area Booking"]:hover,
+a[title="Accedi Area Booking"]:hover svg,
+a[title="Il Mio Account"]:hover,
+a[title="Il Mio Account"]:hover svg {
+    color: rgb(55, 164, 178) !important;
+    stroke: rgb(55, 164, 178) !important; /* Molto importante per le icone con stroke */
+}
+
+/* Rende la transizione fluida come il resto del menu */
+a[title="Accedi Area Booking"], 
+a[title="Accedi Area Booking"] svg {
+    transition: all 0.3s ease-in-out !important;
+}
 </style>
 
 <header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
