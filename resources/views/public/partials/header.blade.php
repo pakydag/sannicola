@@ -4,9 +4,19 @@
     $bookingEnabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value');
 @endphp
 <header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
-    <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between h-28">
-            <div class="flex">
+    <div class="max-w-7xl mx-auto w-full">
+        <div class="flex items-center justify-between h-28">
+             <!-- Logo -->
+                <div class="flex shrink-0 mr-5">
+                    <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
+                        @if($siteLogo)
+                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" class="h-20 w-auto object-contain">
+                        @else
+                            {{ config('app.name', 'Il Mio Sito') }}
+                        @endif
+                    </a>
+                </div>
+            <div class="flex items-center gap-7">
                 <!-- Mobile menu button -->
                 <div class="-ml-2 mr-2 flex items-center sm:hidden">
                     <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" aria-label="Menu" aria-expanded="false">
@@ -17,16 +27,7 @@
                     </button>
                 </div>
 
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center mr-5">
-                    <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
-                        @if($siteLogo)
-                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" class="h-10 w-auto object-contain">
-                        @else
-                            {{ config('app.name', 'Il Mio Sito') }}
-                        @endif
-                    </a>
-                </div>
+
 
                 <!-- Navigation Links -->
                 <nav class="tracking-tight hidden gap-7 sm:-my-px sm:flex justify-center items-center">
@@ -90,7 +91,7 @@
                 </nav>
             </div>
             
-            <div class="flex items-center space-x-2 sm:ml-6">
+            <div class="flex items-center space-x-5 sm:ml-6">
     @if($bookingEnabled == '1')
         @if(Auth::guard('booking_customer')->check())
             <div class="relative inline-flex items-center" x-data="{ open: false }" @click.away="open = false">
