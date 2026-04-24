@@ -3,6 +3,20 @@
     $shopEnabled = \App\Models\Setting::where('key', 'shop_enabled')->value('value');
     $bookingEnabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value');
 @endphp
+
+<style>
+header nav a{padding-top: 48px !important; padding-bottom: 42px !important;}
+nav a:hover,
+nav a:hover p,
+[class*="hover:text-gray"]:hover,
+[class*="hover:border-gray"]:hover {
+    color: rgb(55, 164, 178) !important;
+    border-color: rgb(55, 164, 178) !important;
+}
+header nav .border-indigo-500, header nav .border-gray-300{border-color: rgb(55 164 178) !important}
+a p.text-gray-500, header .text-gray-900{color: rgb(55 164 178) !important;}
+</style>
+
 <header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
     <div class="max-w-7xl mx-auto w-full">
         <div class="flex items-center justify-between h-28">
@@ -10,7 +24,7 @@
                 <div class="flex shrink-0 mr-5">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
                         @if($siteLogo)
-                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" class="h-20 w-auto object-contain">
+                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'brightness-0 invert'" class="h-16 w-auto transition-all duration-300">
                         @else
                             {{ config('app.name', 'Il Mio Sito') }}
                         @endif
@@ -59,7 +73,7 @@
                             @if($sez->tipo == 'archivio' && $sez->menu_a_tendina && !$sez->modulo)
                                 <!-- Dropdown per Archivio (Solo per sezioni CMS normali) -->
                                 <div class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent" x-data="{ open: false }" @click.away="open = false" @mouseenter="open = true" @mouseleave="open = false">
-                                    <a href="{{ $url }}" :class="scrolled ? 'text-gray-500 hover:text-black' : 'text-white/80 hover:text-white'" class="font-serif italic text-base leading-5 transition duration-150 ease-in-out inline-block">{{ $sez->nome }} <svg class="ml-1 h-4 w-4 inline-block transform transition-transform duration-200" :class="{'rotate-180': open, 'text-gray-400': scrolled, 'text-white/50': !scrolled}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
+                                    <a href="{{ $url }}" :class="scrolled ? 'text-gray-500 hover:text-black' : 'text-white/80 hover:text-white'" class="text-base leading-5 transition duration-150 ease-in-out inline-block">{{ $sez->nome }} <svg class="ml-1 h-4 w-4 inline-block transform transition-transform duration-200" :class="{'rotate-180': open, 'text-gray-400': scrolled, 'text-white/50': !scrolled}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
                                     
                                     <div x-show="open" 
                                          x-transition:enter="transition ease-out duration-100" 
@@ -84,7 +98,7 @@
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="font-serif italic text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
