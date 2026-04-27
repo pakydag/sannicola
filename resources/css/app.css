@@ -13,6 +13,9 @@
         @apply text-cyan-600;
     }
     .hover-menu:hover {
-        @apply text-cyan-600 !important;
+        @apply text-cyan-600;
+    }
+    .hover-menu-line:hover {
+        @apply border-cyan-600 !important;
     }
 }
