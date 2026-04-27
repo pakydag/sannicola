@@ -24,7 +24,7 @@
         <article class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative">
             
             <header class="mb-10 text-center">
-                <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase">
+                <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase hidden">
                     {{ $articolo->section->nome ?? 'Senza Categoria' }}
                     @if($articolo->mostra_data)
                         &bull; {{ $articolo->created_at->format('d M Y') }}

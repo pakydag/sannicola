@@ -12,15 +12,15 @@
                 </nav>
             </div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16 bg-white py-12 border-t-0 shadow-sm rounded-b-lg border border-gray-100">
-                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">Le Nostre Strutture</h1>
+                <h1 class="text-4xl font-extrabold primary sm:text-5xl">Le Nostre Strutture</h1>
                 <p class="mt-4 text-xl text-gray-500">Prenota il tuo soggiorno ideale in una delle nostre fantastiche location.</p>
             </div>
         @else
         <div class="pt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">Le Nostre Strutture</h1>
+                <h1 class="text-4xl font-extrabold primary sm:text-5xl">Le Nostre Strutture</h1>
                 <p class="mt-4 text-xl text-gray-500">Prenota il tuo soggiorno ideale in una delle nostre fantastiche location.</p>
             </div>
         @endif

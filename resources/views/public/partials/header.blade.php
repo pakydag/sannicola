@@ -6,13 +6,6 @@
 
 <style>
 header nav a{padding-top: 48px !important; padding-bottom: 42px !important;}
-nav a:hover,
-nav a:hover p,
-[class*="hover:text-gray"]:hover,
-[class*="hover:border-gray"]:hover {
-    color: rgb(55, 164, 178) !important;
-    border-color: rgb(55, 164, 178) !important;
-}
 header nav .border-indigo-500, header nav .border-gray-300{border-color: rgb(55 164 178) !important}
 a p.text-gray-500, header .text-gray-900{color: rgb(55 164 178) !important;}
 a[title="Accedi Area Booking"]:hover,
@@ -111,7 +104,7 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-indigo-500 text-gray-900' : 'border-transparent text-gray-500 hover:primary hover:border-gray-300' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
