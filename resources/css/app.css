@@ -12,4 +12,7 @@
     .primary {
         @apply text-cyan-600;
     }
+    .hover-menu:hover {
+        @apply text-cyan-600 !important;
+    }
 }
