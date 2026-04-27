@@ -72,39 +72,10 @@ class VapiWebhookController extends Controller
     {
         if ($contact) {
             Log::info("Vapi AssistantRequest: riconosciuto contatto #{$contact->id} ({$contact->first_name})");
-
-            $msg = "Ciao " . $contact->first_name . ", ben tornato!";
-
-            // 1. Verifica Ticket Aperti
-            $customerPhone = $payload['message']['call']['customer']['number'] ?? ($payload['call']['customer']['number'] ?? null);
-            $openTicket = AiTicket::where('status', 'open')
-                ->where(function($query) use ($contact, $customerPhone) {
-                    $query->where('contact_id', $contact->id);
-                    if ($customerPhone) {
-                        $query->orWhere('phone', 'like', "%{$customerPhone}%");
-                    }
-                })->first();
-
-            // 2. Verifica Appuntamenti Futuri
-            $futureAppointment = \App\Models\Appointment::where('status', 'confirmed')
-                ->where('start_time', '>', now())
-                ->where('contact_id', $contact->id)
-                ->orderBy('start_time', 'asc')
-                ->first();
-
-            if ($openTicket) {
-                $msg .= " Ti confermo che il tuo ticket per '" . $openTicket->assistance_type . "' è in corso e presto riceverai comunicazioni in merito.";
-                $msg .= " Desideri aprire un altro ticket o fissare un appuntamento?";
-            } elseif ($futureAppointment) {
-                $dateFormatted = date('d/m/Y \a\l\l\e H:i', strtotime($futureAppointment->start_time));
-                $msg .= " Ho visto che hai già un appuntamento fissato per il " . $dateFormatted . ". Desideri modificarlo, annullarlo oppure vuoi aprire un ticket o fissare un altro appuntamento?";
-            } else {
-                $msg .= " Come posso aiutarti oggi? Vuoi aprire un ticket o fissare un appuntamento?";
-            }
-
+            
             return response()->json([
                 'assistant' => [
-                    'firstMessage' => $msg
+                    'firstMessage' => "Ciao " . $contact->first_name . ", come posso aiutarti?"
                 ]
             ]);
         }
@@ -112,7 +83,7 @@ class VapiWebhookController extends Controller
         // Fallback per numeri non riconosciuti
         return response()->json([
             'assistant' => [
-                'firstMessage' => "Cèdam srl, sono Vanessa, come posso aiutarti?"
+                'firstMessage' => "Cèdam srl, sono Vanessa, come ti chiami?"
             ]
         ]);
     }
