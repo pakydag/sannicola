@@ -30,7 +30,7 @@
                         &bull; {{ $articolo->created_at->format('d M Y') }}
                     @endif
                 </p>
-                <h1 class="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+                <h1 class="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight primary">
                     {{ $articolo->titolo }}
                 </h1>
                 @if($articolo->sottotitolo)
