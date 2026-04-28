@@ -42,7 +42,7 @@
                     
                     @if(!empty($widget->data['link']))
                         <div class="mt-4">
-                            <a href="{{ $widget->data['link'] }}" class="border border-black inline-block px-11 py-5 uppercase font-thin transition-transform duration-200 ease-linear hover:-translate-y-1">
+                            <a href="{{ $widget->data['link'] }}" class="btn">
                                 Scopri di più
                             </a>
                         </div>

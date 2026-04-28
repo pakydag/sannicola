@@ -39,7 +39,7 @@
 
         <div class="mt-auto">
             @if($s->prenotabile)
-                <a href="{{ route('public.booking.show', $s->id) }}" class="inline-block border border-black px-11 py-5 text-black mb-5">
+                <a href="{{ route('public.booking.show', $s->id) }}" class="btn mb-5">
                     Scopri e Prenota
                 </a>
             @else

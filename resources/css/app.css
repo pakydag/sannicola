@@ -21,4 +21,11 @@
     .hover-menu-line:hover {
         @apply border-cyan-600 !important;
     }
+    .btn {
+        @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out;
+    }
+
+    .btn:hover {
+        @apply border-cyan-600 text-cyan-600;
+    }
 }

@@ -10,7 +10,7 @@
         $embedCode = preg_replace('/height="\d+"/', '', $embedCode);
         
         // Iniezione stili
-        $embedCode = str_replace('<iframe', '<iframe style="border:0; width:100%; height:'.$height.'px; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"', $embedCode);
+        $embedCode = str_replace('<iframe', '<iframe style="border:0; width:100%; height:'.$height.'px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"', $embedCode);
     }
 @endphp
 

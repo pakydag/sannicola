@@ -21,10 +21,10 @@
 
     <div class="mx-auto max-w-7xl rounded-b-lg">
 
-        <article class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative rounded-lg">
+        <article class="bg-white shadow-sm py-6 px-11 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
             
             <header class="mb-10 text-center">
-                <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase hidden">
+                <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase">
                     {{ $articolo->section->nome ?? 'Senza Categoria' }}
                     @if($articolo->mostra_data)
                         &bull; {{ $articolo->created_at->format('d M Y') }}
@@ -105,8 +105,14 @@
                         $actualWidget = $isGlobal ? \App\Models\GlobalWidget::find($widget->data['global_widget_id'] ?? null) : $widget;
                     @endphp
 
+        <!-- Area Contact Form -->
+        @if($articolo->has_contact_form)
+            <div>
+                @include('public.partials.contact_form')
+            </div>
+        @endif
                     @if($actualWidget)
-                        <div class="widget-block bg-white shadow-sm overflow-hidden {{ ($actualWidget->tipo === 'gallery' || $actualWidget->tipo === 'video') ? 'rounded-none p-0' : 'rounded-2xl ring-1 ring-gray-200 p-8' }}">
+                        <div class="widget-block bg-white shadow-sm overflow-hidden {{ ($actualWidget->tipo === 'gallery' || $actualWidget->tipo === 'video') ? 'rounded-none p-0' : 'rounded-lg ring-1 ring-gray-200' }}">
                             @if($actualWidget->titolo && !in_array($actualWidget->tipo, ['gallery', 'video']))
                                 <h3 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-100">{{ $actualWidget->titolo }}</h3>
                             @endif
@@ -140,12 +146,6 @@
             </div>
         @endif
 
-        <!-- Area Contact Form -->
-        @if($articolo->has_contact_form)
-            <div class="mt-8">
-                @include('public.partials.contact_form')
-            </div>
-        @endif
         
     </div>
 </div>

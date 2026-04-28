@@ -63,7 +63,7 @@
 
                 <!-- Submit -->
                 <div class="w-full md:w-auto flex-grow flex items-end">
-                    <button type="submit" class="inline-flex leading-none self-end border border-black px-6 pt-[17px] pb-[17px] py-3 mb-1 uppercase font-thin transition-transform duration-200 ease-linear hover:-translate-y-1">
+                    <button type="submit" class="inline-flex leading-none self-end px-6 pt-[17px] pb-[17px] py-3 uppercase btn">
                         <svg class="w-4 h-4 self-center -mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         Cerca
                     </button>

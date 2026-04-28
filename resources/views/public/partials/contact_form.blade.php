@@ -1,5 +1,5 @@
-<div class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative" id="contatti">
-    <div class="text-center mb-8">
+<div class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative rounded-lg" id="contatti">
+    <div class="text-center mb-8 hidden">
         <h3 class="text-2xl font-bold text-gray-900 mb-2">Contattaci</h3>
         <p class="text-gray-600">Compila il modulo sottostante per inviarci una richiesta. Ti risponderemo al più presto.</p>
     </div>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="text-right">
-                <button type="submit" class="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+                <button type="submit" class="inline-flex justify-center px-6 pt-[17px] pb-[17px] btn">
                     Invia Richiesta
                 </button>
             </div>

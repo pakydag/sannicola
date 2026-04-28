@@ -9,12 +9,12 @@
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <span class="text-gray-900">{{ $sezione->nome }}</span>
+            <span>{{ $sezione->nome }}</span>
         </nav>
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-sm rounded-b-lg mb-12">
+<div class="max-w-7xl mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12">
     <header class="text-center mb-10">
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight primary">
             {{ $sezione->nome }}
@@ -62,7 +62,7 @@
                                 </a>
                             </div>
                             <div class="pb-6 px-6 text-center">
-                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="inline-block border border-black px-11 py-5 text-black mb-5">Leggi di più &rarr;</a>
+                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="btn mb-5">Leggi di più &rarr;</a>
                             </div>
                         </div>
                     @endforeach
