@@ -70,22 +70,50 @@ class VapiWebhookController extends Controller
      */
     private function handleAssistantRequest($payload, $contact = null)
     {
+        // Recuperiamo l'assistente dal payload (se presente)
+        // Prendi l'assistente dal payload o usa quello predefinito nelle impostazioni
+        $assistantId = Setting::where('key', 'vapi_assistant_id')->value('value');
+        $assistant = $payload['message']['assistant'] ?? ($payload['assistant'] ?? null);
+
+        // Se l'assistente non è nel payload (tipico di assistant-request con phone number impostato su "Server"),
+        // usiamo l'assistantId predefinito per identificare Riley
+        if (!$assistant && $assistantId) {
+            $assistant = ['id' => $assistantId];
+        }
+
+        if (!$assistant) {
+            return response()->json(['error' => 'No assistant found'], 400);
+        }
+
         if ($contact) {
             Log::info("Vapi AssistantRequest: riconosciuto contatto #{$contact->id} ({$contact->first_name})");
             
+            $firstName = $contact->first_name;
+            $greeting = "Ciao " . $firstName . ", come posso aiutarti?";
+            
+            // 1. Forziamo il messaggio iniziale
+            $assistant['firstMessage'] = $greeting;
+            
+            // 2. Forziamo la modalità 'assistant-speaks-first' per evitare che l'AI generi un saluto generico
+            $assistant['firstMessageMode'] = 'assistant-speaks-first';
+
+            // 3. Iniettiamo l'informazione nel prompt di sistema così l'AI "sa" chi è il cliente
+            if (isset($assistant['model']['messages'])) {
+                foreach ($assistant['model']['messages'] as &$message) {
+                    if ($message['role'] === 'system') {
+                        $message['content'] .= "\n\nDATI CLIENTE RICONOSCIUTO:\n- Nome: {$firstName} {$contact->last_name}\n- Azienda: " . ($contact->company_name ?? 'N/D');
+                        $message['content'] .= "\nL'utente è già stato riconosciuto dal sistema. NON chiedere il nome, salutalo cordialmente per nome.";
+                    }
+                }
+            }
+            
             return response()->json([
-                'assistant' => [
-                    'firstMessage' => "Ciao " . $contact->first_name . ", come posso aiutarti?"
-                ]
+                'assistant' => $assistant
             ]);
         }
 
-        // Fallback per numeri non riconosciuti
-        return response()->json([
-            'assistant' => [
-                'firstMessage' => "Cèdam srl, sono Vanessa, come ti chiami?"
-            ]
-        ]);
+        // Fallback per numeri non riconosciuti o assistant.started generici
+        return response()->json(['status' => 'ok']);
     }
 
     /**

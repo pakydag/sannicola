@@ -283,6 +283,28 @@ class VapiService
     }
 
     /**
+     * Update an ongoing call with new assistant configuration
+     */
+    public function updateCall($callId, $data)
+    {
+        if (!$this->apiKey) return null;
+
+        try {
+            $response = Http::withHeaders(['Authorization' => 'Bearer ' . $this->apiKey])
+                ->patch("{$this->baseUrl}/call/{$callId}", $data);
+
+            if ($response->failed()) {
+                Log::error("VapiService Update Call Failed: " . $response->status() . " - " . $response->body());
+            }
+
+            return $response->successful() ? $response->json() : null;
+        } catch (\Exception $e) {
+            Log::error('VapiService Update Call Error: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
      * Get details for a specific call from Vapi
      */
     public function getCallDetails($callId)
