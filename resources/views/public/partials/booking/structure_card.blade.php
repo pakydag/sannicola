@@ -2,7 +2,7 @@
     $s = $structure;
 @endphp
 
-<div class="overflow-hidden bg-white hover:shadow-2xl transition-shadow duration-300 flex flex-col h-full border border-gray-100">
+<div class="overflow-hidden bg-white hover:shadow-2xl transition-shadow duration-300 flex flex-col h-full border border-gray-100 rounded-lg">
     <!-- Immagine -->
     <div class="relative h-64">
         @if($s->photos->count() > 0)

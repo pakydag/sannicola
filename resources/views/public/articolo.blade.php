@@ -21,7 +21,7 @@
 
     <div class="mx-auto max-w-7xl rounded-b-lg">
 
-        <article class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative">
+        <article class="bg-white shadow-sm xl:p-14 p-8 overflow-hidden relative rounded-lg">
             
             <header class="mb-10 text-center">
                 <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase hidden">

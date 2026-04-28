@@ -14,9 +14,9 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-sm rounded-b-lg mb-12">
     <header class="text-center mb-10">
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900">
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight primary">
             {{ $sezione->nome }}
         </h1>
     </header>
@@ -26,11 +26,12 @@
         {!! $sezione->contenuto !!}
     </div>
     @endif
-
+</div>
+<div class="max-w-7xl mx-auto">
     @if($sezione->tipo !== 'pagina')
         @if($articoli->count() > 0)
-            <div class="border-t border-gray-200 pt-10">
-                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 mb-8 text-center">Articoli in questa sezione</h2>
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 mb-8 text-center hidden">Articoli in questa sezione</h2>
                 
                 @php
                     // Mappa il numero di colonne selezionato alle classi Tailwind complete
@@ -48,7 +49,7 @@
                     @foreach($articoli as $articolo)
                         <div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col transition hover:shadow-md">
                             @if($articolo->hasMedia('foto'))
-                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block p-4 border-b">
+                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block">
                                     <img src="{{ $articolo->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $articolo->titolo }}" class="w-full h-48 object-cover rounded">
                                 </a>
                             @endif
@@ -56,7 +57,7 @@
                                 <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block mt-2">
                                     <h3 class="text-xl font-semibold text-gray-900">{{ $articolo->titolo }}</h3>
                                     @if($articolo->sottotitolo)
-                                        <p class="mt-3 text-base text-gray-500">{{ Str::limit($articolo->sottotitolo, 100) }}</p>
+                                        <p class="mt-3 text-base primary">{{ Str::limit($articolo->sottotitolo, 100) }}</p>
                                     @endif
                                 </a>
                             </div>
