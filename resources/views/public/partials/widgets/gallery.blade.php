@@ -27,7 +27,7 @@
             <div class="swiper-wrapper">
                 @foreach($widget->data['photos'] as $photo)
                     @if(!empty($photo['url']) || !empty($photo['video_url']))
-                        <div class="swiper-slide h-64 sm:h-96 md:h-[500px]">
+                        <div class="swiper-slide h-64 sm:h-96 md:h-[500px] overflow-hidden">
                             @if(!empty($photo['video_url']))
                                 <video autoplay loop muted playsinline class="w-full h-full object-cover">
                                     <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
