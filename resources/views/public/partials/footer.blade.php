@@ -108,7 +108,7 @@
 
         <!-- Bottom Bar -->
         <div class="pt-8 border-t border-gray-800 text-center text-gray-500 text-xs">
-            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Tutti i diritti riservati. Realizzato con ❤️ per il tuo business.</p>
+            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Tutti i diritti riservati.</p>
         </div>
     </div>
 </footer>

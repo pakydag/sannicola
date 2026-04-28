@@ -98,7 +98,7 @@
 
         <!-- Area Widget -->
         @if($articolo->widgets->count() > 0)
-            <div class="mt-16 space-y-16">
+            <div>
                 @foreach($articolo->widgets as $widget)
                     @php
                         $isGlobal = $widget->tipo === 'global_widget';

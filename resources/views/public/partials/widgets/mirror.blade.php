@@ -21,7 +21,7 @@
                 $isReversed = ($index % 2 !== 0);
             @endphp
             
-            <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-gray-50 p-6 md:p-10 shadow-sm border border-gray-100">
+            <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-white p-6 md:p-10 shadow-sm border border-gray-100 rounded-lg">
                 
                 <!-- Image Section -->
                 <div class="w-full md:w-1/2">
@@ -39,13 +39,13 @@
                 <!-- Text Section -->
                 <div class="w-full md:w-1/2 flex flex-col justify-center">
                     <h4 class="text-2xl font-bold text-gray-900 mb-2">
-                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="hover:text-indigo-600 transition-colors">
+                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}"">
                             {{ $item->titolo }}
                         </a>
                     </h4>
                     
                     @if($item->sottotitolo)
-                        <h5 class="text-lg font-medium text-indigo-600 mb-4">{{ $item->sottotitolo }}</h5>
+                        <h5 class="text-lg font-medium primary mb-4">{{ $item->sottotitolo }}</h5>
                     @endif
                     
                     <div class="text-gray-600 mb-6 line-clamp-3">

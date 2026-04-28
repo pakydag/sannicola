@@ -14,7 +14,7 @@
                    
 
                     @if($widget->tipo === 'gallery')
-                    <div class="max-w-full w-screen mx-auto widget-block bg-white shadow-sm rounded-none overflow-hidden">
+                    <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden mb-16">
                     @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
                     @endif    
                         @include('public.partials.widgets.gallery', ['widget' => $widget])</div>
@@ -24,7 +24,7 @@
                             @endif
                             @include('public.partials.widgets.video', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'mirror_blocks')
-                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white overflow-hidden">
+                        <div class="max-w-7xl mx-auto mb-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="text-3xl font-extrabold hidden text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.mirror', ['widget' => $widget])</div>
@@ -48,7 +48,7 @@
                             @include('public.partials.widgets.booking_search', ['widget' => $widget])
                         </div>
                     @elseif($widget->tipo === 'info_blocks')
-                        <div class="max-w-7xl mx-auto mb-12 widget-block bg-white overflow-hidden">
+                        <div class="max-w-7xl mx-auto mb-16 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.info_blocks', ['widget' => $widget])</div>
@@ -59,10 +59,10 @@
                             @include('public.partials.widgets.booking_structures', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'map')
                         @php $fullWidth = $widget->data['full_width'] ?? 0; @endphp
-                        <div class="{{ $fullWidth ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' }} mb-12 widget-block">
+                        <div class="{{ $fullWidth ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' }} widget-block">
                             @if($widget->titolo)
-                                <div class="max-w-7xl mx-auto mb-6">
-                                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">{{ $widget->titolo }}</h2>
+                                <div class="max-w-7xl mx-auto mt-12">
+                                    <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl hidden">{{ $widget->titolo }}</h2>
                                 </div>
                             @endif
                             @include('public.partials.widgets.map', ['widget' => $widget])

@@ -23,7 +23,7 @@
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         @endonce
 
-        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden rounded-lg">
+        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden rounded-lg mt-8">
             <div class="swiper-wrapper">
                 @foreach($widget->data['photos'] as $photo)
                     @if(!empty($photo['url']) || !empty($photo['video_url']))

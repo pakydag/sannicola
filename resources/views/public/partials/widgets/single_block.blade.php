@@ -20,7 +20,7 @@
     <div class="overflow-hidden" style="background-color: {{ $bgColor }}; color: {{ $textColor }};">
         @if(($widget->data['layout'] ?? 'side') == 'stacked')
             <!-- Layout Stacked (Foto Sopra) -->
-            <div class="flex flex-col bg-gray-100">
+            <div class="flex flex-col bg-gray-100 rounded-lg">
                 @if(!empty($widget->data['video']))
                     <div class="h-64 md:h-96 relative bg-black">
                         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
@@ -29,7 +29,7 @@
                     </div>
                 @elseif(!empty($widget->data['image']))
                     <div class="h-64 md:h-96 relative bg-gray-200">
-                        <img src="{{ asset($widget->data['image']) }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
+                        <img src="{{ asset($widget->data['image']) }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover rounded-t-lg">
                     </div>
                 @endif
 
