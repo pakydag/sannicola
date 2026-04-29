@@ -9,23 +9,7 @@
 
 /* resources/css/app.css */
 @layer components {
-    .primary {
-        @apply text-cyan-600;
-    }
-     .menu-line{
-        @apply border-cyan-600 !important;
-    }
-    .hover-menu:hover {
-        @apply text-cyan-600;
-    }
-    .hover-menu-line:hover {
-        @apply border-cyan-600 !important;
-    }
     .btn {
-        @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out;
-    }
-
-    .btn:hover {
-        @apply border-cyan-600 text-cyan-600;
+        @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary;
     }
 }

@@ -1,7 +1,7 @@
 @php
     $sourceSectionId = $widget->data['source_section_id'] ?? null;
     $limit = $widget->data['limit'] ?? 3;
-    
+
     $specchioArticles = collect();
     if ($sourceSectionId) {
         $specchioArticles = \App\Models\Article::where('section_id', $sourceSectionId)
@@ -20,9 +20,9 @@
                 // So flex-row-reverse should apply when index is odd (index % 2 !== 0)
                 $isReversed = ($index % 2 !== 0);
             @endphp
-            
+
             <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-white p-6 md:p-10 shadow-sm border border-gray-100 rounded-lg">
-                
+
                 <!-- Image Section -->
                 <div class="w-full md:w-1/2">
                     @if($item->hasMedia('foto'))
@@ -43,15 +43,15 @@
                             {{ $item->titolo }}
                         </a>
                     </h4>
-                    
+
                     @if($item->sottotitolo)
-                        <h5 class="text-lg font-medium primary mb-4">{{ $item->sottotitolo }}</h5>
+                        <h5 class="text-lg font-medium text-primary mb-4">{{ $item->sottotitolo }}</h5>
                     @endif
-                    
+
                     <div class="text-gray-600 mb-6 line-clamp-3">
                         {!! strip_tags($item->descrizione) !!}
                     </div>
-                    
+
                     <div>
                         <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="whitespace-nowrap inline-flex border border-black px-8 py-4 text-black mb-5 mt-4">
                             Leggi di più

@@ -15,7 +15,7 @@ a[title="Il Mio Account"]:hover svg {
 }
 
 /* Rende la transizione fluida come il resto del menu */
-a[title="Accedi Area Booking"], 
+a[title="Accedi Area Booking"],
 a[title="Accedi Area Booking"] svg {
     transition: all 0.3s ease-in-out !important;
 }
@@ -50,7 +50,7 @@ a[title="Accedi Area Booking"] svg {
                 <!-- Navigation Links -->
                 <nav class="tracking-tight hidden gap-7 sm:-my-px sm:flex justify-center items-center">
 
-                    
+
                     @if(isset($shared_sezioni))
                         @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
                             @if(
@@ -66,8 +66,8 @@ a[title="Accedi Area Booking"] svg {
                                 if ($sez->modulo === 'shop') $url = route('public.shop.index');
                                 if ($sez->modulo === 'booking') $url = route('public.booking.index');
                                 if ($sez->modulo === 'b2b') $url = route('agent.dashboard');
-                                
-                                $isActive = request()->is($sez->slug ?? $sez->id.'-it') || 
+
+                                $isActive = request()->is($sez->slug ?? $sez->id.'-it') ||
                                             ($sez->modulo === 'home' && request()->routeIs('public.home')) ||
                                             ($sez->modulo === 'shop' && request()->routeIs('public.shop.*')) ||
                                             ($sez->modulo === 'booking' && request()->routeIs('public.booking.*')) ||
@@ -78,16 +78,16 @@ a[title="Accedi Area Booking"] svg {
                                 <!-- Dropdown per Archivio (Solo per sezioni CMS normali) -->
                                 <div class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent" x-data="{ open: false }" @click.away="open = false" @mouseenter="open = true" @mouseleave="open = false">
                                     <a href="{{ $url }}" :class="scrolled ? 'text-gray-500 hover:text-black' : 'text-white/80 hover:text-white'" class="text-base leading-5 transition duration-150 ease-in-out inline-block">{{ $sez->nome }} <svg class="ml-1 h-4 w-4 inline-block transform transition-transform duration-200" :class="{'rotate-180': open, 'text-gray-400': scrolled, 'text-white/50': !scrolled}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
-                                    
-                                    <div x-show="open" 
-                                         x-transition:enter="transition ease-out duration-100" 
-                                         x-transition:enter-start="transform opacity-0 scale-95" 
-                                         x-transition:enter-end="transform opacity-100 scale-100" 
-                                         x-transition:leave="transition ease-in duration-75" 
-                                         x-transition:leave-start="transform opacity-100 scale-100" 
-                                         x-transition:leave-end="transform opacity-0 scale-95" 
+
+                                    <div x-show="open"
+                                         x-transition:enter="transition ease-out duration-100"
+                                         x-transition:enter-start="transform opacity-0 scale-95"
+                                         x-transition:enter-end="transform opacity-100 scale-100"
+                                         x-transition:leave="transition ease-in duration-75"
+                                         x-transition:leave-start="transform opacity-100 scale-100"
+                                         x-transition:leave-end="transform opacity-0 scale-95"
                                          class="origin-top-left absolute left-0 top-12 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 divide-y divide-gray-100 focus:outline-none" style="display: none;">
-                                        
+
                                         <div class="py-1">
                                             <a href="{{ $url }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-semibold border-b">
                                                 Tutti gli articoli
@@ -102,13 +102,13 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'menu-line primary' : 'border-transparent text-gray-500 hover-menu hover-menu-line' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
                 </nav>
             </div>
-            
+
             <div class="flex items-center space-x-5 sm:ml-6">
     @if($bookingEnabled == '1')
         @if(Auth::guard('booking_customer')->check())
@@ -157,16 +157,16 @@ a[title="Accedi Area Booking"] svg {
     </div>
 
     <!-- Mobile menu, toggle via Alpine.js -->
-    <div x-show="mobileMenuOpen" class="sm:hidden bg-white border-t border-gray-200" style="display: none;" 
-         x-transition:enter="transition ease-out duration-100" 
-         x-transition:enter-start="transform opacity-0 scale-95" 
-         x-transition:enter-end="transform opacity-100 scale-100" 
-         x-transition:leave="transition ease-in duration-75" 
-         x-transition:leave-start="transform opacity-100 scale-100" 
+    <div x-show="mobileMenuOpen" class="sm:hidden bg-white border-t border-gray-200" style="display: none;"
+         x-transition:enter="transition ease-out duration-100"
+         x-transition:enter-start="transform opacity-0 scale-95"
+         x-transition:enter-end="transform opacity-100 scale-100"
+         x-transition:leave="transition ease-in duration-75"
+         x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95">
         <div class="pt-2 pb-3 space-y-1">
 
-            
+
             @if(isset($shared_sezioni))
                 @foreach($shared_sezioni->where('mostra_nel_menu', true) as $sez)
                     @if(
@@ -182,8 +182,8 @@ a[title="Accedi Area Booking"] svg {
                         if ($sez->modulo === 'shop') $url = route('public.shop.index');
                         if ($sez->modulo === 'booking') $url = route('public.booking.index');
                         if ($sez->modulo === 'b2b') $url = route('agent.dashboard');
-                        
-                        $isActive = request()->is($sez->slug ?? $sez->id.'-it') || 
+
+                        $isActive = request()->is($sez->slug ?? $sez->id.'-it') ||
                                     ($sez->modulo === 'home' && request()->routeIs('public.home')) ||
                                     ($sez->modulo === 'shop' && request()->routeIs('public.shop.*')) ||
                                     ($sez->modulo === 'booking' && request()->routeIs('public.booking.*')) ||
