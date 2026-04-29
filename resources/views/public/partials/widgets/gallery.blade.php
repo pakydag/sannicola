@@ -23,17 +23,18 @@
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         @endonce
 
-        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden rounded-lg mt-8">
+        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden rounded-lg">
             <div class="swiper-wrapper">
                 @foreach($widget->data['photos'] as $photo)
                     @if(!empty($photo['url']) || !empty($photo['video_url']))
-                        <div class="aspect-video swiper-slide !h-64 sm:!h-96 md:!h-[500px] overflow-hidden group" role="group">
-                            <div class="relative w-full aspect-video md:!h-[500px]">
+                        <div class="aspect-video swiper-slide overflow-hidden group" role="group">
+                            
                             @if(!empty($photo['video_url']))
                                 <video autoplay loop muted playsinline class="w-full h-full object-cover">
                                     <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
                                 </video>
                             @elseif(!empty($photo['url']))
+                            <div class="relative w-full aspect-video md:!h-[500px]">
                                 @if(!empty($photo['link']))
                                     <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
                                         <img src="{{ asset($photo['url']) }}" class="w-full !h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Image">
