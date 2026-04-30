@@ -23,7 +23,7 @@ a[title="Accedi Area Booking"] svg {
 
 <header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
     <div class="max-w-7xl mx-auto w-full">
-        <div class="flex items-center justify-between h-28">
+        <div class="flex items-center justify-between h-28 ">
              <!-- Logo -->
                 <div class="flex shrink-0 mr-5">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
@@ -34,7 +34,7 @@ a[title="Accedi Area Booking"] svg {
                         @endif
                     </a>
                 </div>
-            <div class="flex items-center gap-7">
+            <div class="flex items-center gap-7 ml-auto md:ml-0 flex items-center space-x-4">
                 <!-- Mobile menu button -->
                 <div class="-ml-2 mr-2 flex items-center sm:hidden">
                     <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" aria-label="Menu" aria-expanded="false">

@@ -1,8 +1,8 @@
 <div class="mx-auto">
-    <div class="bg-white/80 backdrop-blur-md overflow-hidden p-6 md:p-8 shadow-xl relative rounded-lg">
+    <div class="mx-4 lg:mx-0 bg-white/80 backdrop-blur-md overflow-hidden p-6 md:p-8 shadow-xl relative rounded-lg">
         <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-black rounded-full opacity-20 blur-3xl"></div>
         <div class="absolute top-0 right-0 -mb-10 -ml-10 w-40 h-40 bg-black rounded-full opacity-20 blur-3xl"></div>
-        
+
         <div class="relative z-10 max-w-7xl mx-auto">
             @if(!empty($widget->data['title']) || !empty($widget->data['subtitle']))
                 <div class="text-center mb-8 hidden">
@@ -16,13 +16,13 @@
             @endif
 
             <form action="{{ route('public.booking.search') }}" method="GET" class="p-4 md:p-6 flex flex-col md:flex-row items-end gap-4">
-                
+
                 <!-- Check-in -->
                 <div class="w-full md:w-1/4">
                     <label class="block text-sm font-bold text-neutral-500 mb-2" for="start_date">
                         Check-in
                     </label>
-                    <input class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors" 
+                    <input class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors"
                            id="start_date" name="start_date" type="date" required min="{{ date('Y-m-d') }}" value="{{ request('start_date') }}">
                 </div>
 
@@ -31,7 +31,7 @@
                     <label class="block text-sm font-bold text-neutral-500 mb-2" for="end_date">
                         Check-out
                     </label>
-                    <input class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors" 
+                    <input class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors"
                            id="end_date" name="end_date" type="date" required min="{{ date('Y-m-d', strtotime('+1 day')) }}" value="{{ request('end_date') }}">
                 </div>
 
@@ -40,7 +40,7 @@
                     <label class="block text-sm font-bold text-neutral-500 mb-2" for="adulti">
                         Adulti
                     </label>
-                    <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white" 
+                    <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white"
                             id="adulti" name="adulti">
                         @for($i = 1; $i <= 10; $i++)
                             <option value="{{ $i }}" {{ request('adulti') == $i ? 'selected' : '' }}>{{ $i }}</option>
@@ -53,7 +53,7 @@
                     <label class="block text-sm font-bold text-neutral-500 mb-2" for="bambini">
                         Bambini / Ragazzi
                     </label>
-                    <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white" 
+                    <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white"
                             id="bambini" name="bambini">
                         @for($i = 0; $i <= 10; $i++)
                             <option value="{{ $i }}" {{ request('bambini') == $i ? 'selected' : '' }}>{{ $i }}</option>
@@ -83,14 +83,14 @@
             if (this.value) {
                 const nextDay = new Date(this.value);
                 nextDay.setDate(nextDay.getDate() + 1);
-                
+
                 const yyyy = nextDay.getFullYear();
                 const mm = String(nextDay.getMonth() + 1).padStart(2, '0');
                 const dd = String(nextDay.getDate()).padStart(2, '0');
-                
+
                 const minEnd = `${yyyy}-${mm}-${dd}`;
                 endInput.min = minEnd;
-                
+
                 if (endInput.value && endInput.value <= this.value) {
                     endInput.value = minEnd;
                 }
