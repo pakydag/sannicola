@@ -214,58 +214,35 @@
     </div>
 
     @push('scripts')
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/super-build/ckeditor.js"></script>
+        <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>
             let editorInstance;
             let fmActiveTarget = 'editor';
             
-            CKEDITOR.ClassicEditor
-                .create( document.querySelector( '#contenuto' ), {
-                    toolbar: {
-                        items: [
-                            'heading', '|',
-                            'bold', 'italic', 'strikethrough', 'underline', '|',
-                            'bulletedList', 'numberedList', '|',
-                            'alignment', '|',
-                            'link', 'blockQuote', 'insertTable', '|',
-                            'undo', 'redo'
-                        ]
-                    },
-                    language: 'it',
-                    alignment: {
-                        options: [ 'left', 'center', 'right', 'justify' ]
-                    },
-                    removePlugins: [
-                        'AIAssistant', 
-                        'CKBox', 
-                        'CKFinder', 
-                        'EasyImage', 
-                        'CloudServices',
-                        'RealTimeCollaborativeComments', 
-                        'RealTimeCollaborativeEditing', 
-                        'RealTimeCollaborativeTrackChanges', 
-                        'RealTimeCollaborativeRevisionHistory',
-                        'PresenceList', 
-                        'Comments', 
-                        'TrackChanges', 
-                        'RevisionHistory', 
-                        'Pagination', 
-                        'WProofreader', 
-                        'MathType',
-                        'SlashCommand', 
-                        'Template', 
-                        'DocumentOutline', 
-                        'FormatPainter', 
-                        'TableOfContents', 
-                        'PasteFromOfficeEnhanced'
-                    ]
-                } )
-                .then( editor => {
-                    editorInstance = editor;
-                } )
-                .catch( error => {
-                    console.error( error );
-                } );
+            // Inizializzazione CKEditor 4
+            editorInstance = CKEDITOR.replace('contenuto', {
+                language: 'it',
+                uiColor: '#F3F4F6',
+                height: 400,
+                extraPlugins: 'justify,colorbutton,font',
+                toolbarGroups: [
+                    { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                    { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                    { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                    { name: 'forms', groups: [ 'forms' ] },
+                    '/',
+                    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                    { name: 'links', groups: [ 'links' ] },
+                    { name: 'insert', groups: [ 'insert' ] },
+                    '/',
+                    { name: 'styles', groups: [ 'styles' ] },
+                    { name: 'colors', groups: [ 'colors' ] },
+                    { name: 'tools', groups: [ 'tools' ] },
+                    { name: 'others', groups: [ 'others' ] },
+                    { name: 'about', groups: [ 'about' ] }
+                ]
+            });
 
             document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById('fm-button').addEventListener('click', (event) => {
@@ -324,12 +301,7 @@
 
                 if(fmActiveTarget === 'editor') {
                     if(editorInstance) {
-                        editorInstance.model.change( writer => {
-                            const imageElement = writer.createElement( 'imageBlock', {
-                                src: $url
-                            } );
-                            editorInstance.model.insertContent( imageElement, editorInstance.model.document.selection );
-                        } );
+                        editorInstance.insertHtml('<img src="' + $url + '" style="max-width:100%;height:auto;">');
                     }
                 } else if(fmActiveTarget === 'seo_image') {
                     document.getElementById('seo_image').value = $url;
