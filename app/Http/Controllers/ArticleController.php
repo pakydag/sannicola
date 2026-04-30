@@ -149,7 +149,7 @@ class ArticleController extends Controller
             $this->addSmartMedia($articolo, $request->allegato, 'allegati');
         }
 
-        return redirect()->route('admin.articoli.index')->with('success', 'Articolo creato con successo.');
+        return redirect()->route('admin.articoli.edit', $articolo)->with('success', 'Articolo creato con successo.');
     }
 
     /**
@@ -255,7 +255,7 @@ class ArticleController extends Controller
             }
         }
 
-        return redirect()->route('admin.articoli.index')->with('success', 'Articolo aggiornato con successo.');
+        return redirect()->route('admin.articoli.edit', $articoli)->with('success', 'Articolo aggiornato con successo.');
     }
 
     /**

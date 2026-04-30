@@ -143,7 +143,7 @@ class SectionController extends Controller
             $sezione->update(['slug' => $sezione->id . '-it']);
         }
 
-        return redirect()->route('admin.sezioni.index')->with('success', 'Sezione creata con successo.');
+        return redirect()->route('admin.sezioni.edit', $sezione)->with('success', 'Sezione creata con successo.');
     }
 
     public function edit(Section $sezioni)
@@ -193,7 +193,7 @@ class SectionController extends Controller
             $sezioni->update(['slug' => $sezioni->id . '-it']);
         }
 
-        return redirect()->route('admin.sezioni.index')->with('success', 'Sezione aggiornata con successo.');
+        return redirect()->route('admin.sezioni.edit', $sezioni)->with('success', 'Sezione aggiornata con successo.');
     }
 
     public function destroy(Section $sezioni)
