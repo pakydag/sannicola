@@ -12,13 +12,4 @@
     .btn {
         @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary;
     }
-
-    /* Giustifica il testo globalmente nei blocchi di contenuto */
-    .prose {
-        text-align: justify;
-    }
-    
-    .prose p {
-        text-align: justify;
-    }
 }
