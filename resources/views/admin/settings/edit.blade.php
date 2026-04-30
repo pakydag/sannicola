@@ -98,6 +98,22 @@
                                 <p class="text-xs text-gray-500 mt-1">Scegli il file immagine (PNG, JPG o SVG) dal File Manager.</p>
                             </div>
 
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Favicon (Icona Browser)</label>
+                                @if(!empty($settings['site_favicon']))
+                                    <div class="mb-3 px-4 py-2 bg-gray-50 border rounded inline-block">
+                                        <img src="{{ asset($settings['site_favicon']) }}" alt="Favicon Attuale" class="h-8 w-8 object-contain">
+                                    </div>
+                                @endif
+                                <div class="flex mt-1 relative rounded-md shadow-sm max-w-lg">
+                                    <input type="text" id="site_favicon" name="site_favicon" value="{{ old('site_favicon', $settings['site_favicon'] ?? '') }}" readonly placeholder="Seleziona Icona..." class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
+                                    <button type="button" id="btn-sfoglia-favicon" class="-ml-px relative inline-flex items-center space-x-2 px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200 hover:bg-gray-300 focus:outline-none">
+                                        <span>Sfoglia...</span>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Scegli il file immagine (solitamente .ico o .png 32x32) dal File Manager.</p>
+                            </div>
+
                             @if($user->is_super_admin)
                                 <div class="mt-8 border-t pt-6 border-gray-100">
                                     <h3 class="text-lg font-medium leading-6 text-gray-900 mb-4 flex items-center gap-2">
@@ -473,6 +489,13 @@
                     document.getElementById('btn-sfoglia-logo').addEventListener('click', (e) => {
                         e.preventDefault();
                         fmActiveInput = document.getElementById('site_logo');
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                // Selezione Favicon
+                if (document.getElementById('btn-sfoglia-favicon')) {
+                    document.getElementById('btn-sfoglia-favicon').addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fmActiveInput = document.getElementById('site_favicon');
                         window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                     });
                 }

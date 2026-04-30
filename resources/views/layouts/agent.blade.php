@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    @php
+        $favicon = \App\Models\Setting::where('key', 'site_favicon')->value('value');
+    @endphp
+
+    @if($favicon)
+        <link rel="icon" type="image/x-icon" href="{{ asset($favicon) }}">
+    @endif
+
     <title>Portale Agente - {{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
