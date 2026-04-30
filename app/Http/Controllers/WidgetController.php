@@ -47,6 +47,21 @@ class WidgetController extends Controller
         return redirect()->back()->with('success', 'Widget aggiunto con successo.');
     }
 
+    public function update(Request $request, Widget $widget)
+    {
+        $validated = $request->validate([
+            'titolo' => 'nullable|string|max:255',
+            'data' => 'nullable|array',
+        ]);
+
+        $widget->update([
+            'titolo' => $validated['titolo'] ?? $widget->titolo,
+            'data' => $this->processDataRecursive($validated['data'] ?? []),
+        ]);
+
+        return redirect()->back()->with('success', 'Widget aggiornato con successo.');
+    }
+
     public function destroy(Widget $widget)
     {
         $widget->delete();

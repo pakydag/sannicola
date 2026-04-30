@@ -231,7 +231,56 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900 border-b border-gray-200">
+                <div class="p-6 text-gray-900 border-b border-gray-200" x-data="{ 
+                        activeTab: '{{ session('active_tab', 'gallery') }}',
+                        galleryPhotos: [],
+                        editingWidget: null,
+                        formTitolo: '',
+                        editWidget(widget) {
+                            this.editingWidget = widget;
+                            this.activeTab = widget.tipo;
+                            this.formTitolo = widget.titolo || '';
+                            
+                            // Se è una gallery, popola l'array delle foto
+                            if (widget.tipo === 'gallery') {
+                                this.galleryPhotos = widget.data && widget.data.photos ? JSON.parse(JSON.stringify(widget.data.photos)) : [];
+                            }
+                            
+                            // Scorri fino al form
+                            document.getElementById('widget-form-container').scrollIntoView({ behavior: 'smooth' });
+                        },
+                        cancelEdit() {
+                            this.editingWidget = null;
+                            this.formTitolo = '';
+                            this.galleryPhotos = [];
+                        },
+                        initSortable() {
+                            this.$nextTick(() => {
+                                if (this.$refs.galleryGrid) {
+                                    new Sortable(this.$refs.galleryGrid, {
+                                        animation: 150,
+                                        handle: '.drag-handle',
+                                        ghostClass: 'opacity-25',
+                                        onEnd: (evt) => {
+                                            const items = Array.from(this.$refs.galleryGrid.querySelectorAll('input[name*=\'[url]\']'));
+                                            // Since we use template, reordering the DOM doesn't update the array automatically in a simple way
+                                            // but Sortable does move the elements. However, Alpine's x-for might reset it.
+                                            // So we should update the array.
+                                            const newOrder = [];
+                                            const photoDivs = Array.from(this.$refs.galleryGrid.querySelectorAll('.relative.group'));
+                                            photoDivs.forEach(div => {
+                                                const url = div.querySelector('input[name*=\'[url]\']').value;
+                                                const video_url = div.querySelector('input[name*=\'[video_url]\']').value;
+                                                const link = div.querySelector('input[name*=\'[link]\']').value;
+                                                newOrder.push({ url, video_url, link });
+                                            });
+                                            this.galleryPhotos = newOrder;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }" x-init="initSortable()">
                     <h3 class="text-lg font-semibold mb-4 text-indigo-700 border-b pb-2">Gestione Widget Aggiuntivi</h3>
                     
                     @if(session('success'))
@@ -277,7 +326,10 @@
                                                 </div>
                                             @endif
                                         </div>
-                                        <div>
+                                        <div class="flex items-center gap-3">
+                                            <button type="button" @click="editWidget({{ json_encode($widget) }})" class="text-indigo-600 hover:text-indigo-800" title="Modifica">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            </button>
                                             <form action="{{ route('admin.widgets.destroy', $widget) }}" method="POST" onsubmit="return confirm('Vuoi davvero eliminare questo widget?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -295,26 +347,7 @@
                     @endif
 
                     <!-- Aggiunta Nuovi Widget -->
-                    <div class="border-t pt-6" x-data="{ 
-                        activeTab: 'gallery',
-                        galleryPhotos: [],
-                        initSortable() {
-                            this.$nextTick(() => {
-                                if (this.$refs.galleryGrid) {
-                                    Sortable.create(this.$refs.galleryGrid, {
-                                        animation: 150,
-                                        handle: '.drag-handle',
-                                        onEnd: (evt) => {
-                                            let items = [...this.galleryPhotos];
-                                            const movedItem = items.splice(evt.oldIndex, 1)[0];
-                                            items.splice(evt.newIndex, 0, movedItem);
-                                            this.galleryPhotos = items;
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    }" x-init="initSortable()">
+                    <div class="border-t pt-6" id="widget-form-container">
                         <h4 class="font-bold mb-4 text-gray-700">Aggiungi un nuovo Widget</h4>
                         
                         <!-- Grid Selector -->
@@ -453,15 +486,23 @@
                         </div>
 
                         <!-- Form Gallery (New Grid System) -->
-                        <div x-show="activeTab === 'gallery'" class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 shadow-sm">
-                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                        <div x-show="activeTab === 'gallery'" class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 shadow-sm transition-all" :class="editingWidget ? 'ring-2 ring-indigo-500 bg-white' : ''">
+                            <h3 x-show="editingWidget" class="text-lg font-bold text-indigo-700 mb-4 flex items-center gap-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                Modifica Gallery
+                            </h3>
+
+                            <form :action="editingWidget ? '/amministrazione/widgets/' + editingWidget.id : '{{ route('admin.widgets.store', $articolo) }}'" method="POST">
                                 @csrf
+                                <template x-if="editingWidget">
+                                    <input type="hidden" name="_method" value="PUT">
+                                </template>
                                 <input type="hidden" name="tipo" value="gallery">
                                 
                                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                     <div class="flex-1 w-full">
                                         <label class="block text-indigo-900 font-extrabold mb-1 uppercase text-xs tracking-widest">Titolo Gallery *</label>
-                                        <input type="text" name="titolo" required placeholder="es. I nostri momenti" class="shadow-sm border-0 rounded-xl w-full py-2.5 px-4 focus:ring-2 focus:ring-indigo-500 text-sm">
+                                        <input type="text" name="titolo" required x-model="formTitolo" placeholder="es. I nostri momenti" class="shadow-sm border-0 rounded-xl w-full py-2.5 px-4 focus:ring-2 focus:ring-indigo-500 text-sm">
                                     </div>
                                     <button type="button" @click="fmActiveTarget='widget_gallery_multiple'; window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2 whitespace-nowrap md:mt-5">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -512,20 +553,24 @@
                                     </div>
                                 </div>
 
-                                <div class="flex justify-end mt-4">
-                                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Gallery</button>
+                                <div class="flex justify-end mt-4 gap-3">
+                                    <button type="button" x-show="editingWidget" @click="cancelEdit()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded shadow transition-colors">Annulla</button>
+                                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline" x-text="editingWidget ? 'Aggiorna Gallery' : 'Salva Gallery'"></button>
                                 </div>
                             </form>
                         </div>
 
                         <!-- Form Top Announcement -->
-                        <div x-show="activeTab === 'announcement'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                        <div x-show="activeTab === 'announcement'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner" :class="editingWidget ? 'ring-2 ring-indigo-500 bg-white' : ''">
+                            <form :action="editingWidget ? '/amministrazione/widgets/' + editingWidget.id : '{{ route('admin.widgets.store', $articolo) }}'" method="POST">
                                 @csrf
+                                <template x-if="editingWidget">
+                                    <input type="hidden" name="_method" value="PUT">
+                                </template>
                                 <input type="hidden" name="tipo" value="top_announcement">
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin *</label>
-                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
+                                    <input type="text" name="titolo" required x-model="formTitolo" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -556,7 +601,6 @@
                                         <input type="text" name="data[button_url]" placeholder="Es: /shop o https://..." class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
                                 </div>
-
                                 <div class="text-right mt-4">
                                     <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Annuncio</button>
                                 </div>
@@ -564,13 +608,16 @@
                         </div>
 
                         <!-- Form Video -->
-                        <div x-show="activeTab === 'video'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                        <div x-show="activeTab === 'video'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner" :class="editingWidget ? 'ring-2 ring-indigo-500 bg-white' : ''">
+                            <form :action="editingWidget ? '/amministrazione/widgets/' + editingWidget.id : '{{ route('admin.widgets.store', $articolo) }}'" method="POST">
                                 @csrf
+                                <template x-if="editingWidget">
+                                    <input type="hidden" name="_method" value="PUT">
+                                </template>
                                 <input type="hidden" name="tipo" value="video">
                                 <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Video *</label>
-                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin *</label>
+                                    <input type="text" name="titolo" required x-model="formTitolo" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">File Video (MP4) *</label>
