@@ -257,8 +257,24 @@
                                                 <strong class="text-gray-800">{{ $gw->titolo ?? '(Eliminato)' }}</strong>
                                             @else
                                                 @php $isShop = str_starts_with($widget->tipo, 'shop_'); @endphp
-                                                <span class="inline-block {{ $isShop ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800' }} text-xs px-2 py-1 rounded uppercase font-bold mr-2">{{ $widget->tipo }}</span>
-                                                <strong class="text-gray-800">{{ $widget->titolo }}</strong>
+                                                <div class="flex flex-col">
+                                                    <div class="flex items-center">
+                                                        <span class="inline-block {{ $isShop ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800' }} text-xs px-2 py-1 rounded uppercase font-bold mr-2">{{ $widget->tipo }}</span>
+                                                        <strong class="text-gray-800">{{ $widget->titolo }}</strong>
+                                                    </div>
+                                                    @if($widget->tipo === 'gallery' && !empty($widget->data['photos']))
+                                                        <div class="flex gap-1 mt-2 overflow-x-auto pb-1 max-w-md">
+                                                            @foreach(array_slice($widget->data['photos'], 0, 8) as $p)
+                                                                <img src="{{ asset($p['url'] ?? '') }}" class="h-10 w-14 object-cover rounded shadow-xs border border-gray-200 flex-shrink-0">
+                                                            @endforeach
+                                                            @if(count($widget->data['photos']) > 8)
+                                                                <div class="h-10 w-10 flex items-center justify-center bg-gray-200 rounded text-[10px] text-gray-600 font-bold flex-shrink-0">
+                                                                    +{{ count($widget->data['photos']) - 8 }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             @endif
                                         </div>
                                         <div>
@@ -279,7 +295,26 @@
                     @endif
 
                     <!-- Aggiunta Nuovi Widget -->
-                    <div class="border-t pt-6" x-data="{ activeTab: 'gallery' }">
+                    <div class="border-t pt-6" x-data="{ 
+                        activeTab: 'gallery',
+                        galleryPhotos: [],
+                        initSortable() {
+                            this.$nextTick(() => {
+                                if (this.$refs.galleryGrid) {
+                                    Sortable.create(this.$refs.galleryGrid, {
+                                        animation: 150,
+                                        handle: '.drag-handle',
+                                        onEnd: (evt) => {
+                                            let items = [...this.galleryPhotos];
+                                            const movedItem = items.splice(evt.oldIndex, 1)[0];
+                                            items.splice(evt.newIndex, 0, movedItem);
+                                            this.galleryPhotos = items;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }" x-init="initSortable()">
                         <h4 class="font-bold mb-4 text-gray-700">Aggiungi un nuovo Widget</h4>
                         
                         <!-- Grid Selector -->
@@ -417,37 +452,67 @@
                             </button>
                         </div>
 
-                        <!-- Form Gallery -->
-                        <div x-show="activeTab === 'gallery'" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
+                        <!-- Form Gallery (New Grid System) -->
+                        <div x-show="activeTab === 'gallery'" class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 shadow-sm">
                             <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="tipo" value="gallery">
-                                <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Gallery *</label>
-                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
+                                
+                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                                    <div class="flex-1 w-full">
+                                        <label class="block text-indigo-900 font-extrabold mb-1 uppercase text-xs tracking-widest">Titolo Gallery *</label>
+                                        <input type="text" name="titolo" required placeholder="es. I nostri momenti" class="shadow-sm border-0 rounded-xl w-full py-2.5 px-4 focus:ring-2 focus:ring-indigo-500 text-sm">
+                                    </div>
+                                    <button type="button" @click="fmActiveTarget='widget_gallery_multiple'; window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2 whitespace-nowrap md:mt-5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Scegli Foto
+                                    </button>
                                 </div>
-                                <div id="gallery-container" class="space-y-3 mb-4">
-                                    <div class="flex items-center space-x-2 gallery-row">
-                                        <div class="flex-1 flex flex-col space-y-2">
-                                            <div class="flex">
-                                                <input type="text" name="data[photos][0][url]" readonly required placeholder="URL Foto dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
-                                                <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">📸 Foto</button>
+
+                                <div x-ref="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-white/50 p-6 rounded-3xl border-2 border-dashed border-indigo-100 min-h-[200px]">
+                                    <template x-for="(foto, index) in galleryPhotos" :key="index + '-' + foto.url">
+                                        <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300 overflow-hidden">
+                                            <!-- Drag Handle -->
+                                            <div class="drag-handle p-1.5 bg-indigo-600 text-white rounded-lg cursor-grab active:cursor-grabbing shadow-lg hover:bg-indigo-700 transition-colors absolute top-2 left-2 z-10">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                                                </svg>
                                             </div>
-                                            <div class="flex">
-                                                <input type="text" name="data[photos][0][video_url]" readonly placeholder="URL Video (opzionale)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
-                                                <button type="button" class="btn-sfoglia-video-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">🎥 Video</button>
+
+                                            <!-- Delete Button -->
+                                            <button type="button" @click="galleryPhotos.splice(index, 1)" class="p-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-lg absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+
+                                            <!-- Thumbnail -->
+                                            <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
+                                                <img :src="foto.url" class="h-full w-full object-cover">
+                                            </div>
+
+                                            <!-- Hidden Inputs -->
+                                            <input type="hidden" :name="'data[photos]['+index+'][url]'" :value="foto.url">
+                                            
+                                            <!-- Optional Metadata -->
+                                            <div class="mt-2 space-y-1">
+                                                <input type="text" :name="'data[photos]['+index+'][video_url]'" x-model="foto.video_url" placeholder="Video (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
+                                                <input type="text" :name="'data[photos]['+index+'][link]'" x-model="foto.link" placeholder="Link (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
                                             </div>
                                         </div>
-                                        <div class="flex-1">
-                                            <input type="text" name="data[photos][0][link]" placeholder="Link Opzionale (http://...)" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-sm h-full">
-                                        </div>
-                                        <button type="button" class="btn-rimuovi-foto text-red-500 opacity-50 hover:opacity-100" title="Rimuovi"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
+                                    </template>
+
+                                    <div x-show="galleryPhotos.length === 0" class="col-span-full flex flex-col items-center justify-center py-10 text-indigo-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <p class="text-sm italic">Nessuna foto selezionata. Clicca su 'Scegli Foto' per iniziare.</p>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between mt-4">
-                                    <button type="button" id="btn-aggiungi-foto" class="text-indigo-600 font-bold hover:text-indigo-800 text-sm flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi un'altra foto
-                                    </button>
+
+                                <div class="flex justify-end mt-4">
                                     <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Gallery</button>
                                 </div>
                             </form>
@@ -918,6 +983,7 @@
     @push('scripts')
         <style>.cke_notification_warning { display: none !important; }</style>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>
             let editorInstance;
@@ -1148,16 +1214,37 @@
             // Callback function expected by FileManager popup
             function fmSetLink($url) {
                 const baseUrl = '{{ config('app.url') }}';
-                let relativeUrl = $url.replace(baseUrl, '');
                 
-                if (!relativeUrl.startsWith('http')) {
-                    let cleanPath = relativeUrl.replace(/^\/+/, '');
-                    if (!cleanPath.startsWith('storage/')) {
-                        relativeUrl = '/storage/' + cleanPath;
-                    } else {
-                        relativeUrl = '/' + cleanPath;
+                const cleanUrl = (u) => {
+                    if (typeof u !== 'string') return u;
+                    let rel = u.replace(baseUrl, '');
+                    if (!rel.startsWith('http')) {
+                        let cleanPath = rel.replace(/^\/+/, '');
+                        if (!cleanPath.startsWith('storage/')) {
+                            return '/storage/' + cleanPath;
+                        } else {
+                            return '/' + cleanPath;
+                        }
                     }
+                    return rel;
+                };
+
+                if (fmActiveTarget === 'widget_gallery_multiple') {
+                    const widgetsEl = document.querySelector('[x-data*="galleryPhotos"]');
+                    if (widgetsEl) {
+                        const data = window.Alpine ? window.Alpine.$data(widgetsEl) : widgetsEl.__x.$data;
+                        if (Array.isArray($url)) {
+                            $url.forEach(u => {
+                                data.galleryPhotos.push({ url: cleanUrl(u), video_url: '', link: '' });
+                            });
+                        } else {
+                            data.galleryPhotos.push({ url: cleanUrl($url), video_url: '', link: '' });
+                        }
+                    }
+                    return;
                 }
+
+                let relativeUrl = cleanUrl($url);
                 
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {
