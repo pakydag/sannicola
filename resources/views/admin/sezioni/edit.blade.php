@@ -271,66 +271,16 @@
                     toolbar: {
                         items: [
                             'heading', '|',
-                            'bold', 'italic', 'strikethrough', 'underline', 'code', 'subscript', 'superscript', 'removeFormat', '|',
-                            'bulletedList', 'numberedList', 'todoList', '|',
-                            'outdent', 'indent', '|',
-                            'undo', 'redo', '-',
-                            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', 'highlight', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', '|',
+                            'bulletedList', 'numberedList', '|',
                             'alignment', '|',
-                            'link', 'blockQuote', 'insertTable', 'mediaEmbed', 'htmlEmbed', '|',
-                            'specialCharacters', 'horizontalLine', 'pageBreak', '|',
-                            'sourceEditing'
-                        ],
-                        shouldNotGroupWhenFull: true
+                            'link', 'blockQuote', 'insertTable', '|',
+                            'undo', 'redo'
+                        ]
                     },
                     language: 'it',
-                    list: {
-                        properties: {
-                            styles: true,
-                            startIndex: true,
-                            reversed: true
-                        }
-                    },
-                    heading: {
-                        options: [
-                            { model: 'paragraph', title: 'Paragrafo', class: 'ck-heading_paragraph' },
-                            { model: 'heading1', view: 'h1', title: 'Titolo 1', class: 'ck-heading_heading1' },
-                            { model: 'heading2', view: 'h2', title: 'Titolo 2', class: 'ck-heading_heading2' },
-                            { model: 'heading3', view: 'h3', title: 'Titolo 3', class: 'ck-heading_heading3' }
-                        ]
-                    },
-                    fontSize: {
-                        options: [ 10, 12, 14, 'default', 18, 20, 22 ],
-                        supportAllValues: true
-                    },
-                    htmlSupport: {
-                        allow: [
-                            {
-                                name: /.*/,
-                                attributes: true,
-                                classes: true,
-                                styles: true
-                            }
-                        ]
-                    },
                     alignment: {
                         options: [ 'left', 'center', 'right', 'justify' ]
-                    },
-                    link: {
-                        decorators: {
-                            addTargetToExternalLinks: true,
-                            defaultProtocol: 'https://',
-                            toggleDownloadable: {
-                                mode: 'manual',
-                                label: 'Downloadable',
-                                attributes: {
-                                    download: 'file'
-                                }
-                            }
-                        }
-                    },
-                    removeFormat: {
-                        class: 'remove-format'
                     }
                 } )
                 .then( editor => {
