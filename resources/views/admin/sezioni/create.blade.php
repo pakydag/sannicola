@@ -236,10 +236,28 @@
                         options: [ 'left', 'center', 'right', 'justify' ]
                     },
                     removePlugins: [
-                        'AIAssistant', 'CKBox', 'CKFinder', 'EasyImage', 'RealTimeCollaborativeComments', 
-                        'RealTimeCollaborativeEditing', 'RealTimeCollaborativeTrackChanges', 'RealTimeCollaborativeRevisionHistory',
-                        'PresenceList', 'Comments', 'TrackChanges', 'RevisionHistory', 'Pagination', 'WProofreader', 'MathType',
-                        'SlashCommand', 'Template', 'DocumentOutline', 'FormatPainter', 'TableOfContents', 'PasteFromOfficeEnhanced'
+                        'AIAssistant', 
+                        'CKBox', 
+                        'CKFinder', 
+                        'EasyImage', 
+                        'CloudServices',
+                        'RealTimeCollaborativeComments', 
+                        'RealTimeCollaborativeEditing', 
+                        'RealTimeCollaborativeTrackChanges', 
+                        'RealTimeCollaborativeRevisionHistory',
+                        'PresenceList', 
+                        'Comments', 
+                        'TrackChanges', 
+                        'RevisionHistory', 
+                        'Pagination', 
+                        'WProofreader', 
+                        'MathType',
+                        'SlashCommand', 
+                        'Template', 
+                        'DocumentOutline', 
+                        'FormatPainter', 
+                        'TableOfContents', 
+                        'PasteFromOfficeEnhanced'
                     ]
                 } )
                 .then( editor => {
