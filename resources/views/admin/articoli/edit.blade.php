@@ -916,6 +916,7 @@
     </div>
 
     @push('scripts')
+        <style>.cke_notification_warning { display: none !important; }</style>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
         <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>

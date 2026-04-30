@@ -214,6 +214,7 @@
     </div>
 
     @push('scripts')
+        <style>.cke_notification_warning { display: none !important; }</style>
         <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>
             let editorInstance;
