@@ -491,6 +491,8 @@
                         fmActiveInput = document.getElementById('site_logo');
                         window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                     });
+                }
+
                 // Selezione Favicon
                 if (document.getElementById('btn-sfoglia-favicon')) {
                     document.getElementById('btn-sfoglia-favicon').addEventListener('click', (e) => {
