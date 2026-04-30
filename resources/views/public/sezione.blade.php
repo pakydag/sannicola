@@ -19,6 +19,11 @@
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight primary">
             {{ $sezione->nome }}
         </h1>
+        @if($sezione->sottotitolo)
+            <p class="mt-4 text-xl text-gray-500 italic">
+                {{ $sezione->sottotitolo }}
+            </p>
+        @endif
     </header>
 
     @if($sezione->contenuto)

@@ -109,6 +109,7 @@ class SectionController extends Controller
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'sottotitolo' => 'nullable|string|max:255',
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
@@ -159,6 +160,7 @@ class SectionController extends Controller
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'sottotitolo' => 'nullable|string|max:255',
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',

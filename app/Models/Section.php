@@ -8,6 +8,7 @@ class Section extends Model
 {
     protected $fillable = [
         'nome',
+        'sottotitolo',
         'contenuto',
         'ordine',
         'visibile',

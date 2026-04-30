@@ -43,6 +43,15 @@
                             @error('nome') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- Sottotitolo -->
+                        <div class="mb-4">
+                            <label for="sottotitolo" class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale)</label>
+                            <input type="text" name="sottotitolo" id="sottotitolo" value="{{ old('sottotitolo', $sezione->sottotitolo) }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Inserisci un breve testo descrittivo...">
+                            @error('sottotitolo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         @if(!$sezione->modulo)
                             <!-- URL Custom (Slug) -->
                             <div class="mb-4">
