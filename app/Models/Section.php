@@ -9,6 +9,8 @@ class Section extends Model
     protected $fillable = [
         'nome',
         'sottotitolo',
+        'foto',
+        'allineamento_media',
         'contenuto',
         'ordine',
         'visibile',

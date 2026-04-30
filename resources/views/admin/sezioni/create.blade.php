@@ -133,6 +133,37 @@
                             @error('immagine') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- Foto Principale + Allineamento -->
+                        <div class="mb-8 bg-gray-50 p-4 rounded border border-gray-200">
+                            <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Foto Principale e Allineamento</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Foto -->
+                                <div>
+                                    <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto</label>
+                                    <div class="flex items-stretch">
+                                        <input type="text" name="foto" id="foto" value="{{ old('foto') }}" readonly placeholder="Scegli foto..."
+                                            class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                        <button type="button" id="fm-foto-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0 text-sm">
+                                            Scegli
+                                        </button>
+                                        <button type="button" id="fm-foto-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
+                                    </div>
+                                </div>
+
+                                <!-- Allineamento -->
+                                <div>
+                                    <label for="allineamento_media" class="block text-gray-700 text-sm font-bold mb-2">Allineamento Foto</label>
+                                    <select name="allineamento_media" id="allineamento_media" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                        <option value="left" {{ old('allineamento_media') == 'left' ? 'selected' : '' }}>⬅ Sinistra</option>
+                                        <option value="center" {{ old('allineamento_media', 'center') == 'center' ? 'selected' : '' }}>↔ Centro</option>
+                                        <option value="right" {{ old('allineamento_media') == 'right' ? 'selected' : '' }}>➡ Destra</option>
+                                    </select>
+                                    <p class="text-xs text-gray-500 mt-1">Scegli come allineare la foto rispetto al testo della sezione.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- ======== Pannello SEO & Condivisione ======== -->
                         <div class="mt-10 mb-8 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                             <div class="bg-gray-200 px-4 py-3 border-b border-gray-300">
@@ -216,9 +247,20 @@
                     window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
                 });
 
+                document.getElementById('fm-foto-button').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    fmActiveTarget = 'foto';
+                    window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                });
+
                 document.getElementById('fm-immagine-clear').addEventListener('click', (event) => {
                     event.preventDefault();
                     document.getElementById('immagine').value = '';
+                });
+
+                document.getElementById('fm-foto-clear').addEventListener('click', (event) => {
+                    event.preventDefault();
+                    document.getElementById('foto').value = '';
                 });
 
                 document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
@@ -254,6 +296,8 @@
                     document.getElementById('seo_image').value = $url;
                 } else if(fmActiveTarget === 'immagine') {
                     document.getElementById('immagine').value = $url;
+                } else if(fmActiveTarget === 'foto') {
+                    document.getElementById('foto').value = $url;
                 }
             }
 

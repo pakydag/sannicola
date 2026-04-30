@@ -124,10 +124,13 @@ class SectionController extends Controller
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'immagine' => 'nullable|string',
+            'foto' => 'nullable|string',
+            'allineamento_media' => 'nullable|in:left,center,right',
         ]);
 
         $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
         $validated['immagine'] = $this->stripDomain($validated['immagine'] ?? '');
+        $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
@@ -175,10 +178,13 @@ class SectionController extends Controller
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'immagine' => 'nullable|string',
+            'foto' => 'nullable|string',
+            'allineamento_media' => 'nullable|in:left,center,right',
         ]);
 
         $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
         $validated['immagine'] = $this->stripDomain($validated['immagine'] ?? '');
+        $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
