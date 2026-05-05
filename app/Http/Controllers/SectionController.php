@@ -109,6 +109,7 @@ class SectionController extends Controller
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'sottotitolo' => 'nullable|string|max:255',
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
@@ -123,10 +124,13 @@ class SectionController extends Controller
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'immagine' => 'nullable|string',
+            'foto' => 'nullable|string',
+            'allineamento_media' => 'nullable|in:left,center,right',
         ]);
 
         $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
         $validated['immagine'] = $this->stripDomain($validated['immagine'] ?? '');
+        $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
@@ -143,7 +147,7 @@ class SectionController extends Controller
             $sezione->update(['slug' => $sezione->id . '-it']);
         }
 
-        return redirect()->route('admin.sezioni.index')->with('success', 'Sezione creata con successo.');
+        return redirect()->route('admin.sezioni.edit', $sezione)->with('success', 'Sezione creata con successo.');
     }
 
     public function edit(Section $sezioni)
@@ -159,6 +163,7 @@ class SectionController extends Controller
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'sottotitolo' => 'nullable|string|max:255',
             'contenuto' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
@@ -173,10 +178,13 @@ class SectionController extends Controller
             'seo_description' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'immagine' => 'nullable|string',
+            'foto' => 'nullable|string',
+            'allineamento_media' => 'nullable|in:left,center,right',
         ]);
 
         $validated['seo_image'] = $this->stripDomain($validated['seo_image']);
         $validated['immagine'] = $this->stripDomain($validated['immagine'] ?? '');
+        $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
 
         $validated['visibile'] = $request->has('visibile');
         $validated['menu_a_tendina'] = $request->has('menu_a_tendina');
@@ -193,7 +201,7 @@ class SectionController extends Controller
             $sezioni->update(['slug' => $sezioni->id . '-it']);
         }
 
-        return redirect()->route('admin.sezioni.index')->with('success', 'Sezione aggiornata con successo.');
+        return redirect()->route('admin.sezioni.edit', $sezioni)->with('success', 'Sezione aggiornata con successo.');
     }
 
     public function destroy(Section $sezioni)

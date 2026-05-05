@@ -19,12 +19,38 @@
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight primary">
             {{ $sezione->nome }}
         </h1>
+        @if($sezione->sottotitolo)
+            <p class="mt-4 text-xl text-gray-500 italic">
+                {{ $sezione->sottotitolo }}
+            </p>
+        @endif
     </header>
 
+    @php
+        $alignment = $sezione->allineamento_media ?? 'center';
+        $alignmentClasses = 'w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200 mb-10';
+        
+        if ($alignment === 'left') {
+            $alignmentClasses = 'md:float-left md:mr-8 md:mb-6 md:w-1/2 w-full rounded-lg bg-gray-50 object-cover max-h-[500px] shadow-lg ring-1 ring-gray-200';
+        } elseif ($alignment === 'right') {
+            $alignmentClasses = 'md:float-right md:ml-8 md:mb-6 md:w-1/2 w-full rounded-xl bg-gray-50 object-cover max-h-[500px] shadow-lg ring-1 ring-gray-200';
+        }
+    @endphp
+
+    @if($sezione->foto)
+        <figure class="{{ $alignment === 'center' ? 'my-10 text-center' : '' }}">
+            <img class="{{ $alignmentClasses }}" src="{{ asset($sezione->foto) }}" alt="{{ $sezione->nome }}">
+        </figure>
+    @endif
+
     @if($sezione->contenuto)
-    <div class="prose prose-indigo prose-lg mx-auto text-gray-500 mb-16 max-w-none">
+    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto max-w-prose' : 'max-w-none' }} text-gray-500 mb-16">
         {!! $sezione->contenuto !!}
     </div>
+    @endif
+
+    @if($alignment !== 'center')
+        <div class="clear-both"></div>
     @endif
 </div>
 <div class="max-w-7xl mx-auto">

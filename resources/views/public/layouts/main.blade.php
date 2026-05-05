@@ -4,6 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    @php
+        $favicon = \App\Models\Setting::where('key', 'site_favicon')->value('value');
+    @endphp
+
+    @if($favicon)
+        <link rel="icon" type="image/x-icon" href="{{ asset($favicon) }}">
+    @endif
+
     <title>{{ $seo['title'] ?? config('app.name', 'CRM Laravel') }}</title>
 
     <!-- Meta SEO Standard -->

@@ -231,7 +231,56 @@
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
-                <div class="p-6 text-gray-900 border-b border-gray-200">
+                <div class="p-6 text-gray-900 border-b border-gray-200" x-data="{ 
+                        activeTab: '{{ session('active_tab', 'gallery') }}',
+                        galleryPhotos: [],
+                        editingWidget: null,
+                        formTitolo: '',
+                        editWidget(widget) {
+                            this.editingWidget = widget;
+                            this.activeTab = widget.tipo;
+                            this.formTitolo = widget.titolo || '';
+                            
+                            // Se è una gallery, popola l'array delle foto
+                            if (widget.tipo === 'gallery') {
+                                this.galleryPhotos = widget.data && widget.data.photos ? JSON.parse(JSON.stringify(widget.data.photos)) : [];
+                            }
+                            
+                            // Scorri fino al form
+                            document.getElementById('widget-form-container').scrollIntoView({ behavior: 'smooth' });
+                        },
+                        cancelEdit() {
+                            this.editingWidget = null;
+                            this.formTitolo = '';
+                            this.galleryPhotos = [];
+                        },
+                        initSortable() {
+                            this.$nextTick(() => {
+                                if (this.$refs.galleryGrid) {
+                                    new Sortable(this.$refs.galleryGrid, {
+                                        animation: 150,
+                                        handle: '.drag-handle',
+                                        ghostClass: 'opacity-25',
+                                        onEnd: (evt) => {
+                                            const items = Array.from(this.$refs.galleryGrid.querySelectorAll('input[name*=\'[url]\']'));
+                                            // Since we use template, reordering the DOM doesn't update the array automatically in a simple way
+                                            // but Sortable does move the elements. However, Alpine's x-for might reset it.
+                                            // So we should update the array.
+                                            const newOrder = [];
+                                            const photoDivs = Array.from(this.$refs.galleryGrid.querySelectorAll('.relative.group'));
+                                            photoDivs.forEach(div => {
+                                                const url = div.querySelector('input[name*=\'[url]\']').value;
+                                                const video_url = div.querySelector('input[name*=\'[video_url]\']').value;
+                                                const link = div.querySelector('input[name*=\'[link]\']').value;
+                                                newOrder.push({ url, video_url, link });
+                                            });
+                                            this.galleryPhotos = newOrder;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }" x-init="initSortable()">
                     <h3 class="text-lg font-semibold mb-4 text-indigo-700 border-b pb-2">Gestione Widget Aggiuntivi</h3>
                     
                     @if(session('success'))
@@ -257,11 +306,30 @@
                                                 <strong class="text-gray-800">{{ $gw->titolo ?? '(Eliminato)' }}</strong>
                                             @else
                                                 @php $isShop = str_starts_with($widget->tipo, 'shop_'); @endphp
-                                                <span class="inline-block {{ $isShop ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800' }} text-xs px-2 py-1 rounded uppercase font-bold mr-2">{{ $widget->tipo }}</span>
-                                                <strong class="text-gray-800">{{ $widget->titolo }}</strong>
+                                                <div class="flex flex-col">
+                                                    <div class="flex items-center">
+                                                        <span class="inline-block {{ $isShop ? 'bg-orange-100 text-orange-800' : 'bg-indigo-100 text-indigo-800' }} text-xs px-2 py-1 rounded uppercase font-bold mr-2">{{ $widget->tipo }}</span>
+                                                        <strong class="text-gray-800">{{ $widget->titolo }}</strong>
+                                                    </div>
+                                                    @if($widget->tipo === 'gallery' && !empty($widget->data['photos']))
+                                                        <div class="flex gap-1 mt-2 overflow-x-auto pb-1 max-w-md">
+                                                            @foreach(array_slice($widget->data['photos'], 0, 8) as $p)
+                                                                <img src="{{ asset($p['url'] ?? '') }}" class="h-10 w-14 object-cover rounded shadow-xs border border-gray-200 flex-shrink-0">
+                                                            @endforeach
+                                                            @if(count($widget->data['photos']) > 8)
+                                                                <div class="h-10 w-10 flex items-center justify-center bg-gray-200 rounded text-[10px] text-gray-600 font-bold flex-shrink-0">
+                                                                    +{{ count($widget->data['photos']) - 8 }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             @endif
                                         </div>
-                                        <div>
+                                        <div class="flex items-center gap-3">
+                                            <button type="button" @click="editWidget({{ json_encode($widget) }})" class="text-indigo-600 hover:text-indigo-800" title="Modifica">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                            </button>
                                             <form action="{{ route('admin.widgets.destroy', $widget) }}" method="POST" onsubmit="return confirm('Vuoi davvero eliminare questo widget?');">
                                                 @csrf
                                                 @method('DELETE')
@@ -279,7 +347,7 @@
                     @endif
 
                     <!-- Aggiunta Nuovi Widget -->
-                    <div class="border-t pt-6" x-data="{ activeTab: 'gallery' }">
+                    <div class="border-t pt-6" id="widget-form-container">
                         <h4 class="font-bold mb-4 text-gray-700">Aggiungi un nuovo Widget</h4>
                         
                         <!-- Grid Selector -->
@@ -417,50 +485,92 @@
                             </button>
                         </div>
 
-                        <!-- Form Gallery -->
-                        <div x-show="activeTab === 'gallery'" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                        <!-- Form Gallery (New Grid System) -->
+                        <div x-show="activeTab === 'gallery'" class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100 shadow-sm transition-all" :class="editingWidget ? 'ring-2 ring-indigo-500 bg-white' : ''">
+                            <h3 x-show="editingWidget" class="text-lg font-bold text-indigo-700 mb-4 flex items-center gap-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                Modifica Gallery
+                            </h3>
+
+                            <form :action="editingWidget ? '/amministrazione/widgets/' + editingWidget.id : '{{ route('admin.widgets.store', $articolo) }}'" method="POST">
                                 @csrf
+                                <template x-if="editingWidget">
+                                    <input type="hidden" name="_method" value="PUT">
+                                </template>
                                 <input type="hidden" name="tipo" value="gallery">
-                                <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Gallery *</label>
-                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
+                                
+                                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                                    <div class="flex-1 w-full">
+                                        <label class="block text-indigo-900 font-extrabold mb-1 uppercase text-xs tracking-widest">Titolo Gallery *</label>
+                                        <input type="text" name="titolo" required x-model="formTitolo" placeholder="es. I nostri momenti" class="shadow-sm border-0 rounded-xl w-full py-2.5 px-4 focus:ring-2 focus:ring-indigo-500 text-sm">
+                                    </div>
+                                    <button type="button" @click="fmActiveTarget='widget_gallery_multiple'; window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2 whitespace-nowrap md:mt-5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                                        </svg>
+                                        Scegli Foto
+                                    </button>
                                 </div>
-                                <div id="gallery-container" class="space-y-3 mb-4">
-                                    <div class="flex items-center space-x-2 gallery-row">
-                                        <div class="flex-1 flex flex-col space-y-2">
-                                            <div class="flex">
-                                                <input type="text" name="data[photos][0][url]" readonly required placeholder="URL Foto dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
-                                                <button type="button" class="btn-sfoglia-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">📸 Foto</button>
+
+                                <div x-ref="galleryGrid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 bg-white/50 p-6 rounded-3xl border-2 border-dashed border-indigo-100 min-h-[200px]">
+                                    <template x-for="(foto, index) in galleryPhotos" :key="index + '-' + foto.url">
+                                        <div class="relative group bg-white p-2 rounded-2xl shadow-sm border border-gray-200 transition-all hover:shadow-md hover:border-indigo-300 overflow-hidden">
+                                            <!-- Drag Handle -->
+                                            <div class="drag-handle p-1.5 bg-indigo-600 text-white rounded-lg cursor-grab active:cursor-grabbing shadow-lg hover:bg-indigo-700 transition-colors absolute top-2 left-2 z-10">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16" />
+                                                </svg>
                                             </div>
-                                            <div class="flex">
-                                                <input type="text" name="data[photos][0][video_url]" readonly placeholder="URL Video (opzionale)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none text-sm">
-                                                <button type="button" class="btn-sfoglia-video-gallery bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-r shadow border border-l-0 text-sm whitespace-nowrap">🎥 Video</button>
+
+                                            <!-- Delete Button -->
+                                            <button type="button" @click="galleryPhotos.splice(index, 1)" class="p-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 shadow-lg absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-all">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+
+                                            <!-- Thumbnail -->
+                                            <div class="aspect-video w-full overflow-hidden rounded-xl bg-gray-100">
+                                                <img :src="foto.url" class="h-full w-full object-cover">
+                                            </div>
+
+                                            <!-- Hidden Inputs -->
+                                            <input type="hidden" :name="'data[photos]['+index+'][url]'" :value="foto.url">
+                                            
+                                            <!-- Optional Metadata -->
+                                            <div class="mt-2 space-y-1">
+                                                <input type="text" :name="'data[photos]['+index+'][video_url]'" x-model="foto.video_url" placeholder="Video (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
+                                                <input type="text" :name="'data[photos]['+index+'][link]'" x-model="foto.link" placeholder="Link (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
                                             </div>
                                         </div>
-                                        <div class="flex-1">
-                                            <input type="text" name="data[photos][0][link]" placeholder="Link Opzionale (http://...)" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-sm h-full">
-                                        </div>
-                                        <button type="button" class="btn-rimuovi-foto text-red-500 opacity-50 hover:opacity-100" title="Rimuovi"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
+                                    </template>
+
+                                    <div x-show="galleryPhotos.length === 0" class="col-span-full flex flex-col items-center justify-center py-10 text-indigo-300">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <p class="text-sm italic">Nessuna foto selezionata. Clicca su 'Scegli Foto' per iniziare.</p>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between mt-4">
-                                    <button type="button" id="btn-aggiungi-foto" class="text-indigo-600 font-bold hover:text-indigo-800 text-sm flex items-center">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg> Aggiungi un'altra foto
-                                    </button>
-                                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline">Salva Gallery</button>
+
+                                <div class="flex justify-end mt-4 gap-3">
+                                    <button type="button" x-show="editingWidget" @click="cancelEdit()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-6 rounded shadow transition-colors">Annulla</button>
+                                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-6 rounded shadow focus:outline-none focus:shadow-outline" x-text="editingWidget ? 'Aggiorna Gallery' : 'Salva Gallery'"></button>
                                 </div>
                             </form>
                         </div>
 
                         <!-- Form Top Announcement -->
-                        <div x-show="activeTab === 'announcement'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                        <div x-show="activeTab === 'announcement'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner" :class="editingWidget ? 'ring-2 ring-indigo-500 bg-white' : ''">
+                            <form :action="editingWidget ? '/amministrazione/widgets/' + editingWidget.id : '{{ route('admin.widgets.store', $articolo) }}'" method="POST">
                                 @csrf
+                                <template x-if="editingWidget">
+                                    <input type="hidden" name="_method" value="PUT">
+                                </template>
                                 <input type="hidden" name="tipo" value="top_announcement">
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin *</label>
-                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
+                                    <input type="text" name="titolo" required x-model="formTitolo" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -491,7 +601,6 @@
                                         <input type="text" name="data[button_url]" placeholder="Es: /shop o https://..." class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
                                 </div>
-
                                 <div class="text-right mt-4">
                                     <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Annuncio</button>
                                 </div>
@@ -499,13 +608,16 @@
                         </div>
 
                         <!-- Form Video -->
-                        <div x-show="activeTab === 'video'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                            <form action="{{ route('admin.widgets.store', $articolo) }}" method="POST">
+                        <div x-show="activeTab === 'video'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner" :class="editingWidget ? 'ring-2 ring-indigo-500 bg-white' : ''">
+                            <form :action="editingWidget ? '/amministrazione/widgets/' + editingWidget.id : '{{ route('admin.widgets.store', $articolo) }}'" method="POST">
                                 @csrf
+                                <template x-if="editingWidget">
+                                    <input type="hidden" name="_method" value="PUT">
+                                </template>
                                 <input type="hidden" name="tipo" value="video">
                                 <div class="mb-4">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Video *</label>
-                                    <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin *</label>
+                                    <input type="text" name="titolo" required x-model="formTitolo" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
                                 </div>
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">File Video (MP4) *</label>
@@ -916,8 +1028,10 @@
     </div>
 
     @push('scripts')
+        <style>.cke_notification_warning { display: none !important; }</style>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-        <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+        <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>
             let editorInstance;
             let fmActiveTarget = 'editor';
@@ -925,14 +1039,30 @@
             let photoIndex = 1; // Initialize index for new gallery photos
             let blockIndex = 1; // Initialize index for new info blocks
             
-            ClassicEditor
-                .create( document.querySelector( '#descrizione' ) )
-                .then( editor => {
-                    editorInstance = editor;
-                } )
-                .catch( error => {
-                    console.error( error );
-                } );
+            // Inizializzazione CKEditor 4
+            editorInstance = CKEDITOR.replace('descrizione', {
+                language: 'it',
+                uiColor: '#F3F4F6',
+                height: 400,
+                extraPlugins: 'justify,colorbutton,font',
+                toolbarGroups: [
+                    { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                    { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                    { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                    { name: 'forms', groups: [ 'forms' ] },
+                    '/',
+                    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                    { name: 'links', groups: [ 'links' ] },
+                    { name: 'insert', groups: [ 'insert' ] },
+                    '/',
+                    { name: 'styles', groups: [ 'styles' ] },
+                    { name: 'colors', groups: [ 'colors' ] },
+                    { name: 'tools', groups: [ 'tools' ] },
+                    { name: 'others', groups: [ 'others' ] },
+                    { name: 'about', groups: [ 'about' ] }
+                ]
+            });
 
             document.addEventListener("DOMContentLoaded", function() {
                 // Article core buttons
@@ -1131,25 +1261,41 @@
             // Callback function expected by FileManager popup
             function fmSetLink($url) {
                 const baseUrl = '{{ config('app.url') }}';
-                let relativeUrl = $url.replace(baseUrl, '');
                 
-                if (!relativeUrl.startsWith('http')) {
-                    let cleanPath = relativeUrl.replace(/^\/+/, '');
-                    if (!cleanPath.startsWith('storage/')) {
-                        relativeUrl = '/storage/' + cleanPath;
-                    } else {
-                        relativeUrl = '/' + cleanPath;
+                const cleanUrl = (u) => {
+                    if (typeof u !== 'string') return u;
+                    let rel = u.replace(baseUrl, '');
+                    if (!rel.startsWith('http')) {
+                        let cleanPath = rel.replace(/^\/+/, '');
+                        if (!cleanPath.startsWith('storage/')) {
+                            return '/storage/' + cleanPath;
+                        } else {
+                            return '/' + cleanPath;
+                        }
                     }
+                    return rel;
+                };
+
+                if (fmActiveTarget === 'widget_gallery_multiple') {
+                    const widgetsEl = document.querySelector('[x-data*="galleryPhotos"]');
+                    if (widgetsEl) {
+                        const data = window.Alpine ? window.Alpine.$data(widgetsEl) : widgetsEl.__x.$data;
+                        if (Array.isArray($url)) {
+                            $url.forEach(u => {
+                                data.galleryPhotos.push({ url: cleanUrl(u), video_url: '', link: '' });
+                            });
+                        } else {
+                            data.galleryPhotos.push({ url: cleanUrl($url), video_url: '', link: '' });
+                        }
+                    }
+                    return;
                 }
+
+                let relativeUrl = cleanUrl($url);
                 
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {
-                        editorInstance.model.change( writer => {
-                            const imageElement = writer.createElement( 'imageBlock', {
-                                src: $url // Qui manteniamo l'assoluto per l'editor CKEditor se serve, o usiamo relativo
-                            } );
-                            editorInstance.model.insertContent( imageElement, editorInstance.model.document.selection );
-                        } );
+                        editorInstance.insertHtml('<img src="' + $url + '" style="max-width:100%;height:auto;">');
                     }
                 } else if (fmActiveTarget === 'foto') {
                     document.getElementById('foto').value = relativeUrl;

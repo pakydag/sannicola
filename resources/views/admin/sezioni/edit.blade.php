@@ -43,6 +43,15 @@
                             @error('nome') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- Sottotitolo -->
+                        <div class="mb-4">
+                            <label for="sottotitolo" class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale)</label>
+                            <input type="text" name="sottotitolo" id="sottotitolo" value="{{ old('sottotitolo', $sezione->sottotitolo) }}"
+                                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                placeholder="Inserisci un breve testo descrittivo...">
+                            @error('sottotitolo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         @if(!$sezione->modulo)
                             <!-- URL Custom (Slug) -->
                             <div class="mb-4">
@@ -161,6 +170,42 @@
                             @error('immagine') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- Foto Principale + Allineamento -->
+                        <div class="mb-8 bg-gray-50 p-4 rounded border border-gray-200">
+                            <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Foto Principale e Allineamento</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Foto -->
+                                <div>
+                                    <label for="foto" class="block text-gray-700 text-sm font-bold mb-2">Foto</label>
+                                    <div class="flex items-stretch">
+                                        <input type="text" name="foto" id="foto" value="{{ old('foto', $sezione->foto) }}" readonly placeholder="Scegli foto..."
+                                            class="shadow appearance-none border rounded-l flex-1 py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                        <button type="button" id="fm-foto-button" class="bg-indigo-600 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded-r shadow whitespace-nowrap flex-shrink-0 text-sm">
+                                            Scegli
+                                        </button>
+                                        <button type="button" id="fm-foto-clear" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 ml-2 rounded shadow" title="Rimuovi">X</button>
+                                    </div>
+                                    @if($sezione->foto)
+                                        <div class="mt-2">
+                                            <img src="{{ asset($sezione->foto) }}" class="h-20 w-auto object-cover rounded border shadow-sm border-gray-200">
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Allineamento -->
+                                <div>
+                                    <label for="allineamento_media" class="block text-gray-700 text-sm font-bold mb-2">Allineamento Foto</label>
+                                    <select name="allineamento_media" id="allineamento_media" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline text-sm">
+                                        <option value="left" {{ old('allineamento_media', $sezione->allineamento_media) == 'left' ? 'selected' : '' }}>⬅ Sinistra</option>
+                                        <option value="center" {{ old('allineamento_media', $sezione->allineamento_media ?? 'center') == 'center' ? 'selected' : '' }}>↔ Centro</option>
+                                        <option value="right" {{ old('allineamento_media', $sezione->allineamento_media) == 'right' ? 'selected' : '' }}>➡ Destra</option>
+                                    </select>
+                                    <p class="text-xs text-gray-500 mt-1">Scegli come allineare la foto rispetto al testo della sezione.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- ======== Pannello SEO & Condivisione ======== -->
                         <div class="mt-10 mb-8 border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                             <div class="bg-gray-200 px-4 py-3 border-b border-gray-300">
@@ -216,19 +261,37 @@
     </div>
 
     @push('scripts')
-        <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+        <style>.cke_notification_warning { display: none !important; }</style>
+        <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>
             let editorInstance;
             let fmActiveTarget = 'editor';
             
-            ClassicEditor
-                .create( document.querySelector( '#contenuto' ) )
-                .then( editor => {
-                    editorInstance = editor;
-                } )
-                .catch( error => {
-                    console.error( error );
-                } );
+            // Inizializzazione CKEditor 4
+            editorInstance = CKEDITOR.replace('contenuto', {
+                language: 'it',
+                uiColor: '#F3F4F6',
+                height: 400,
+                // Assicurati che il plugin justify sia attivo (è incluso nella versione full)
+                extraPlugins: 'justify,colorbutton,font',
+                toolbarGroups: [
+                    { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                    { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                    { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                    { name: 'forms', groups: [ 'forms' ] },
+                    '/',
+                    { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                    { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                    { name: 'links', groups: [ 'links' ] },
+                    { name: 'insert', groups: [ 'insert' ] },
+                    '/',
+                    { name: 'styles', groups: [ 'styles' ] },
+                    { name: 'colors', groups: [ 'colors' ] },
+                    { name: 'tools', groups: [ 'tools' ] },
+                    { name: 'others', groups: [ 'others' ] },
+                    { name: 'about', groups: [ 'about' ] }
+                ]
+            });
 
             document.addEventListener("DOMContentLoaded", function() {
                 const fmButton = document.getElementById('fm-button');
@@ -258,11 +321,28 @@
                     });
                 }
 
+                const fmFotoButton = document.getElementById('fm-foto-button');
+                if (fmFotoButton) {
+                    fmFotoButton.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveTarget = 'foto';
+                        window.open('{{ url('file-manager/fm-button') }}', 'fm', 'width=1400,height=800');
+                    });
+                }
+
                 const fmImmagineClear = document.getElementById('fm-immagine-clear');
                 if (fmImmagineClear) {
                     fmImmagineClear.addEventListener('click', (event) => {
                         event.preventDefault();
                         document.getElementById('immagine').value = '';
+                    });
+                }
+
+                const fmFotoClear = document.getElementById('fm-foto-clear');
+                if (fmFotoClear) {
+                    fmFotoClear.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        document.getElementById('foto').value = '';
                     });
                 }
 
@@ -291,17 +371,14 @@
 
                 if(fmActiveTarget === 'editor') {
                     if(editorInstance) {
-                        editorInstance.model.change( writer => {
-                            const imageElement = writer.createElement( 'imageBlock', {
-                                src: $url
-                            } );
-                            editorInstance.model.insertContent( imageElement, editorInstance.model.document.selection );
-                        } );
+                        editorInstance.insertHtml('<img src="' + $url + '" style="max-width:100%;height:auto;">');
                     }
                 } else if(fmActiveTarget === 'seo_image') {
                     document.getElementById('seo_image').value = relativeUrl;
                 } else if(fmActiveTarget === 'immagine') {
                     document.getElementById('immagine').value = relativeUrl;
+                } else if(fmActiveTarget === 'foto') {
+                    document.getElementById('foto').value = relativeUrl;
                 }
             }
 

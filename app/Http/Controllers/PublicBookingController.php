@@ -117,6 +117,7 @@ class PublicBookingController extends Controller
 
     public function show($id)
     {
+        $section = \App\Models\Section::where('modulo', 'booking')->first();
         $structure = \App\Models\BookingStructure::where('attivo', true)->with(['photos', 'variants', 'prices', 'services.category', 'extras'])->findOrFail($id);
         
         // Get existing bookings for the calendar
@@ -143,7 +144,7 @@ class PublicBookingController extends Controller
             'url' => url()->current()
         ];
 
-        return view('public.booking.show', compact('structure', 'bookedDates', 'seo'));
+        return view('public.booking.show', compact('structure', 'bookedDates', 'seo', 'section'));
     }
 
     public function checkAvailability(Request $request)

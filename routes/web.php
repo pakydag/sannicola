@@ -88,6 +88,7 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
 
     // Widget Routes
     Route::post('/articoli/{articolo}/widgets', [WidgetController::class, 'store'])->name('widgets.store');
+    Route::put('/widgets/{widget}', [WidgetController::class, 'update'])->name('widgets.update');
     Route::delete('/widgets/{widget}', [WidgetController::class, 'destroy'])->name('widgets.destroy');
     Route::post('/widgets/reorder', [WidgetController::class, 'reorder'])->name('widgets.reorder');
 

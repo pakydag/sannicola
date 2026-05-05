@@ -67,7 +67,7 @@ class SettingController extends Controller
         ];
 
         $generalSettings = [
-            'site_logo', 'mail_mailer', 'mail_host', 'mail_port', 
+            'site_logo', 'site_favicon', 'mail_mailer', 'mail_host', 'mail_port', 
             'mail_username', 'mail_password', 'mail_encryption', 
             'mail_from_address', 'mail_from_name',
             'vapi_key', 'vapi_assistant_id', 'spoki_key',
@@ -78,6 +78,7 @@ class SettingController extends Controller
 
         $validated = $request->validate([
             'site_logo' => 'nullable|string',
+            'site_favicon' => 'nullable|string',
             'mail_mailer' => 'nullable|string',
             'mail_host' => 'nullable|string',
             'mail_port' => 'nullable|string',
@@ -114,6 +115,9 @@ class SettingController extends Controller
 
         if (isset($validated['site_logo'])) {
             $validated['site_logo'] = $this->stripDomain($validated['site_logo']);
+        }
+        if (isset($validated['site_favicon'])) {
+            $validated['site_favicon'] = $this->stripDomain($validated['site_favicon']);
         }
 
         // Process Checkboxes

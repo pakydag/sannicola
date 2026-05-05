@@ -1,18 +1,32 @@
 @extends('public.layouts.main')
 
 @section('content')
-    <div class="bg-gray-50 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <nav class="flex mb-8 text-gray-500 text-sm" aria-label="Breadcrumb">
-                <ol class="flex items-center space-x-2">
-                    <li><a href="{{ route('public.booking.index') }}" class="hover:text-indigo-600 transition">Tutte le strutture</a></li>
-                    <li>
-                        <svg class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </li>
-                    <li class="font-bold text-gray-900">{{ $structure->nome }}</li>
-                </ol>
-            </nav>
+    <div class="bg-gray-50 pb-16">
+        @if(isset($section) && $section->immagine)
+            <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" style="background-image: url('{{ asset($section->immagine) }}');">
+                <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+                    <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
+                        <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
+                        <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+                        <a href="{{ route('public.booking.index') }}" class="hover:text-gray-900 transition">Prenota</a>
+                        <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+                        <span class="text-gray-900 font-bold">{{ $structure->nome }}</span>
+                    </nav>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        @else
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+                <nav class="flex mb-8 text-gray-500 text-sm" aria-label="Breadcrumb">
+                    <ol class="flex items-center space-x-2">
+                        <li><a href="{{ route('public.home') }}" class="hover:text-indigo-600 transition">Home</a></li>
+                        <li><svg class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                        <li><a href="{{ route('public.booking.index') }}" class="hover:text-indigo-600 transition">Tutte le strutture</a></li>
+                        <li><svg class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
+                        <li class="font-bold text-gray-900">{{ $structure->nome }}</li>
+                    </ol>
+                </nav>
+        @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
                 
