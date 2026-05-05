@@ -5,10 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $seo['title'] ?? config('app.name', 'CRM Laravel') }}</title>
-    
+
     <!-- Meta SEO Standard -->
     <meta name="description" content="{{ $seo['description'] ?? 'Benvenuti sul nostro sito ufficiale' }}">
-    
+
     <!-- Open Graph (Facebook, LinkedIn, Pinterest, WhatsApp ecc.) -->
     <meta property="og:title" content="{{ $seo['title'] ?? config('app.name', 'CRM Laravel') }}" />
     <meta property="og:description" content="{{ $seo['description'] ?? 'Benvenuti sul nostro sito ufficiale' }}" />
@@ -17,7 +17,7 @@
     @if(!empty($seo['image']))
         <meta property="og:image" content="{{ asset($seo['image']) }}" />
     @endif
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $seo['title'] ?? config('app.name', 'CRM Laravel') }}">
@@ -29,6 +29,10 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus+SC&display=swap" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -50,7 +54,7 @@
             @include('public.partials.widgets.top_announcement', ['widget' => $topAnnouncement])
         </div>
     @endif
-    
+
     @include('public.partials.header')
 
     <!-- Page Content -->
