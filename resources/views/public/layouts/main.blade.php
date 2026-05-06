@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
+
     @php
         $favicon = \App\Models\Setting::where('key', 'site_favicon')->value('value');
     @endphp
@@ -49,7 +49,7 @@
     <!-- Tracking Scripts (Head) -->
     @include('public.partials.tracking_scripts_head')
 </head>
-<body class="font-sans antialiased text-gray-900 bg-white flex flex-col min-h-screen">
+<body class="antialiased  bg-white flex flex-col min-h-screen">
     <!-- Tracking Scripts (Body) -->
     @include('public.partials.tracking_scripts_body')
 

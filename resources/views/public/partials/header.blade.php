@@ -5,14 +5,8 @@
 @endphp
 
 <style>
-header nav a{padding-top: 48px !important; padding-bottom: 42px !important;}
-a[title="Accedi Area Booking"]:hover,
-a[title="Accedi Area Booking"]:hover svg,
-a[title="Il Mio Account"]:hover,
-a[title="Il Mio Account"]:hover svg {
-    color: rgb(55, 164, 178) !important;
-    stroke: rgb(55, 164, 178) !important; /* Molto importante per le icone con stroke */
-}
+header nav a{padding-top: 48px !important; padding-bottom: 43px !important;}
+
 
 /* Rende la transizione fluida come il resto del menu */
 a[title="Accedi Area Booking"],
@@ -102,7 +96,7 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary' : 'border-transparent text-gray-500 hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="text-base inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary' : 'border-transparent hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white' }}'" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
@@ -113,7 +107,7 @@ a[title="Accedi Area Booking"] svg {
     @if($bookingEnabled == '1')
         @if(Auth::guard('booking_customer')->check())
             <div class="relative inline-flex items-center" x-data="{ open: false }" @click.away="open = false">
-                <button @click="open = !open" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="p-2 transition-colors flex items-center gap-1" title="Area Booking">
+                <button @click="open = !open" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="p-2 transition-colors flex items-center gap-1" title="Area Booking">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
                     <svg class="h-4 w-4 transform transition-transform duration-200" :class="{'rotate-180': open}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </button>
@@ -125,7 +119,7 @@ a[title="Accedi Area Booking"] svg {
                 </div>
             </div>
         @else
-            <a href="{{ route('public.booking.dashboard.index') }}" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Accedi Area Booking">
+            <a href="{{ route('public.booking.dashboard.index') }}" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Accedi Area Booking">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
             </a>
         @endif
@@ -144,7 +138,7 @@ a[title="Accedi Area Booking"] svg {
     @endif
 
     @if($shopEnabled == '1')
-        <a href="{{ route('public.shop.cart.index') }}" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors">
+        <a href="{{ route('public.shop.cart.index') }}" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             @php $cartCount = array_sum(array_column(session()->get('cart', []), 'quantita')); @endphp
             @if($cartCount > 0)

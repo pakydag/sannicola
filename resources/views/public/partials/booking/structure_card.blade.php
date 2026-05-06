@@ -18,8 +18,8 @@
 
     <!-- Contenuto -->
     <div class="p-6 flex-1 flex flex-col">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2 truncate">{{ $s->nome }}</h2>
-        
+        <h2 class="text-2xl mb-2 truncate">{{ $s->nome }}</h2>
+
         @if($s->prenotabile)
             <div class="flex items-center gap-4 text-gray-500 text-sm mb-4">
                 <span class="flex items-center gap-1">
@@ -43,7 +43,7 @@
                     Scopri e Prenota
                 </a>
             @else
-                <div class="block w-full text-center bg-gray-100 text-gray-400 font-bold py-3 px-4 rounded-xl">
+                <div class="block w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl">
                     Non disponibile
                 </div>
             @endif

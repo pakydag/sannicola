@@ -9,7 +9,12 @@
 
 /* resources/css/app.css */
 @layer components {
-    .btn {
-        @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary;
-    }
+    body { @apply font-sans text-lg leading-relaxed text-black font-light }
+    h1, h2, h3, h4, h5, h6 { @apply font-display font-normal text-primary; }
+    h2 { @apply text-2xl mb-4 text-secondary font-sans; }
+    p { @apply mb-4; }
+    b, strong { @apply font-medium; }
+    nav a { @apply font-display text-sm uppercase transition-colors tracking-wide; }
+    .breadcrumb a { @apply font-sans normal-case;}
+    .btn { @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary; }
 }

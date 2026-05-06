@@ -6,7 +6,7 @@
 <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" @if($articolo->section && $articolo->section->immagine) style="background-image: url('{{ asset($articolo->section->immagine) }}');" @endif>
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <!-- Breadcrumb / Back link -->
-        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
+        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
             @if($articolo->section && $articolo->section->visibile)
@@ -22,7 +22,7 @@
     <div class="mx-auto max-w-7xl rounded-b-lg">
 
         <article class="bg-white shadow-sm py-6 px-11 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
-            
+
             <header class="mb-10 text-center">
                 <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase">
                     {{ $articolo->section->nome ?? 'Senza Categoria' }}
@@ -30,20 +30,20 @@
                         &bull; {{ $articolo->created_at->format('d M Y') }}
                     @endif
                 </p>
-                <h1 class="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight primary">
+                <h1 class="mt-2 text-4xl sm:text-5xl tracking-tight primary">
                     {{ $articolo->titolo }}
                 </h1>
                 @if($articolo->sottotitolo)
-                    <p class="mt-4 text-xl text-gray-500 leading-18">
+                    <h2 class="mt-4 text-xl leading-18">
                         {{ $articolo->sottotitolo }}
-                    </p>
+                    </h2>
                 @endif
             </header>
 
             @php
                 $alignment = $articolo->allineamento_media ?? 'center';
                 $alignmentClasses = 'w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200 mb-10';
-                
+
                 if ($alignment === 'left') {
                     $alignmentClasses = 'md:float-left md:mr-8 md:mb-6 md:w-1/2 w-full rounded-lg bg-gray-50 object-cover max-h-[500px] shadow-lg ring-1 ring-gray-200';
                 } elseif ($alignment === 'right') {
@@ -146,7 +146,7 @@
             </div>
         @endif
 
-        
+
     </div>
 </div>
 @endsection

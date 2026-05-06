@@ -6,7 +6,7 @@
 <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <!-- Breadcrumb / Back link -->
-        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
+        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
             <span>{{ $sezione->nome }}</span>
@@ -16,20 +16,20 @@
 
 <div class="max-w-7xl mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12">
     <header class="text-center mb-10">
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight primary">
+        <h1 class="text-4xl sm:text-5xl tracking-tight primary">
             {{ $sezione->nome }}
         </h1>
         @if($sezione->sottotitolo)
-            <p class="mt-4 text-xl text-gray-500 italic">
+            <h2 class="mt-4 text-xl">
                 {{ $sezione->sottotitolo }}
-            </p>
+            </h2>
         @endif
     </header>
 
     @php
         $alignment = $sezione->allineamento_media ?? 'center';
         $alignmentClasses = 'w-full rounded-xl bg-gray-50 object-cover max-h-[600px] shadow-lg ring-1 ring-gray-200 mb-10';
-        
+
         if ($alignment === 'left') {
             $alignmentClasses = 'md:float-left md:mr-8 md:mb-6 md:w-1/2 w-full rounded-lg bg-gray-50 object-cover max-h-[500px] shadow-lg ring-1 ring-gray-200';
         } elseif ($alignment === 'right') {
@@ -58,7 +58,7 @@
         @if($articoli->count() > 0)
             <div>
                 <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 mb-8 text-center hidden">Articoli in questa sezione</h2>
-                
+
                 @php
                     // Mappa il numero di colonne selezionato alle classi Tailwind complete
                     $gridClass = 'grid-cols-1 md:grid-cols-3'; // Default 3 colonne

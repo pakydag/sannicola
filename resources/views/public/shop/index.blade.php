@@ -6,7 +6,7 @@
 @if(isset($section) && $section->immagine)
 <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" style="background-image: url('{{ asset($section->immagine) }}');">
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
-        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400">
+        <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
             <span class="text-gray-900">Shop</span>
@@ -58,12 +58,12 @@
                         Le Nostre Collezioni
                     @endif
                 </div>
-                
+
                 @if($filtered)
                     <a href="{{ route('public.shop.index') }}" class="text-xs font-bold text-red-500 hover:text-red-700 underline uppercase tracking-widest">Rimuovi Filtro</a>
                 @endif
             </h2>
-            
+
             @if($filtered)
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @forelse($prodotti as $prodotto)
@@ -71,7 +71,7 @@
                             @php
                                 $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
                             @endphp
-                            
+
                             <div class="relative overflow-hidden aspect-[4/3]">
                                 @if($primaFoto)
                                     <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
@@ -81,20 +81,20 @@
                                     </div>
                                 @endif
                             </div>
-                            
+
                             <div class="p-6 flex-grow flex flex-col">
                                 @if($prodotto->marca)
                                     <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                                 @endif
-                                
+
                                 <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
-                                
+
                                 <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                     @php
                                         $variant = $prodotto->variants->first();
                                         $prezzo = $variant ? $variant->prezzo : 0;
                                         $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
-                                        
+
                                         $showPreview = ($settings['shop_price_preview'] ?? '0') == '1';
                                         if ($showPreview) {
                                             $priceData = $prodotto->getLowestPrice();
@@ -102,7 +102,7 @@
                                             $prezzo_scontato = $priceData['prezzo_scontato'];
                                         }
                                     @endphp
-                                    
+
                                     <div class="flex flex-col">
                                         @if($showPreview)
                                             @if($prezzo_scontato > 0)
@@ -119,7 +119,7 @@
                                             <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest">Dettagli</span>
                                         @endif
                                     </div>
-                                    
+
                                     <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                                     </a>
@@ -146,7 +146,7 @@
                                 @endif
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
                             </div>
-                            
+
                             <div class="absolute bottom-0 left-0 right-0 p-6 text-white text-center">
                                 <h3 class="text-2xl font-bold">{{ $collezione->nome }}</h3>
                                 <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="bottone-personalizzato2 mt-4 inline-flex items-center text-sm font-bold bg-white text-gray-900 px-6 py-2 rounded-xl hover:bg-indigo-600 hover:text-white transition-all">

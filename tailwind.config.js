@@ -14,10 +14,11 @@ export default {
             fontFamily: {
                 //sans: ['Figtree', ...defaultTheme.fontFamily.sans],
                 sans: ['Jost', ...defaultTheme.fontFamily.sans],
+                display: ['"Marcellus SC"', 'serif'],
             },
             colors: {
                 primary: '#c4aa7e',
-                secondary: '#fbbf24',
+                secondary: '#82834c',
             },
         },
     },
