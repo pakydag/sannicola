@@ -42,7 +42,7 @@ a[title="Accedi Area Booking"] svg {
 
 
                 <!-- Navigation Links -->
-                <nav class="tracking-tight hidden gap-7 sm:-my-px sm:flex justify-center items-center">
+                <nav class="menu tracking-tight hidden gap-7 sm:-my-px sm:flex justify-center items-center">
 
 
                     @if(isset($shared_sezioni))

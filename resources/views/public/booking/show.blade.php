@@ -10,11 +10,11 @@
                         <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
                         <a href="{{ route('public.booking.index') }}" class="hover:text-gray-900 transition">Prenota</a>
                         <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-                        <span class="text-gray-900 font-bold">{{ $structure->nome }}</span>
+                        <span>{{ $structure->nome }}</span>
                     </nav>
                 </div>
             </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 bg-white">
         @else
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
                 <nav class="flex mb-8 text-gray-500 text-sm" aria-label="Breadcrumb">
@@ -29,16 +29,16 @@
         @endif
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                
+
                 <!-- Colonna Sinistra: Media & Descrizione -->
                 <div class="lg:col-span-2 space-y-8">
-                    
+
                     <!-- Gallery -->
                     <style>
                         .hide-scroll::-webkit-scrollbar { display: none; }
                         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
                     </style>
-                    <div x-data="{ 
+                    <div x-data="{
                             activePhoto: '{{ $structure->photos->count() > 0 ? asset($structure->photos->first()->path) : '' }}',
                             photos: {{ json_encode($structure->photos->pluck('path')->map(fn($path) => asset($path))) }},
                             currentIndex: 0,
@@ -69,12 +69,12 @@
                                 });
                             }
                         }" class="space-y-4">
-                        
+
                         <!-- PHOTo PRINCIPALE CON FRECCE -->
                         <div class="relative h-[500px] w-full rounded-lg overflow-hidden shadow-xl bg-gray-100 group">
                             @if($structure->photos->count() > 0)
                                 <img :src="activePhoto" class="w-full h-full object-cover transition-opacity duration-300">
-                                
+
                                 @if($structure->photos->count() > 1)
                                     <!-- Freccia Sinistra Copertina -->
                                     <button type="button" @click="prev" class="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg text-gray-800 transition-all opacity-0 group-hover:opacity-100 transform hover:scale-110 focus:outline-none" style="z-index: 20;">
@@ -89,14 +89,14 @@
                                         </svg>
                                     </button>
                                 @endif
-                                
+
                             @else
                                 <div class="w-full h-full flex items-center justify-center">
                                     <svg class="h-20 w-20 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                 </div>
                             @endif
                         </div>
-                        
+
                         <!-- RIGA MINIATURE -->
                         @if($structure->photos->count() > 1)
                             <div class="relative flex items-center pt-1 group/thumbs">
@@ -127,12 +127,12 @@
                     </div>
 
                     <!-- Details -->
-                    <div class="bg-white rounded-lg p-8 border border-gray-100">
-                        <h1 class="text-4xl font-extrabold text-gray-900 mb-6">{{ $structure->nome }}</h1>
-                        
-                        <div class="flex flex-wrap gap-8 mb-8 pb-8 border-b border-gray-200">
+                    <div class="bg-white rounded-lg p-6">
+                        <div class="titoli"><h1 class="text-4xl mb-6">{{ $structure->nome }}</h1></div>
+
+                        <div class="flex flex-wrap gap-8 mb-6 pb-8 border-b border-gray-200">
                             <div class="flex items-center gap-2">
-                                <div class="h-10 w-10 bg-grey-100 rounded-xl shadow-sm flex items-center justify-center primary">
+                                <div class="h-10 w-10 bg-gray-100 rounded-xl shadow-sm flex items-center justify-center primary">
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 </div>
                                 <div>
@@ -141,7 +141,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                <div class="h-10 w-10 bg-grey-100 rounded-xl shadow-sm flex items-center justify-center primary">
+                                <div class="h-10 w-10 bg-gray-100 rounded-xl shadow-sm flex items-center justify-center primary">
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
                                 </div>
                                 <div>
@@ -166,15 +166,15 @@
 
                         <!-- Servizi e Amenità -->
                         @if($structure->services->count() > 0)
-                            <div class="mt-12 border-t pt-12">
-                                <h3 class="text-2xl font-extrabold text-gray-900 mb-8">Servizi e Dotazioni</h3>
+                            <div class="mt-12 border-t pt-12 titoli">
+                                <h3 class="text-2xl mb-8">Servizi e Dotazioni</h3>
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                     @foreach($structure->services as $service)
                                         <div class="flex items-center gap-3">
                                             <div class="h-10 w-10 bg-indigo-50 rounded-xl flex items-center justify-center text-xl shrink-0 shadow-sm border border-indigo-100">
                                                 {{ $service->icona ?: '✨' }}
                                             </div>
-                                            <span class="text-gray-800 font-bold text-sm leading-tight">{{ $service->nome }}</span>
+                                            <span class="text-gray-800 text-sm leading-tight">{{ $service->nome }}</span>
                                         </div>
                                     @endforeach
                                 </div>
@@ -185,13 +185,13 @@
 
                 <!-- Colonna Destra: Prenotazione -->
                 <div class="lg:col-span-1">
-                    <div class="sticky top-8 bg-white p-8 rounded-lg shadow-sm border border-gray-100">
+                    <div class="sticky top-14 p-8 bg-gray-30 rounded-xl">
                         @if($structure->prenotabile)
                         <div x-data="bookingForm()">
-                            <div class="flex justify-between items-end mb-8">
+                            <div class="flex justify-between items-end">
                                 <div>
                                     @if($structure->tipo_prezzo === 'fisso')
-                                        <p class="text-xl font-extrabold text-gray-900">Prenota Soggiorno</p>
+                                        <p class="text-xl font-extrabold text-gray-900 mb-6">Prenota Soggiorno</p>
                                     @else
                                         <p class="text-xl font-extrabold text-gray-900">Prezzo per persona</p>
                                         <p class="text-gray-500 text-sm">per periodo</p>
@@ -205,11 +205,11 @@
                                 <div class="grid grid-cols-2 gap-0 border rounded-xl overflow-hidden shadow-sm">
                                     <div class="border-b p-3 bg-gray-50">
                                         <label class="block text-[10px] font-bold uppercase text-gray-400">Arrivo</label>
-                                        <input type="date" x-model="startDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" min="{{ date('Y-m-d') }}">
+                                        <input type="date" x-model="startDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0" min="{{ date('Y-m-d') }}">
                                     </div>
                                     <div class="border-b border-l p-3 bg-gray-50">
                                         <label class="block text-[10px] font-bold uppercase text-gray-400">Partenza</label>
-                                        <input type="date" x-model="endDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0 font-bold" :min="startDate">
+                                        <input type="date" x-model="endDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0" :min="startDate">
                                     </div>
                                     @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
                                         <div class="col-span-2 p-3 bg-gray-50 border-t">
@@ -236,9 +236,9 @@
                                                     <label class="flex items-center justify-between p-2 rounded-lg border bg-white cursor-pointer hover:border-indigo-300 transition-colors">
                                                         <div class="flex items-center gap-2">
                                                             <input type="checkbox" x-model="selectedExtras" value="{{ $extra->id }}" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <span class="text-xs font-bold text-gray-700">{{ $extra->nome }}</span>
+                                                            <span class="text-xs text-gray-700">{{ $extra->nome }}</span>
                                                         </div>
-                                                        <span class="text-xs font-bold text-gray-500">€{{ number_format($extra->prezzo, 2) }}/g</span>
+                                                        <span class="text-xs text-gray-500">€{{ number_format($extra->prezzo, 2) }}/g</span>
                                                     </label>
                                                 @endforeach
                                             </div>
@@ -271,7 +271,7 @@
                                     </template>
                                 </div>
 
-                                <button type="submit" 
+                                <button type="submit"
                                         :disabled="!isAvailable || totalDays <= 0 || isChecking || parseFloat(totalPrice) <= 0 || totalGuests > {{ $structure->posti_totali }}"
                                         x-show="totalDays > 0 && (isAvailable || totalGuests > {{ $structure->posti_totali }}) && (parseFloat(totalPrice) > 0 || totalGuests > {{ $structure->posti_totali }})"
                                         class="w-full py-4 rounded-2xl font-extrabold text-lg shadow-lg transition-all duration-300 transform active:scale-95 bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -279,7 +279,7 @@
                                     <span x-show="isChecking">Verifica in corso...</span>
                                 </button>
                             </form>
-                            
+
                             <p class="text-center text-[11px] text-gray-400 mt-6 px-4">
                                 Non ti verrà addebitato nulla in questo momento. Verrai reindirizzato alla pagina di pagamento.
                             </p>
@@ -321,14 +321,14 @@
                 // Pre-fill guests from request if available
                 const reqAdulti = parseInt('{{ request('adulti', 0) }}');
                 const reqBambini = parseInt('{{ request('bambini', 0) }}');
-                
+
                 if (reqAdulti > 0 || reqBambini > 0) {
                     const variants = @json($structure->variants);
                     if (variants.length > 0) {
                         // Attempt to find "Adulto" and "Bambino" variants
                         let adultVariant = variants.find(v => v.nome.toLowerCase().includes('adult'));
                         let childVariant = variants.find(v => v.nome.toLowerCase().includes('bambin') || v.nome.toLowerCase().includes('child'));
-                        
+
                         if (reqAdulti > 0) {
                             const vId = adultVariant ? adultVariant.id : variants[0].id;
                             this.ospiti[vId] = reqAdulti;
@@ -341,7 +341,7 @@
                         }
                     }
                 }
-                
+
                 // Trigger check if dates are present
                 if (this.startDate && this.endDate) {
                     this.checkDates();
@@ -356,7 +356,7 @@
                 if (this.startDate && this.endDate) {
                     const start = new Date(this.startDate);
                     const end = new Date(this.endDate);
-                    
+
                     if (end > start) {
                         const diffTime = Math.abs(end - start);
                         this.totalDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -381,7 +381,7 @@
                 // Client side quick check
                 const start = new Date(this.startDate);
                 const end = new Date(this.endDate);
-                
+
                 for (let d = new Date(start); d < end; d.setDate(d.getDate() + 1)) {
                     let dateStr = d.toISOString().split('T')[0];
                     if (this.bookedDates.includes(dateStr)) {
@@ -429,7 +429,7 @@
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = '{{ route("public.booking.reserve") }}';
-                
+
                 const csrf = document.createElement('input');
                 csrf.type = 'hidden';
                 csrf.name = '_token';

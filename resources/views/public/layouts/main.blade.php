@@ -49,7 +49,7 @@
     <!-- Tracking Scripts (Head) -->
     @include('public.partials.tracking_scripts_head')
 </head>
-<body class="antialiased  bg-white flex flex-col min-h-screen">
+<body class="main antialiased  bg-white flex flex-col min-h-screen">
     <!-- Tracking Scripts (Body) -->
     @include('public.partials.tracking_scripts_body')
 

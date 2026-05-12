@@ -15,7 +15,7 @@
 </div>
 
 <div class="max-w-7xl mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12">
-    <header class="text-center mb-10">
+    <header class="titoli text-center mb-10">
         <h1 class="text-4xl sm:text-5xl tracking-tight primary">
             {{ $sezione->nome }}
         </h1>
@@ -44,7 +44,7 @@
     @endif
 
     @if($sezione->contenuto)
-    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto max-w-prose' : 'max-w-none' }} text-gray-500 mb-16">
+    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto' : 'max-w-none' }} mb-16">
         {!! $sezione->contenuto !!}
     </div>
     @endif
@@ -79,11 +79,11 @@
                                     <img src="{{ $articolo->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $articolo->titolo }}" class="w-full h-48 object-cover rounded">
                                 </a>
                             @endif
-                            <div class="p-6 flex-grow flex flex-col pb-4 text-center items-center justify-center">
+                            <div class="titoli p-6 flex-grow flex flex-col pb-4 text-center items-center justify-center">
                                 <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block mt-2">
-                                    <h3 class="text-xl font-semibold text-gray-900">{{ $articolo->titolo }}</h3>
+                                    <h1 class="text-xl font-semibold text-gray-900">{{ $articolo->titolo }}</h1>
                                     @if($articolo->sottotitolo)
-                                        <p class="mt-3 text-base primary">{{ Str::limit($articolo->sottotitolo, 100) }}</p>
+                                        <h2 class="mt-3 text-base primary">{{ Str::limit($articolo->sottotitolo, 100) }}</h2>
                                     @endif
                                 </a>
                             </div>

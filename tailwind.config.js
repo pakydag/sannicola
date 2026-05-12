@@ -17,7 +17,7 @@ export default {
                 display: ['"Marcellus SC"', 'serif'],
             },
             colors: {
-                primary: '#c4aa7e',
+                primary: '#c0900d',
                 secondary: '#82834c',
             },
         },
