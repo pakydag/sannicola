@@ -15,7 +15,7 @@ a[title="Accedi Area Booking"] svg {
 }
 </style>
 
-<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
+<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="menu top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
     <div class="max-w-7xl mx-auto w-full">
         <div class="flex items-center justify-between h-28 ">
              <!-- Logo -->
