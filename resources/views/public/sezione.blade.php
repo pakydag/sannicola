@@ -44,7 +44,7 @@
     @endif
 
     @if($sezione->contenuto)
-    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto' : 'max-w-none' }} mb-16">
+    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto' : 'max-w-6xl' }} mb-16 max-w-4xl">
         {!! $sezione->contenuto !!}
     </div>
     @endif

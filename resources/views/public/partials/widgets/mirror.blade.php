@@ -21,7 +21,7 @@
                 $isReversed = ($index % 2 !== 0);
             @endphp
 
-            <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-white p-6 md:p-10 shadow-sm border border-gray-100 rounded-lg">
+            <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-white p-6 md:p-10 shadow-sm border border-gray-100 rounded-lg mt-10">
 
                 <!-- Image Section -->
                 <div class="w-full md:w-1/2 photo overflow-hidden">

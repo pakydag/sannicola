@@ -107,7 +107,7 @@
         </div>
 
         <!-- Bottom Bar -->
-        <div class="pt-8 border-t border-gray-800 text-center text-gray-200 text-xs">
+        <div class="pt-8 border-t border-gray-800 text-center text-white text-xs">
             <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Tutti i diritti riservati.</p>
         </div>
     </div>

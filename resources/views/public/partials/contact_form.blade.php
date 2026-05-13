@@ -12,7 +12,7 @@
             </div>
         </div>
     @else
-        <form action="{{ route('public.contact.submit') }}#contatti" method="POST" class="max-w-3xl mx-auto">
+        <form action="{{ route('public.contact.submit') }}#contatti" method="POST" class="max-w-4xl mx-auto">
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
