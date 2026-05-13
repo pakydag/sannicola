@@ -22,11 +22,11 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 bg-white border-b border-gray-200">
-                    
+
                     <!-- Filtri -->
                     <form action="{{ $isArchive ? route('admin.booking.bookings.archive') : route('admin.booking.bookings.index') }}" method="GET" class="mb-6 bg-gray-50 p-4 rounded-lg flex flex-wrap gap-4 items-end">
                         <div class="flex-1 min-w-[200px]">
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Struttura</label>
+                            <label class="block text-xs text-gray-700 uppercase mb-1">Struttura</label>
                             <select name="structure_id" class="w-full border-gray-300 rounded shadow-sm text-sm">
                                 <option value="">Tutte le strutture</option>
                                 @foreach($structures as $s)
@@ -35,7 +35,7 @@
                             </select>
                         </div>
                         <div class="w-32">
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mese</label>
+                            <label class="block text-xs text-gray-700 uppercase mb-1">Mese</label>
                             <select name="month" class="w-full border-gray-300 rounded shadow-sm text-sm">
                                 <option value="">Tutti</option>
                                 @for($i=1; $i<=12; $i++)
@@ -46,7 +46,7 @@
                             </select>
                         </div>
                         <div class="w-24">
-                            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Anno</label>
+                            <label class="block text-xs text-gray-700 uppercase mb-1">Anno</label>
                             <select name="year" class="w-full border-gray-300 rounded shadow-sm text-sm">
                                 <option value="">Tutti</option>
                                 @for($i=date('Y')-2; $i<=date('Y')+2; $i++)

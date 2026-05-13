@@ -24,9 +24,9 @@
             <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-white p-6 md:p-10 shadow-sm border border-gray-100 rounded-lg">
 
                 <!-- Image Section -->
-                <div class="w-full md:w-1/2">
+                <div class="w-full md:w-1/2 photo overflow-hidden">
                     @if($item->hasMedia('foto'))
-                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="block overflow-hidden">
+                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="block">
                             <img src="{{ $item->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $item->titolo }}">
                         </a>
                     @else
@@ -37,15 +37,15 @@
                 </div>
 
                 <!-- Text Section -->
-                <div class="w-full md:w-1/2 flex flex-col justify-center">
-                    <h4 class="text-2xl font-bold text-gray-900 mb-2">
+                <div class="titoli w-full md:w-1/2 flex flex-col justify-center">
+                    <h4 class="text-2xl text-primary mb-2">
                         <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}"">
                             {{ $item->titolo }}
                         </a>
                     </h4>
 
                     @if($item->sottotitolo)
-                        <h5 class="text-lg font-medium text-primary mb-4">{{ $item->sottotitolo }}</h5>
+                        <h5 class="text-lg font-medium text-secondary mb-4">{{ $item->sottotitolo }}</h5>
                     @endif
 
                     <div class="text-gray-600 mb-6 line-clamp-3">
@@ -53,7 +53,7 @@
                     </div>
 
                     <div>
-                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="whitespace-nowrap inline-flex border border-black px-8 py-4 text-black mb-5 mt-4">
+                        <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="btn inline-flex">
                             Leggi di più
                             <svg class="w-4 h-4 ml-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>

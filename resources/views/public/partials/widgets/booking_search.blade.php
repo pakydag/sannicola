@@ -19,7 +19,7 @@
 
                 <!-- Check-in -->
                 <div class="w-full md:w-1/4">
-                    <label class="block text-sm font-bold text-neutral-500 mb-2" for="start_date">
+                    <label class="block text-sm text-neutral-500 mb-2" for="start_date">
                         Check-in
                     </label>
                     <input class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors"
@@ -28,7 +28,7 @@
 
                 <!-- Check-out -->
                 <div class="w-full md:w-1/4">
-                    <label class="block text-sm font-bold text-neutral-500 mb-2" for="end_date">
+                    <label class="block text-sm text-neutral-500 mb-2" for="end_date">
                         Check-out
                     </label>
                     <input class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors"
@@ -37,7 +37,7 @@
 
                 <!-- Adulti -->
                 <div class="w-full md:w-1/6">
-                    <label class="block text-sm font-bold text-neutral-500 mb-2" for="adulti">
+                    <label class="block text-sm text-neutral-500 mb-2" for="adulti">
                         Adulti
                     </label>
                     <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white"
@@ -50,7 +50,7 @@
 
                 <!-- Bambini (0-17) -->
                 <div class="w-full md:w-1/6">
-                    <label class="block text-sm font-bold text-neutral-500 mb-2" for="bambini">
+                    <label class="block text-sm text-neutral-500 mb-2" for="bambini">
                         Bambini / Ragazzi
                     </label>
                     <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white"

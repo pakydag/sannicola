@@ -13,7 +13,7 @@
             $articles = $section->articles;
         }
     }
-    
+
     // Determine Tailwind grid columns class based on user choice
     $gridClass = 'grid-cols-1 md:grid-cols-2';
     if ($columnsCount == 3) {
@@ -46,13 +46,13 @@
                         @endif
                     </a>
 
-                    <div class="p-6 flex-1 flex flex-col">
+                    <div class="p-6 flex-1 flex flex-col titoli">
                         <a href="{{ url($section->slug . '/' . $article->slug) }}" class="block mt-2">
                             <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-indigo-600 transition-colors line-clamp-2">
                                 {{ $article->titolo }}
                             </h3>
                         </a>
-                        
+
                         @if($article->sottotitolo)
                             <p class="text-sm text-indigo-600 font-medium mb-3">{{ $article->sottotitolo }}</p>
                         @endif

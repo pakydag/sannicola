@@ -23,8 +23,8 @@
 
         <article class="bg-white shadow-sm py-6 px-11 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
 
-            <header class="mb-10 text-center">
-                <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase">
+            <header class="mb-10 text-center titoli">
+                <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase hidden">
                     {{ $articolo->section->nome ?? 'Senza Categoria' }}
                     @if($articolo->mostra_data)
                         &bull; {{ $articolo->created_at->format('d M Y') }}
@@ -68,7 +68,7 @@
                 </figure>
             @endif
 
-            <div class="prose prose-lg prose-indigo {{ $alignment === 'center' ? 'mx-auto max-w-prose' : 'max-w-none' }} text-gray-600">
+            <div class="prose prose-indigo {{ $alignment === 'center' ? 'mx-auto max-w-prose' : 'max-w-none' }} text-gray-600">
                 {!! $articolo->descrizione !!}
             </div>
 
