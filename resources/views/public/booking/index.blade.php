@@ -1,7 +1,7 @@
 @extends('public.layouts.main')
 
 @section('content')
-    <div class="bg-gray-50 pb-16 mx-6 lg:mx-auto">
+    <div class="bg-gray-50 pb-16 lg:mx-auto">
         @if(isset($section) && $section->immagine)
         <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
             <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
