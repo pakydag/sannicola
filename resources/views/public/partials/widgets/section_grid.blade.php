@@ -48,7 +48,7 @@
 
                     <div class="p-6 flex-1 flex flex-col titoli">
                         <a href="{{ url($section->slug . '/' . $article->slug) }}" class="block mt-2">
-                            <h3 class="text-xl font-semibold text-gray-900 mb-2 hover:text-indigo-600 transition-colors line-clamp-2">
+                            <h3 class="text-xl font-normal text-gray-900 mb-2 hover:text-indigo-600 transition-colors line-clamp-2">
                                 {{ $article->titolo }}
                             </h3>
                         </a>

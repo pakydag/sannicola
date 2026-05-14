@@ -81,7 +81,7 @@
                             @endif
                             <div class="titoli p-6 flex-grow flex flex-col pb-4 text-center items-center justify-center">
                                 <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block mt-2">
-                                    <h1 class="text-xl font-semibold text-gray-900">{{ $articolo->titolo }}</h1>
+                                    <h1 class="text-xl font-normal text-gray-900">{{ $articolo->titolo }}</h1>
                                     @if($articolo->sottotitolo)
                                         <h2 class="mt-3 text-base primary">{{ Str::limit($articolo->sottotitolo, 100) }}</h2>
                                     @endif
