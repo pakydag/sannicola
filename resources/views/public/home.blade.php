@@ -14,7 +14,7 @@
 
 
                     @if($widget->tipo === 'gallery')
-                    <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden pt-6">
+                    <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden">
                     @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
                     @endif
                         @include('public.partials.widgets.gallery', ['widget' => $widget])</div>
