@@ -14,7 +14,7 @@
 
 
                     @if($widget->tipo === 'gallery')
-                    <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden">
+                    <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden pt-6">
                     @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
                     @endif
                         @include('public.partials.widgets.gallery', ['widget' => $widget])</div>
@@ -53,7 +53,7 @@
                             @endif
                             @include('public.partials.widgets.info_blocks', ['widget' => $widget])</div>
                     @elseif($widget->tipo === 'booking_structures')
-                        <div class="max-w-7xl mx-6 lg:mx-auto mb-12 py-12 widget-block overflow-hidden">
+                        <div class="max-w-7xl mx-6 lg:mx-auto mb-10 py-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.booking_structures', ['widget' => $widget])</div>
