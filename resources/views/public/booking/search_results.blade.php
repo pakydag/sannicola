@@ -10,9 +10,9 @@
             Strutture Disponibili
         </h1>
         <p class="text-indigo-100 text-center text-lg max-w-2xl mx-auto mb-8">
-            Dal {{ \Carbon\Carbon::parse($searchParams['start_date'])->format('d/m/Y') }} 
-            al {{ \Carbon\Carbon::parse($searchParams['end_date'])->format('d/m/Y') }} 
-            per {{ $searchParams['adulti'] }} Adult{{ $searchParams['adulti'] > 1 ? 'i' : 'o' }} 
+            Dal {{ \Carbon\Carbon::parse($searchParams['start_date'])->format('d/m/Y') }}
+            al {{ \Carbon\Carbon::parse($searchParams['end_date'])->format('d/m/Y') }}
+            per {{ $searchParams['adulti'] }} Adult{{ $searchParams['adulti'] > 1 ? 'i' : 'o' }}
             @if($searchParams['bambini'] > 0)
                 e {{ $searchParams['bambini'] }} Bambin{{ $searchParams['bambini'] > 1 ? 'i' : 'o' }}
             @endif
@@ -72,24 +72,24 @@
                             Fino a {{ $structure->posti_totali }} posti
                         </div>
                     </div>
-                    
+
                     <div class="p-6 flex-grow flex flex-col">
                         <h3 class="text-xl font-bold text-gray-900 mb-2">{{ $structure->nome }}</h3>
                         <p class="text-gray-600 mb-4 line-clamp-2 text-sm">{!! strip_tags($structure->descrizione) !!}</p>
-                        
+
                         <div class="flex items-center text-sm text-gray-500 mb-6 gap-4">
                             <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg> {{ $structure->camere_letto }} Camere</span>
                             <span class="flex items-center"><svg class="w-4 h-4 mr-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg> {{ $structure->bagni }} Bagni</span>
                         </div>
-                        
+
                         <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
                             @if($structure->prenotabile)
                                 <div>
                                     <span class="block text-xs text-gray-500 uppercase font-semibold">Preventivo Est.</span>
                                     <span class="text-2xl font-black text-indigo-600">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
                                 </div>
-                                
-                                <a href="{{ route('public.booking.show', $structure->id) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}&adulti={{ $searchParams['adulti'] }}&bambini={{ $searchParams['bambini'] }}" 
+
+                                <a href="{{ route('public.booking.show', $structure->id) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}&adulti={{ $searchParams['adulti'] }}&bambini={{ $searchParams['bambini'] }}"
                                    class="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold transition shadow-md">
                                     Prenota
                                 </a>

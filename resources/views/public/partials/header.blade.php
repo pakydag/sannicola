@@ -15,22 +15,22 @@ a[title="Accedi Area Booking"] svg {
 }
 </style>
 
-<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="menu top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/70 to-transparent border-white/100 shadow-none'">
+<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="menu top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none'">
     <div class="max-w-7xl mx-auto w-full">
         <div class="flex items-center justify-between h-28 ">
              <!-- Logo -->
-                <div class="flex shrink-0 mr-5">
+                <div class="flex shrink-0 mr-5 ml-4 lg:ml-0">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
                         @if($siteLogo)
-                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'brightness-0 invert'" class="h-16 w-auto transition-all duration-300">
+                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'brightness-0 invert'" class="h-14 w-auto transition-all duration-300">
                         @else
                             {{ config('app.name', 'Il Mio Sito') }}
                         @endif
                     </a>
                 </div>
-            <div class="flex items-center gap-7 ml-auto md:ml-0 space-x-4">
+            <div class="flex items-center gap-7 ml-auto space-x-4">
                 <!-- Mobile menu button -->
-                <div class="-ml-2 mr-2 flex items-center sm:hidden">
+                <div class="-ml-2 mr-2 flex items-center lg:hidden">
                     <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" aria-label="Menu" aria-expanded="false">
                         <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                             <path :class="{'hidden': mobileMenuOpen, 'inline-flex': !mobileMenuOpen }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -42,7 +42,7 @@ a[title="Accedi Area Booking"] svg {
 
 
                 <!-- Navigation Links -->
-                <nav class="menu tracking-tight hidden gap-7 sm:-my-px sm:flex justify-center items-center">
+                <nav class="menu tracking-tight hidden gap-7 sm:-my-px lg:flex justify-center items-center">
 
 
                     @if(isset($shared_sezioni))
@@ -151,7 +151,7 @@ a[title="Accedi Area Booking"] svg {
     </div>
 
     <!-- Mobile menu, toggle via Alpine.js -->
-    <div x-show="mobileMenuOpen" class="sm:hidden bg-white border-t border-gray-200" style="display: none;"
+    <div x-show="mobileMenuOpen" class="lg:hidden bg-white border-t border-gray-200" style="display: none;"
          x-transition:enter="transition ease-out duration-100"
          x-transition:enter-start="transform opacity-0 scale-95"
          x-transition:enter-end="transform opacity-100 scale-100"
@@ -197,14 +197,14 @@ a[title="Accedi Area Booking"] svg {
                                     Tutti gli articoli
                                 </a>
                                 @foreach($sez->articles()->where('visibile', true)->latest()->get() as $articolo)
-                                    <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block py-2 text-sm text-gray-500 hover:text-indigo-600">
+                                    <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block py-2 text-sm text-gray-500 hover:text-primary">
                                         {{ Str::limit($articolo->titolo, 30) }}
                                     </a>
                                 @endforeach
                             </div>
                         </div>
                     @else
-                        <a href="{{ $url }}" class="block pl-3 pr-4 py-2 border-l-4 {{ $isActive ? 'border-indigo-500 text-indigo-700 bg-indigo-50' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
+                        <a href="{{ $url }}" class="block pl-3 pr-4 py-2 border-l-4 {{ $isActive ? 'border-text-primary text-primary' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
                             {{ $sez->nome }}
                         </a>
                     @endif

@@ -1,5 +1,5 @@
 <div class="mx-auto">
-    <div class="mx-4 lg:mx-0 bg-white/80 backdrop-blur-md overflow-hidden p-6 md:p-8 shadow-xl relative rounded-lg">
+    <div class="mx-auto bg-white/80 backdrop-blur-md overflow-hidden p-6 md:p-8 shadow-xl relative rounded-lg">
         <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-40 h-40 bg-black rounded-full opacity-20 blur-3xl"></div>
         <div class="absolute top-0 right-0 -mb-10 -ml-10 w-40 h-40 bg-black rounded-full opacity-20 blur-3xl"></div>
 

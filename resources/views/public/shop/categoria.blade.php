@@ -58,7 +58,7 @@
                         @php
                             $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
                         @endphp
-                        
+
                         <div class="relative overflow-hidden aspect-[4/3]">
                             @if($primaFoto)
                                 <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
@@ -68,25 +68,25 @@
                                 </div>
                             @endif
                             <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
-                            
+
                             @if($prodotto->variants->first() && $prodotto->variants->first()->prezzo_scontato > 0)
                                 <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">Saldi</div>
                             @endif
                         </div>
-                        
+
                         <div class="p-6 flex-grow flex flex-col">
                             @if($prodotto->marca)
                                 <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                             @endif
-                            
+
                             <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
-                            
+
                             <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                 @php
                                     $variant = $prodotto->variants->first();
                                     $prezzo = $variant ? $variant->prezzo : 0;
                                     $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
-                                    
+
                                     $showPreview = ($settings['shop_price_preview'] ?? '0') == '1';
                                     if ($showPreview) {
                                         $priceData = $prodotto->getLowestPrice();
@@ -94,7 +94,7 @@
                                         $prezzo_scontato = $priceData['prezzo_scontato'];
                                     }
                                 @endphp
-                                
+
                                 <div class="flex flex-col">
                                     @if($showPreview)
                                         @if($prezzo_scontato > 0)
@@ -119,7 +119,7 @@
                                         <span class="text-sm font-bold text-gray-400 uppercase tracking-widest text-indigo-500">Vedi Dettagli</span>
                                     @endif
                                 </div>
-                                
+
                                 <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'generale', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                                 </a>

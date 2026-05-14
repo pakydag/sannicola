@@ -5,14 +5,14 @@
             <div>
                 <div class="mb-6">
                     @if(!empty($global_settings['site_logo']))
-                        <img src="{{ asset($global_settings['site_logo']) }}" alt="{{ config('app.name') }}" class="h-20 w-auto object-contain brightness-0 invert">
+                        <img src="{{ asset($global_settings['site_logo']) }}" alt="{{ config('app.name') }}" class="h-12 w-auto object-contain brightness-0 invert">
                     @else
                         <span class="text-2xl font-bold text-white">{{ config('app.name') }}</span>
                     @endif
                 </div>
-                <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                <div class="text-gray-300 text-sm leading-relaxed mb-6">
                     {{ $global_settings['footer_description'] ?? 'La tua soluzione completa per la gestione aziendale e la presenza online professionale.' }}
-                </p>
+                </div>
                 <!-- Social Icons -->
                 <div class="flex space-x-4">
                     @if(!empty($global_settings['social_facebook']))
@@ -108,7 +108,7 @@
 
         <!-- Bottom Bar -->
         <div class="pt-8 border-t border-gray-800 text-center text-white text-xs">
-            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. Tutti i diritti riservati.</p>
+            &copy; {{ date('Y') }} {{ config('app.name') }}. Tutti i diritti riservati.
         </div>
     </div>
 </footer>

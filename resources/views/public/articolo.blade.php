@@ -3,8 +3,8 @@
 @section('title', $articolo->titolo . ' - ' . config('app.name'))
 
 @section('content')
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" @if($articolo->section && $articolo->section->immagine) style="background-image: url('{{ asset($articolo->section->immagine) }}');" @endif>
-    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" @if($articolo->section && $articolo->section->immagine) style="background-image: url('{{ asset($articolo->section->immagine) }}');" @endif>
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
@@ -17,7 +17,7 @@
         </nav>
     </div>
 </div>
-<div class="bg-gray-50 pb-16">
+<div class="bg-gray-50 pb-16 mx-6 lg:mx-auto">
 
     <div class="mx-auto max-w-7xl rounded-b-lg">
 

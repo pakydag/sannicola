@@ -24,10 +24,10 @@
             <div class="flex flex-col md:flex-row {{ $isReversed ? 'md:flex-row-reverse' : '' }} gap-8 items-center bg-white p-6 md:p-10 shadow-sm border border-gray-100 rounded-lg mt-10">
 
                 <!-- Image Section -->
-                <div class="w-full md:w-1/2 photo overflow-hidden">
+                <div class="w-full md:w-1/2 photo overflow-hidden h-[200px] lg:h-[300px]">
                     @if($item->hasMedia('foto'))
                         <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="block">
-                            <img src="{{ $item->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $item->titolo }}">
+                            <img src="{{ $item->getFirstMediaUrl('foto', 'thumb') }}" alt="{{ $item->titolo }}" class="w-full h-full object-cover">
                         </a>
                     @else
                         <div class="w-full h-64 md:h-80 bg-gray-200 flex items-center justify-center text-gray-400">

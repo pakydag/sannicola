@@ -3,8 +3,8 @@
 @section('title', $sezione->nome . ' - ' . config('app.name'))
 
 @section('content')
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
-    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12">
+<div class="max-w-7xl mx-6 lg:mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12">
     <header class="titoli text-center mb-10">
         <h1 class="text-4xl sm:text-5xl tracking-tight primary">
             {{ $sezione->nome }}
@@ -44,7 +44,7 @@
     @endif
 
     @if($sezione->contenuto)
-    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto' : 'max-w-6xl' }} mb-16 max-w-4xl">
+    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto' : 'max-w-6xl' }} mb-16 max-w-4xl mt-10 md:mt-0">
         {!! $sezione->contenuto !!}
     </div>
     @endif
@@ -53,7 +53,7 @@
         <div class="clear-both"></div>
     @endif
 </div>
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto mx-6 lg:mx-auto">
     @if($sezione->tipo !== 'pagina')
         @if($articoli->count() > 0)
             <div>
