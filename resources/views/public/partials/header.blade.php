@@ -55,7 +55,7 @@ a[title="Accedi Area Booking"] svg {
                 @endif
             </div>
         @endif
-        <div class="flex items-center justify-between h-28 ">
+        <div class="flex items-center justify-between h-20">
              <!-- Logo -->
                 <div class="flex shrink-0 mr-5 ml-4 lg:ml-0">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
