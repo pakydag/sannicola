@@ -1,4 +1,7 @@
 <x-app-layout>
+@php
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+@endphp
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Gestione Servizi Extra') }}
@@ -18,6 +21,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Nome Servizio</label>
                                 <input type="text" name="nome" placeholder="es. Culla, Colazione..." class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
                             </div>
+                            @if($englishEnabled)
+                                <div class="bg-indigo-50/30 p-2 rounded border border-indigo-100/50">
+                                    <label class="block text-indigo-950 text-sm font-bold mb-2">Nome Servizio [INGLESE]</label>
+                                    <input type="text" name="nome_en" placeholder="English extra name..." class="shadow border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 bg-white" required>
+                                </div>
+                            @endif
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Prezzo Giornaliero (€)</label>
                                 <input type="number" step="0.01" name="prezzo" placeholder="0.00" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
@@ -78,6 +87,12 @@
                                                                         <label class="block text-gray-700 text-sm font-bold mb-1">Nome</label>
                                                                         <input type="text" name="nome" value="{{ $extra->nome }}" class="w-full border rounded p-2" required>
                                                                     </div>
+                                                                    @if($englishEnabled)
+                                                                        <div class="bg-indigo-50/30 p-2 rounded border border-indigo-100/50">
+                                                                            <label class="block text-indigo-950 text-sm font-bold mb-1">Nome [INGLESE]</label>
+                                                                            <input type="text" name="nome_en" value="{{ $extra->nome_en }}" class="w-full border border-indigo-300 rounded p-2 bg-white" required>
+                                                                        </div>
+                                                                    @endif
                                                                     <div>
                                                                         <label class="block text-gray-700 text-sm font-bold mb-1">Prezzo/Giorno</label>
                                                                         <input type="number" step="0.01" name="prezzo" value="{{ $extra->prezzo }}" class="w-full border rounded p-2" required>

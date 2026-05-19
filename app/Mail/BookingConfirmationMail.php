@@ -13,14 +13,16 @@ class BookingConfirmationMail extends Mailable
 {
     public $booking;
     public $isPending;
+    public $locale;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($booking, $isPending = false)
+    public function __construct($booking, $isPending = false, $locale = null)
     {
         $this->booking = $booking;
         $this->isPending = $isPending;
+        $this->locale = $locale ?? app()->getLocale();
     }
 
     /**
@@ -28,9 +30,15 @@ class BookingConfirmationMail extends Mailable
      */
     public function envelope(): Envelope
     {
-        $subject = $this->isPending 
-            ? 'In attesa di pagamento - Prenotazione #' . $this->booking->id 
-            : 'Conferma Prenotazione #' . $this->booking->id;
+        if ($this->locale === 'en') {
+            $subject = $this->isPending 
+                ? 'Pending Payment - Booking #' . $this->booking->id 
+                : 'Booking Confirmation #' . $this->booking->id;
+        } else {
+            $subject = $this->isPending 
+                ? 'In attesa di pagamento - Prenotazione #' . $this->booking->id 
+                : 'Conferma Prenotazione #' . $this->booking->id;
+        }
 
         return new Envelope(
             subject: $subject,

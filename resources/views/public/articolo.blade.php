@@ -105,12 +105,7 @@
                         $actualWidget = $isGlobal ? \App\Models\GlobalWidget::find($widget->data['global_widget_id'] ?? null) : $widget;
                     @endphp
 
-        <!-- Area Contact Form -->
-        @if($articolo->has_contact_form)
-            <div>
-                @include('public.partials.contact_form')
-            </div>
-        @endif
+
                     @if($actualWidget)
                         <div class="widget-block bg-white shadow-sm overflow-hidden {{ ($actualWidget->tipo === 'gallery' || $actualWidget->tipo === 'video') ? 'rounded-none p-0' : 'rounded-lg ring-1 ring-gray-200' }}">
                             @if($actualWidget->titolo && !in_array($actualWidget->tipo, ['gallery', 'video']))
@@ -146,6 +141,24 @@
             </div>
         @endif
 
+        <!-- Area Forms -->
+        @if($articolo->has_contact_form)
+            <div class="mt-8">
+                @include('public.partials.contact_form')
+            </div>
+        @endif
+
+        @if($articolo->has_transfer_form)
+            <div class="mt-8">
+                @include('public.partials.transfer_form')
+            </div>
+        @endif
+
+        @if($articolo->has_car_rental_form)
+            <div class="mt-8">
+                @include('public.partials.car_rental_form')
+            </div>
+        @endif
 
     </div>
 </div>

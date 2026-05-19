@@ -8,7 +8,7 @@
                     <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                         <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
                         <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-                        <a href="{{ route('public.booking.index') }}" class="hover:text-gray-900 transition">Prenota</a>
+                        <a href="{{ route('public.booking.index') }}" class="hover:text-gray-900 transition">{{ app()->getLocale() === 'en' ? 'Book' : 'Prenota' }}</a>
                         <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
                         <span>{{ $structure->nome }}</span>
                     </nav>
@@ -21,7 +21,7 @@
                     <ol class="flex items-center space-x-2">
                         <li><a href="{{ route('public.home') }}" class="hover:text-indigo-600 transition">Home</a></li>
                         <li><svg class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
-                        <li><a href="{{ route('public.booking.index') }}" class="hover:text-indigo-600 transition">Tutte le strutture</a></li>
+                        <li><a href="{{ route('public.booking.index') }}" class="hover:text-indigo-600 transition">{{ app()->getLocale() === 'en' ? 'All structures' : 'Tutte le strutture' }}</a></li>
                         <li><svg class="h-4 w-4 mx-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></li>
                         <li class="font-bold text-gray-900">{{ $structure->nome }}</li>
                     </ol>
@@ -136,7 +136,7 @@
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase font-bold">Camere</p>
+                                    <p class="text-xs text-gray-500 uppercase font-bold">{{ app()->getLocale() === 'en' ? 'Bedrooms' : 'Camere' }}</p>
                                     <p class="font-extrabold text-gray-900">{{ $structure->camere_letto }}</p>
                                 </div>
                             </div>
@@ -145,7 +145,7 @@
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase font-bold">Bagni</p>
+                                    <p class="text-xs text-gray-500 uppercase font-bold">{{ app()->getLocale() === 'en' ? 'Bathrooms' : 'Bagni' }}</p>
                                     <p class="font-extrabold text-gray-900">{{ $structure->bagni }}</p>
                                 </div>
                             </div>
@@ -154,7 +154,7 @@
                                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-gray-500 uppercase font-bold">Max Ospiti</p>
+                                    <p class="text-xs text-gray-500 uppercase font-bold">{{ app()->getLocale() === 'en' ? 'Max Guests' : 'Max Ospiti' }}</p>
                                     <p class="font-extrabold text-gray-900">{{ $structure->posti_totali }}</p>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                         <!-- Servizi e Amenità -->
                         @if($structure->services->count() > 0)
                             <div class="mt-12 border-t pt-12 titoli">
-                                <h3 class="text-2xl mb-8">Servizi e Dotazioni</h3>
+                                <h3 class="text-2xl mb-8">{{ app()->getLocale() === 'en' ? 'Services & Amenities' : 'Servizi e Dotazioni' }}</h3>
                                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                                     @foreach($structure->services as $service)
                                         <div class="flex items-center gap-3">
@@ -191,10 +191,10 @@
                             <div class="flex justify-between items-end">
                                 <div>
                                     @if($structure->tipo_prezzo === 'fisso')
-                                        <p class="text-xl font-extrabold text-gray-900 mb-6">Prenota Soggiorno</p>
+                                        <p class="text-xl font-extrabold text-gray-900 mb-6">{{ app()->getLocale() === 'en' ? 'Book Stay' : 'Prenota Soggiorno' }}</p>
                                     @else
-                                        <p class="text-xl font-extrabold text-gray-900">Prezzo per persona</p>
-                                        <p class="text-gray-500 text-sm">per periodo</p>
+                                        <p class="text-xl font-extrabold text-gray-900">{{ app()->getLocale() === 'en' ? 'Price per person' : 'Prezzo per persona' }}</p>
+                                        <p class="text-gray-500 text-sm">{{ app()->getLocale() === 'en' ? 'per period' : 'per periodo' }}</p>
                                     @endif
                                 </div>
                                 <div class="text-right">
@@ -204,23 +204,23 @@
                             <form @submit.prevent="submitBooking" class="space-y-6">
                                 <div class="grid grid-cols-2 gap-0 border rounded-xl overflow-hidden shadow-sm">
                                     <div class="border-b p-3 bg-gray-50">
-                                        <label class="block text-[10px] font-bold uppercase text-gray-400">Arrivo</label>
+                                        <label class="block text-[10px] font-bold uppercase text-gray-400">{{ app()->getLocale() === 'en' ? 'Arrival' : 'Arrivo' }}</label>
                                         <input type="date" x-model="startDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0" min="{{ date('Y-m-d') }}">
                                     </div>
                                     <div class="border-b border-l p-3 bg-gray-50">
-                                        <label class="block text-[10px] font-bold uppercase text-gray-400">Partenza</label>
+                                        <label class="block text-[10px] font-bold uppercase text-gray-400">{{ app()->getLocale() === 'en' ? 'Departure' : 'Partenza' }}</label>
                                         <input type="date" x-model="endDate" @change="checkDates" class="w-full bg-transparent border-0 p-0 text-sm focus:ring-0" :min="startDate">
                                     </div>
                                     @if($structure->tipo_prezzo === 'persona' && $structure->variants->count() > 0)
                                         <div class="col-span-2 p-3 bg-gray-50 border-t">
-                                            <label class="block text-[10px] font-bold uppercase text-gray-400">Ospiti</label>
+                                            <label class="block text-[10px] font-bold uppercase text-gray-400">{{ app()->getLocale() === 'en' ? 'Guests' : 'Ospiti' }}</label>
                                             <div class="grid grid-cols-2 gap-4 mt-2">
                                                 @foreach($structure->variants as $variant)
                                                     <div class="flex items-center justify-between bg-white p-2 rounded-lg border shadow-sm">
                                                         <span class="text-xs font-bold">{{ $variant->nome }}</span>
                                                         <select x-model.number="ospiti['{{ $variant->id }}']" @change="checkDates" class="bg-transparent border-0 p-0 text-sm focus:ring-0 font-extrabold w-12 text-right">
                                                             @for($i=0; $i<=$structure->posti_totali; $i++)
-                                                                <option value="{{ $i }}">{{ $i }}</option>
+                                                                 <option value="{{ $i }}">{{ $i }}</option>
                                                             @endfor
                                                         </select>
                                                     </div>
@@ -230,7 +230,7 @@
                                     @endif
                                     @if($structure->extras->count() > 0)
                                         <div class="col-span-2 p-3 bg-gray-50 border-t">
-                                            <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">Servizi Extra</label>
+                                            <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">{{ app()->getLocale() === 'en' ? 'Extra Services' : 'Servizi Extra' }}</label>
                                             <div class="space-y-2">
                                                 @foreach($structure->extras as $extra)
                                                     <label class="flex items-center justify-between p-2 rounded-lg border bg-white cursor-pointer hover:border-indigo-300 transition-colors">
@@ -238,7 +238,7 @@
                                                             <input type="checkbox" x-model="selectedExtras" value="{{ $extra->id }}" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
                                                             <span class="text-xs text-gray-700">{{ $extra->nome }}</span>
                                                         </div>
-                                                        <span class="text-xs text-gray-500">€{{ number_format($extra->prezzo, 2) }}/g</span>
+                                                        <span class="text-xs text-gray-500">€{{ number_format($extra->prezzo, 2) }}{{ app()->getLocale() === 'en' ? '/d' : '/g' }}</span>
                                                     </label>
                                                 @endforeach
                                             </div>
@@ -250,23 +250,31 @@
                                     <template x-if="isAvailable">
                                         <div class="space-y-3">
                                             <div class="flex justify-between items-center text-gray-600">
-                                                <span>Soggiorno di <span x-text="totalDays"></span> notti</span>
+                                                @if(app()->getLocale() === 'en')
+                                                    <span>Stay of <span x-text="totalDays"></span> nights</span>
+                                                @else
+                                                    <span>Soggiorno di <span x-text="totalDays"></span> notti</span>
+                                                @endif
                                                 <span class="font-bold text-gray-900">€<span x-text="totalPrice"></span></span>
                                             </div>
                                             <div class="flex justify-between items-center pt-3 border-t text-base">
-                                                <span class="font-extrabold text-gray-900">Totale</span>
+                                                <span class="font-extrabold text-gray-900">{{ app()->getLocale() === 'en' ? 'Total' : 'Totale' }}</span>
                                                 <span class="font-extrabold text-indigo-700 text-xl">€<span x-text="totalPrice"></span></span>
                                             </div>
                                         </div>
                                     </template>
                                     <template x-if="!isAvailable && !isChecking && totalGuests <= {{ $structure->posti_totali }}">
                                         <div class="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-center font-bold">
-                                            Le date selezionate non sono disponibili.
+                                            {{ app()->getLocale() === 'en' ? 'The selected dates are not available.' : 'Le date selezionate non sono disponibili.' }}
                                         </div>
                                     </template>
                                     <template x-if="totalGuests > {{ $structure->posti_totali }}">
                                         <div class="p-3 bg-orange-50 border border-orange-200 text-orange-600 rounded-xl text-center font-bold">
-                                            Il numero totale di ospiti riservati (<span x-text="totalGuests"></span>) supera la capacità della struttura ({{ $structure->posti_totali }}).
+                                            @if(app()->getLocale() === 'en')
+                                                The total number of reserved guests (<span x-text="totalGuests"></span>) exceeds the structure's capacity ({{ $structure->posti_totali }}).
+                                            @else
+                                                Il numero totale di ospiti riservati (<span x-text="totalGuests"></span>) supera la capacità della struttura ({{ $structure->posti_totali }}).
+                                            @endif
                                         </div>
                                     </template>
                                 </div>
@@ -275,13 +283,13 @@
                                         :disabled="!isAvailable || totalDays <= 0 || isChecking || parseFloat(totalPrice) <= 0 || totalGuests > {{ $structure->posti_totali }}"
                                         x-show="totalDays > 0 && (isAvailable || totalGuests > {{ $structure->posti_totali }}) && (parseFloat(totalPrice) > 0 || totalGuests > {{ $structure->posti_totali }})"
                                         class="w-full py-4 rounded-2xl font-extrabold text-lg shadow-lg transition-all duration-300 transform active:scale-95 bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed">
-                                    <span x-show="!isChecking">Prenota Ora</span>
-                                    <span x-show="isChecking">Verifica in corso...</span>
+                                    <span x-show="!isChecking">{{ app()->getLocale() === 'en' ? 'Book Now' : 'Prenota Ora' }}</span>
+                                    <span x-show="isChecking">{{ app()->getLocale() === 'en' ? 'Checking...' : 'Verifica in corso...' }}</span>
                                 </button>
                             </form>
 
                             <p class="text-center text-[11px] text-gray-400 mt-6 px-4">
-                                Non ti verrà addebitato nulla in questo momento. Verrai reindirizzato alla pagina di pagamento.
+                                {{ app()->getLocale() === 'en' ? 'You will not be charged anything at this time. You will be redirected to the payment page.' : 'Non ti verrà addebitato nulla in questo momento. Verrai reindirizzato alla pagina di pagamento.' }}
                             </p>
                         </div>
                         @else
@@ -289,9 +297,9 @@
                                 <div class="h-16 w-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                     <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 </div>
-                                <h3 class="text-xl font-extrabold text-gray-900 mb-2">Non Prenotabile</h3>
+                                <h3 class="text-xl font-extrabold text-gray-900 mb-2">{{ app()->getLocale() === 'en' ? 'Not Bookable' : 'Non Prenotabile' }}</h3>
                                 <p class="text-gray-500 font-bold leading-relaxed">
-                                    Questa struttura non è al momento prenotabile.
+                                    {{ app()->getLocale() === 'en' ? 'This structure is currently not bookable.' : 'Questa struttura non è al momento prenotabile.' }}
                                 </p>
                             </div>
                         @endif

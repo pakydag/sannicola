@@ -1,8 +1,21 @@
 @extends('public.layouts.main')
 
 @section('content')
-<div class="bg-gray-50 min-h-screen py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    @if(isset($section) && $section->immagine)
+    <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
+        <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
+            <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
+                <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
+                <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+                <span>Area Clienti</span>
+            </nav>
+        </div>
+    </div>
+    <div class="bg-gray-50 min-h-screen pb-12 lg:mx-auto">
+    @else
+    <div class="bg-gray-50 min-h-screen py-12">
+    @endif
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 {{ isset($section) && $section->immagine ? 'pt-8' : '' }}">
         <div class="flex flex-col md:flex-row gap-8">
             <!-- Sidebar / Menu -->
             <div class="w-full md:w-64 space-y-2">
@@ -26,12 +39,33 @@
             <!-- Content Area -->
             <div class="flex-1">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-8 border-b border-gray-100">
-                        <h1 class="text-2xl font-bold text-gray-900">Le mie Prenotazioni</h1>
-                        <p class="text-gray-500 text-sm">Visualizza lo stato e i dettagli dei tuoi soggiorni.</p>
+                    <div class="p-8 border-b border-gray-100 flex justify-between items-start">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Area Cliente - {{ $customer->nome }} {{ $customer->cognome }}</h1>
+                            <p class="text-gray-500 text-sm">Benvenuto nella tua area personale. Qui puoi gestire le tue prenotazioni e il tuo profilo.</p>
+                        </div>
+                    </div>
+
+                    <!-- Dati Cliente -->
+                    <div class="p-8 border-b border-gray-100 bg-gray-50">
+                        <h2 class="text-lg font-bold text-gray-900 mb-4">I tuoi Dati</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <p><span class="text-gray-500">Nome e Cognome:</span> <strong>{{ $customer->nome }} {{ $customer->cognome }}</strong></p>
+                                <p><span class="text-gray-500">Email:</span> <strong>{{ $customer->email }}</strong></p>
+                                <p><span class="text-gray-500">Telefono:</span> <strong>{{ $customer->telefono ?? 'Non specificato' }}</strong></p>
+                            </div>
+                            <div>
+                                <p><span class="text-gray-500">Città:</span> <strong>{{ $customer->citta ?? 'Non specificata' }}</strong></p>
+                                <p><span class="text-gray-500">Nazione:</span> <strong>{{ $customer->nazione ?? 'Non specificata' }}</strong></p>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="p-0">
+                        <div class="p-8 border-b border-gray-100">
+                            <h2 class="text-xl font-bold text-gray-900">Le tue Prenotazioni</h2>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left">
                                 <thead class="bg-gray-50 text-gray-400 uppercase text-[10px] font-bold tracking-wider">
@@ -80,11 +114,19 @@
                                                 {{ $booking->stato }}
                                             </span>
                                         </td>
-                                        <td class="px-8 py-6 text-right">
+                                        <td class="px-8 py-6 text-right space-x-2">
                                             @if($booking->stripe_payment_link && $booking->stato_pagamento == 'non_pagato')
-                                                <a href="{{ $booking->stripe_payment_link }}" class="text-indigo-600 hover:underline text-xs font-bold mr-4">Paga con Stripe</a>
+                                                <a href="{{ $booking->stripe_payment_link }}" class="text-indigo-600 hover:underline text-xs font-bold">Paga con Stripe</a>
                                             @endif
-                                            {{-- Potremmo aggiungere un tasto dettaglio qui se serve una pagina specifica --}}
+                                            
+                                            @if(in_array($booking->stato, ['confermato', 'in_attesa']))
+                                                <form action="{{ route('public.booking.dashboard.cancel_request', $booking) }}" method="POST" class="inline-block" onsubmit="return confirm('Sei sicuro di voler richiedere la cancellazione di questa prenotazione?');">
+                                                    @csrf
+                                                    <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-bold border border-red-200 px-3 py-1 rounded-full hover:bg-red-50 transition-colors">
+                                                        Richiedi Cancellazione
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                     @empty

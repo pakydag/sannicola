@@ -1,4 +1,7 @@
 <x-app-layout>
+@php
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+@endphp
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Modifica Struttura: {{ $structure->nome }}</h2>
     </x-slot>
@@ -36,6 +39,13 @@
                                     <label class="block text-gray-700 font-bold mb-2">Nome Struttura *</label>
                                     <input type="text" name="nome" value="{{ old('nome', $structure->nome) }}" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
                                 </div>
+
+                                @if($englishEnabled)
+                                    <div class="col-span-2 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                        <label class="block text-indigo-950 font-bold mb-2">Nome Struttura [INGLESE] *</label>
+                                        <input type="text" name="nome_en" value="{{ old('nome_en', $structure->nome_en) }}" required class="shadow border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 bg-white">
+                                    </div>
+                                @endif
                                 <div>
                                     <label class="block text-gray-700 font-bold mb-2">Numero Bagni</label>
                                     <input type="number" name="bagni" value="{{ old('bagni', $structure->bagni) }}" min="1" required class="shadow border rounded w-full py-2 px-3 text-gray-700">
@@ -69,8 +79,17 @@
 
                         <!-- TAB: DESCRIZIONE -->
                         <div x-show="tab === 'descrizione'" class="space-y-4" style="display:none;">
-                            <label class="block text-gray-700 font-bold mb-2">Descrizione della Struttura</label>
-                            <textarea name="descrizione" id="descrizione" class="w-full">{{ old('descrizione', $structure->descrizione) }}</textarea>
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2">Descrizione della Struttura</label>
+                                <textarea name="descrizione" id="descrizione" class="w-full">{{ old('descrizione', $structure->descrizione) }}</textarea>
+                            </div>
+
+                            @if($englishEnabled)
+                                <div class="bg-indigo-50/30 p-4 rounded border border-indigo-100/50 mt-4">
+                                    <label class="block text-indigo-950 font-bold mb-2">Descrizione della Struttura [INGLESE]</label>
+                                    <textarea name="descrizione_en" id="descrizione_en" class="w-full">{{ old('descrizione_en', $structure->descrizione_en) }}</textarea>
+                                </div>
+                            @endif
                         </div>
 
                         <!-- TAB: PREZZI & PERIODI -->
@@ -331,11 +350,28 @@
                                     <input type="text" name="seo_title" id="seo_title" value="{{ old('seo_title', $structure->seo_title) }}" placeholder="Titolo personalizzato..." class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     @error('seo_title') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                                 </div>
+
+                                @if($englishEnabled)
+                                    <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                        <label for="seo_title_en" class="block text-indigo-950 text-sm font-bold mb-2">Titolo SEO [INGLESE]</label>
+                                        <input type="text" name="seo_title_en" id="seo_title_en" value="{{ old('seo_title_en', $structure->seo_title_en) }}" placeholder="English SEO title..." class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline">
+                                        @error('seo_title_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                @endif
+
                                 <div class="mb-4">
                                     <label for="seo_description" class="block text-gray-700 text-sm font-bold mb-2">Descrizione/Riassunto Social</label>
                                     <textarea name="seo_description" id="seo_description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('seo_description', $structure->seo_description) }}</textarea>
                                     @error('seo_description') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                                 </div>
+
+                                @if($englishEnabled)
+                                    <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                        <label for="seo_description_en" class="block text-indigo-950 text-sm font-bold mb-2">Descrizione SEO [INGLESE]</label>
+                                        <textarea name="seo_description_en" id="seo_description_en" rows="3" class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 bg-white leading-tight focus:outline-none focus:shadow-outline" placeholder="English SEO description...">{{ old('seo_description_en', $structure->seo_description_en) }}</textarea>
+                                        @error('seo_description_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                @endif
                                 <div class="mb-4">
                                     <label for="seo_image" class="block text-gray-700 text-sm font-bold mb-2">Immagine Anteprima Social</label>
                                     <div class="flex items-stretch">
@@ -372,6 +408,9 @@
         <script>
             // CKEditor
             CKEDITOR.replace('descrizione');
+            if (document.getElementById('descrizione_en')) {
+                CKEDITOR.replace('descrizione_en');
+            }
 
             // File Manager logic per le foto
             let currentFmIndex = null;

@@ -52,7 +52,9 @@ class BookingStructureController extends Controller
     {
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'descrizione' => 'nullable|string',
+            'descrizione_en' => 'nullable|string',
             'bagni' => 'required|integer|min:1',
             'camere_letto' => 'required|integer|min:1',
             'posti_totali' => 'required|integer|min:1',
@@ -70,7 +72,9 @@ class BookingStructureController extends Controller
             'prezzi.*.end_date' => 'required|date|after_or_equal:prezzi.*.start_date',
             'prezzi.*.prezzo' => 'required|numeric|min:0',
             'seo_title' => 'nullable|string|max:255',
+            'seo_title_en' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'seo_description_en' => 'nullable|string',
             'seo_image' => 'nullable|string',
         ]);
 
@@ -173,7 +177,9 @@ class BookingStructureController extends Controller
     {
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'descrizione' => 'nullable|string',
+            'descrizione_en' => 'nullable|string',
             'bagni' => 'required|integer|min:1',
             'camere_letto' => 'required|integer|min:1',
             'posti_totali' => 'required|integer|min:1',
@@ -191,7 +197,9 @@ class BookingStructureController extends Controller
             'prezzi.*.end_date' => 'required|date|after_or_equal:prezzi.*.start_date',
             'prezzi.*.prezzo' => 'required|numeric|min:0',
             'seo_title' => 'nullable|string|max:255',
+            'seo_title_en' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'seo_description_en' => 'nullable|string',
             'seo_image' => 'nullable|string',
         ]);
 

@@ -8,10 +8,13 @@ class Section extends Model
 {
     protected $fillable = [
         'nome',
+        'nome_en',
         'sottotitolo',
+        'sottotitolo_en',
         'foto',
         'allineamento_media',
         'contenuto',
+        'contenuto_en',
         'ordine',
         'visibile',
         'tipo',
@@ -22,7 +25,9 @@ class Section extends Model
         'mostra_nel_footer',
         'slug',
         'seo_title',
+        'seo_title_en',
         'seo_description',
+        'seo_description_en',
         'seo_image',
         'immagine',
     ];
@@ -30,5 +35,45 @@ class Section extends Model
     public function articles()
     {
         return $this->hasMany(Article::class);
+    }
+
+    public function getNomeAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->nome_en)) {
+            return $this->nome_en;
+        }
+        return $value;
+    }
+
+    public function getSottotitoloAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->sottotitolo_en)) {
+            return $this->sottotitolo_en;
+        }
+        return $value;
+    }
+
+    public function getContenutoAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->contenuto_en)) {
+            return $this->contenuto_en;
+        }
+        return $value;
+    }
+
+    public function getSeoTitleAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->seo_title_en)) {
+            return $this->seo_title_en;
+        }
+        return $value;
+    }
+
+    public function getSeoDescriptionAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->seo_description_en)) {
+            return $this->seo_description_en;
+        }
+        return $value;
     }
 }

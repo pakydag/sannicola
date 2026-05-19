@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class BookingStructure extends Model
 {
     protected $fillable = [
-        'nome', 'descrizione', 'bagni', 'camere_letto', 'posti_totali', 'costo_al_giorno', 'attivo', 'prenotabile', 'tipo_prezzo', 'seo_title', 'seo_description', 'seo_image'
+        'nome', 'nome_en', 'descrizione', 'descrizione_en', 'bagni', 'camere_letto', 'posti_totali', 'costo_al_giorno', 'attivo', 'prenotabile', 'tipo_prezzo', 'seo_title', 'seo_description', 'seo_image'
     ];
 
     public function photos()
@@ -38,5 +38,21 @@ class BookingStructure extends Model
     public function extras()
     {
         return $this->belongsToMany(BookingExtra::class, 'booking_structure_extras', 'booking_structure_id', 'booking_extra_id');
+    }
+
+    public function getNomeAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->nome_en)) {
+            return $this->nome_en;
+        }
+        return $value;
+    }
+
+    public function getDescrizioneAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->descrizione_en)) {
+            return $this->descrizione_en;
+        }
+        return $value;
     }
 }

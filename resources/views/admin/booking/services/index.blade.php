@@ -1,4 +1,7 @@
 <x-app-layout>
+@php
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+@endphp
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">Gestione Servizi Strutture</h2>
     </x-slot>
@@ -24,6 +27,12 @@
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Nome Servizio *</label>
                                 <input type="text" name="nome" required placeholder="es. Ristorante, Piscina Aperta..." class="w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
+                            @if($englishEnabled)
+                                <div class="bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                    <label class="block text-sm font-bold text-indigo-950 mb-1">Nome Servizio [INGLESE] *</label>
+                                    <input type="text" name="nome_en" required placeholder="English service name..." class="w-full rounded-xl border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm bg-white">
+                                </div>
+                            @endif
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-2">Icona</label>
                                 <div x-data="{ selected: '🍽️' }" class="space-y-3">
@@ -101,6 +110,12 @@
                                                 <input type="hidden" name="icona" :value="editIcon">
                                                 <input type="text" name="nome" value="{{ $service->nome }}" class="flex-1 rounded-lg border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm font-bold shadow-sm" required placeholder="Nome servizio">
                                             </div>
+                                            @if($englishEnabled)
+                                                <div class="bg-indigo-50/30 p-2 rounded border border-indigo-100/50">
+                                                    <label class="block text-xs font-bold text-indigo-950 mb-1">Nome Servizio [INGLESE] *</label>
+                                                    <input type="text" name="nome_en" value="{{ $service->nome_en }}" class="w-full rounded-lg border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500 text-xs font-bold shadow-sm bg-white" required placeholder="English service name">
+                                                </div>
+                                            @endif
 
                                             <div x-show="showPicker" @click.away="showPicker = false" class="absolute top-12 left-0 z-[100] bg-white border border-gray-200 rounded-xl shadow-xl p-3 flex flex-wrap gap-2 w-72 max-h-48 overflow-y-auto">
                                                 @foreach($icons as $icon)

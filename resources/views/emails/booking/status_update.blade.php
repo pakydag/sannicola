@@ -15,7 +15,11 @@
             <h2>Aggiornamento Prenotazione</h2>
         </div>
 
-        <p>Gentile {{ $booking->customer->nome }},</p>
+        @if($statusType == 'cancellation_request_from_customer')
+            <p>Gentile Amministratore,</p>
+        @else
+            <p>Gentile {{ $booking->customer->nome }},</p>
+        @endif
 
         @if($statusType == 'paid')
             <p>Siamo lieti di informarti che abbiamo ricevuto il pagamento di <strong>€{{ number_format($booking->totale_prezzo, 2, ',', '.') }}</strong> per la tua prenotazione <strong>#{{ $booking->id }}</strong> presso <strong>{{ $booking->structure->nome }}</strong>.</p>
@@ -23,6 +27,9 @@
         @elseif($statusType == 'cancelled')
             <p>Ti informiamo che la tua prenotazione <strong>#{{ $booking->id }}</strong> per un totale di <strong>€{{ number_format($booking->totale_prezzo, 2, ',', '.') }}</strong> è stata <strong>annullata</strong>.</p>
             <p>Se ritieni si tratti di un errore, ti preghiamo di contattarci il prima possibile.</p>
+        @elseif($statusType == 'cancellation_request_from_customer')
+            <p>Il cliente ha appena inviato una richiesta di <strong>cancellazione</strong> per la prenotazione <strong>#{{ $booking->id }}</strong> (Totale: <strong>€{{ number_format($booking->totale_prezzo, 2, ',', '.') }}</strong>).</p>
+            <p>La prenotazione è stata contrassegnata come annullata nel sistema, controlla l'area admin per ulteriori dettagli o eventuali rimborsi.</p>
         @elseif($statusType == 'stripe_link')
             <p>Per confermare la tua prenotazione <strong>#{{ $booking->id }}</strong> presso <strong>{{ $booking->structure->nome }}</strong>, è necessario procedere al pagamento dell'importo totale di <strong>€{{ number_format($booking->totale_prezzo, 2, ',', '.') }}</strong>.</p>
             <p style="text-align: center; margin: 30px 0;">

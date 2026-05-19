@@ -18,6 +18,7 @@ class BookingExtraController extends Controller
     {
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'prezzo' => 'required|numeric|min:0',
             'ordine' => 'nullable|integer',
         ]);
@@ -31,6 +32,7 @@ class BookingExtraController extends Controller
     {
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'prezzo' => 'required|numeric|min:0',
             'ordine' => 'nullable|integer',
         ]);

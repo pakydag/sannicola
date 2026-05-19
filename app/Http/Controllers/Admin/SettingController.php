@@ -73,7 +73,7 @@ class SettingController extends Controller
             'vapi_key', 'vapi_assistant_id', 'spoki_key',
             'company_address', 'company_phone', 'company_email_public', 'company_vat',
             'social_facebook', 'social_instagram', 'social_linkedin', 'social_youtube',
-            'footer_description'
+            'footer_description', 'footer_description_en'
         ];
 
         $validated = $request->validate([
@@ -111,6 +111,7 @@ class SettingController extends Controller
             'social_linkedin' => 'nullable|string',
             'social_youtube' => 'nullable|string',
             'footer_description' => 'nullable|string',
+            'footer_description_en' => 'nullable|string',
         ]);
 
         if (isset($validated['site_logo'])) {
@@ -121,7 +122,7 @@ class SettingController extends Controller
         }
 
         // Process Checkboxes
-        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings, ['spoki_enabled', 'cookie_consent_enabled', 'accessibility_panel_enabled']);
+        $checkboxes = array_merge($shopSettings, $bookingSettings, $b2bSettings, ['spoki_enabled', 'cookie_consent_enabled', 'accessibility_panel_enabled', 'english_enabled']);
         foreach ($checkboxes as $chk) {
             $canEdit = false;
             
@@ -134,7 +135,7 @@ class SettingController extends Controller
                 elseif (in_array($chk, $shopSettings) && $user->can_manage_shop) $canEdit = true;
                 elseif (in_array($chk, $bookingSettings) && $user->can_manage_booking) $canEdit = true;
                 elseif (in_array($chk, $b2bSettings) && $user->can_manage_agents) $canEdit = true;
-                elseif (in_array($chk, ['cookie_consent_enabled', 'accessibility_panel_enabled'])) $canEdit = true;
+                elseif (in_array($chk, ['cookie_consent_enabled', 'accessibility_panel_enabled', 'english_enabled'])) $canEdit = true;
             }
 
             if ($canEdit) {

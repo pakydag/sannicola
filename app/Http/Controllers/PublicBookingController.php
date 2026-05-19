@@ -74,9 +74,12 @@ class PublicBookingController extends Controller
             }
         }
 
+        $section = \App\Models\Section::where('modulo', 'booking')->first();
+
         return view('public.booking.search_results', [
             'structures' => $availableStructures,
-            'searchParams' => $request->all()
+            'searchParams' => $request->all(),
+            'section' => $section
         ]);
     }
 
@@ -433,7 +436,16 @@ class PublicBookingController extends Controller
     private function sendBookingConfirmation($booking, $isPending = false)
     {
         try {
-            \Illuminate\Support\Facades\Mail::to($booking->customer->email)->send(new \App\Mail\BookingConfirmationMail($booking, $isPending));
+            $locale = app()->getLocale();
+            
+            // Client email
+            \Illuminate\Support\Facades\Mail::to($booking->customer->email)->send(new \App\Mail\BookingConfirmationMail($booking, $isPending, $locale));
+            
+            // Admin email
+            $adminEmail = \App\Models\Setting::where('key', 'admin_email')->value('value') ?? config('mail.from.address');
+            if ($adminEmail) {
+                \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\BookingConfirmationMail($booking, $isPending, $locale));
+            }
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Errore invio conferma prenotazione: ' . $e->getMessage());
         }
@@ -614,7 +626,7 @@ class PublicBookingController extends Controller
             'password' => 'required',
         ]);
 
-        $remember = $request->has('remember');
+        $remember = $request->boolean('remember');
 
         if (\Illuminate\Support\Facades\Auth::guard('booking_customer')->attempt($credentials, $remember)) {
             $request->session()->regenerate();
@@ -622,5 +634,61 @@ class PublicBookingController extends Controller
         }
 
         return response()->json(['success' => false, 'message' => 'Credenziali non valide.'], 401);
+    }
+
+    public function showLogin()
+    {
+        // If already logged in, redirect to dashboard
+        if (\Illuminate\Support\Facades\Auth::guard('booking_customer')->check()) {
+            return redirect()->route('public.booking.dashboard.index');
+        }
+        return view('public.booking.login');
+    }
+
+    public function showForgotPassword()
+    {
+        if (\Illuminate\Support\Facades\Auth::guard('booking_customer')->check()) {
+            return redirect()->route('public.booking.dashboard.index');
+        }
+        return view('public.booking.forgot_password');
+    }
+
+    public function sendResetPasswordEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:booking_customers,email',
+        ], [
+            'email.exists' => 'Questo indirizzo e-mail non è registrato nei nostri sistemi.',
+        ]);
+
+        $customer = \App\Models\BookingCustomer::where('email', $request->email)->first();
+
+        if ($customer) {
+            // Generate temporary password
+            $tempPassword = \Illuminate\Support\Str::random(10);
+            
+            // Update customer password
+            $customer->password = \Illuminate\Support\Facades\Hash::make($tempPassword);
+            $customer->save();
+
+            // Optionally sync with CRM
+            $contact = \App\Models\Contact::where('email', $customer->email)->first();
+            if ($contact) {
+                $contact->password = $customer->password;
+                $contact->save();
+            }
+
+            // Send email
+            try {
+                \Illuminate\Support\Facades\Mail::to($customer->email)->send(new \App\Mail\CustomerResetPasswordMail($customer, $tempPassword));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Errore invio email reset password: ' . $e->getMessage());
+                return back()->with('error', 'Impossibile inviare l\'e-mail in questo momento. Riprova più tardi.');
+            }
+
+            return back()->with('success', 'Una nuova password temporanea è stata inviata al tuo indirizzo email.');
+        }
+
+        return back()->with('error', 'Si è verificato un errore.');
     }
 }
