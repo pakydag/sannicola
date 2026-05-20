@@ -3,7 +3,7 @@
 @section('title', $sezione->nome . ' - ' . config('app.name'))
 
 @section('content')
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
+<div class="relative bg-gray-50 h-64 flex items-end bg-top bg-center bg-cover px-6 lg:px-0 bg-no-repeat" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
@@ -44,7 +44,7 @@
     @endif
 
     @if($sezione->contenuto)
-    <div class="prose prose-indigo prose-lg {{ $alignment === 'center' ? 'mx-auto' : 'max-w-6xl' }} mb-16 max-w-4xl mt-10 md:mt-0">
+    <div class="{{ $alignment === 'center' ? 'mx-auto' : 'max-w-6xl' }} mb-16 max-w-4xl mt-10 md:mt-0">
         {!! $sezione->contenuto !!}
     </div>
     @endif

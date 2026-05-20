@@ -17,7 +17,7 @@
     @endphp
 
     @if($bannerImage)
-        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
+        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
             <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
                 <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                     <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
@@ -127,7 +127,7 @@
                                     <label class="block text-sm font-medium text-gray-700 mb-1">{{ app()->getLocale() === 'en' ? 'Phone Number *' : 'Telefono / Cellulare *' }}</label>
                                     <input type="text" name="telefono" value="{{ $user ? $user->telefono : old('telefono') }}" required class="w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500">
                                 </div>
-                                
+
                                 @if(!Auth::guard('booking_customer')->check())
                                 <div class="md:col-span-2 flex justify-between items-center bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-2 mt-4">
                                     <div>
@@ -166,7 +166,7 @@
                                     $stripe_enabled = \App\Models\Setting::where('key', 'booking_payment_stripe_enabled')->value('value') == '1';
                                     $paypal_enabled = \App\Models\Setting::where('key', 'booking_payment_paypal_enabled')->value('value') == '1';
                                     $bonifico_enabled = \App\Models\Setting::where('key', 'booking_payment_bonifico_enabled')->value('value') == '1';
-                                    
+
                                     $first_active = null;
                                     if($stripe_enabled) $first_active = 'stripe';
                                     elseif($paypal_enabled) $first_active = 'paypal';
@@ -313,7 +313,7 @@
             const password = document.getElementById('login_password').value;
             const remember = document.getElementById('remember') ? document.getElementById('remember').checked : false;
             const errorDiv = document.getElementById('login-error');
-            
+
             errorDiv.classList.add('hidden');
 
             try {
@@ -347,17 +347,17 @@
             for (let i = 0, n = charset.length; i < length; ++i) {
                 retVal += charset.charAt(Math.floor(Math.random() * n));
             }
-            
+
             // Ensure mixed case, symbols and numbers logic (rough check)
             const passwordField = document.getElementById('password_field');
             const confirmationField = document.getElementById('password_confirmation_field');
-            
+
             if (passwordField && confirmationField) {
                 passwordField.type = 'text'; // Show it temporarily
                 passwordField.value = retVal;
                 confirmationField.type = 'text';
                 confirmationField.value = retVal;
-                
+
                 alert('{{ app()->getLocale() === "en" ? "Password generated successfully: " : "Password generata con successo: " }}' + retVal + '\n\n{{ app()->getLocale() === "en" ? "Make sure to keep it in a safe place." : "Assicurati di conservarla in un luogo sicuro." }}');
             }
         }

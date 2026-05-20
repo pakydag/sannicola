@@ -2,7 +2,7 @@
 
 @section('content')
     @if(isset($section) && $section->immagine)
-    <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
+    <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
         <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
             <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
                 <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
@@ -118,7 +118,7 @@
                                             @if($booking->stripe_payment_link && $booking->stato_pagamento == 'non_pagato')
                                                 <a href="{{ $booking->stripe_payment_link }}" class="text-indigo-600 hover:underline text-xs font-bold">Paga con Stripe</a>
                                             @endif
-                                            
+
                                             @if(in_array($booking->stato, ['confermato', 'in_attesa']))
                                                 <form action="{{ route('public.booking.dashboard.cancel_request', $booking) }}" method="POST" class="inline-block" onsubmit="return confirm('Sei sicuro di voler richiedere la cancellazione di questa prenotazione?');">
                                                     @csrf

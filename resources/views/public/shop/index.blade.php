@@ -4,7 +4,7 @@
 
 @section('content')
 @if(isset($section) && $section->immagine)
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>

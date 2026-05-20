@@ -3,7 +3,7 @@
 @section('content')
     <div class="bg-gray-50 pb-16 lg:mx-auto">
         @if(isset($section) && $section->immagine)
-        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
+        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
             <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
                 <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
                     <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
@@ -24,7 +24,7 @@
                 <h2 class="mt-4 text-xl">{{ app()->getLocale() === 'en' ? 'Book your ideal stay in one of our fantastic locations.' : 'Prenota il tuo soggiorno ideale in una delle nostre fantastiche location.' }}</h2>
             </div>
         @endif
- 
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($structures as $s)
                     @include('public.partials.booking.structure_card', ['structure' => $s])

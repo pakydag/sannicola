@@ -9,7 +9,7 @@
 
 /* resources/css/app.css */
 @layer components {
-    body.main { @apply font-sans text-lg leading-relaxed text-black font-light }
+    body.main { @apply font-sans text-sm leading-relaxed text-black font-light }
     .titoli { & h1, & h2, & h3, & h4, & h5, & h6 { @apply font-display text-primary; } }
     .titoli { & h2, & h5 { @apply mb-4 text-secondary; } }
     .main p { @apply font-light text-black; }
@@ -27,13 +27,13 @@
     line-height: 1.75;
 }
 .prose p {
-    margin-top: 1.25em;
-    margin-bottom: 1.25em;
+    margin-top: 0;
+    margin-bottom: 0;
     font-weight: 300;
 }
 .prose ul {
-    margin-top: 1.25em;
-    margin-bottom: 1.25em;
+    margin-top:0;
+    margin-bottom:0;
     padding-left: 1.625em;
     list-style-type: disc !important;
 }

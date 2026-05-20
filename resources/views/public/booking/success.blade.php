@@ -18,7 +18,7 @@
     @endphp
 
     @if($bannerImage)
-        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
+        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
             <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
                 <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                     <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
@@ -45,7 +45,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                     </svg>
                 </div>
-                
+
                 <h1 class="text-4xl font-extrabold text-gray-900 mb-4">{{ app()->getLocale() === 'en' ? 'Booking Confirmed!' : 'Prenotazione Confermata!' }}</h1>
                 <p class="text-gray-500 text-lg mb-8">{{ app()->getLocale() === 'en' ? "Thank you for choosing our property. We have successfully received your booking request #{$booking->id}." : "Grazie per aver scelto la nostra struttura. Abbiamo ricevuto correttamente la tua richiesta di prenotazione #{$booking->id}." }}</p>
 
@@ -101,7 +101,7 @@
                         {{ app()->getLocale() === 'en' ? 'Print Receipt' : 'Stampa Ricevuta' }}
                     </a>
                 </div>
-                
+
                 <p class="mt-8 text-xs text-gray-400">{{ app()->getLocale() === 'en' ? "We have sent a summary email to {$booking->customer->email}" : "Ti abbiamo inviato un'email di riepilogo a {$booking->customer->email}" }}</p>
             </div>
         </div>

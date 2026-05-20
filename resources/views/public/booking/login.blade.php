@@ -7,7 +7,7 @@
     @endphp
 
     @if($bannerImage)
-        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
+        <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
             <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
                 <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                     <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
@@ -77,13 +77,13 @@
 <script>
     async function performLogin(e) {
         e.preventDefault();
-        
+
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
         const remember = document.getElementById('remember').checked;
         const errorDiv = document.getElementById('login-error-msg');
         const submitBtn = document.getElementById('submit-btn');
-        
+
         errorDiv.classList.add('hidden');
         submitBtn.disabled = true;
         submitBtn.innerHTML = '{{ app()->getLocale() === "en" ? "Logging in..." : "Accesso in corso..." }}';

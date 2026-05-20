@@ -7,7 +7,7 @@
 @endphp
 
 <style>
-header nav a{padding-top: 48px !important; padding-bottom: 43px !important;}
+header nav a{padding-top:5px !important; padding-bottom:5px !important;}
 
 
 /* Rende la transizione fluida come il resto del menu */
@@ -137,14 +137,14 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-normal' : 'border-transparent hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white font-semibold' }}'" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-normal' : 'border-transparent hover:text-primary hover:border-primary hover:text-semibold' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white hover:text-white hover:border-white hover:font-semibold font-medium' }}'" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
                 </nav>
             </div>
 
-            <div class="flex items-center space-x-5 sm:ml-6">
+            <div class="flex items-center space-x-5 sm:ml-6 hidden">
     @if($shopEnabled == '1' || Auth::check())
         @auth
             <a href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('public.account.dashboard') }}" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Il Mio Account">

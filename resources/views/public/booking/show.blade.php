@@ -3,7 +3,7 @@
 @section('content')
     <div class="bg-gray-50 pb-16 mx-6 lg:mx-auto">
         @if(isset($section) && $section->immagine)
-            <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-center bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
+            <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
                 <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
                     <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                         <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
@@ -160,7 +160,7 @@
                             </div>
                         </div>
 
-                        <div class="prose prose-indigo max-w-none text-gray-600 mb-12">
+                        <div class="max-w-none text-gray-600 mb-12">
                             {!! $structure->descrizione !!}
                         </div>
 
