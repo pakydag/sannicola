@@ -31,12 +31,15 @@ a[title="Accedi Area Booking"] svg {
             <div class="flex items-center gap-7 ml-auto space-x-4">
                 <!-- Mobile menu button -->
                 <div class="-ml-2 mr-2 flex items-center lg:hidden">
-                    <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out" aria-label="Menu" aria-expanded="false">
-                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                            <path :class="{'hidden': mobileMenuOpen, 'inline-flex': !mobileMenuOpen }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            <path :class="{'hidden': !mobileMenuOpen, 'inline-flex': mobileMenuOpen }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                  <button @click="mobileMenuOpen = !mobileMenuOpen" type="button"
+        :class="scrolled ? 'text-gray-600 hover:text-gray-900 hover:bg-gray-100' : 'text-white hover:text-white/80 hover:bg-white/10'"
+        class="inline-flex items-center justify-center p-2 rounded-md focus:outline-none transition duration-150 ease-in-out"
+        aria-label="Menu" :aria-expanded="mobileMenuOpen">
+    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+        <path :class="{'hidden': mobileMenuOpen, 'inline-flex': !mobileMenuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        <path :class="{'hidden': !mobileMenuOpen, 'inline-flex': mobileMenuOpen }" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+</button>
                 </div>
 
 
@@ -158,7 +161,7 @@ a[title="Accedi Area Booking"] svg {
          x-transition:leave="transition ease-in duration-75"
          x-transition:leave-start="transform opacity-100 scale-100"
          x-transition:leave-end="transform opacity-0 scale-95">
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="pt-2 pb-3 space-y-1 font-display">
 
 
             @if(isset($shared_sezioni))
@@ -204,7 +207,7 @@ a[title="Accedi Area Booking"] svg {
                             </div>
                         </div>
                     @else
-                        <a href="{{ $url }}" class="block pl-3 pr-4 py-2 border-l-4 {{ $isActive ? 'border-text-primary text-primary' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
+                        <a href="{{ $url }}" class="block pl-3 pr-4 py-2 border-l-2 border-primary {{ $isActive ? 'border-text-primary text-primary' : 'border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 hover:border-gray-300' }} text-base font-medium transition duration-150 ease-in-out">
                             {{ $sez->nome }}
                         </a>
                     @endif
