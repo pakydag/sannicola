@@ -106,8 +106,11 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'section_id' => 'required|exists:sections,id',
             'titolo' => 'required|string|max:255',
+            'titolo_en' => 'nullable|string|max:255',
             'sottotitolo' => 'nullable|string|max:255',
+            'sottotitolo_en' => 'nullable|string|max:255',
             'descrizione' => 'required|string',
+            'descrizione_en' => 'nullable|string',
             'link' => 'nullable|url|max:255',
             'foto' => 'nullable|string', 
             'video' => 'nullable|string',
@@ -117,9 +120,13 @@ class ArticleController extends Controller
             'visibile' => 'boolean',
             'mostra_data' => 'boolean',
             'seo_title' => 'nullable|string|max:255',
+            'seo_title_en' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'seo_description_en' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'has_contact_form' => 'boolean',
+            'has_transfer_form' => 'boolean',
+            'has_car_rental_form' => 'boolean',
         ]);
 
         $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
@@ -130,6 +137,8 @@ class ArticleController extends Controller
         $validated['visibile'] = $request->has('visibile');
         $validated['mostra_data'] = $request->has('mostra_data');
         $validated['has_contact_form'] = $request->has('has_contact_form');
+        $validated['has_transfer_form'] = $request->has('has_transfer_form');
+        $validated['has_car_rental_form'] = $request->has('has_car_rental_form');
 
         if (!empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['slug']);
@@ -198,8 +207,11 @@ class ArticleController extends Controller
         $validated = $request->validate([
             'section_id' => 'required|exists:sections,id',
             'titolo' => 'required|string|max:255',
+            'titolo_en' => 'nullable|string|max:255',
             'sottotitolo' => 'nullable|string|max:255',
+            'sottotitolo_en' => 'nullable|string|max:255',
             'descrizione' => 'required|string',
+            'descrizione_en' => 'nullable|string',
             'link' => 'nullable|url|max:255',
             'foto' => 'nullable|string',
             'video' => 'nullable|string',
@@ -209,9 +221,13 @@ class ArticleController extends Controller
             'visibile' => 'boolean',
             'mostra_data' => 'boolean',
             'seo_title' => 'nullable|string|max:255',
+            'seo_title_en' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'seo_description_en' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'has_contact_form' => 'boolean',
+            'has_transfer_form' => 'boolean',
+            'has_car_rental_form' => 'boolean',
         ]);
 
         $validated['foto'] = $this->stripDomain($validated['foto'] ?? '');
@@ -222,6 +238,8 @@ class ArticleController extends Controller
         $validated['visibile'] = $request->has('visibile');
         $validated['mostra_data'] = $request->has('mostra_data');
         $validated['has_contact_form'] = $request->has('has_contact_form');
+        $validated['has_transfer_form'] = $request->has('has_transfer_form');
+        $validated['has_car_rental_form'] = $request->has('has_car_rental_form');
 
         if (!empty($validated['slug'])) {
             $validated['slug'] = Str::slug($validated['slug']);

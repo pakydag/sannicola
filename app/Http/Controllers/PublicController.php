@@ -8,6 +8,8 @@ use App\Models\Article;
 use App\Models\HomeBlock;
 use App\Models\Setting;
 use App\Models\ContactRequest;
+use App\Models\TransferRequest;
+use App\Models\CarRentalRequest;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
@@ -106,6 +108,10 @@ class PublicController extends Controller
 
     public function submitContactForm(Request $request)
     {
+        $request->validate([
+            'privacy' => 'required|accepted',
+        ]);
+
         $validated = $request->validate([
             'ragione_sociale' => 'nullable|string|max:255',
             'nome' => 'required|string|max:255',
@@ -115,8 +121,270 @@ class PublicController extends Controller
             'richiesta' => 'required|string',
         ]);
 
+        $recipient = config('mail.from.address');
+        if ($recipient) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($recipient)->send(new \App\Mail\ContactRequestMail($validated));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send contact request email: " . $e->getMessage());
+            }
+        }
+
         ContactRequest::create($validated);
 
-        return redirect()->back()->with('success', 'Grazie per averci contattato! La tua richiesta è stata inviata con successo. Ti risponderemo il prima possibile.');
+        $successMessage = app()->getLocale() === 'en' 
+            ? 'Thank you for contacting us! Your request has been sent successfully. We will reply as soon as possible.'
+            : 'Grazie per averci contattato! La tua richiesta è stata inviata con successo. Ti risponderemo il prima possibile.';
+
+        return redirect()->back()->with('success', $successMessage);
+    }
+
+    public function submitTransferForm(Request $request)
+    {
+        $request->validate([
+            'privacy' => 'required|accepted',
+        ]);
+
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'cognome' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telefono' => 'required|string|max:20',
+            'luogo_arrivo' => 'required|string|max:255',
+            'data' => 'required|date',
+            'orario' => 'required|string',
+            'numero_persone' => 'required|integer|min:1',
+            'andata_ritorno' => 'nullable|boolean',
+            'data_ritorno' => 'nullable|required_if:andata_ritorno,1|date',
+            'orario_ritorno' => 'nullable|required_if:andata_ritorno,1|string',
+            'messaggio' => 'nullable|string',
+        ]);
+
+        $recipient = config('mail.from.address');
+        if ($recipient) {
+            \Illuminate\Support\Facades\Mail::to($recipient)->send(new \App\Mail\TransferRequestMail($validated));
+        }
+
+        TransferRequest::create($validated);
+
+        $successMessage = app()->getLocale() === 'en'
+            ? 'Thank you! Your transfer request has been sent successfully. We will reply as soon as possible.'
+            : 'Grazie! La tua richiesta di transfer è stata inviata con successo. Ti risponderemo al più presto.';
+
+        return redirect()->back()->with('transfer_success', $successMessage);
+    }
+
+    public function submitCarRentalForm(Request $request)
+    {
+        $request->validate([
+            'privacy' => 'required|accepted',
+        ]);
+
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'cognome' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'telefono' => 'required|string|max:20',
+            'data_ritiro' => 'required|date',
+            'orario_ritiro' => 'required|string',
+            'data_riconsegna' => 'required|date',
+            'orario_riconsegna' => 'required|string',
+            'numero_posti' => 'required|integer|min:1|max:9',
+            'messaggio' => 'nullable|string',
+        ]);
+
+        $recipient = config('mail.from.address');
+        if ($recipient) {
+            \Illuminate\Support\Facades\Mail::to($recipient)->send(new \App\Mail\CarRentalRequestMail($validated));
+        }
+
+        CarRentalRequest::create($validated);
+
+        $successMessage = app()->getLocale() === 'en'
+            ? 'Thank you! Your car rental request has been sent successfully. We will reply as soon as possible.'
+            : 'Grazie! La tua richiesta di noleggio auto è stata inviata con successo. Ti risponderemo al più presto.';
+
+        return redirect()->back()->with('car_rental_success', $successMessage);
+    }
+
+    public function viewContactThread($token)
+    {
+        $contactRequest = ContactRequest::where('secure_token', $token)->firstOrFail();
+
+        $seo = [
+            'title' => (app()->getLocale() === 'en' ? 'Conversation Thread' : 'Conversazione Richiesta') . ' - ' . config('app.name'),
+            'description' => 'Visualizza la conversazione in merito alla richiesta di contatto.',
+            'image' => null,
+            'url' => url()->current()
+        ];
+
+        return view('public.contact_thread', compact('contactRequest', 'seo'));
+    }
+
+    public function replyContactThread(Request $request, $token)
+    {
+        $contactRequest = ContactRequest::where('secure_token', $token)->firstOrFail();
+
+        $request->validate([
+            'message' => 'required|string',
+            'attachment' => 'nullable|file|max:10240', // 10MB limit
+        ]);
+
+        $attachmentPath = null;
+        $attachmentName = null;
+
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            $attachmentName = $request->file('attachment')->getClientOriginalName();
+        }
+
+        $message = \App\Models\ContactMessage::create([
+            'contact_request_id' => $contactRequest->id,
+            'sender' => 'client',
+            'message' => $request->message,
+            'attachment_path' => $attachmentPath,
+            'attachment_name' => $attachmentName,
+        ]);
+
+        // Imposta letto a false per notificare l'amministratore nel gestionale
+        $contactRequest->update(['letto' => false]);
+
+        // Invia email all'amministratore del sito
+        $recipient = config('mail.from.address');
+        if ($recipient) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($recipient)->send(
+                    new \App\Mail\ClientRepliedMail($contactRequest, $request->message, $attachmentPath, $attachmentName)
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send client reply notification: " . $e->getMessage());
+            }
+        }
+
+        $successMsg = app()->getLocale() === 'en'
+            ? 'Your reply has been sent successfully.'
+            : 'La tua risposta è stata inviata con successo.';
+
+        return redirect()->back()->with('success', $successMsg);
+    }
+
+    public function viewTransferThread($token)
+    {
+        $transferRequest = \App\Models\TransferRequest::where('secure_token', $token)->firstOrFail();
+        $transferRequest->load('messages');
+
+        $seo = [
+            'title' => (app()->getLocale() === 'en' ? 'Transfer Conversation' : 'Conversazione Transfer') . ' - ' . config('app.name'),
+            'description' => 'Visualizza la conversazione in merito alla richiesta di transfer.',
+            'image' => null,
+            'url' => url()->current()
+        ];
+
+        return view('public.transfer_thread', compact('transferRequest', 'seo'));
+    }
+
+    public function replyTransferThread(Request $request, $token)
+    {
+        $transferRequest = \App\Models\TransferRequest::where('secure_token', $token)->firstOrFail();
+
+        $request->validate([
+            'message' => 'required|string',
+            'attachment' => 'nullable|file|max:10240', // 10MB
+        ]);
+
+        $attachmentPath = null;
+        $attachmentName = null;
+
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            $attachmentName = $request->file('attachment')->getClientOriginalName();
+        }
+
+        \App\Models\TransferMessage::create([
+            'transfer_request_id' => $transferRequest->id,
+            'sender' => 'client',
+            'message' => $request->message,
+            'attachment_path' => $attachmentPath,
+            'attachment_name' => $attachmentName,
+        ]);
+
+        $transferRequest->update(['letto' => false]);
+
+        $recipient = config('mail.from.address');
+        if ($recipient) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($recipient)->send(
+                    new \App\Mail\ClientTransferRepliedMail($transferRequest, $request->message, $attachmentPath, $attachmentName)
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send client transfer reply notification: " . $e->getMessage());
+            }
+        }
+
+        $successMsg = app()->getLocale() === 'en'
+            ? 'Your reply has been sent successfully.'
+            : 'La tua risposta è stata inviata con successo.';
+
+        return redirect()->back()->with('success', $successMsg);
+    }
+
+    public function viewCarRentalThread($token)
+    {
+        $carRentalRequest = \App\Models\CarRentalRequest::where('secure_token', $token)->firstOrFail();
+        $carRentalRequest->load('messages');
+
+        $seo = [
+            'title' => (app()->getLocale() === 'en' ? 'Rental Conversation' : 'Conversazione Noleggio') . ' - ' . config('app.name'),
+            'description' => 'Visualizza la conversazione in merito alla richiesta di noleggio auto.',
+            'image' => null,
+            'url' => url()->current()
+        ];
+
+        return view('public.car_rental_thread', compact('carRentalRequest', 'seo'));
+    }
+
+    public function replyCarRentalThread(Request $request, $token)
+    {
+        $carRentalRequest = \App\Models\CarRentalRequest::where('secure_token', $token)->firstOrFail();
+
+        $request->validate([
+            'message' => 'required|string',
+            'attachment' => 'nullable|file|max:10240', // 10MB
+        ]);
+
+        $attachmentPath = null;
+        $attachmentName = null;
+
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('attachments', 'public');
+            $attachmentName = $request->file('attachment')->getClientOriginalName();
+        }
+
+        \App\Models\CarRentalMessage::create([
+            'car_rental_request_id' => $carRentalRequest->id,
+            'sender' => 'client',
+            'message' => $request->message,
+            'attachment_path' => $attachmentPath,
+            'attachment_name' => $attachmentName,
+        ]);
+
+        $carRentalRequest->update(['letto' => false]);
+
+        $recipient = config('mail.from.address');
+        if ($recipient) {
+            try {
+                \Illuminate\Support\Facades\Mail::to($recipient)->send(
+                    new \App\Mail\ClientCarRentalRepliedMail($carRentalRequest, $request->message, $attachmentPath, $attachmentName)
+                );
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error("Failed to send client car rental reply notification: " . $e->getMessage());
+            }
+        }
+
+        $successMsg = app()->getLocale() === 'en'
+            ? 'Your reply has been sent successfully.'
+            : 'La tua risposta è stata inviata con successo.';
+
+        return redirect()->back()->with('success', $successMsg);
     }
 }

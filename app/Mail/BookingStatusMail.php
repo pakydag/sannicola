@@ -31,6 +31,7 @@ class BookingStatusMail extends Mailable
         $subject = match ($this->statusType) {
             'paid' => 'Conferma Ricezione Pagamento - Prenotazione #' . $this->booking->id,
             'cancelled' => 'Annullamento Prenotazione #' . $this->booking->id,
+            'cancellation_request_from_customer' => 'Richiesta di Cancellazione dal Cliente - Prenotazione #' . $this->booking->id,
             'stripe_link' => 'Link di Pagamento per la tua Prenotazione #' . $this->booking->id,
             'bank_details' => 'Dati per il Bonifico - Prenotazione #' . $this->booking->id,
             'paga_in_struttura' => 'Conferma Prenotazione - Paga in Struttura #' . $this->booking->id,

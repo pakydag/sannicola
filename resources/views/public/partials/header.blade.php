@@ -2,6 +2,8 @@
     $siteLogo = \App\Models\Setting::where('key', 'site_logo')->value('value');
     $shopEnabled = \App\Models\Setting::where('key', 'shop_enabled')->value('value');
     $bookingEnabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value');
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+    $currentLocale = session('locale', 'it');
 @endphp
 
 <style>
@@ -17,7 +19,43 @@ a[title="Accedi Area Booking"] svg {
 
 <header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="menu top-0 left-0 w-full z-50 transition-all duration-300 border-b" :class="scrolled ? 'fixed bg-white shadow-md border-gray-200' : 'absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none'">
     <div class="max-w-7xl mx-auto w-full">
-        <div class="flex items-center justify-between h-28 ">
+        <!-- Top bar with language selector and booking personal area, aligned to the right, no border -->
+        @if($englishEnabled || $bookingEnabled == '1')
+            <div class="flex items-center justify-end py-2 px-4 lg:px-0 gap-4 transition-all duration-300">
+                @if($englishEnabled)
+                    <div class="flex items-center space-x-3 mr-2 bg-black/10 px-2 py-1 rounded-full border border-white/10" :class="scrolled ? 'bg-gray-100 border-gray-200 text-black' : 'bg-black/20 border-white/20 text-white'">
+                        <a href="{{ route('set-locale', 'it') }}" class="flex items-center justify-center transition-transform hover:scale-115 {{ $currentLocale === 'it' ? 'scale-110 drop-shadow-md' : 'opacity-50 hover:opacity-100' }}" title="Italiano">
+                            <span class="text-lg">🇮🇹</span>
+                        </a>
+                        <a href="{{ route('set-locale', 'en') }}" class="flex items-center justify-center transition-transform hover:scale-115 {{ $currentLocale === 'en' ? 'scale-110 drop-shadow-md' : 'opacity-50 hover:opacity-100' }}" title="English">
+                            <span class="text-lg">🇬🇧</span>
+                        </a>
+                    </div>
+                @endif
+
+                @if($bookingEnabled == '1')
+                    @if(Auth::guard('booking_customer')->check())
+                        <div class="relative inline-flex items-center" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="p-2 transition-colors flex items-center gap-1" title="Area Booking">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                                <svg class="h-4 w-4 transform transition-transform duration-200" :class="{'rotate-180': open}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                            </button>
+                            <div x-show="open" x-transition class="absolute right-0 top-12 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 py-1" style="display: none;">
+                                <div class="px-4 py-2 text-xs text-gray-400 border-b">Area Booking</div>
+                                <a href="{{ route('public.booking.dashboard.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 italic">Le mie prenotazioni</a>
+                                <a href="{{ route('public.booking.dashboard.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 italic">Profilo</a>
+                                <form action="{{ route('public.booking.dashboard.logout') }}" method="POST">@csrf<button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 italic">Esci</button></form>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('public.booking.dashboard.index') }}" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Accedi Area Booking">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                        </a>
+                    @endif
+                @endif
+            </div>
+        @endif
+        <div class="flex items-center justify-between h-20">
              <!-- Logo -->
                 <div class="flex shrink-0 mr-5 ml-4 lg:ml-0">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
@@ -107,27 +145,6 @@ a[title="Accedi Area Booking"] svg {
             </div>
 
             <div class="flex items-center space-x-5 sm:ml-6">
-    @if($bookingEnabled == '1')
-        @if(Auth::guard('booking_customer')->check())
-            <div class="relative inline-flex items-center" x-data="{ open: false }" @click.away="open = false">
-                <button @click="open = !open" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="p-2 transition-colors flex items-center gap-1" title="Area Booking">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-                    <svg class="h-4 w-4 transform transition-transform duration-200" :class="{'rotate-180': open}" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>
-                <div x-show="open" x-transition class="absolute right-0 top-12 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 py-1" style="display: none;">
-                    <div class="px-4 py-2 text-xs text-gray-400 border-b">Area Booking</div>
-                    <a href="{{ route('public.booking.dashboard.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 italic">Le mie prenotazioni</a>
-                    <a href="{{ route('public.booking.dashboard.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 italic">Profilo</a>
-                    <form action="{{ route('public.booking.dashboard.logout') }}" method="POST">@csrf<button type="submit" class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 italic">Esci</button></form>
-                </div>
-            </div>
-        @else
-            <a href="{{ route('public.booking.dashboard.index') }}" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Accedi Area Booking">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-            </a>
-        @endif
-    @endif
-
     @if($shopEnabled == '1' || Auth::check())
         @auth
             <a href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('public.account.dashboard') }}" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Il Mio Account">

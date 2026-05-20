@@ -11,7 +11,7 @@
                     @endif
                 </div>
                 <div class="text-gray-300 text-sm leading-relaxed mb-6">
-                    {{ $global_settings['footer_description'] ?? 'La tua soluzione completa per la gestione aziendale e la presenza online professionale.' }}
+                    {{ app()->getLocale() === 'en' ? ($global_settings['footer_description_en'] ?? $global_settings['footer_description'] ?? 'Your complete solution for business management and a professional online presence.') : ($global_settings['footer_description'] ?? 'La tua soluzione completa per la gestione aziendale e la presenza online professionale.') }}
                 </div>
                 <!-- Social Icons -->
                 <div class="flex space-x-4">
@@ -108,7 +108,7 @@
 
         <!-- Bottom Bar -->
         <div class="pt-8 border-t border-gray-800 text-center text-white text-xs">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. Tutti i diritti riservati.
+            &copy; {{ date('Y') }} Eyukka srl. Tutti i diritti riservati.
         </div>
     </div>
 </footer>

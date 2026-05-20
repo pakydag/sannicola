@@ -19,6 +19,7 @@ class BookingServiceController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'icona' => 'required|string|max:10',
         ]);
 
@@ -26,6 +27,7 @@ class BookingServiceController extends Controller
 
         BookingService::create([
             'nome' => $request->nome,
+            'nome_en' => $request->nome_en,
             'icona' => $request->icona,
             'ordine' => $maxOrdine + 1,
             'booking_service_category_id' => null // Deprecated field
@@ -38,11 +40,13 @@ class BookingServiceController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'icona' => 'required|string|max:10',
         ]);
 
         $service->update([
             'nome' => $request->nome,
+            'nome_en' => $request->nome_en,
             'icona' => $request->icona,
         ]);
 

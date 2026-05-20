@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 // Rotte Pubbliche (Homepage)
 Route::get('/', [PublicController::class, 'home'])->name('public.home');
 
+Route::get('/lang/{locale}', function ($locale) {
+    if (in_array($locale, ['it', 'en'])) {
+        session(['locale' => $locale]);
+    }
+    return redirect()->back();
+})->name('set-locale');
+
 // Rotte Autenticate / Amministrazione
 
 Route::get('/dashboard', function () {
@@ -64,7 +71,11 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     Route::resource('sezioni', SectionController::class);
     Route::resource('global-widgets', GlobalWidgetController::class);
     Route::resource('contatti', ContactRequestController::class)->only(['index', 'show', 'destroy']);
-    
+    Route::post('contatti/{contatto}/rispondi', [ContactRequestController::class, 'reply'])->name('contatti.reply');
+    Route::resource('transfers', \App\Http\Controllers\Admin\TransferRequestController::class)->only(['index', 'show', 'destroy']);
+    Route::post('transfers/{transfer}/rispondi', [\App\Http\Controllers\Admin\TransferRequestController::class, 'reply'])->name('transfers.reply');
+    Route::resource('car-rentals', \App\Http\Controllers\Admin\CarRentalRequestController::class)->only(['index', 'show', 'destroy']);
+    Route::post('car-rentals/{car_rental}/rispondi', [\App\Http\Controllers\Admin\CarRentalRequestController::class, 'reply'])->name('car-rentals.reply');
     // Ordinamento
     Route::post('sezioni/reorder', [SectionController::class, 'reorder'])->name('sezioni.reorder');
     Route::post('articoli/reorder', [ArticleController::class, 'reorder'])->name('articoli.reorder');
@@ -216,7 +227,16 @@ require __DIR__.'/auth.php';
 
 // Form Contatti Pubblico
 Route::post('/contatti/invia', [PublicController::class, 'submitContactForm'])->name('public.contact.submit');
+Route::get('/contatti/conversazione/{token}', [PublicController::class, 'viewContactThread'])->name('public.contact.thread');
+Route::post('/contatti/conversazione/{token}/rispondi', [PublicController::class, 'replyContactThread'])->name('public.contact.thread.reply');
 
+Route::post('/transfer/invia', [PublicController::class, 'submitTransferForm'])->name('public.transfer.submit');
+Route::get('/transfer/conversazione/{token}', [PublicController::class, 'viewTransferThread'])->name('public.transfer.thread');
+Route::post('/transfer/conversazione/{token}/rispondi', [PublicController::class, 'replyTransferThread'])->name('public.transfer.thread.reply');
+
+Route::post('/car-rental/invia', [PublicController::class, 'submitCarRentalForm'])->name('public.car_rental.submit');
+Route::get('/car-rental/conversazione/{token}', [PublicController::class, 'viewCarRentalThread'])->name('public.car_rental.thread');
+Route::post('/car-rental/conversazione/{token}/rispondi', [PublicController::class, 'replyCarRentalThread'])->name('public.car_rental.thread.reply');
 // Spoki Webhook
 Route::post('/webhook/spoki', [\App\Http\Controllers\SpokiWebhookController::class, 'handle']);
 Route::get('/webhook/spoki', function () {
@@ -244,8 +264,10 @@ Route::get('/shop/{collezione_slug}/{prodotto_slug}', [\App\Http\Controllers\Pub
 // Booking Pubblico
 Route::get('/booking', [\App\Http\Controllers\PublicBookingController::class, 'index'])->name('public.booking.index');
 Route::get('/booking/checkout', [\App\Http\Controllers\PublicBookingController::class, 'checkout'])->name('public.booking.checkout');
-    // Booking Checkout & Payment
+    Route::get('/booking/login', [\App\Http\Controllers\PublicBookingController::class, 'showLogin'])->name('public.booking.login.view');
     Route::post('/booking/login', [\App\Http\Controllers\PublicBookingController::class, 'loginCheckout'])->name('public.booking.login');
+    Route::get('/booking/forgot-password', [\App\Http\Controllers\PublicBookingController::class, 'showForgotPassword'])->name('public.booking.forgot_password');
+    Route::post('/booking/forgot-password', [\App\Http\Controllers\PublicBookingController::class, 'sendResetPasswordEmail'])->name('public.booking.forgot_password.submit');
     Route::post('/booking/process-checkout', [\App\Http\Controllers\PublicBookingController::class, 'processCheckout'])->name('public.booking.process_checkout');
     Route::get('/booking/success/{id}', [\App\Http\Controllers\PublicBookingController::class, 'success'])->name('public.booking.success');
 
@@ -254,6 +276,7 @@ Route::get('/booking/checkout', [\App\Http\Controllers\PublicBookingController::
         Route::get('/', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'index'])->name('index');
         Route::get('/profile', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'profile'])->name('profile');
         Route::post('/profile', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/{booking}/cancel-request', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'requestCancellation'])->name('cancel_request');
         Route::post('/logout', [\App\Http\Controllers\BookingCustomerDashboardController::class, 'logout'])->name('logout');
     });
 Route::get('/booking/stripe/success', [\App\Http\Controllers\PublicBookingController::class, 'stripeSuccess'])->name('public.booking.stripe.success');

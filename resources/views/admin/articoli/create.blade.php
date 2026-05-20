@@ -1,4 +1,7 @@
 <x-app-layout>
+@php
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+@endphp
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Crea Nuovo Articolo') }}
@@ -35,6 +38,15 @@
                             @error('titolo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                <label for="titolo_en" class="block text-indigo-950 text-sm font-bold mb-2">Titolo [INGLESE] *</label>
+                                <input type="text" name="titolo_en" id="titolo_en" value="{{ old('titolo_en') }}" required
+                                    class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+                                @error('titolo_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
+
                         <!-- Sottotitolo -->
                         <div class="mb-4">
                             <label for="sottotitolo" class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo</label>
@@ -42,6 +54,15 @@
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                             @error('sottotitolo') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
+
+                        @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                <label for="sottotitolo_en" class="block text-indigo-950 text-sm font-bold mb-2">Sottotitolo [INGLESE]</label>
+                                <input type="text" name="sottotitolo_en" id="sottotitolo_en" value="{{ old('sottotitolo_en') }}"
+                                    class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+                                @error('sottotitolo_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
 
                         <!-- URL Custom (Slug) -->
                         <div class="mb-4">
@@ -70,6 +91,24 @@
                             @error('has_contact_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
+                        <!-- Includi Modulo Transfer -->
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="has_transfer_form" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('has_transfer_form') ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600">Includi modulo di richiesta transfer alla fine dell'articolo</span>
+                            </label>
+                            @error('has_transfer_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <!-- Includi Modulo Noleggio Auto -->
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="has_car_rental_form" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('has_car_rental_form') ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600">Includi modulo noleggio auto alla fine dell'articolo</span>
+                            </label>
+                            @error('has_car_rental_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                        </div>
+
                         <!-- Mostra Data -->
                         <div class="mb-4">
                             <label class="flex items-center">
@@ -92,6 +131,21 @@
                                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('descrizione') }}</textarea>
                             @error('descrizione') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
+
+                        @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-4 rounded border border-indigo-100/50">
+                                <div class="flex items-center justify-between mb-2">
+                                    <label for="descrizione_en" class="block text-indigo-950 text-sm font-bold">Descrizione [INGLESE] *</label>
+                                    <button type="button" id="fm-button-en" class="bg-indigo-100 hover:bg-indigo-200 text-indigo-800 text-xs font-bold py-1 px-3 rounded inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        Inserisci Immagine [ENG]
+                                    </button>
+                                </div>
+                                <textarea name="descrizione_en" id="descrizione_en" rows="5"
+                                    class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">{{ old('descrizione_en') }}</textarea>
+                                @error('descrizione_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
 
                         <!-- Link -->
                         <div class="mb-4">
@@ -169,12 +223,31 @@
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                                     @error('seo_title') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                                 </div>
+
+                                @if($englishEnabled)
+                                    <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                        <label for="seo_title_en" class="block text-indigo-950 text-sm font-bold mb-2">Titolo SEO [INGLESE]</label>
+                                        <input type="text" name="seo_title_en" id="seo_title_en" value="{{ old('seo_title_en') }}" placeholder="English SEO title..."
+                                            class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white">
+                                        @error('seo_title_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                @endif
+
                                 <div class="mb-4">
                                     <label for="seo_description" class="block text-gray-700 text-sm font-bold mb-2">Descrizione/Riassunto Social (max 160 caratteri ideali)</label>
                                     <textarea name="seo_description" id="seo_description" rows="3"
                                         class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('seo_description') }}</textarea>
                                     @error('seo_description') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                                 </div>
+
+                                @if($englishEnabled)
+                                    <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                        <label for="seo_description_en" class="block text-indigo-950 text-sm font-bold mb-2">Descrizione SEO [INGLESE]</label>
+                                        <textarea name="seo_description_en" id="seo_description_en" rows="3"
+                                            class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white" placeholder="English SEO description...">{{ old('seo_description_en') }}</textarea>
+                                        @error('seo_description_en') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
+                                    </div>
+                                @endif
                                 <div class="mb-4">
                                     <label for="seo_image" class="block text-gray-700 text-sm font-bold mb-2">Immagine Anteprima Social</label>
                                     <div class="flex items-stretch">
@@ -210,6 +283,7 @@
         <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
         <script>
             let editorInstance;
+            let editorInstanceEn;
             let fmActiveTarget = 'editor';
             
             // Inizializzazione CKEditor 4
@@ -237,12 +311,46 @@
                 ]
             });
 
+            if (document.getElementById('descrizione_en')) {
+                editorInstanceEn = CKEDITOR.replace('descrizione_en', {
+                    language: 'en',
+                    uiColor: '#F3F4F6',
+                    height: 400,
+                    extraPlugins: 'justify,colorbutton,font',
+                    toolbarGroups: [
+                        { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                        { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                        { name: 'editing', groups: [ 'find', 'selection', 'spellchecker', 'editing' ] },
+                        { name: 'forms', groups: [ 'forms' ] },
+                        '/',
+                        { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                        { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi', 'paragraph' ] },
+                        { name: 'links', groups: [ 'links' ] },
+                        { name: 'insert', groups: [ 'insert' ] },
+                        '/',
+                        { name: 'styles', groups: [ 'styles' ] },
+                        { name: 'colors', groups: [ 'colors' ] },
+                        { name: 'tools', groups: [ 'tools' ] },
+                        { name: 'others', groups: [ 'others' ] },
+                        { name: 'about', groups: [ 'about' ] }
+                    ]
+                });
+            }
+
             document.addEventListener("DOMContentLoaded", function() {
                 document.getElementById('fm-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'editor';
                     window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
                 });
+
+                if (document.getElementById('fm-button-en')) {
+                    document.getElementById('fm-button-en').addEventListener('click', (event) => {
+                        event.preventDefault();
+                        fmActiveTarget = 'editor_en';
+                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    });
+                }
                 
                 document.getElementById('fm-foto-button').addEventListener('click', (event) => {
                     event.preventDefault();
@@ -306,6 +414,10 @@
                 if (fmActiveTarget === 'editor') {
                     if(editorInstance) {
                         editorInstance.insertHtml('<img src="' + $url + '" style="max-width:100%;height:auto;">');
+                    }
+                } else if (fmActiveTarget === 'editor_en') {
+                    if(editorInstanceEn) {
+                        editorInstanceEn.insertHtml('<img src="' + $url + '" style="max-width:100%;height:auto;">');
                     }
                 } else if (fmActiveTarget === 'foto') {
                     document.getElementById('foto').value = relativeUrl;

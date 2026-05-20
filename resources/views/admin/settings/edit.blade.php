@@ -2,6 +2,7 @@
     $user = Auth::user();
     $shop_enabled = \App\Models\Setting::where('key', 'shop_enabled')->value('value') == '1'; 
     $booking_enabled = \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1';
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
 @endphp
 
 <x-app-layout>
@@ -136,6 +137,13 @@
                                             <span class="ms-3 text-sm font-medium text-gray-900">Abilita Modulo Booking</span>
                                         </label>
                                         <p class="text-xs text-gray-500">Attivando questa opzione, un nuovo menu 'Booking' apparirà nell'amministrazione.</p>
+
+                                        <label class="inline-flex items-center cursor-pointer mt-4 border-t pt-4 w-full">
+                                            <input type="checkbox" name="english_enabled" value="1" class="sr-only peer" {{ (isset($settings['english_enabled']) && $settings['english_enabled'] == '1') ? 'checked' : '' }}>
+                                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                            <span class="ms-3 text-sm font-medium text-gray-950 font-bold">Aggiungi Inglese (Abilita Doppia Lingua ITA/ENG)</span>
+                                        </label>
+                                        <p class="text-xs text-gray-500">Se abilitato, mostrerà le bandierine per il cambio lingua sul sito e i doppi campi nel gestionale.</p>
                                     </div>
                                 </div>
                             @endif
@@ -388,6 +396,13 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Breve Descrizione Footer</label>
                                     <textarea name="footer_description" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-sm" placeholder="Siamo un'azienda leader nel settore... (max 200 caratteri)">{{ old('footer_description', $settings['footer_description'] ?? '') }}</textarea>
                                 </div>
+
+                                @if($englishEnabled)
+                                    <div class="col-span-2 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                                        <label class="block text-indigo-950 text-sm font-bold mb-2">Breve Descrizione Footer [INGLESE]</label>
+                                        <textarea name="footer_description_en" rows="3" class="shadow appearance-none border border-indigo-300 rounded w-full py-2 px-3 focus:outline-none text-sm bg-white" placeholder="Enter short footer description in English...">{{ old('footer_description_en', $settings['footer_description_en'] ?? '') }}</textarea>
+                                    </div>
+                                @endif
 
                                 <div class="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                                     <h4 class="col-span-2 text-md font-bold text-gray-800">Link Social Network</h4>

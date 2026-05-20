@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BookingService extends Model
 {
-    protected $fillable = ['booking_service_category_id', 'nome', 'icona', 'ordine'];
+    protected $fillable = ['booking_service_category_id', 'nome', 'nome_en', 'icona', 'ordine'];
 
     // Questa relazione è deprecata dopo la migrazione alla struttura piatta, 
     // ma la manteniamo per evitare errori con vecchie chiamate find() se attive
@@ -18,5 +18,13 @@ class BookingService extends Model
     public function structures()
     {
         return $this->belongsToMany(BookingStructure::class, 'booking_structure_services');
+    }
+
+    public function getNomeAttribute($value)
+    {
+        if (app()->getLocale() === 'en' && !empty($this->nome_en)) {
+            return $this->nome_en;
+        }
+        return $value;
     }
 }

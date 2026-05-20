@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\SetLocaleMiddleware::class,
+        ]);
+
         $middleware->validateCsrfTokens(except: [
             'webhook/spoki',
             'webhook/*',
@@ -21,6 +25,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\IsAdmin::class,
             'agent' => \App\Http\Middleware\IsAgent::class,
         ]);
+
+        $middleware->redirectTo(
+            guests: function (\Illuminate\Http\Request $request) {
+                if ($request->is('booking*')) {
+                    return route('public.booking.login.view');
+                }
+                return route('login');
+            }
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

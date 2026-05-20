@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Attachment;
+
+class AdminTransferRepliedMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $transferRequest;
+    public $messageText;
+    public $attachmentPath;
+    public $attachmentName;
+
+    /**
+     * Create a new message instance.
+     */
+    public function __construct($transferRequest, $messageText, $attachmentPath = null, $attachmentName = null)
+    {
+        $this->transferRequest = $transferRequest;
+        $this->messageText = $messageText;
+        $this->attachmentPath = $attachmentPath;
+        $this->attachmentName = $attachmentName;
+    }
+
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Nuovo messaggio in merito alla tua richiesta di transfer - ' . config('app.name'),
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
+    {
+        return new Content(
+            markdown: 'emails.admin_transfer_replied',
+            with: [
+                'transferRequest' => $this->transferRequest,
+                'messageText' => $this->messageText,
+            ],
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     */
+    public function attachments(): array
+    {
+        if ($this->attachmentPath && file_exists(storage_path('app/public/' . $this->attachmentPath))) {
+            return [
+                Attachment::fromPath(storage_path('app/public/' . $this->attachmentPath))
+                    ->as($this->attachmentName ?? 'allegato')
+            ];
+        }
+        return [];
+    }
+}

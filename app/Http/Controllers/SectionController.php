@@ -109,8 +109,11 @@ class SectionController extends Controller
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'sottotitolo' => 'nullable|string|max:255',
+            'sottotitolo_en' => 'nullable|string|max:255',
             'contenuto' => 'nullable|string',
+            'contenuto_en' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
             'tipo' => 'required|in:pagina,archivio,sistema',
@@ -121,7 +124,9 @@ class SectionController extends Controller
             'colonne_griglia' => 'required|integer|min:1|max:6',
             'slug' => 'nullable|string|max:255|unique:sections,slug',
             'seo_title' => 'nullable|string|max:255',
+            'seo_title_en' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'seo_description_en' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'immagine' => 'nullable|string',
             'foto' => 'nullable|string',
@@ -163,8 +168,11 @@ class SectionController extends Controller
 
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
+            'nome_en' => 'nullable|string|max:255',
             'sottotitolo' => 'nullable|string|max:255',
+            'sottotitolo_en' => 'nullable|string|max:255',
             'contenuto' => 'nullable|string',
+            'contenuto_en' => 'nullable|string',
             'ordine' => 'required|integer',
             'visibile' => 'boolean',
             'tipo' => 'required|in:pagina,archivio,sistema',
@@ -175,7 +183,9 @@ class SectionController extends Controller
             'colonne_griglia' => 'required|integer|min:1|max:6',
             'slug' => 'nullable|string|max:255|unique:sections,slug,' . $sezioni->id,
             'seo_title' => 'nullable|string|max:255',
+            'seo_title_en' => 'nullable|string|max:255',
             'seo_description' => 'nullable|string',
+            'seo_description_en' => 'nullable|string',
             'seo_image' => 'nullable|string',
             'immagine' => 'nullable|string',
             'foto' => 'nullable|string',

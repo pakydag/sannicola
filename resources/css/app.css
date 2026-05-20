@@ -17,7 +17,59 @@
     .menu nav a { @apply font-display text-sm uppercase transition-colors tracking-wide; }
     .breadcrumb a { @apply font-sans normal-case;}
     .btn { @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary; }
-    .footer { @apply bg-gray-100 py-10 text-sm text-gray-600 border-t border-gray-200; }
+    .footer { @apply bg-gray-100 py-10 text-sm text-gray-600;}
     .footer a { @apply transition-colors hover:text-primary; }
     .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
+}
+
+/* Custom prose styling for user-generated content from CKEditor */
+.prose {
+    line-height: 1.75;
+}
+.prose p {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    font-weight: 300;
+}
+.prose ul {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+    list-style-type: disc !important;
+}
+.prose ol {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+    list-style-type: decimal !important;
+}
+.prose li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+.prose h1, .prose h2, .prose h3, .prose h4 {
+    color: #c0900d;
+    font-family: "Marcellus SC", serif;
+    font-weight: 400;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+.prose strong, .prose b {
+    font-weight: 600;
+    color: #111827;
+}
+.prose blockquote {
+    font-style: italic;
+    border-left: 4px solid #c0900d;
+    padding-left: 1em;
+    margin: 1.5em 0;
+    color: #4b5563;
+}
+.prose a {
+    color: #c0900d;
+    text-decoration: underline;
+    font-weight: 500;
+}
+.prose a:hover {
+    color: #82834c;
 }
