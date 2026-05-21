@@ -270,14 +270,23 @@
                                 </div>
                                 @if(!empty($pending['extra_dettaglio']))
                                     @php
-                                        $selectedExtras = \App\Models\BookingExtra::whereIn('id', $pending['extra_dettaglio'])->get();
+                                        $selectedExtras = \App\Models\BookingExtra::whereIn('id', array_keys($pending['extra_dettaglio']))->get();
+                                        $extraStrings = [];
+                                        foreach($selectedExtras as $extra) {
+                                            $qty = (int)($pending['extra_dettaglio'][$extra->id] ?? 0);
+                                            if ($qty > 0) {
+                                                $extraStrings[] = $extra->nome . ($qty > 1 ? " (x{$qty})" : "");
+                                            }
+                                        }
                                     @endphp
-                                    <div class="flex justify-between text-sm py-1">
-                                        <span class="text-gray-500 font-bold uppercase text-[10px]">{{ app()->getLocale() === 'en' ? 'Extras' : 'Extra' }}</span>
-                                        <span class="font-bold text-right text-xs">
-                                            {{ $selectedExtras->pluck('nome')->implode(', ') }}
-                                        </span>
-                                    </div>
+                                    @if(count($extraStrings) > 0)
+                                        <div class="flex justify-between text-sm py-1">
+                                            <span class="text-gray-500 font-bold uppercase text-[10px]">{{ app()->getLocale() === 'en' ? 'Extras' : 'Extra' }}</span>
+                                            <span class="font-bold text-right text-xs">
+                                                {{ implode(', ', $extraStrings) }}
+                                            </span>
+                                        </div>
+                                    @endif
                                 @endif
                             </div>
 

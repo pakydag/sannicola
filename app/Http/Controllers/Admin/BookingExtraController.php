@@ -20,6 +20,7 @@ class BookingExtraController extends Controller
             'nome' => 'required|string|max:255',
             'nome_en' => 'nullable|string|max:255',
             'prezzo' => 'required|numeric|min:0',
+            'tipo_calcolo' => 'required|string|in:giornaliero,una_tantum,giornaliero_persona,una_tantum_persona',
             'ordine' => 'nullable|integer',
         ]);
 
@@ -34,6 +35,7 @@ class BookingExtraController extends Controller
             'nome' => 'required|string|max:255',
             'nome_en' => 'nullable|string|max:255',
             'prezzo' => 'required|numeric|min:0',
+            'tipo_calcolo' => 'required|string|in:giornaliero,una_tantum,giornaliero_persona,una_tantum_persona',
             'ordine' => 'nullable|integer',
         ]);
 

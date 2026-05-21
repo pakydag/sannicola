@@ -1,4 +1,7 @@
 <x-app-layout>
+@php
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+@endphp
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Modifica Widget Globale: {{ $globalWidget->titolo }}
@@ -32,6 +35,13 @@
                             <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                             <input type="text" name="titolo" value="{{ old('titolo', $globalWidget->titolo) }}" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                         </div>
+@if($englishEnabled)
+<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
+                            <input type="text" name="titolo_en" value="{{ old('titolo', $globalWidget->titolo) }}"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                        </div>
+@endif
+
 
                         <!-- Gallery -->
                         @if($globalWidget->tipo === 'gallery')
@@ -111,6 +121,55 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale)</label>
                                 <input type="text" name="data[subtitle]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
+@if($englishEnabled)
+<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">File Video (MP4) *</label>
+                                <div class="flex mt-1 relative rounded-md shadow-sm">
+                                    <input type="text" id="video_url" name="data[video_url]" value="{{ old('data.video_url', $globalWidget->data['video_url'] ?? '') }}" readonly  class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
+                                    <button type="button" id="btn-sfoglia-video" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli MP4...</button>
+                                </div>
+                            </div>
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 flex space-x-6">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="data[autoplay]" value="1" {{ old('data.autoplay', $globalWidget->data['autoplay'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
+                                    <span class="ml-2 text-gray-700 font-medium">Autoplay (Parte in automatico)</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="data[loop]" value="1" {{ old('data.loop', $globalWidget->data['loop'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
+                                    <span class="ml-2 text-gray-700 font-medium">Loop (Ripeti all'infinito)</span>
+                                </label>
+                            </div>
+
+                        <!-- Mirror Blocks -->
+                        @elseif($globalWidget->tipo === 'mirror_blocks')
+                            <div class="grid grid-cols-2 gap-4 mb-4 mt-6">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Sezione Sorgente *</label>
+                                    <select name="data[source_section_id]"  class="shadow border rounded w-full py-2 px-3">
+                                        <option value="">-- Seleziona --</option>
+                                        @foreach(\App\Models\Section::all() as $sez)
+                                            <option value="{{ $sez->id }}" {{ old('data.source_section_id', $globalWidget->data['source_section_id'] ?? '') == $sez->id ? 'selected' : '' }}>{{ $sez->nome }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero Articoli (Limite) *</label>
+                                    <select name="data[limit]"  class="shadow border rounded w-full py-2 px-3">
+                                        @for($i=1; $i<=10; $i++)
+                                            <option value="{{ $i }}" {{ old('data.limit', $globalWidget->data['limit'] ?? '') == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                        @endfor
+                                    </select>
+                                </div>
+                            </div>
+
+                        <!-- Single Block -->
+                        @elseif($globalWidget->tipo === 'single_block')
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale) [INGLESE]</label>
+                                <input type="text" name="data[subtitle_en]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                            </div>
+@endif
+
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Link al click (Opzionale)</label>
                                 <input type="url" name="data[link]" value="{{ old('data.link', $globalWidget->data['link'] ?? '') }}" placeholder="https://..." class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
@@ -276,10 +335,24 @@
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Testo in Evidenza (Titolo Interno)</label>
                                         <input type="text" name="data[title]" value="{{ old('data.title', $globalWidget->data['title'] ?? '') }}" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
+@if($englishEnabled)
+<div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Testo in Evidenza (Titolo Interno) [INGLESE]</label>
+                                        <input type="text" name="data[title_en]" value="{{ old('data.title', $globalWidget->data['title'] ?? '') }}" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+@endif
+
                                     <div>
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo</label>
                                         <input type="text" name="data[subtitle]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
+@if($englishEnabled)
+<div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo [INGLESE]</label>
+                                        <input type="text" name="data[subtitle_en]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+@endif
+
                                 </div>
                             </div>
                         @elseif($globalWidget->tipo === 'info_blocks')
@@ -460,6 +533,30 @@
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Messaggio Comunicazione *</label>
                                         <input type="text" name="data[message]" value="{{ old('data.message', $globalWidget->data['message'] ?? '') }}" required placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                     </div>
+@if($englishEnabled)
+<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-6">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Stile Visualizzazione</label>
+                                <select name="data[style]" class="shadow border rounded w-full md:w-1/4 py-2 px-3 focus:outline-none">
+                                    <option value="grid" {{ (old('data.style', $globalWidget->data['style'] ?? 'grid') == 'grid') ? 'selected' : '' }}>Griglia Loghi</option>
+                                    <option value="carousel" {{ (old('data.style', $globalWidget->data['style'] ?? 'grid') == 'carousel') ? 'selected' : '' }}>Slider Carosello</option>
+                                </select>
+                            </div>
+
+                        <!-- Top Announcement -->
+                        @elseif($globalWidget->tipo === 'top_announcement')
+                            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100 mt-6">
+                                <h4 class="font-bold text-indigo-900 mb-4 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Configurazione Annuncio
+                                </h4>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Messaggio Comunicazione * [INGLESE]</label>
+                                        <input type="text" name="data[message_en]" value="{{ old('data.message', $globalWidget->data['message'] ?? '') }}"  placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+@endif
+
                                     
                                     <div>
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo</label>
@@ -481,6 +578,13 @@
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Testo Bottone (Opzionale)</label>
                                         <input type="text" name="data[button_text]" value="{{ old('data.button_text', $globalWidget->data['button_text'] ?? '') }}" placeholder="Es: Scopri di più" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
+@if($englishEnabled)
+<div>
+                                        <label class="block text-gray-700 text-sm font-bold mb-2">Testo Bottone (Opzionale) [INGLESE]</label>
+                                        <input type="text" name="data[button_text_en]" value="{{ old('data.button_text', $globalWidget->data['button_text'] ?? '') }}" placeholder="Es: Scopri di più" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    </div>
+@endif
+
                                     
                                     <div>
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Link Bottone</label>

@@ -40,7 +40,7 @@
 
             <!-- Colonna 2: Navigazione Dinamica -->
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">Navigazione</h3>
+                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Navigation' : 'Navigazione' }}</h3>
                 <ul class="space-y-4">
                     <li><a href="{{ url('/') }}" class="text-gray-300 hover:text-white transition text-sm">Home</a></li>
                     @if(isset($shared_sezioni))
@@ -57,11 +57,11 @@
 
             <!-- Colonna 3: Link Legali -->
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">Supporto & Legale</h3>
+                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Support & Legal' : 'Supporto & Legale' }}</h3>
                 <ul class="space-y-4">
                     <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Privacy Policy</a></li>
                     <li><a href="javascript:void(0)" onclick="openCookiePreferences()" class="text-gray-400 hover:text-white transition text-sm">Cookie Policy</a></li>
-                    <li><a href="{{ route('login') }}" class="text-gray-400 hover:text-white transition text-sm">Area Riservata</a></li>
+                    <li><a href="{{ route('login') }}" class="text-gray-400 hover:text-white transition text-sm">{{ app()->getLocale() === 'en' ? 'Reserved Area' : 'Area Riservata' }}</a></li>
                     @if(config('app.shop_enabled') == '1' || ($global_settings['shop_enabled'] ?? '0') == '1')
                         <li><a href="{{ route('public.shop.index') }}" class="text-gray-400 hover:text-white transition text-sm">Shop Online</a></li>
                     @endif
@@ -70,7 +70,7 @@
 
             <!-- Colonna 4: Contatti -->
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">Contatti</h3>
+                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Contacts' : 'Contatti' }}</h3>
                 <ul class="space-y-4 text-sm text-gray-300">
                     @if(!empty($global_settings['company_address']))
                         <li class="flex items-start">
@@ -108,7 +108,7 @@
 
         <!-- Bottom Bar -->
         <div class="pt-8 border-t border-gray-800 text-center text-white text-xs">
-            &copy; {{ date('Y') }} Eyukka srl. Tutti i diritti riservati.
+            &copy; {{ date('Y') }} Eyukka srl. {{ app()->getLocale() === 'en' ? 'All rights reserved.' : 'Tutti i diritti riservati.' }}
         </div>
     </div>
 </footer>

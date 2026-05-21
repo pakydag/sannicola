@@ -28,8 +28,17 @@
                                 </div>
                             @endif
                             <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Prezzo Giornaliero (€)</label>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Prezzo Base (€)</label>
                                 <input type="number" step="0.01" name="prezzo" placeholder="0.00" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Tipo di Costo</label>
+                                <select name="tipo_calcolo" class="shadow border rounded w-full py-2 px-3 text-gray-700" required>
+                                    <option value="giornaliero">Giornaliero (per prenotazione)</option>
+                                    <option value="una_tantum">Una Tantum (per prenotazione)</option>
+                                    <option value="giornaliero_persona">Giornaliero (per persona)</option>
+                                    <option value="una_tantum_persona">Una Tantum (per persona)</option>
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Ordine</label>
@@ -53,7 +62,8 @@
                                 <tr>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ordine</th>
                                     <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nome</th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prezzo/Giorno</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Costo Base</th>
+                                    <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo Calcolo</th>
                                     <th class="px-6 py-3 bg-gray-50 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Azioni</th>
                                 </tr>
                             </thead>
@@ -63,6 +73,19 @@
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $extra->ordine }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">{{ $extra->nome }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">€{{ number_format($extra->prezzo, 2) }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-xs">
+                                            @if($extra->tipo_calcolo === 'giornaliero')
+                                                Giornaliero (Prenotazione)
+                                            @elseif($extra->tipo_calcolo === 'una_tantum')
+                                                Una Tantum (Prenotazione)
+                                            @elseif($extra->tipo_calcolo === 'giornaliero_persona')
+                                                Giornaliero (Per Persona)
+                                            @elseif($extra->tipo_calcolo === 'una_tantum_persona')
+                                                Una Tantum (Per Persona)
+                                            @else
+                                                {{ $extra->tipo_calcolo }}
+                                            @endif
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                             <div class="flex justify-end gap-2" x-data="{ editing: false }">
                                                 <!-- Edit Form (Modal or Inline would be better, using simple for now) -->
@@ -75,8 +98,8 @@
                                                 </form>
 
                                                 <!-- Inline Edit Template -->
-                                                <template x-if="editing">
-                                                    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                                                <template x-teleport="body">
+                                                    <div x-show="editing" style="display: none;" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4">
                                                         <div class="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl" @click.away="editing = false">
                                                             <h4 class="text-xl font-bold mb-4">Modifica {{ $extra->nome }}</h4>
                                                             <form action="{{ route('admin.booking.extras.update', $extra) }}" method="POST">
@@ -94,8 +117,17 @@
                                                                         </div>
                                                                     @endif
                                                                     <div>
-                                                                        <label class="block text-gray-700 text-sm font-bold mb-1">Prezzo/Giorno</label>
+                                                                        <label class="block text-gray-700 text-sm font-bold mb-1">Prezzo Base</label>
                                                                         <input type="number" step="0.01" name="prezzo" value="{{ $extra->prezzo }}" class="w-full border rounded p-2" required>
+                                                                    </div>
+                                                                    <div>
+                                                                        <label class="block text-gray-700 text-sm font-bold mb-1">Tipo di Costo</label>
+                                                                        <select name="tipo_calcolo" class="w-full border rounded p-2" required>
+                                                                            <option value="giornaliero" {{ $extra->tipo_calcolo === 'giornaliero' ? 'selected' : '' }}>Giornaliero (per prenotazione)</option>
+                                                                            <option value="una_tantum" {{ $extra->tipo_calcolo === 'una_tantum' ? 'selected' : '' }}>Una Tantum (per prenotazione)</option>
+                                                                            <option value="giornaliero_persona" {{ $extra->tipo_calcolo === 'giornaliero_persona' ? 'selected' : '' }}>Giornaliero (per persona)</option>
+                                                                            <option value="una_tantum_persona" {{ $extra->tipo_calcolo === 'una_tantum_persona' ? 'selected' : '' }}>Una Tantum (per persona)</option>
+                                                                        </select>
                                                                     </div>
                                                                     <div>
                                                                         <label class="block text-gray-700 text-sm font-bold mb-1">Ordine</label>

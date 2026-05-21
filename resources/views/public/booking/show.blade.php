@@ -237,13 +237,27 @@
                                             <label class="block text-[10px] font-bold uppercase text-gray-400 mb-2">{{ app()->getLocale() === 'en' ? 'Extra Services' : 'Servizi Extra' }}</label>
                                             <div class="space-y-2">
                                                 @foreach($structure->extras as $extra)
-                                                    <label class="flex items-center justify-between p-2 rounded-lg border bg-white cursor-pointer hover:border-indigo-300 transition-colors">
+                                                    <div class="flex items-center justify-between p-2 rounded-lg border bg-white transition-colors">
                                                         <div class="flex items-center gap-2">
-                                                            <input type="checkbox" x-model="selectedExtras" value="{{ $extra->id }}" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <span class="text-xs text-gray-700">{{ $extra->nome }}</span>
+                                                            @if(in_array($extra->tipo_calcolo, ['giornaliero_persona', 'una_tantum_persona']))
+                                                                <select x-model.number="extrasQty['{{ $extra->id }}']" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 py-1 pl-2 pr-6 text-xs">
+                                                                    <option value="0">0</option>
+                                                                    <template x-for="i in {{ $structure->posti_totali }}" :key="i">
+                                                                        <option :value="i" x-text="i"></option>
+                                                                    </template>
+                                                                </select>
+                                                            @else
+                                                                <input type="checkbox" x-model="extrasQty['{{ $extra->id }}']" :true-value="1" :false-value="0" @change="checkDates" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                                                            @endif
+                                                            <span class="text-xs text-gray-700 cursor-default">{{ $extra->nome }}</span>
                                                         </div>
-                                                        <span class="text-xs text-gray-500">€{{ number_format($extra->prezzo, 2) }}{{ app()->getLocale() === 'en' ? '/d' : '/g' }}</span>
-                                                    </label>
+                                                        <span class="text-xs text-gray-500">
+                                                            €{{ number_format($extra->prezzo, 2) }}
+                                                            @if(in_array($extra->tipo_calcolo, ['giornaliero', 'giornaliero_persona']))
+                                                                {{ app()->getLocale() === 'en' ? '/d' : '/g' }}
+                                                            @endif
+                                                        </span>
+                                                    </div>
                                                 @endforeach
                                             </div>
                                         </div>
@@ -323,7 +337,7 @@
             ospiti: {!! json_encode($structure->variants->pluck('id')->mapWithKeys(fn($id) => [(string)$id => 0])) !!},
             totalDays: 0,
             totalPrice: 0,
-            selectedExtras: [],
+            extrasQty: {!! json_encode($structure->extras->pluck('id')->mapWithKeys(fn($id) => [(string)$id => 0])) !!},
             isChecking: false,
             isAvailable: true,
             bookedDates: @json($bookedDates),
@@ -409,6 +423,11 @@
                     ospitiPayload[key] = parseInt(this.ospiti[key]) || 0;
                 }
 
+                const extrasPayload = {};
+                for (const key in this.extrasQty) {
+                    extrasPayload[key] = parseInt(this.extrasQty[key]) || 0;
+                }
+
                 // Server side double check & Price calculation
                 fetch('{{ route("public.booking.check") }}', {
                     method: 'POST',
@@ -421,7 +440,7 @@
                         start_date: this.startDate,
                         end_date: this.endDate,
                         ospiti: ospitiPayload,
-                        extras: this.selectedExtras
+                        extras: extrasPayload
                     })
                 })
                 .then(res => res.json())
@@ -478,13 +497,15 @@
                 }
 
                 // Add extras
-                this.selectedExtras.forEach(extraId => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'extras[]';
-                    input.value = extraId;
-                    form.appendChild(input);
-                });
+                for (const extraId in this.extrasQty) {
+                    if (this.extrasQty[extraId] > 0) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = `extras[${extraId}]`;
+                        input.value = this.extrasQty[extraId];
+                        form.appendChild(input);
+                    }
+                }
 
                 // Add total
                 const totalInput = document.createElement('input');

@@ -211,8 +211,22 @@ class PublicBookingController extends Controller
         $seasonalPrices = $structure->prices;
         
         // Load extras to get their prices
-        $selectedExtras = \App\Models\BookingExtra::whereIn('id', $extraIds)->get();
-        $extrasDailyCost = $selectedExtras->sum('prezzo');
+        $selectedExtras = \App\Models\BookingExtra::whereIn('id', array_keys($extraIds))->get();
+        $extrasDailyCost = 0;
+        $extrasOneTimeCost = 0;
+
+        foreach ($selectedExtras as $extra) {
+            $qty = (int)($extraIds[$extra->id] ?? 0);
+            if ($qty <= 0) continue;
+
+            $cost = $extra->prezzo * $qty;
+
+            if ($extra->tipo_calcolo === 'una_tantum' || $extra->tipo_calcolo === 'una_tantum_persona') {
+                $extrasOneTimeCost += $cost;
+            } else {
+                $extrasDailyCost += $cost;
+            }
+        }
 
         for ($date = clone $startDate; $date < $endDate; $date->modify('+1 day')) {
             $currentDateStr = $date->format('Y-m-d');
@@ -245,6 +259,8 @@ class PublicBookingController extends Controller
             $total += $dayPrice;
             $details[] = ['date' => $currentDateStr, 'price' => $dayPrice];
         }
+
+        $total += $extrasOneTimeCost;
 
         return ['total' => $total, 'details' => $details, 'extras' => $selectedExtras];
     }

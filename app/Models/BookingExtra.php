@@ -10,6 +10,7 @@ class BookingExtra extends Model
         'nome',
         'nome_en',
         'prezzo',
+        'tipo_calcolo',
         'ordine',
     ];
 
