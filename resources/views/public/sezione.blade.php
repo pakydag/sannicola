@@ -3,8 +3,8 @@
 @section('title', $sezione->nome . ' - ' . config('app.name'))
 
 @section('content')
-<div class="relative bg-gray-50 h-64 flex items-end bg-top bg-center bg-cover px-6 lg:px-0 bg-no-repeat" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
-    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
+<div class="gradient relative bg-gray-50 h-64 flex items-end bg-top bg-center bg-cover px-6 lg:px-0 bg-no-repeat" @if($sezione->immagine) style="background-image: url('{{ asset($sezione->immagine) }}');" @endif>
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0 relative z-10">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-6 lg:mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12">
+<div class="max-w-7xl mx-6 lg:mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12 relative z-10">
     <header class="titoli text-center mb-10">
         <h1 class="text-4xl sm:text-5xl tracking-tight primary">
             {{ $sezione->nome }}

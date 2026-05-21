@@ -3,8 +3,8 @@
 @section('content')
     <div class="bg-gray-50 pb-16 mx-6 lg:mx-auto">
         @if(isset($section) && $section->immagine)
-            <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-fixed px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
-                <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
+            <div class="gradient relative bg-gray-50 h-64 flex items-end bg-cover px-6 lg:px-0" style="background-image: url('{{ asset($section->immagine) }}');">
+                <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0 relative z-10">
                     <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                         <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
                         <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
@@ -14,7 +14,11 @@
                     </nav>
                 </div>
             </div>
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 bg-white relative z-10">
+                <div class="titoli text-center mb-16">
+                    <h1 class="text-4xl sm:text-5xl">{{ $structure->nome }}</h1>
+                    <h2 class="mt-4 text-xl">{{ $structure->sottotitolo }}</h2>
+                </div>
         @else
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
                 <nav class="flex mb-8 text-gray-500 text-sm" aria-label="Breadcrumb">
@@ -110,7 +114,7 @@
                                 <!-- Contenitore Miniature -->
                                 <div x-ref="thumbArray" class="hide-scroll flex gap-2 overflow-x-auto scroll-smooth w-full px-8 py-1 snap-x snap-mandatory">
                                     @foreach($structure->photos as $index => $photo)
-                                        <button @click="setActive({{ $index }})" class="flex-shrink-0 h-16 w-24 sm:h-20 sm:w-28 rounded-lg overflow-hidden transition-all hover:opacity-100 snap-center" :class="currentIndex === {{ $index }} ? 'ring-1 ring-indigo-600 opacity-100 scale-105 shadow-md' : 'opacity-60 grayscale-[30%]'">
+                                        <button @click="setActive({{ $index }})" class="flex-shrink-0 h-16 w-24 sm:h-20 sm:w-28 rounded-lg overflow-hidden transition-all hover:opacity-100 snap-center" :class="currentIndex === {{ $index }} ? 'ring-1 ring-primary opacity-100 scale-105 shadow-md' : 'opacity-60 grayscale-[30%]'">
                                             <img src="{{ asset($photo->path) }}" class="w-full h-full object-cover">
                                         </button>
                                     @endforeach

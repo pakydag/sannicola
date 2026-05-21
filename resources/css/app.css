@@ -20,6 +20,21 @@
     .footer { @apply bg-gray-100 py-10 text-sm text-gray-600;}
     .footer a { @apply transition-colors hover:text-primary; }
     .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
+
+.gradient:before {
+    content: '';
+    position: absolute;
+    display: block;
+    top: 0px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: -moz-linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.4) 1%, rgba(0,0,0,0) 100%);
+    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 1%, rgba(0, 0, 0, 0) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 1%, rgba(0, 0, 0, 0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66000000', endColorstr='#00000000',GradientType=0 );
+    height: 538px;
+}
 }
 
 /* Custom prose styling for user-generated content from CKEditor */

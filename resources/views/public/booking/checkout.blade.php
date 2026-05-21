@@ -18,7 +18,7 @@
 
     @if($bannerImage)
         <div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImage }}');">
-            <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0">
+            <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0 relative z-10">
                 <nav class="flex p-6 items-left text-sm font-medium text-gray-400">
                     <a href="{{ route('public.home') }}" class="hover:text-gray-900 transition">Home</a>
                     <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>

@@ -7,9 +7,6 @@
 @endphp
 
 <style>
-header nav a{padding-top:5px !important; padding-bottom:5px !important;}
-
-
 /* Rende la transizione fluida come il resto del menu */
 a[title="Accedi Area Booking"],
 a[title="Accedi Area Booking"] svg {
@@ -21,7 +18,7 @@ a[title="Accedi Area Booking"] svg {
     <div class="max-w-7xl mx-auto w-full">
         <!-- Top bar with language selector and booking personal area, aligned to the right, no border -->
         @if($englishEnabled || $bookingEnabled == '1')
-            <div class="flex items-center justify-end py-2 px-4 lg:px-0 gap-4 transition-all duration-300">
+            <div class="flex items-center justify-end py-2 pb-0 px-4 lg:px-0 gap-4 transition-all duration-300">
                 @if($englishEnabled)
                     <div class="flex items-center space-x-3 mr-2 bg-black/10 px-2 py-1 rounded-full border border-white/10" :class="scrolled ? 'bg-gray-100 border-gray-200 text-black' : 'bg-black/20 border-white/20 text-white'">
                         <a href="{{ route('set-locale', 'it') }}" class="flex items-center justify-center transition-transform hover:scale-115 {{ $currentLocale === 'it' ? 'scale-110 drop-shadow-md' : 'opacity-50 hover:opacity-100' }}" title="Italiano">
@@ -137,7 +134,7 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-normal' : 'border-transparent hover:text-primary hover:border-primary hover:text-semibold' }}' : '{{ $isActive ? 'border-white text-white' : 'border-transparent text-white hover:text-white hover:border-white hover:font-semibold font-medium' }}'" class="inline-flex items-center px-1 pt-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-semibold' : 'border-transparent hover:text-primary hover:border-primary hover:font-semibold' }}' : '{{ $isActive ? 'border-white text-white font-semibold' : 'border-transparent text-white hover:text-white hover:border-white hover:font-semibold font-medium' }}'" class="inline-flex items-center pb-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
