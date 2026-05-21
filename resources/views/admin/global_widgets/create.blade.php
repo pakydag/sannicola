@@ -324,40 +324,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                 <input type="text" name="titolo" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">File Video (MP4) *</label>
-                                <div class="flex mt-1 relative rounded-md shadow-sm">
-                                    <input type="text" id="video_url" name="data[video_url]" readonly  class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                    <button type="button" id="btn-sfoglia-video" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli MP4...</button>
-                                </div>
-                            </div>
-                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 flex space-x-6">
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="data[autoplay]" value="1" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
-                                    <span class="ml-2 text-gray-700 font-medium">Autoplay (Parte in automatico)</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="data[loop]" value="1" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
-                                    <span class="ml-2 text-gray-700 font-medium">Loop (Ripeti all'infinito)</span>
-                                </label>
-                            </div>
-                            <div class="text-right mt-4">
-                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Video Globale</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Form Mirror Blocks -->
-                    <div x-show="activeTab === 'mirror'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="tipo" value="mirror_blocks">
+                            @if($englishEnabled)
                             <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
+                            @endif
 
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div>
@@ -393,52 +365,23 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Blocco *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Sezione Sorgente *</label>
-                                    <select name="data[source_section_id]"  class="shadow border rounded w-full py-2 px-3">
-                                        <option value="">-- Seleziona --</option>
-                                        @foreach(\App\Models\Section::all() as $sez)
-                                            <option value="{{ $sez->id }}">{{ $sez->nome }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero Articoli (Limite) *</label>
-                                    <select name="data[limit]"  class="shadow border rounded w-full py-2 px-3">
-                                        @for($i=1; $i<=10; $i++)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="text-right mt-4">
-                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Specchio Globale</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Form Single Block -->
-                    <div x-show="activeTab === 'single'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="tipo" value="single_block">
+                            @if($englishEnabled)
                             <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Blocco * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
+                            @endif
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale)</label>
                                 <input type="text" name="data[subtitle]" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                            @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale) [INGLESE]</label>
                                 <input type="text" name="data[subtitle_en]" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
+                            @endif
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Link al click (Opzionale)</label>

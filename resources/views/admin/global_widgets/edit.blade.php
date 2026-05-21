@@ -36,9 +36,9 @@
                             <input type="text" name="titolo" value="{{ old('titolo', $globalWidget->titolo) }}" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                         </div>
 @if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                        <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                            <input type="text" name="titolo_en" value="{{ old('titolo', $globalWidget->titolo) }}"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                            <input type="text" name="titolo_en" value="{{ old('titolo_en', $globalWidget->titolo_en) }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                         </div>
 @endif
 
@@ -121,54 +121,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale)</label>
                                 <input type="text" name="data[subtitle]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-6">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">File Video (MP4) *</label>
-                                <div class="flex mt-1 relative rounded-md shadow-sm">
-                                    <input type="text" id="video_url" name="data[video_url]" value="{{ old('data.video_url', $globalWidget->data['video_url'] ?? '') }}" readonly  class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                    <button type="button" id="btn-sfoglia-video" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli MP4...</button>
-                                </div>
-                            </div>
-                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 flex space-x-6">
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="data[autoplay]" value="1" {{ old('data.autoplay', $globalWidget->data['autoplay'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
-                                    <span class="ml-2 text-gray-700 font-medium">Autoplay (Parte in automatico)</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="data[loop]" value="1" {{ old('data.loop', $globalWidget->data['loop'] ?? 0) ? 'checked' : '' }} class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300">
-                                    <span class="ml-2 text-gray-700 font-medium">Loop (Ripeti all'infinito)</span>
-                                </label>
-                            </div>
-
-                        <!-- Mirror Blocks -->
-                        @elseif($globalWidget->tipo === 'mirror_blocks')
-                            <div class="grid grid-cols-2 gap-4 mb-4 mt-6">
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Sezione Sorgente *</label>
-                                    <select name="data[source_section_id]"  class="shadow border rounded w-full py-2 px-3">
-                                        <option value="">-- Seleziona --</option>
-                                        @foreach(\App\Models\Section::all() as $sez)
-                                            <option value="{{ $sez->id }}" {{ old('data.source_section_id', $globalWidget->data['source_section_id'] ?? '') == $sez->id ? 'selected' : '' }}>{{ $sez->nome }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero Articoli (Limite) *</label>
-                                    <select name="data[limit]"  class="shadow border rounded w-full py-2 px-3">
-                                        @for($i=1; $i<=10; $i++)
-                                            <option value="{{ $i }}" {{ old('data.limit', $globalWidget->data['limit'] ?? '') == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                            </div>
-
-                        <!-- Single Block -->
-                        @elseif($globalWidget->tipo === 'single_block')
-                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-6">
+                            @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-2">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale) [INGLESE]</label>
-                                <input type="text" name="data[subtitle_en]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="data[subtitle_en]" value="{{ old('data.subtitle_en', $globalWidget->data['subtitle_en'] ?? '') }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
+                            @endif
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Link al click (Opzionale)</label>
@@ -336,9 +294,9 @@
                                         <input type="text" name="data[title]" value="{{ old('data.title', $globalWidget->data['title'] ?? '') }}" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
 @if($englishEnabled)
-<div>
+                                    <div>
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Testo in Evidenza (Titolo Interno) [INGLESE]</label>
-                                        <input type="text" name="data[title_en]" value="{{ old('data.title', $globalWidget->data['title'] ?? '') }}" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        <input type="text" name="data[title_en]" value="{{ old('data.title_en', $globalWidget->data['title_en'] ?? '') }}" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
 @endif
 
@@ -347,9 +305,9 @@
                                         <input type="text" name="data[subtitle]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
 @if($englishEnabled)
-<div>
+                                    <div>
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo [INGLESE]</label>
-                                        <input type="text" name="data[subtitle_en]" value="{{ old('data.subtitle', $globalWidget->data['subtitle'] ?? '') }}" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                        <input type="text" name="data[subtitle_en]" value="{{ old('data.subtitle_en', $globalWidget->data['subtitle_en'] ?? '') }}" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                     </div>
 @endif
 
