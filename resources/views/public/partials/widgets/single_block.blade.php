@@ -43,7 +43,7 @@
                     @if(!empty($widget->data['link']))
                         <div class="mt-4">
                             <a href="{{ $widget->data['link'] }}" class="btn">
-                                Scopri di più
+                                {{ app()->getLocale() === 'en' ? 'Find out more' : 'Scopri di più' }}
                             </a>
                         </div>
                     @endif
@@ -74,7 +74,7 @@
                     @if(!empty($widget->data['link']))
                         <div class="mt-4">
                             <a href="{{ $widget->data['link'] }}" class="btn">
-                                Scopri di più
+                                {{ app()->getLocale() === 'en' ? 'Find out more' : 'Scopri di più' }}
                             </a>
                         </div>
                     @endif
