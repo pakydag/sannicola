@@ -20,12 +20,14 @@ a[title="Accedi Area Booking"] svg {
         @if($englishEnabled || $bookingEnabled == '1')
             <div class="flex items-center justify-end py-2 pb-0 px-4 lg:px-0 gap-4 transition-all duration-300">
                 @if($englishEnabled)
-                    <div class="flex items-center space-x-3 mr-2 bg-black/10 px-2 py-1 rounded-full border border-white/10" :class="scrolled ? 'bg-gray-100 border-gray-200 text-black' : 'bg-black/20 border-white/20 text-white'">
-                        <a href="{{ route('set-locale', 'it') }}" class="flex items-center justify-center transition-transform hover:scale-115 {{ $currentLocale === 'it' ? 'scale-110 drop-shadow-md' : 'opacity-50 hover:opacity-100' }}" title="Italiano">
-                            <span class="text-lg">🇮🇹</span>
+                    <div class="flex items-center space-x-4 mr-2 bg-black/10 px-3 py-1.5 rounded-full border border-white/10" :class="scrolled ? 'bg-gray-100 border-gray-200 text-black' : 'bg-black/20 border-white/20 text-white'">
+                        <a href="{{ route('set-locale', 'it') }}" class="flex items-center gap-1.5 transition-transform hover:scale-105 {{ $currentLocale === 'it' ? 'scale-105 drop-shadow-md font-bold' : 'opacity-60 hover:opacity-100' }}" title="Italiano">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" class="w-5 h-3.5 rounded-sm object-cover shadow-sm"><rect width="3" height="2" fill="#009246"/><rect width="2" height="2" x="1" fill="#fff"/><rect width="1" height="2" x="2" fill="#ce2b37"/></svg>
+                            <span class="text-xs tracking-wider">IT</span>
                         </a>
-                        <a href="{{ route('set-locale', 'en') }}" class="flex items-center justify-center transition-transform hover:scale-115 {{ $currentLocale === 'en' ? 'scale-110 drop-shadow-md' : 'opacity-50 hover:opacity-100' }}" title="English">
-                            <span class="text-lg">🇬🇧</span>
+                        <a href="{{ route('set-locale', 'en') }}" class="flex items-center gap-1.5 transition-transform hover:scale-105 {{ $currentLocale === 'en' ? 'scale-105 drop-shadow-md font-bold' : 'opacity-60 hover:opacity-100' }}" title="English">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" class="w-5 h-3.5 rounded-sm object-cover shadow-sm"><path fill="#012169" d="M0 0h60v30H0z"/><path stroke="#FFF" stroke-width="6" d="M0 0l60 30m0-30L0 30"/><path stroke="#C8102E" stroke-width="4" d="M0 0l60 30m0-30L0 30"/><path stroke="#FFF" stroke-width="10" d="M30 0v30M0 15h60"/><path stroke="#C8102E" stroke-width="6" d="M30 0v30M0 15h60"/></svg>
+                            <span class="text-xs tracking-wider">EN</span>
                         </a>
                     </div>
                 @endif
