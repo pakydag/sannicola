@@ -588,6 +588,10 @@
                                         <div class="md:col-span-7">
                                             <label class="block text-gray-700 text-xs font-bold mb-1">Testo del blocco (Accetta HTML)</label>
                                             <textarea name="data[items][0][text]" rows="2" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder="Inserisci testo..."></textarea>
+                                                @if($englishEnabled)
+                                                    <label class="block text-gray-700 text-xs font-bold mb-1 mt-2">Testo del blocco (Accetta HTML) [INGLESE]</label>
+                                                    <textarea name="data[items][0][text_en]" rows="2" class="bg-indigo-50/30 shadow border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder="Inserisci testo..."></textarea>
+                                                @endif
                                         </div>
                                         <div class="md:col-span-1 flex items-center justify-center">
                                             <button type="button" class="text-red-100 opacity-20 pointer-events-none" title="Non eliminabile">
@@ -974,6 +978,10 @@
                                 <div class="md:col-span-7">
                                     <label class="block text-gray-700 text-xs font-bold mb-1">Testo del blocco (Accetta HTML)</label>
                                     <textarea name="data[items][${blockIndex}][text]" rows="2" class="shadow border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder="Inserisci testo..."></textarea>
+                                                @if($englishEnabled)
+                                                    <label class="block text-gray-700 text-xs font-bold mb-1 mt-2">Testo del blocco (Accetta HTML) [INGLESE]</label>
+                                                    <textarea name="data[items][${blockIndex}][text_en]" rows="2" class="bg-indigo-50/30 shadow border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder="Inserisci testo..."></textarea>
+                                                @endif
                                 </div>
                                 <div class="md:col-span-1 flex items-center justify-center">
                                     <button type="button" class="btn-rimuovi-block text-red-500 hover:text-red-700" title="Rimuovi Block">
