@@ -33,6 +33,7 @@ class GlobalWidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'required|string|max:255',
+            'titolo_en' => 'nullable|string|max:255',
             'tipo' => 'required|string|in:gallery,video,mirror_blocks,single_block,section_grid,image_text_image,booking_search,info_blocks,booking_structures,map,shop_collection,shop_featured_products,shop_brands,top_announcement',
             'data' => 'nullable|array',
         ]);
@@ -41,6 +42,7 @@ class GlobalWidgetController extends Controller
 
         GlobalWidget::create([
             'titolo' => $validated['titolo'],
+            'titolo_en' => $validated['titolo_en'] ?? null,
             'tipo' => $validated['tipo'],
             'data' => $data,
         ]);
@@ -63,6 +65,7 @@ class GlobalWidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'required|string|max:255',
+            'titolo_en' => 'nullable|string|max:255',
             'data' => 'nullable|array',
         ]);
 
@@ -70,6 +73,7 @@ class GlobalWidgetController extends Controller
 
         $globalWidget->update([
             'titolo' => $validated['titolo'],
+            'titolo_en' => $validated['titolo_en'] ?? null,
             'data' => $data,
         ]);
 

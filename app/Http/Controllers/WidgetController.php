@@ -31,6 +31,7 @@ class WidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'nullable|string|max:255',
+            'titolo_en' => 'nullable|string|max:255',
             'tipo' => 'required|string|in:gallery,video,mirror_blocks,global_widget,single_block,section_grid,info_blocks,booking_structures,map,shop_collection,shop_featured_products,shop_brands',
             'data' => 'nullable|array',
         ]);
@@ -39,6 +40,7 @@ class WidgetController extends Controller
 
         $articolo->widgets()->create([
             'titolo' => $validated['titolo'] ?? null,
+            'titolo_en' => $validated['titolo_en'] ?? null,
             'tipo' => $validated['tipo'],
             'data' => $this->processDataRecursive($validated['data'] ?? []),
             'ordine' => $maxOrdine + 1,
@@ -51,11 +53,13 @@ class WidgetController extends Controller
     {
         $validated = $request->validate([
             'titolo' => 'nullable|string|max:255',
+            'titolo_en' => 'nullable|string|max:255',
             'data' => 'nullable|array',
         ]);
 
         $widget->update([
             'titolo' => $validated['titolo'] ?? $widget->titolo,
+            'titolo_en' => $validated['titolo_en'] ?? $widget->titolo_en,
             'data' => $this->processDataRecursive($validated['data'] ?? []),
         ]);
 
