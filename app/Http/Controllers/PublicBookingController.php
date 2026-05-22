@@ -77,9 +77,7 @@ class PublicBookingController extends Controller
             $availableStructures->push($structure);
         }
 
-        // Sort: available structures first, then unavailable
-        $availableStructures = $availableStructures->sortByDesc('is_available')->values();
-
+        // Keep original order (same as home page)
         $section = \App\Models\Section::where('modulo', 'booking')->first();
 
         return view('public.booking.search_results', [

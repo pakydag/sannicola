@@ -17,60 +17,16 @@
             </div>
         </div>
         <div class="bg-gray-50 pb-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
-                <div class="bg-indigo-700 py-12 px-6 rounded-3xl shadow-xl mb-12">
-                    <h1 class="text-3xl font-extrabold text-white sm:text-4xl text-center mb-6">
-                        {{ app()->getLocale() === 'en' ? 'Available Structures' : 'Strutture Disponibili' }}
-                    </h1>
-                    <p class="text-indigo-100 text-center text-lg max-w-2xl mx-auto mb-8">
-                        @if(app()->getLocale() === 'en')
-                            From {{ \Carbon\Carbon::parse($searchParams['start_date'])->format('d/m/Y') }}
-                            to {{ \Carbon\Carbon::parse($searchParams['end_date'])->format('d/m/Y') }}
-                            for {{ $searchParams['adulti'] }} Adult{{ $searchParams['adulti'] > 1 ? 's' : '' }}
-                            @if($searchParams['bambini'] > 0)
-                                and {{ $searchParams['bambini'] }} Child{{ $searchParams['bambini'] > 1 ? 'ren' : 'd' }}
-                            @endif
-                        @else
-                            Dal {{ \Carbon\Carbon::parse($searchParams['start_date'])->format('d/m/Y') }}
-                            al {{ \Carbon\Carbon::parse($searchParams['end_date'])->format('d/m/Y') }}
-                            per {{ $searchParams['adulti'] }} Adult{{ $searchParams['adulti'] > 1 ? 'i' : 'o' }}
-                            @if($searchParams['bambini'] > 0)
-                                e {{ $searchParams['bambini'] }} Bambin{{ $searchParams['bambini'] > 1 ? 'i' : 'o' }}
-                            @endif
-                        @endif
-                    </p>
-
-                    <!-- Form modifica ricerca -->
-                    @include('public.partials.widgets.booking_search', ['widget' => (object)['data' => []]])
-                </div>
-    @else
-        <div class="bg-indigo-700 py-12">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-extrabold text-white sm:text-4xl text-center mb-6">
-                    {{ app()->getLocale() === 'en' ? 'Available Structures' : 'Strutture Disponibili' }}
-                </h1>
-                <p class="text-indigo-100 text-center text-lg max-w-2xl mx-auto mb-8">
-                    @if(app()->getLocale() === 'en')
-                        From {{ \Carbon\Carbon::parse($searchParams['start_date'])->format('d/m/Y') }}
-                        to {{ \Carbon\Carbon::parse($searchParams['end_date'])->format('d/m/Y') }}
-                        for {{ $searchParams['adulti'] }} Adult{{ $searchParams['adulti'] > 1 ? 's' : '' }}
-                        @if($searchParams['bambini'] > 0)
-                            and {{ $searchParams['bambini'] }} Child{{ $searchParams['bambini'] > 1 ? 'ren' : 'd' }}
-                        @endif
-                    @else
-                        Dal {{ \Carbon\Carbon::parse($searchParams['start_date'])->format('d/m/Y') }}
-                        al {{ \Carbon\Carbon::parse($searchParams['end_date'])->format('d/m/Y') }}
-                        per {{ $searchParams['adulti'] }} Adult{{ $searchParams['adulti'] > 1 ? 'i' : 'o' }}
-                        @if($searchParams['bambini'] > 0)
-                            e {{ $searchParams['bambini'] }} Bambin{{ $searchParams['bambini'] > 1 ? 'i' : 'o' }}
-                        @endif
-                    @endif
-                </p>
-
+            <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto -mt-16 relative z-20 mb-12">
                 <!-- Form modifica ricerca -->
                 @include('public.partials.widgets.booking_search', ['widget' => (object)['data' => []]])
             </div>
-        </div>
+    @else
+        <div class="bg-gray-50 pt-12 pb-16">
+            <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-12">
+                <!-- Form modifica ricerca -->
+                @include('public.partials.widgets.booking_search', ['widget' => (object)['data' => []]])
+            </div>
     @endif
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
