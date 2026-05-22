@@ -88,7 +88,7 @@
                                 </a>
                             </div>
                             <div class="pb-6 px-6 text-center">
-                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="btn mb-5">Leggi di più &rarr;</a>
+                                <a href="{{ route('public.articolo', ['sezione_slug' => $sezione->slug ?? $sezione->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="btn mb-5">{{ app()->getLocale() === 'en' ? 'Read more' : 'Leggi di più' }} &rarr;</a>
                             </div>
                         </div>
                     @endforeach

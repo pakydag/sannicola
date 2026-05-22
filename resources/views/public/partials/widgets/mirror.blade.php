@@ -54,7 +54,7 @@
 
                     <div>
                         <a href="{{ route('public.articolo', ['sezione_slug' => $item->section->slug ?? $item->section->id.'-it', 'articolo_slug' => $item->slug ?? $item->id.'-it']) }}" class="btn inline-flex">
-                            Leggi di più
+                            {{ app()->getLocale() === 'en' ? 'Read more' : 'Leggi di più' }}
                             <svg class="w-4 h-4 ml-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                         </a>
                     </div>
