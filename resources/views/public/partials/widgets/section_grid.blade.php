@@ -63,7 +63,7 @@
 
                         <div class="mt-auto">
                             <a href="{{ url($section->slug . '/' . $article->slug) }}" class="text-indigo-600 font-semibold hover:text-indigo-800 text-sm flex items-center">
-                                Leggi tutto <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                {{ app()->getLocale() === 'en' ? 'Read more' : 'Leggi tutto' }} <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
                         </div>
                     </div>
