@@ -38,7 +38,7 @@
                 <!-- Adulti -->
                 <div class="w-full md:w-1/6">
                     <label class="block text-sm text-neutral-500 mb-2 font-normal" for="adulti">
-                        Adulti
+                        {{ app()->getLocale() === 'en' ? 'Adults' : 'Adulti' }}
                     </label>
                     <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white"
                             id="adulti" name="adulti">
@@ -51,7 +51,7 @@
                 <!-- Bambini (0-17) -->
                 <div class="w-full md:w-1/6">
                     <label class="block text-sm text-neutral-500 mb-2 font-normal" for="bambini">
-                        Bambini / Ragazzi
+                        {{ app()->getLocale() === 'en' ? 'Children' : 'Bambini / Ragazzi' }}
                     </label>
                     <select class="w-full px-4 py-3 border border-gray-200 focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-colors appearance-none bg-white"
                             id="bambini" name="bambini">
@@ -65,7 +65,7 @@
                 <div class="w-full md:w-auto flex-grow flex items-end">
                     <button type="submit" class="inline-flex leading-none self-end px-6 pt-[17px] pb-[17px] py-3 uppercase btn">
                         <svg class="w-4 h-4 self-center -mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        Cerca
+                        {{ app()->getLocale() === 'en' ? 'Search' : 'Cerca' }}
                     </button>
                 </div>
 
