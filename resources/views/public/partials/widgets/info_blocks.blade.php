@@ -22,9 +22,12 @@
                             <img src="{{ asset($item['image']) }}" alt="Icon" class="h-16 w-16 object-contain relative transition-transform duration-300 group-hover:scale-110">
                         </div>
                     @endif
-                    @if(!empty($item['text']))
+                    @php
+                        $text = (app()->getLocale() === 'en' && !empty($item['text_en'])) ? $item['text_en'] : ($item['text'] ?? '');
+                    @endphp
+                    @if(!empty($text))
                         <div class="prose prose-sm prose-indigo text-gray-600 max-w-none">
-                            {!! $item['text'] !!}
+                            {!! $text !!}
                         </div>
                     @endif
                 </div>
