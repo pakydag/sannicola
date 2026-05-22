@@ -1,7 +1,4 @@
 <x-app-layout>
-@php
-    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
-@endphp
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             Crea Nuovo Widget Globale
@@ -178,13 +175,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                            @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
-
+                            @endif
                             <div id="gallery-container" class="space-y-3 mb-4">
                                 <div class="flex items-center space-x-2 gallery-row">
                                     <div class="flex-1 flex flex-col space-y-2 text-sm">
@@ -219,26 +215,24 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                            @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Interno Admin * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. Messaggio di benvenuto">
                             </div>
-@endif
-
+                            @endif
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                 <div class="md:col-span-2">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Messaggio Comunicazione *</label>
                                     <input type="text" name="data[message]" required placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@if($englishEnabled)
-<div class="md:col-span-2">
+                                @if($englishEnabled)
+                                <div class="md:col-span-2 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Messaggio Comunicazione * [INGLESE]</label>
-                                    <input type="text" name="data[message_en]"  placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                    <input type="text" name="data[message_en]" placeholder="Es: Spedizione gratuita per ordini sopra i 50€!" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@endif
-
+                                @endif
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo</label>
                                     <select name="data[bg_color]" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
@@ -257,13 +251,12 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Testo Bottone (Opzionale)</label>
                                     <input type="text" name="data[button_text]" placeholder="Es: Scopri di più" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@if($englishEnabled)
-<div>
+                                @if($englishEnabled)
+                                <div class="bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Testo Bottone (Opzionale) [INGLESE]</label>
                                     <input type="text" name="data[button_text_en]" placeholder="Es: Scopri di più" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@endif
-
+                                @endif
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Link Bottone</label>
                                     <input type="text" name="data[button_url]" placeholder="Es: /shop o https://..." class="shadow border rounded w-full py-2 px-3 focus:outline-none">
@@ -285,13 +278,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                            @if($englishEnabled)
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
-
+                            @endif
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">File Video (MP4) *</label>
                                 <div class="flex mt-1 relative rounded-md shadow-sm">
@@ -330,7 +322,6 @@
                                 <input type="text" name="titolo_en" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
                             @endif
-
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Sezione Sorgente *</label>
@@ -371,18 +362,16 @@
                                 <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
                             @endif
-
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale)</label>
                                 <input type="text" name="data[subtitle]" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
                             @if($englishEnabled)
-                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
+                            <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50 mt-2">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo (Opzionale) [INGLESE]</label>
                                 <input type="text" name="data[subtitle_en]" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
                             @endif
-
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Link al click (Opzionale)</label>
                                 <input type="url" name="data[link]" placeholder="https://..." class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
@@ -440,61 +429,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Immagine Sfondo / Principale</label>
-                                    <div class="flex mt-1 relative rounded-md shadow-sm">
-                                        <input type="text" id="single_block_image" name="data[image]" readonly  placeholder="Immagine dal File Manager" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                        <button type="button" id="btn-sfoglia-single" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli Foto...</button>
-                                    </div>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Video Sfondo (Opzionale)</label>
-                                    <div class="flex mt-1 relative rounded-md shadow-sm">
-                                        <input type="text" id="single_block_video" name="data[video]" readonly placeholder="URL Video (.mp4)" class="shadow border rounded-l w-full py-2 px-3 bg-white focus:outline-none">
-                                        <button type="button" id="btn-sfoglia-single-video" class="-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-r-md text-gray-700 bg-gray-200">Scegli Video...</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <div class="col-span-1">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Colore Sfondo Blocco (HEX)</label>
-                                    <div class="flex items-center space-x-2">
-                                        <input type="color" name="data[bg_color]" value="#ffffff" class="h-10 w-10 border rounded cursor-pointer">
-                                        <span class="text-sm text-gray-500">Scegli un colore di sfondo.</span>
-                                    </div>
-                                </div>
-                                <div class="col-span-1">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Disposizione Contenuto</label>
-                                    <div class="flex flex-col space-y-2">
-                                        <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="data[layout]" value="side" checked class="form-radio h-4 w-4 text-indigo-600">
-                                            <span class="ml-2 text-sm text-gray-700 font-medium">Foto a sinistra (Full)</span>
-                                        </label>
-                                        <label class="flex items-center cursor-pointer">
-                                            <input type="radio" name="data[layout]" value="stacked" class="form-radio h-4 w-4 text-indigo-600">
-                                            <span class="ml-2 text-sm text-gray-700 font-medium">Foto sopra (Stacked)</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right mt-4">
-                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Blocco Singolo</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Form Booking Structures -->
-                    <div x-show="activeTab === 'booking_structures'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="tipo" value="booking_structures">
+                            @if($englishEnabled)
                             <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
-
+                            @endif
                             <div class="grid grid-cols-2 gap-4 mb-4">
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Numero di Strutture *</label>
@@ -529,42 +469,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. La nostra posizione">
                             </div>
-@if($englishEnabled)
-<div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero di Strutture *</label>
-                                    <select name="data[limit]"  class="shadow border rounded w-full py-2 px-3">
-                                        @for($i=1; $i<=12; $i++)
-                                            <option value="{{ $i }}" {{ $i == 3 ? 'selected' : '' }}>{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Elementi per riga *</label>
-                                    <select name="data[columns]"  class="shadow border rounded w-full py-2 px-3 focus:outline-none">
-                                        <option value="1">1 Colonna</option>
-                                        <option value="2">2 Colonne</option>
-                                        <option value="3" selected>3 Colonne</option>
-                                        <option value="4">4 Colonne</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="text-right mt-4">
-                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Strutture</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Form Map -->
-                    <div x-show="activeTab === 'map'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="tipo" value="map">
+                            @if($englishEnabled)
                             <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. La nostra posizione">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="es. La nostra posizione">
                             </div>
-@endif
-
+                            @endif
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Codice Embed Google Maps (iframe) *</label>
                                 <textarea name="data[embed_code]" required rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none text-xs" placeholder='Incolla qui il codice <iframe src="..."></iframe>'></textarea>
@@ -596,31 +506,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Griglia *</label>
                                 <input type="text" name="titolo" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="flex items-center mt-6">
-                                    <label class="inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" name="data[full_width]" value="1" class="form-checkbox h-5 w-5 text-indigo-600">
-                                        <span class="ml-2 text-gray-700 text-sm font-bold">Tutta Larghezza (Full Width)</span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="text-right mt-4">
-                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Widget Mappa</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Form Section Grid -->
-                    <div x-show="activeTab === 'grid'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="tipo" value="section_grid">
+                            @if($englishEnabled)
                             <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Griglia * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
-
+                            @endif
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Sezione Sorgente *</label>
                                 <select name="data[source_section_id]" required class="shadow border rounded w-full py-2 px-3">
@@ -664,52 +555,12 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                 <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Sezione Sorgente *</label>
-                                <select name="data[source_section_id]"  class="shadow border rounded w-full py-2 px-3">
-                                    <option value="">-- Seleziona --</option>
-                                    @foreach(\App\Models\Section::all() as $sez)
-                                        <option value="{{ $sez->id }}">{{ $sez->nome }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Numero Articoli (Limite) *</label>
-                                    <select name="data[limit]"  class="shadow border rounded w-full py-2 px-3">
-                                        @for($i=1; $i<=20; $i++)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Elementi per Riga *</label>
-                                    <select name="data[columns]"  class="shadow border rounded w-full py-2 px-3">
-                                        <option value="1">1 Colonna</option>
-                                        <option value="2">2 Colonne</option>
-                                        <option value="3" selected>3 Colonne</option>
-                                        <option value="4">4 Colonne</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="text-right mt-4">
-                                <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded shadow">Salva Griglia Globale</button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Form Info Blocks -->
-                    <div x-show="activeTab === 'info_blocks'" style="display: none;" class="bg-indigo-50 p-6 rounded-lg border border-indigo-100 shadow-inner">
-                        <form action="{{ route('admin.global-widgets.store') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="tipo" value="info_blocks">
+                            @if($englishEnabled)
                             <div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
+                                <input type="text" name="titolo_en" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@endif
-
+                            @endif
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Numero Colonne (Desktop) *</label>
                                 <select name="data[columns]" required class="shadow border rounded w-full md:w-1/4 py-2 px-3 focus:outline-none">
@@ -762,13 +613,6 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale Widget *</label>
                                 <input type="text" name="titolo" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale Widget * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow border rounded w-full py-2 px-3 focus:outline-none">
-                            </div>
-@endif
-
                             <hr class="my-6 border-indigo-200">
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -853,13 +697,6 @@
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale Widget *</label>
                                 <input type="text" name="titolo" required class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                             </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale Widget * [INGLESE]</label>
-                                <input type="text" name="titolo_en"  class="shadow border rounded w-full py-2 px-3 focus:outline-none">
-                            </div>
-@endif
-
                             
                             <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
                                 <div class="flex">
@@ -881,24 +718,10 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Testo in Evidenza (Titolo Interno)</label>
                                     <input type="text" name="data[title]" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@if($englishEnabled)
-<div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Testo in Evidenza (Titolo Interno) [INGLESE]</label>
-                                    <input type="text" name="data[title_en]" placeholder="es. Trova la tua struttura perfetta" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
-                                </div>
-@endif
-
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo</label>
                                     <input type="text" name="data[subtitle]" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@if($englishEnabled)
-<div>
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Sottotitolo [INGLESE]</label>
-                                    <input type="text" name="data[subtitle_en]" placeholder="es. Inserisci le date per verificare la disponibilità" class="shadow border rounded w-full py-2 px-3 focus:outline-none">
-                                </div>
-@endif
-
                             </div>
 
                             <div class="text-right mt-6">
@@ -917,13 +740,6 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                     <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
                                 </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                    <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none focus:shadow-outline">
-                                </div>
-@endif
-
                                 <div class="grid grid-cols-2 gap-4 mb-4">
                                     <div>
                                         <label class="block text-gray-700 text-sm font-bold mb-2">Seleziona Collezione *</label>
@@ -954,13 +770,6 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                     <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
                                 </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                    <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none">
-                                </div>
-@endif
-
 
                                 <div class="mb-6">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Modalità di selezione</label>
@@ -1027,13 +836,6 @@
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale *</label>
                                     <input type="text" name="titolo" required class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Es. Le nostre Marche">
                                 </div>
-@if($englishEnabled)
-<div class="mb-4 bg-indigo-50/30 p-3 rounded border border-indigo-100/50">
-                                    <label class="block text-gray-700 text-sm font-bold mb-2">Titolo Globale * [INGLESE]</label>
-                                    <input type="text" name="titolo_en"  class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="Es. Le nostre Marche">
-                                </div>
-@endif
-
                                 <div class="mb-4">
                                     <label class="block text-gray-700 text-sm font-bold mb-2">Stile Visualizzazione</label>
                                     <select name="data[style]" class="shadow border rounded w-full md:w-1/4 py-2 px-3 focus:outline-none">
