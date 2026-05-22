@@ -1,3 +1,6 @@
+@php
+    $englishEnabled = \App\Models\Setting::where('key', 'english_enabled')->value('value') == '1';
+@endphp
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
