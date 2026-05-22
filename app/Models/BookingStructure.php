@@ -42,7 +42,7 @@ class BookingStructure extends Model
 
     public function getNomeAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->nome_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->nome_en)) {
             return $this->nome_en;
         }
         return $value;
@@ -50,7 +50,7 @@ class BookingStructure extends Model
 
     public function getDescrizioneAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->descrizione_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->descrizione_en)) {
             return $this->descrizione_en;
         }
         return $value;

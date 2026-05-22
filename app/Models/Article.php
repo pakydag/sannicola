@@ -63,7 +63,7 @@ class Article extends Model implements HasMedia
 
     public function getTitoloAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->titolo_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->titolo_en)) {
             return $this->titolo_en;
         }
         return $value;
@@ -71,7 +71,7 @@ class Article extends Model implements HasMedia
 
     public function getSottotitoloAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->sottotitolo_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->sottotitolo_en)) {
             return $this->sottotitolo_en;
         }
         return $value;
@@ -79,7 +79,7 @@ class Article extends Model implements HasMedia
 
     public function getDescrizioneAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->descrizione_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->descrizione_en)) {
             return $this->descrizione_en;
         }
         return $value;
@@ -87,7 +87,7 @@ class Article extends Model implements HasMedia
 
     public function getSeoTitleAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->seo_title_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->seo_title_en)) {
             return $this->seo_title_en;
         }
         return $value;
@@ -95,7 +95,7 @@ class Article extends Model implements HasMedia
 
     public function getSeoDescriptionAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->seo_description_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->seo_description_en)) {
             return $this->seo_description_en;
         }
         return $value;

@@ -22,7 +22,7 @@ class BookingService extends Model
 
     public function getNomeAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->nome_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->nome_en)) {
             return $this->nome_en;
         }
         return $value;

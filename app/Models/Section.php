@@ -39,7 +39,7 @@ class Section extends Model
 
     public function getNomeAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->nome_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->nome_en)) {
             return $this->nome_en;
         }
         return $value;
@@ -47,7 +47,7 @@ class Section extends Model
 
     public function getSottotitoloAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->sottotitolo_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->sottotitolo_en)) {
             return $this->sottotitolo_en;
         }
         return $value;
@@ -55,7 +55,7 @@ class Section extends Model
 
     public function getContenutoAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->contenuto_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->contenuto_en)) {
             return $this->contenuto_en;
         }
         return $value;
@@ -63,7 +63,7 @@ class Section extends Model
 
     public function getSeoTitleAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->seo_title_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->seo_title_en)) {
             return $this->seo_title_en;
         }
         return $value;
@@ -71,7 +71,7 @@ class Section extends Model
 
     public function getSeoDescriptionAttribute($value)
     {
-        if (app()->getLocale() === 'en' && !empty($this->seo_description_en)) {
+        if (app()->getLocale() === 'en' && !request()->is('amministrazione*') && !empty($this->seo_description_en)) {
             return $this->seo_description_en;
         }
         return $value;
