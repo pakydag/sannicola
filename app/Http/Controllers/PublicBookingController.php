@@ -70,9 +70,15 @@ class PublicBookingController extends Controller
                 // Calcolo preventivo veloce (opzionale - usa adulto generico se tipo_prezzo non fisso)
                 $priceData = $this->calculateQuickPrice($structure, $startDate, $endDate, $totalGuests);
                 $structure->preventivo = $priceData;
-                $availableStructures->push($structure);
+                $structure->is_available = true;
+            } else {
+                $structure->is_available = false;
             }
+            $availableStructures->push($structure);
         }
+
+        // Sort: available structures first, then unavailable
+        $availableStructures = $availableStructures->sortByDesc('is_available')->values();
 
         $section = \App\Models\Section::where('modulo', 'booking')->first();
 

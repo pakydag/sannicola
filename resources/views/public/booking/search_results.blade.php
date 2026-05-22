@@ -41,39 +41,7 @@
                     </p>
 
                     <!-- Form modifica ricerca -->
-                    <div class="bg-white rounded-xl shadow-lg p-4 max-w-4xl mx-auto">
-                        <form action="{{ route('public.booking.search') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-end">
-                            <div class="w-full md:w-1/4">
-                                <label class="block text-xs text-gray-500 font-bold mb-1">Check-in</label>
-                                <input type="date" name="start_date" value="{{ $searchParams['start_date'] }}" min="{{ date('Y-m-d') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            </div>
-                            <div class="w-full md:w-1/4">
-                                <label class="block text-xs text-gray-500 font-bold mb-1">Check-out</label>
-                                <input type="date" name="end_date" value="{{ $searchParams['end_date'] }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                            </div>
-                            <div class="w-full md:w-1/6">
-                                <label class="block text-xs text-gray-500 font-bold mb-1">{{ app()->getLocale() === 'en' ? 'Adults' : 'Adulti' }}</label>
-                                <select name="adulti" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    @for($i = 1; $i <= 10; $i++)
-                                        <option value="{{ $i }}" {{ $searchParams['adulti'] == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="w-full md:w-1/6">
-                                <label class="block text-xs text-gray-500 font-bold mb-1">{{ app()->getLocale() === 'en' ? 'Children' : 'Bambini' }}</label>
-                                <select name="bambini" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                    @for($i = 0; $i <= 10; $i++)
-                                        <option value="{{ $i }}" {{ $searchParams['bambini'] == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="w-full md:w-auto flex-grow flex items-end">
-                                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg shadow transition">
-                                    {{ app()->getLocale() === 'en' ? 'Modify' : 'Modifica' }}
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                    @include('public.partials.widgets.booking_search', ['widget' => (object)['data' => []]])
                 </div>
     @else
         <div class="bg-indigo-700 py-12">
@@ -100,39 +68,7 @@
                 </p>
 
                 <!-- Form modifica ricerca -->
-                <div class="bg-white rounded-xl shadow-lg p-4 max-w-4xl mx-auto">
-                    <form action="{{ route('public.booking.search') }}" method="GET" class="flex flex-col md:flex-row gap-4 items-end">
-                        <div class="w-full md:w-1/4">
-                            <label class="block text-xs text-gray-500 font-bold mb-1">Check-in</label>
-                            <input type="date" name="start_date" value="{{ $searchParams['start_date'] }}" min="{{ date('Y-m-d') }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                        <div class="w-full md:w-1/4">
-                            <label class="block text-xs text-gray-500 font-bold mb-1">Check-out</label>
-                            <input type="date" name="end_date" value="{{ $searchParams['end_date'] }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                        <div class="w-full md:w-1/6">
-                            <label class="block text-xs text-gray-500 font-bold mb-1">{{ app()->getLocale() === 'en' ? 'Adults' : 'Adulti' }}</label>
-                            <select name="adulti" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                @for($i = 1; $i <= 10; $i++)
-                                    <option value="{{ $i }}" {{ $searchParams['adulti'] == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="w-full md:w-1/6">
-                            <label class="block text-xs text-gray-500 font-bold mb-1">{{ app()->getLocale() === 'en' ? 'Children' : 'Bambini' }}</label>
-                            <select name="bambini" class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                                @for($i = 0; $i <= 10; $i++)
-                                    <option value="{{ $i }}" {{ $searchParams['bambini'] == $i ? 'selected' : '' }}>{{ $i }}</option>
-                                @endfor
-                            </select>
-                        </div>
-                        <div class="w-full md:w-auto flex-grow flex items-end">
-                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg shadow transition">
-                                {{ app()->getLocale() === 'en' ? 'Modify' : 'Modifica' }}
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                @include('public.partials.widgets.booking_search', ['widget' => (object)['data' => []]])
             </div>
         </div>
     @endif
@@ -165,7 +101,7 @@
                             </div>
 
                             <div class="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
-                                @if($structure->prenotabile)
+                                @if($structure->is_available && $structure->prenotabile)
                                     <div>
                                         <span class="block text-xs text-gray-500 uppercase font-semibold">{{ app()->getLocale() === 'en' ? 'Est. Quote' : 'Preventivo Est.' }}</span>
                                         <span class="text-2xl font-black text-indigo-600">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
