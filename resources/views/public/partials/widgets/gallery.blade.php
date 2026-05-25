@@ -23,8 +23,8 @@
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         @endonce
 
-        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden rounded-lg h-[400px] e md:h-[650px]">
-            <div class="swiper-wrapper">
+        <div class="swiper widget-gallery-swiper shadow-lg overflow-hidden rounded-lg h-[400px] md:h-[650px]">
+            <div class="swiper-wrapper flex items-center">
                 @foreach($widget->data['photos'] as $photo)
                     @if(!empty($photo['url']) || !empty($photo['video_url']))
                         <div class="swiper-slide overflow-hidden group" role="group">
@@ -34,13 +34,13 @@
                                     <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
                                 </video>
                             @elseif(!empty($photo['url']))
-                            <div class="relative w-full md:!h-[500px]">
+                            <div class="relative w-full h-full">
                                 @if(!empty($photo['link']))
                                     <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
-                                        <img src="{{ asset($photo['url']) }}" class="w-full !h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Image">
+                                        <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
                                     </a>
                                 @else
-                                    <img src="{{ asset($photo['url']) }}" class="w-full !h-full object-cover transition-transform duration-500 group-hover:scale-110" alt="Image">
+                                    <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
                                 @endif
                             @endif
                             </div>
