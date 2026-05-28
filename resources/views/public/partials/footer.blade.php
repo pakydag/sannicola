@@ -45,11 +45,13 @@
                     <li><a href="{{ url('/') }}" class="text-gray-300 hover:text-white transition text-sm">Home</a></li>
                     @if(isset($shared_sezioni))
                         @foreach($shared_sezioni->where('mostra_nel_footer', true) as $sez)
-                            <li>
-                                <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" class="text-gray-300 hover:text-white transition text-sm">
-                                    {{ $sez->nome }}
-                                </a>
-                            </li>
+                            @if(strtolower($sez->nome) !== 'informative')
+                                <li>
+                                    <a href="{{ route('public.sezione', $sez->slug ?? $sez->id.'-it') }}" class="text-gray-300 hover:text-white transition text-sm">
+                                        {{ $sez->nome }}
+                                    </a>
+                                </li>
+                            @endif
                         @endforeach
                     @endif
                 </ul>
@@ -59,8 +61,13 @@
             <div>
                 <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Support & Legal' : 'Supporto & Legale' }}</h3>
                 <ul class="space-y-4">
-                    <li><a href="#" class="text-gray-400 hover:text-white transition text-sm">Privacy Policy</a></li>
-                    <li><a href="javascript:void(0)" onclick="openCookiePreferences()" class="text-gray-400 hover:text-white transition text-sm">Cookie Policy</a></li>
+                    @php
+                        $informativeSection = isset($shared_sezioni) ? $shared_sezioni->firstWhere('nome', 'Informative') : null;
+                        $informativeArticles = $informativeSection ? \App\Models\Article::where('section_id', $informativeSection->id)->where('visibile', true)->orderBy('ordine')->get() : collect();
+                    @endphp
+                    @foreach($informativeArticles as $article)
+                        <li><a href="{{ url($informativeSection->slug . '/' . $article->slug) }}" class="text-gray-400 hover:text-white transition text-sm">{{ $article->titolo }}</a></li>
+                    @endforeach
                     <li><a href="{{ route('login') }}" class="text-gray-400 hover:text-white transition text-sm">{{ app()->getLocale() === 'en' ? 'Reserved Area' : 'Area Riservata' }}</a></li>
                     @if(config('app.shop_enabled') == '1' || ($global_settings['shop_enabled'] ?? '0') == '1')
                         <li><a href="{{ route('public.shop.index') }}" class="text-gray-400 hover:text-white transition text-sm">Shop Online</a></li>
