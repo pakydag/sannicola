@@ -34,6 +34,11 @@ class GenerateSitemap extends Command
      */
     public function handle()
     {
+        $siteDomain = \App\Models\Setting::where('key', 'site_domain')->value('value');
+        if ($siteDomain) {
+            \Illuminate\Support\Facades\URL::forceRootUrl($siteDomain);
+        }
+
         $sitemap = Sitemap::create();
 
         // 1. Pagine Base

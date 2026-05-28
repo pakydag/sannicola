@@ -67,7 +67,7 @@ class SettingController extends Controller
         ];
 
         $generalSettings = [
-            'site_logo', 'site_favicon', 'mail_mailer', 'mail_host', 'mail_port', 
+            'site_domain', 'site_logo', 'site_favicon', 'mail_mailer', 'mail_host', 'mail_port', 
             'mail_username', 'mail_password', 'mail_encryption', 
             'mail_from_address', 'mail_from_name',
             'vapi_key', 'vapi_assistant_id', 'spoki_key',
@@ -77,6 +77,7 @@ class SettingController extends Controller
         ];
 
         $validated = $request->validate([
+            'site_domain' => 'nullable|string|url',
             'site_logo' => 'nullable|string',
             'site_favicon' => 'nullable|string',
             'mail_mailer' => 'nullable|string',

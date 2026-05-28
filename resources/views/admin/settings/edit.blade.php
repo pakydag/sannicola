@@ -82,6 +82,12 @@
                         <!-- TAB: Generali -->
                         <div x-show="activeTab === 'generali'" class="space-y-6">
                             <h3 class="text-lg font-medium leading-6 text-gray-900 border-b pb-2">Impostazioni Visive Principali</h3>
+
+                            <div class="mb-4">
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Dominio Sito (Per Sitemap & SEO)</label>
+                                <input type="url" name="site_domain" value="{{ old('site_domain', $settings['site_domain'] ?? config('app.url')) }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none max-w-lg" placeholder="https://www.elysionostuni.it">
+                                <p class="text-xs text-gray-500 mt-1">Inserisci l'URL completo del sito, es: https://www.tuosito.it. Verrà utilizzato per generare correttamente i link nella sitemap.</p>
+                            </div>
                             
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Logo Principale (Header e Email)</label>
