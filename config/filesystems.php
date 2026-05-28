@@ -41,7 +41,7 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('STORAGE_URL', rtrim(env('APP_URL', 'http://localhost'), '/').'/storage'),
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,
