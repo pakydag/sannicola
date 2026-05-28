@@ -85,7 +85,12 @@
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Dominio Sito (Per Sitemap & SEO)</label>
-                                <input type="url" name="site_domain" value="{{ old('site_domain', $settings['site_domain'] ?? config('app.url')) }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none max-w-lg" placeholder="https://www.elysionostuni.it">
+                                <div class="flex items-center gap-4 max-w-2xl">
+                                    <input type="url" name="site_domain" value="{{ old('site_domain', $settings['site_domain'] ?? config('app.url')) }}" class="shadow appearance-none border rounded w-full py-2 px-3 focus:outline-none" placeholder="https://www.elysionostuni.it">
+                                    <button type="button" onclick="event.preventDefault(); document.getElementById('sitemap-form').submit();" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded text-sm whitespace-nowrap">
+                                        Rigenera Sitemap
+                                    </button>
+                                </div>
                                 <p class="text-xs text-gray-500 mt-1">Inserisci l'URL completo del sito, es: https://www.tuosito.it. Verrà utilizzato per generare correttamente i link nella sitemap.</p>
                             </div>
                             
@@ -493,6 +498,11 @@
                                 Salva Configurazione
                             </button>
                         </div>
+                    </form>
+
+                    <!-- Form per la rigenerazione manuale della Sitemap -->
+                    <form id="sitemap-form" action="{{ route('admin.settings.sitemap') }}" method="POST" class="hidden">
+                        @csrf
                     </form>
 
                 </div>
