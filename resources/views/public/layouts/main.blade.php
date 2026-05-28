@@ -48,6 +48,16 @@
 
     <!-- Tracking Scripts (Head) -->
     @include('public.partials.tracking_scripts_head')
+
+    <!-- Dati Strutturati Sitelink (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "{{ config('app.name', 'Elysion Ostuni') }}",
+      "url": "{{ url('/') }}"
+    }
+    </script>
 </head>
 <body class="main antialiased  bg-white flex flex-col min-h-screen">
     <!-- Tracking Scripts (Body) -->
