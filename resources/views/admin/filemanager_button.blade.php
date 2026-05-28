@@ -38,8 +38,11 @@
         // The file manager package will look for this global function if used in a button mode
         // Or we can use the 'fmSetLink' that is already called by the file manager JS
         function fmSetLink($url) {
+            // Forza il path relativo rimuovendo eventuali domini (es. https://web.eyukka.it)
+            let relativeUrl = $url.replace(/^.*\/\/[^\/]+/, '');
+
             if (window.opener && typeof window.opener.fmSetLink === 'function') {
-                window.opener.fmSetLink($url);
+                window.opener.fmSetLink(relativeUrl);
                 window.close();
             }
         }
