@@ -26,10 +26,10 @@
     @endif
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
             <!-- Header decorato -->
-            <div class="bg-indigo-600 px-8 py-10 text-center text-white relative">
+            <div class="bg-primary px-8 py-10 text-center text-white relative">
                 <div class="absolute inset-0 opacity-10 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80');"></div>
                 <h1 class="text-3xl font-extrabold relative z-10">{{ app()->getLocale() === 'en' ? 'Booking Area' : 'Area Booking' }}</h1>
-                <p class="text-indigo-100 text-sm mt-2 relative z-10">{{ app()->getLocale() === 'en' ? 'Login to manage your bookings and profile' : 'Accedi per gestire le tue prenotazioni e il tuo profilo' }}</p>
+                <p class="text-white/80 text-sm mt-2 relative z-10">{{ app()->getLocale() === 'en' ? 'Login to manage your bookings and profile' : 'Accedi per gestire le tue prenotazioni e il tuo profilo' }}</p>
             </div>
 
             <!-- Form -->
@@ -39,25 +39,25 @@
                     <div class="space-y-6">
                         <div>
                             <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ app()->getLocale() === 'en' ? 'Email Address' : 'Indirizzo Email' }}</label>
-                            <input type="email" id="email" name="email" autocomplete="username" required class="w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-3" placeholder="latua@email.com">
+                            <input type="email" id="email" name="email" autocomplete="username" required class="w-full rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm py-3" placeholder="latua@email.com">
                         </div>
 
                         <div>
                             <div class="flex justify-between items-center mb-1">
                                 <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                                <a href="{{ route('public.booking.forgot_password') }}" class="text-xs text-indigo-600 hover:underline">{{ app()->getLocale() === 'en' ? 'Forgot password?' : 'Password dimenticata?' }}</a>
+                                <a href="{{ route('public.booking.forgot_password') }}" class="text-xs text-primary hover:underline">{{ app()->getLocale() === 'en' ? 'Forgot password?' : 'Password dimenticata?' }}</a>
                             </div>
-                            <input type="password" id="password" name="password" autocomplete="current-password" required class="w-full rounded-xl border-gray-200 focus:border-indigo-500 focus:ring-indigo-500 text-sm py-3" placeholder="••••••••">
+                            <input type="password" id="password" name="password" autocomplete="current-password" required class="w-full rounded-xl border-gray-200 focus:border-primary focus:ring-primary text-sm py-3" placeholder="••••••••">
                         </div>
 
                         <div class="flex items-center">
-                            <input type="checkbox" id="remember" name="remember" checked class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 h-4 w-4">
+                            <input type="checkbox" id="remember" name="remember" checked class="rounded border-gray-300 text-primary shadow-sm focus:ring-primary h-4 w-4">
                             <label for="remember" class="ml-2 block text-sm text-gray-600">{{ app()->getLocale() === 'en' ? 'Remember password' : 'Ricorda password' }}</label>
                         </div>
 
                         <div id="login-error-msg" class="hidden p-4 bg-red-50 text-red-700 text-xs font-bold rounded-xl border border-red-100"></div>
 
-                        <button type="submit" id="submit-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-4 px-6 rounded-xl shadow-lg shadow-indigo-100 transition-all flex justify-center items-center gap-2">
+                        <button type="submit" id="submit-btn" class="w-full bg-primary hover:opacity-90 text-white font-extrabold py-4 px-6 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
                             <span>{{ app()->getLocale() === 'en' ? 'Login to Booking Area' : "Accedi all'Area Booking" }}</span>
                             <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
@@ -66,7 +66,7 @@
 
                 <div class="mt-8 pt-6 border-t border-gray-100 text-center">
                     <p class="text-sm text-gray-500">{{ app()->getLocale() === 'en' ? "Don't have a booking yet?" : 'Non hai ancora una prenotazione?' }}</p>
-                    <a href="{{ route('public.booking.index') }}" class="mt-2 inline-block text-sm text-indigo-600 font-bold hover:underline">{{ app()->getLocale() === 'en' ? 'Search and book a property &rarr;' : 'Cerca e prenota una struttura &rarr;' }}</a>
+                    <a href="{{ route('public.booking.index') }}" class="mt-2 inline-block text-sm text-primary font-bold hover:underline">{{ app()->getLocale() === 'en' ? 'Search and book a property &rarr;' : 'Cerca e prenota una struttura &rarr;' }}</a>
                 </div>
             </div>
         </div>

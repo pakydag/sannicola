@@ -28,9 +28,9 @@
 @if(count($articles) > 0)
     <div class="mb-16">
         @if(!empty($widget->titolo))
-            <h2 class="text-3xl font-bold mb-8 text-gray-800 border-b-2 border-indigo-500 pb-2 inline-block">
-                {{ $widget->titolo }}
-            </h2>
+            <div class="titoli text-center mb-8">
+                <h3 class="text-3xl leading-tight">{{ $widget->titolo }}</h3>
+            </div>
         @endif
 
         <div class="grid {{ $gridClass }} gap-8">
@@ -48,22 +48,22 @@
 
                     <div class="p-6 flex-1 flex flex-col titoli">
                         <a href="{{ url($section->slug . '/' . $article->slug) }}" class="block mt-2">
-                            <h3 class="text-xl font-normal text-gray-900 mb-2 hover:text-indigo-600 transition-colors line-clamp-2">
+                            <h3 class="text-xl mb-2 line-clamp-2">
                                 {{ $article->titolo }}
                             </h3>
                         </a>
 
                         @if($article->sottotitolo)
-                            <p class="text-sm text-indigo-600 font-medium mb-3">{{ $article->sottotitolo }}</p>
+                            <p class="text-sm font-medium mb-3">{{ $article->sottotitolo }}</p>
                         @endif
 
                         <div class="text-gray-600 text-sm mb-4 line-clamp-3 ext-content flex-1">
                             {!! strip_tags($article->descrizione) !!}
                         </div>
 
-                        <div class="mt-auto">
-                            <a href="{{ url($section->slug . '/' . $article->slug) }}" class="text-indigo-600 font-semibold hover:text-indigo-800 text-sm flex items-center">
-                                {{ app()->getLocale() === 'en' ? 'Read more' : 'Leggi tutto' }} <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <div class="mt-4">
+                            <a href="{{ url($section->slug . '/' . $article->slug) }}" class="btn">
+                                {{ app()->getLocale() === 'en' ? 'Read more' : 'Leggi tutto' }}
                             </a>
                         </div>
                     </div>
