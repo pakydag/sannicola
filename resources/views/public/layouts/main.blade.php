@@ -52,8 +52,8 @@
     <!-- Dati Strutturati Sitelink (JSON-LD) -->
     <script type="application/ld+json">
     {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
+      "@@context": "https://schema.org",
+      "@@type": "WebSite",
       "name": "{{ config('app.name', 'Elysion Ostuni') }}",
       "url": "{{ url('/') }}"
     }
