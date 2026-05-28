@@ -36,7 +36,12 @@ class GenerateSitemap extends Command
     {
         $siteDomain = \App\Models\Setting::where('key', 'site_domain')->value('value');
         if ($siteDomain) {
+            $siteDomain = rtrim($siteDomain, '/');
             \Illuminate\Support\Facades\URL::forceRootUrl($siteDomain);
+            if (str_starts_with(strtolower($siteDomain), 'https://')) {
+                \Illuminate\Support\Facades\URL::forceScheme('https');
+            }
+            config(['app.url' => $siteDomain]);
         }
 
         $sitemap = Sitemap::create();
