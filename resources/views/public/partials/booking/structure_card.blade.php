@@ -39,7 +39,7 @@
 
         <div class="mt-auto">
             @if($s->prenotabile)
-                <a href="{{ route('public.booking.show', $s->id) }}" class="btn mb-5">
+                <a href="{{ route('public.booking.show', ['id' => $s->id, 'slug' => \Illuminate\Support\Str::slug($s->nome)]) }}" class="btn mb-5">
                     {{ app()->getLocale() === 'en' ? 'Discover and Book' : 'Scopri e Prenota' }}
                 </a>
             @else

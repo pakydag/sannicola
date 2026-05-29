@@ -147,7 +147,7 @@ class PublicBookingController extends Controller
         $seo = [
             'title' => ($structure->seo_title ?: $structure->nome) . ' - ' . ($this->global_seo['home_seo_title'] ?: config('app.name')),
             'description' => $structure->seo_description ?: \Illuminate\Support\Str::limit(strip_tags($structure->descrizione), 160),
-            'image' => $structure->seo_image ?: ($structure->photos->first() ? asset($structure->photos->first()->foto) : ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
+            'image' => $structure->seo_image ?: ($structure->photos->first() ? asset($structure->photos->first()->path) : ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg')),
             'url' => url()->current()
         ];
 

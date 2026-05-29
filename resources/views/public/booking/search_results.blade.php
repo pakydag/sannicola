@@ -63,7 +63,7 @@
                                         <span class="text-2xl font-black text-indigo-600">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
                                     </div>
 
-                                    <a href="{{ route('public.booking.show', $structure->id) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}&adulti={{ $searchParams['adulti'] }}&bambini={{ $searchParams['bambini'] }}"
+                                    <a href="{{ route('public.booking.show', ['id' => $structure->id, 'slug' => \Illuminate\Support\Str::slug($structure->nome)]) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}&adulti={{ $searchParams['adulti'] }}&bambini={{ $searchParams['bambini'] }}"
                                        class="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-xl font-bold transition shadow-md">
                                         {{ app()->getLocale() === 'en' ? 'Book' : 'Prenota' }}
                                     </a>

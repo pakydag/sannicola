@@ -286,7 +286,7 @@ Route::get('/booking/checkout', [\App\Http\Controllers\PublicBookingController::
 Route::get('/booking/stripe/success', [\App\Http\Controllers\PublicBookingController::class, 'stripeSuccess'])->name('public.booking.stripe.success');
 Route::get('/booking/paypal/success', [\App\Http\Controllers\PublicBookingController::class, 'paypalSuccess'])->name('public.booking.paypal.success');
 Route::get('/booking/search', [\App\Http\Controllers\PublicBookingController::class, 'search'])->name('public.booking.search');
-Route::get('/booking/{id}', [\App\Http\Controllers\PublicBookingController::class, 'show'])->name('public.booking.show');
+Route::get('/booking/{id}-{slug?}', [\App\Http\Controllers\PublicBookingController::class, 'show'])->name('public.booking.show')->where('id', '[0-9]+');
 Route::post('/booking/check-availability', [\App\Http\Controllers\PublicBookingController::class, 'checkAvailability'])->name('public.booking.check');
 Route::post('/booking/reserve', [\App\Http\Controllers\PublicBookingController::class, 'reserve'])->name('public.booking.reserve');
 
