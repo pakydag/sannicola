@@ -12,6 +12,14 @@ use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
 // Rotte Pubbliche (Homepage)
+Route::get('/debug-php-limits', function () {
+    return response()->json([
+        'post_max_size' => ini_get('post_max_size'),
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'memory_limit' => ini_get('memory_limit'),
+    ]);
+});
+
 Route::get('/', [PublicController::class, 'home'])->name('public.home');
 
 Route::get('/lang/{locale}', function ($locale) {

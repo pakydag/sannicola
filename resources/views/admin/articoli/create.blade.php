@@ -341,33 +341,33 @@
                 document.getElementById('fm-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'editor';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 if (document.getElementById('fm-button-en')) {
                     document.getElementById('fm-button-en').addEventListener('click', (event) => {
                         event.preventDefault();
                         fmActiveTarget = 'editor_en';
-                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
                 
                 document.getElementById('fm-foto-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'foto';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-allegato-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'allegato';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'seo_image';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
@@ -393,7 +393,7 @@
                 document.getElementById('fm-video-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'video';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
             });
 

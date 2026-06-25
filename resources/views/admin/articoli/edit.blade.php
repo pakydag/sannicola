@@ -583,7 +583,7 @@
                                         </div>
                                         @endif
                                     </div>
-                                    <button type="button" @click="fmActiveTarget='widget_gallery_multiple'; window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2 whitespace-nowrap md:mt-5">
+                                    <button type="button" @click="fmActiveTarget='widget_gallery_multiple'; window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 px-6 rounded-xl font-bold shadow-md transition-all flex items-center gap-2 whitespace-nowrap md:mt-5">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
                                         </svg>
@@ -1239,33 +1239,33 @@
                 document.getElementById('fm-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'editor';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 if (document.getElementById('fm-button-en')) {
                     document.getElementById('fm-button-en').addEventListener('click', (event) => {
                         event.preventDefault();
                         fmActiveTarget = 'editor_en';
-                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
                 
                 document.getElementById('fm-foto-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'foto';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-allegato-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'allegato';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
                 
                 document.getElementById('fm-seo-image-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'seo_image';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 document.getElementById('fm-seo-image-clear').addEventListener('click', (event) => {
@@ -1291,7 +1291,7 @@
                 document.getElementById('fm-video-button').addEventListener('click', (event) => {
                     event.preventDefault();
                     fmActiveTarget = 'video';
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 // --- Widget Video ---
@@ -1299,7 +1299,7 @@
                     e.preventDefault();
                     fmActiveTarget = 'widget_video';
                     fmActiveInput = document.getElementById('video_url');
-                    window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                    window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                 });
 
                 // --- Widget Blocco Singolo ---
@@ -1308,7 +1308,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_single';
                         fmActiveInput = document.getElementById('single_block_image');
-                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
                 if (document.getElementById('btn-sfoglia-single-video')) {
@@ -1316,7 +1316,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_single_video';
                         fmActiveInput = document.getElementById('single_block_video');
-                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                     });
                 }
 
@@ -1356,7 +1356,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_gallery';
                         fmActiveInput = btnSfoglia.previousElementSibling; 
-                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                         return;
                     }
 
@@ -1366,7 +1366,7 @@
                         e.preventDefault();
                         fmActiveTarget = 'widget_gallery_video';
                         fmActiveInput = btnSfogliaVid.previousElementSibling;
-                        window.open('/file-manager/fm-button', 'fm', 'width=1400,height=800');
+                        window.open('{{ route('admin.filemanager.button') }}', 'fm', 'width=1400,height=800');
                         return;
                     }
 
