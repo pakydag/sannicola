@@ -30,6 +30,28 @@
 }
 
 @layer components {
+   /* --- Header & Navigazione --- */
+  .nav-header {
+    @apply fixed top-0 w-full z-50 transition-all duration-300 ease-in-out;
+  }
+
+  /* Stato quando NON scollato (Trasparente) */
+  .nav-header-top {
+    @apply bg-transparent py-5;
+  }
+
+  /* Stato quando scollato (Vetro/Opaco) */
+  .nav-header-scrolled {
+    @apply bg-crema/95 backdrop-blur-md shadow-sm border-b border-outline-variant/30 py-3;
+  }
+
+  .nav-link {
+    @apply text-on-surface-variant hover:text-borgogna transition-colors duration-200 font-medium py-1 border-b-2 border-transparent;
+  }
+
+  .nav-link-active {
+    @apply text-borgogna font-bold border-borgogna;
+  }
   /* Bottoni Personalizzati */
   .btn-primary {
     @apply inline-flex items-center justify-center px-6 py-3 bg-borgogna text-crema font-bold transition-all hover:bg-opacity-90 active:scale-95 rounded-brand;
