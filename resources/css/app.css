@@ -3,88 +3,71 @@
 @tailwind components;
 @tailwind utilities;
 
-[x-cloak] {
-    display: none !important;
+@layer base {
+  :root {
+    /* Palette L'Artigiano Gastronomico */
+    --color-primary: 114 28 36;       /* #721c24 - Borgogna */
+    --color-background: 251 249 245;  /* #fbf9f5 - Crema */
+    --color-secondary: 197 160 89;    /* #c5a059 - Oro Antico */
+    --color-text-main: 45 41 38;      /* #2d2926 - Legno Scuro */
+  }
+
+  body {
+    background-color: rgb(var(--color-background));
+    color: rgb(var(--color-text-main));
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Risoluzione Circular Dependency: definiamo i font senza @apply per le classi custom */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Playfair Display", serif;
+    letter-spacing: -0.025em;
+    color: #721c24;
+    text-transform: uppercase;
+  }
 }
 
-/* resources/css/app.css */
 @layer components {
-    body.main { @apply font-sans text-sm leading-relaxed text-black font-light }
-    .titoli { & h1, & h2, & h3, & h4, & h5, & h6 { @apply font-display text-primary; } }
-    .titoli { & h2, & h5 { @apply mb-4 text-secondary; } }
-    .main p { @apply font-light text-black; }
-    b, strong { @apply font-medium; }
-    .menu nav a { @apply font-display uppercase transition-colors tracking-wide;font-size: 0.83rem; }
-    .breadcrumb a { @apply font-sans normal-case;}
-    .btn { @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary; }
-    .footer { @apply bg-gray-100 py-10 text-sm text-gray-600;}
-    .footer a { @apply transition-colors hover:text-primary; }
-    .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
+  /* Bottoni Personalizzati */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-borgogna text-crema font-bold transition-all hover:bg-opacity-90 active:scale-95 rounded-brand;
+  }
+  
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-borgogna text-borgogna font-bold transition-all hover:bg-borgogna hover:text-crema active:scale-95 rounded-brand;
+  }
 
-.gradient:before {
-    content: '';
-    position: absolute;
-    display: block;
-    top: 0px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: -moz-linear-gradient(top, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.4) 1%, rgba(0,0,0,0) 100%);
-    background: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 1%, rgba(0, 0, 0, 0) 100%);
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.4) 1%, rgba(0, 0, 0, 0) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66000000', endColorstr='#00000000',GradientType=0 );
-    height: 538px;
-}
+  /* Card Gastronomia */
+  .card-prodotto {
+    @apply bg-white border border-outline-variant overflow-hidden hover:shadow-lg transition-all duration-300 rounded-brand;
+  }
+
+  .card-image-container {
+    @apply aspect-[4/3] overflow-hidden relative;
+  }
+
+  .card-image-container img {
+    @apply w-full h-full object-cover transition-transform duration-500 hover:scale-110;
+  }
+
+  /* Navigazione */
+  .nav-link {
+    @apply text-on-surface-variant hover:text-borgogna transition-colors duration-200 font-medium py-1 border-b-2 border-transparent;
+  }
+
+  .nav-link-active {
+    @apply text-borgogna font-bold border-borgogna;
+  }
+
+  /* Badge e Etichette */
+  .badge-artigianale {
+    @apply inline-block px-2 py-1 bg-terracotta text-crema text-[10px] font-bold uppercase tracking-widest rounded-sm;
+  }
 }
 
-/* Custom prose styling for user-generated content from CKEditor */
-.prose {
-    line-height: 1.75;
-}
-.prose p {
-    margin-top: 0;
-    margin-bottom: 0;
-    font-weight: 300;
-}
-.prose ul {
-    margin-top:0;
-    margin-bottom:0;
-    padding-left: 1.625em;
-    list-style-type: disc !important;
-}
-.prose ol {
-    margin-top: 1.25em;
-    margin-bottom: 1.25em;
-    padding-left: 1.625em;
-    list-style-type: decimal !important;
-}
-.prose li {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-}
-.prose h1, .prose h2, .prose h3, .prose h4 {
-    color: #c0900d;
-    font-family: "Marcellus SC", serif;
-    font-weight: 400;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-}
-.prose strong, .prose b {
-    font-weight: 600;
-    color: #111827;
-}
-.prose blockquote {
-    font-style: italic;
-    border-left: 4px solid #c0900d;
-    padding-left: 1em;
-    margin: 1.5em 0;
-    color: #4b5563;
-}
-.prose a {
-    color: #c0900d;
-    text-decoration: underline;
-    font-weight: 500;
-}
-.prose a:hover {
-    color: #82834c;
+/* Utility per trasparenze e blur come da Navbar */
+.glass-effect {
+  @apply bg-crema/90 backdrop-blur-md;
 }
