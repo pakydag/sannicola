@@ -39,7 +39,7 @@ export default {
                 }
             },
             fontFamily: {
-                'display': ['"Playfair Display"', 'serif'],
+                'display': ['"Jost"', 'serif'],
                 'body': ['"Inter"', 'sans-serif'],
             },
             spacing: {

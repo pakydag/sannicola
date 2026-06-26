@@ -14,7 +14,7 @@ a[title="Accedi Area Booking"] svg {
 }
 </style>
 
-<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="menu w-full z-50 transition-all duration-300" :class="scrolled ? 'fixed glass-effect shadow-md' : 'absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none text-white'">    <div class="max-w-7xl mx-auto w-full">
+<header x-data="{ scrolled: false, mobileMenuOpen: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 50 })" class="menu" :class="scrolled ? 'menu-scrolled' : 'menu-top'">    <div class="max-w-7xl mx-auto w-full">
         <!-- Top bar with language selector and booking personal area, aligned to the right, no border -->
         @if($englishEnabled || $bookingEnabled == '1')
             <div class="flex items-center justify-end py-2 pb-0 px-4 lg:px-0 gap-4 transition-all duration-300">
