@@ -1,95 +1,41 @@
 @import './accessibility.css';
+
+/* Spostato in alto per evitare conflitti con il parser di vecchia generazione */
+.glass-effect { @apply bg-crema/90 backdrop-blur-md; }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Palette L'Artigiano Gastronomico */
-    --color-primary: 114 28 36;       /* #721c24 - Borgogna */
-    --color-background: 251 249 245;  /* #fbf9f5 - Crema */
-    --color-secondary: 197 160 89;    /* #c5a059 - Oro Antico */
-    --color-text-main: 45 41 38;      /* #2d2926 - Legno Scuro */
+    --color-primary: 114 28 36;
+    --color-background: 251 249 245;
+    --color-secondary: 197 160 89;
+    --color-text-main: 45 41 38;
   }
-
-  body {
-    background-color: rgb(var(--color-background));
-    color: rgb(var(--color-text-main));
-    font-family: "Inter", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Risoluzione Circular Dependency: definiamo i font senza @apply per le classi custom */
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Playfair Display", serif;
-    letter-spacing: -0.025em;
-    color: #721c24;
-    text-transform: uppercase;
-  }
+  body { background-color: rgb(var(--color-background)); color: rgb(var(--color-text-main)); font-family: "Inter", sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  h1, h2, h3, h4, h5, h6 { font-family: "Playfair Display", serif; letter-spacing: -0.025em; color: #721c24; text-transform: uppercase; }
 }
 
 @layer components {
-   /* --- Header & Navigazione --- */
-  .nav-header {
-    @apply fixed top-0 w-full z-50 transition-all duration-300 ease-in-out;
-  }
-
-  /* Stato quando NON scollato (Trasparente) */
-  .nav-header-top {
-    @apply bg-transparent py-5;
-  }
-
-  /* Stato quando scollato (Vetro/Opaco) */
-  .nav-header-scrolled {
-    @apply bg-crema/95 backdrop-blur-md shadow-sm border-b border-outline-variant/30 py-3;
-  }
-
-  .nav-link {
-    @apply text-on-surface-variant hover:text-borgogna transition-colors duration-200 font-medium py-1 border-b-2 border-transparent;
-  }
-
-  .nav-link-active {
-    @apply text-borgogna font-bold border-borgogna;
-  }
-  /* Bottoni Personalizzati */
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 bg-borgogna text-crema font-bold transition-all hover:bg-opacity-90 active:scale-95 rounded-brand;
-  }
-  
-  .btn-secondary {
-    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-borgogna text-borgogna font-bold transition-all hover:bg-borgogna hover:text-crema active:scale-95 rounded-brand;
-  }
-
-  /* Card Gastronomia */
-  .card-prodotto {
-    @apply bg-white border border-outline-variant overflow-hidden hover:shadow-lg transition-all duration-300 rounded-brand;
-  }
-
-  .card-image-container {
-    @apply aspect-[4/3] overflow-hidden relative;
-  }
-
-  .card-image-container img {
-    @apply w-full h-full object-cover transition-transform duration-500 hover:scale-110;
-  }
-
-  /* Navigazione */
-  .nav-link {
-    @apply text-on-surface-variant hover:text-borgogna transition-colors duration-200 font-medium py-1 border-b-2 border-transparent;
-  }
-
-  .nav-link-active {
-    @apply text-borgogna font-bold border-borgogna;
-  }
-
-  /* Badge e Etichette */
-  .badge-artigianale {
-    @apply inline-block px-2 py-1 bg-terracotta text-crema text-[10px] font-bold uppercase tracking-widest rounded-sm;
-  }
-}
-
-/* Utility per trasparenze e blur come da Navbar */
-.glass-effect {
-  @apply bg-crema/90 backdrop-blur-md;
+  .titoli h1, .titoli h2, .titoli h3, .titoli h4, .titoli h5, .titoli h6 { @apply font-display text-primary; }
+  .titoli h2, .titoli h5 { @apply mb-4 text-secondary; }
+  .main p { @apply font-light text-black; }
+  b, strong { @apply font-medium; }
+  .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
+  .menu nav a { @apply font-display uppercase transition-colors tracking-wide; font-size: 0.83rem; }
+  .breadcrumb a { @apply font-sans normal-case; }
+  .btn { @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary; }
+  .footer { @apply bg-gray-100 py-10 text-sm text-gray-600; }
+  .footer a { @apply transition-colors hover:text-primary; }
+  .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
+  .btn-primary { @apply inline-flex items-center justify-center px-6 py-3 bg-borgogna text-crema font-bold transition-all hover:bg-opacity-90 active:scale-95 rounded-brand; }
+  .btn-secondary { @apply inline-flex items-center justify-center px-6 py-3 border-2 border-borgogna text-borgogna font-bold transition-all hover:bg-borgogna hover:text-crema active:scale-95 rounded-brand; }
+  .card-prodotto { @apply bg-white border border-outline-variant overflow-hidden hover:shadow-lg transition-all duration-300 rounded-brand; }
+  .card-image-container { @apply aspect-[4/3] overflow-hidden relative; }
+  .card-image-container img { @apply w-full h-full object-cover transition-transform duration-500 hover:scale-110; }
+  .nav-link { @apply text-on-surface-variant hover:text-borgogna transition-colors duration-200 font-medium py-1 border-b-2 border-transparent; }
+  .nav-link-active { @apply text-borgogna font-bold border-borgogna; }
+  .badge-artigianale { @apply inline-block px-2 py-1 bg-terracotta text-crema text-[10px] font-bold uppercase tracking-widest rounded-sm; }
 }
