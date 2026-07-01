@@ -110,7 +110,7 @@ a[title="Accedi Area Booking"] svg {
                             @if($sez->tipo == 'archivio' && $sez->menu_a_tendina && !$sez->modulo)
                                 <!-- Dropdown per Archivio (Solo per sezioni CMS normali) -->
                                 <div class="relative inline-flex items-center px-1 pt-1 border-b-2 border-transparent" x-data="{ open: false }" @click.away="open = false" @mouseenter="open = true" @mouseleave="open = false">
-                                    <a href="{{ $url }}">{{ $sez->nome }} <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
+                                    <a href="{{ $url }}" class="has-submenu">{{ $sez->nome }} <svg class="nav-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg></a>
 
                                     <div x-show="open"
                                          x-transition:enter="transition ease-out duration-100"
