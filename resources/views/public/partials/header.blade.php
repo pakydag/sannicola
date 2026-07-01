@@ -121,12 +121,12 @@ a[title="Accedi Area Booking"] svg {
                                          x-transition:leave-end="transform opacity-0 scale-95"
                                          class="origin-top-left absolute left-0 top-12 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 divide-y divide-gray-100 focus:outline-none" style="display: none;">
 
-                                        <div class="py-1">
+                                        <div>
                                             <a href="{{ $url }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-semibold border-b">
                                                 Tutti gli articoli
                                             </a>
                                             @foreach($sez->articles()->where('visibile', true)->latest()->get() as $articolo)
-                                                <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 border-l-2 border-transparent hover:border-indigo-500">
+                                                <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 border-transparent hover:border-indigo-500">
                                                     {{ Str::limit($articolo->titolo, 30) }}
                                                 </a>
                                             @endforeach
