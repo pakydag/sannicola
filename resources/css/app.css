@@ -25,7 +25,6 @@
   b, strong { @apply font-medium; }
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .logo { @apply h-20 w-auto transition-all duration-300; }
-  /*.logo-hover { @apply brightness-0 invert hover:brightness-100 hover:invert-0; }*/
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .menu-top { @apply absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none text-white py-5; }
   .menu-scrolled { @apply fixed glass-effect shadow-md border-outline-variant text-legno-scuro; }
@@ -37,9 +36,9 @@
   .nav-icon { @apply ml-1 h-4 w-4 inline-block transform transition-transform duration-200; }
   .menu-top nav a .nav-icon { @apply text-white/50; }
   .menu-scrolled nav a .nav-icon { @apply text-gray-400; }
-  .menu .has-submenu a {@apply border-none hover:border-none;}
+  .menu .has-submenu + div a { @apply border-none text-black hover:border-none hover:text-black; }  
   .breadcrumb a { @apply font-sans normal-case; }
-  .btn { @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary; }
+  .btn { @apply inline-block bg-borgogna text-crema px-10 py-4 font-display uppercase tracking-wider hover:bg-primary transition-all transform hover:-translate-y-1 shadow-lg; }
   .footer { @apply bg-gray-100 py-10 text-sm text-gray-600; }
   .footer a { @apply transition-colors hover:text-primary; }
   .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
