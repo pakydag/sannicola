@@ -58,7 +58,7 @@ a[title="Accedi Area Booking"] svg {
                 <div class="flex shrink-0 mr-5 ml-4 lg:ml-0">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
                         @if($siteLogo)
-                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'brightness-0 invert'" class="h-14 w-auto transition-all duration-300">
+                            <img src="{{ asset($siteLogo) }}" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'logo-hover'" class="logo">
                         @else
                             {{ config('app.name', 'Il Mio Sito') }}
                         @endif
