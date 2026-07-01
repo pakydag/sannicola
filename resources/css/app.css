@@ -29,6 +29,9 @@
   .menu-top { @apply absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none text-white py-5; }
   .menu-scrolled { @apply fixed glass-effect shadow-md border-outline-variant text-legno-scuro py-2; }
   .menu nav a { @apply font-display uppercase tracking-wide transition-colors tracking-wide inline-flex items-center border-b-2 font-medium leading-5 transition duration-150 ease-in-out border-transparent font-display uppercase; font-size: 0.83rem;}
+  .menu nav a { @apply inline-flex items-center pb-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out border-transparent font-display uppercase tracking-wide; font-size: 0.83rem; }
+  .menu-top nav a { @apply text-white/90 hover:text-white hover:border-white hover:font-semibold; }
+  .menu-scrolled nav a { @apply text-on-surface-variant hover:text-primary hover:border-primary; }
   .breadcrumb a { @apply font-sans normal-case; }
   .btn { @apply inline-block border border-black px-11 py-5 text-black transition-all duration-300 ease-in-out hover:border-primary hover:text-primary; }
   .footer { @apply bg-gray-100 py-10 text-sm text-gray-600; }

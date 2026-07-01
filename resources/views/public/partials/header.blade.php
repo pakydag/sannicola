@@ -135,7 +135,7 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-semibold' : 'border-transparent hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white font-semibold' : 'border-transparent text-white hover:text-white hover:border-white hover:font-semibold font-medium' }}'">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" class="{{ $isActive ? 'nav-link-active' : '' }}">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
