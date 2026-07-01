@@ -25,7 +25,7 @@
   b, strong { @apply font-medium; }
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .logo { @apply h-20 w-auto transition-all duration-300; }
-  .logo-hover { @apply brightness-0 invert hover:brightness-100 hover:invert-0; }
+  /*.logo-hover { @apply brightness-0 invert hover:brightness-100 hover:invert-0; }*/
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .menu-top { @apply absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none text-white py-5; }
   .menu-scrolled { @apply fixed glass-effect shadow-md border-outline-variant text-legno-scuro; }
