@@ -135,7 +135,7 @@ a[title="Accedi Area Booking"] svg {
                                 </div>
                             @else
                                 <!-- Link Semplice (Module o Pagina) -->
-                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-semibold' : 'border-transparent hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white font-semibold' : 'border-transparent text-white hover:text-white hover:border-white hover:font-semibold font-medium' }}'" class="inline-flex items-center pb-1 border-b-2 font-medium leading-5 transition duration-150 ease-in-out">{{ $sez->nome }}</a>
+                                <a href="{{ $url }}" :class="scrolled ? '{{ $isActive ? 'border-primary text-primary font-semibold' : 'border-transparent hover:text-primary hover:border-primary' }}' : '{{ $isActive ? 'border-white text-white font-semibold' : 'border-transparent text-white hover:text-white hover:border-white hover:font-semibold font-medium' }}'">{{ $sez->nome }}</a>
                             @endif
                         @endforeach
                     @endif
