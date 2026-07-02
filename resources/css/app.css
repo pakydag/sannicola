@@ -19,9 +19,8 @@
 }
 
 @layer components {
-  .titoli h1, .titoli h2, .titoli h3, .titoli h4, .titoli h5, .titoli h6 { @apply font-display text-primary; }
+  h1, h2, h3, h4, h5, h6 { @apply font-display text-primary; }
   .titoli h2, .titoli h5 { @apply mb-4 text-secondary; }
-  .main p { @apply font-light text-black; }
   b, strong { @apply font-medium; }
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .logo { @apply h-20 w-auto transition-all duration-300; }
@@ -50,4 +49,5 @@
   .nav-link { @apply text-on-surface-variant hover:text-borgogna transition-colors duration-200 font-medium py-1 border-b-2 border-transparent; }
   .nav-link-active { @apply text-borgogna font-bold border-borgogna; }
   .badge-artigianale { @apply inline-block px-2 py-1 bg-terracotta text-crema text-[10px] font-bold uppercase tracking-widest rounded-sm; }
+  .separatore { @apply mt-2 h-0.5 w-20 bg-secondary mx-auto rounded; }
 }

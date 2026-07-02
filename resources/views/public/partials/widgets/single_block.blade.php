@@ -66,7 +66,7 @@
 
                 <div class="titoli p-8 md:p-12 {{ empty($widget->data['image']) ? 'w-full text-center' : 'md:w-1/2 flex flex-col justify-center' }}">
                     @if(!empty($widget->data['subtitle']))
-                        <p class="text-sm font-semibold tracking-wider uppercase opacity-80 mb-2">{{ $widget->data['subtitle'] }}</p>
+                        <p class="text-sm opacity-80 mb-2">{{ $widget->data['subtitle'] }}</p>
                     @endif
 
                     <h3 class="text-3xl mb-6 leading-tight">{{ $widget->titolo }}</h3>

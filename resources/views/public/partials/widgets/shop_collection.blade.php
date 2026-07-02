@@ -2,10 +2,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($widget->titolo)
             <div class="mb-10 text-center">
-                <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                <h2 class="text-3xl sm:text-4xl">
                     {{ $widget->titolo }}
                 </h2>
-                <div class="mt-2 h-1 w-20 bg-indigo-600 mx-auto rounded"></div>
+                <div class="separatore"></div>
             </div>
         @endif
 

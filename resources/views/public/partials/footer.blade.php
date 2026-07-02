@@ -5,7 +5,8 @@
             <div>
                 <div class="mb-6">
                     @if(!empty($global_settings['site_logo']))
-                        <img src="{{ asset($global_settings['site_logo']) }}" alt="{{ config('app.name') }}" class="h-12 w-auto object-contain brightness-0 invert">
+                        <!--<img src="{{ asset($global_settings['site_logo']) }}" alt="{{ config('app.name') }}" class="h-12 w-auto object-contain">-->
+                        <img src="{{ asset('storage/logo-b.png') }}" alt="{{ config('app.name') }}" class="h-16 w-auto object-contain">
                     @else
                         <span class="text-2xl font-bold text-white">{{ config('app.name') }}</span>
                     @endif
