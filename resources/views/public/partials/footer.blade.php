@@ -1,4 +1,4 @@
-<footer class="bg-legno-scuro text-white pt-16 pb-8 footer font-normal">
+<footer class="footer">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
             <!-- Colonna 1: Brand & Descrizione -->
@@ -41,7 +41,7 @@
 
             <!-- Colonna 2: Navigazione Dinamica -->
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Navigation' : 'Navigazione' }}</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-6 text-secondary">{{ app()->getLocale() === 'en' ? 'Navigation' : 'Navigazione' }}</h3>
                 <ul class="space-y-4">
                     <li><a href="{{ url('/') }}" class="text-gray-300 hover:text-white transition text-sm">Home</a></li>
                     @if(isset($shared_sezioni))
@@ -60,7 +60,7 @@
 
             <!-- Colonna 3: Link Legali -->
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Support & Legal' : 'Supporto & Legale' }}</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-6 text-secondary">{{ app()->getLocale() === 'en' ? 'Support & Legal' : 'Supporto & Legale' }}</h3>
                 <ul class="space-y-4">
                     @php
                         $informativeSection = isset($shared_sezioni) ? $shared_sezioni->firstWhere('nome', 'Informative') : null;
@@ -78,7 +78,7 @@
 
             <!-- Colonna 4: Contatti -->
             <div>
-                <h3 class="text-sm font-bold uppercase tracking-wider mb-6 text-white">{{ app()->getLocale() === 'en' ? 'Contacts' : 'Contatti' }}</h3>
+                <h3 class="text-sm font-semibold uppercase tracking-wider mb-6 text-secondary">{{ app()->getLocale() === 'en' ? 'Contacts' : 'Contatti' }}</h3>
                 <ul class="space-y-4 text-sm text-gray-300">
                     @if(!empty($global_settings['company_address']))
                         <li class="flex items-start">
