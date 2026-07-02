@@ -72,7 +72,7 @@
                             <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                         @endif
                         
-                        <h3 class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 line-clamp-2 min-h-[40px]">{{ $prodotto->nome }}</h3>
+                        <h3 class="text-sm font-semibold transition-colors mb-4 line-clamp-2 min-h-[40px]">{{ $prodotto->nome }}</h3>
                         
                         <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
                             @php
@@ -97,7 +97,7 @@
                                         </div>
                                     @elseif($prezzo > 0)
                                         <div class="flex flex-col">
-                                            <span class="text-base font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                            <span class="text-base font-normal text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
                                         </div>
                                     @else
                                         <span class="text-xs font-bold text-gray-400 italic">Su richiesta</span>
@@ -107,7 +107,7 @@
                                 @endif
                             </div>
                             
-                            <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-gray-900 text-white rounded-lg hover:bg-indigo-600 transition-all shadow-sm">
+                            <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-primary text-white rounded-lg hover:bg-secondary transition-all shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                             </a>
                         </div>

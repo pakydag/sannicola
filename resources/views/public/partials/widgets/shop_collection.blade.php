@@ -62,7 +62,7 @@
                             <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                         @endif
                         
-                        <h3 class="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 line-clamp-2 min-h-[40px]">{{ $prodotto->nome }}</h3>
+                        <h3 class="text-sm transition-colors mb-4 line-clamp-2 min-h-[40px]">{{ $prodotto->nome }}</h3>
                         
                         <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
                             @php
@@ -87,7 +87,7 @@
                                         </div>
                                     @elseif($prezzo > 0)
                                         <div class="flex flex-col">
-                                            <span class="text-base font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                            <span class="text-base font-normal text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
                                         </div>
                                     @else
                                         <span class="text-xs font-bold text-gray-400 italic">Su richiesta</span>
@@ -97,7 +97,7 @@
                                 @endif
                             </div>
                             
-                            <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? ($collezione?->slug ?? 'all'), 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-gray-900 text-white rounded-lg hover:bg-indigo-600 transition-all shadow-sm">
+                            <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? ($collezione?->slug ?? 'all'), 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-8 h-8 bg-primary text-white rounded-lg hover:bg-secondary transition-all shadow-sm">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                             </a>
                         </div>
@@ -112,7 +112,7 @@
         
         @if($collezione)
             <div class="mt-12 text-center">
-                <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="inline-flex items-center px-6 py-3 border border-indigo-600 text-indigo-600 font-bold rounded-full hover:bg-indigo-600 hover:text-white transition-all">
+                <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="btn">
                     Vedi tutta la collezione
                     <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </a>
