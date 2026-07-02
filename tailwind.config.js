@@ -15,7 +15,7 @@ export default {
             colors: {
                 borgogna: '#721c24',
                 crema: '#fbf9f5',
-                'legno-scuro': '#2d2926',
+                'legno-scuro': '#3f2f2b',
                 terracotta: '#a64d32',
                 'oro-antico': '#c5a059',
                 

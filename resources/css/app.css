@@ -37,7 +37,7 @@
   .menu-scrolled nav a .nav-icon { @apply text-gray-400; }
   .menu .has-submenu + div a { @apply border-none text-black hover:border-none hover:text-black; }  
   .breadcrumb a { @apply font-sans normal-case; }
-  .btn { @apply inline-block whitespace-nowrap bg-borgogna text-crema px-10 py-4 font-display uppercase tracking-wider hover:bg-primary transition-all transform hover:-translate-y-1 shadow-lg; }
+  .btn { @apply inline-flex whitespace-nowrap bg-borgogna text-crema px-10 py-4 font-display uppercase tracking-wider hover:bg-primary transition-all transform hover:-translate-y-1 shadow-lg; }
   .footer { @apply bg-gray-100 py-10 text-sm text-gray-600; }
   .footer a { @apply transition-colors hover:text-primary; }
   .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
