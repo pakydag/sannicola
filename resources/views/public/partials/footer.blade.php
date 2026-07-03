@@ -115,7 +115,7 @@
         </div>
 
         <!-- Bottom Bar -->
-        <div class="pt-8 border-t border-gray-800 text-center text-white text-xs">
+        <div class="pt-8 border-t border-stone-700 text-center text-white text-xs">
             &copy; {{ date('Y') }} Eyukka srl. {{ app()->getLocale() === 'en' ? 'All rights reserved.' : 'Tutti i diritti riservati.' }}
         </div>
     </div>

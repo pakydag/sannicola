@@ -20,7 +20,7 @@
 
 @layer components {
   h1, h2, h3, h4, h5, h6 { @apply font-display text-primary; }
-  .titoli h2, .titoli h5 { @apply mb-4 text-secondary; }
+  .titoli h2, .titoli h5 { @apply mb-4 normal-case text-secondary; }
   b, strong { @apply font-medium; }
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .logo { @apply h-20 w-auto transition-all duration-300; }
@@ -28,7 +28,7 @@
   .menu-top { @apply absolute bg-gradient-to-b from-black/80 to-transparent border-white/100 shadow-none text-white py-5; }
   .menu-scrolled { @apply fixed glass-effect shadow-md border-outline-variant text-legno-scuro; }
   .menu nav a { @apply items-center border-b-2 font-medium leading-5 transition duration-150 ease-in-out border-transparent font-display uppercase tracking-wide; font-size: 0.83rem; }
-  .menu-top nav a { @apply text-white/90 hover:text-white hover:border-white hover:font-semibold; }
+  .menu-top nav a { @apply text-white/90 hover:text-white hover:border-white hover:font-medium; }
   .menu-top nav a.nav-link-active { @apply border-white text-white font-semibold; }
   .menu-scrolled nav a { @apply text-legno-scuro hover:text-primary hover:border-primary; }
   .menu-scrolled nav a.nav-link-active { @apply border-primary text-primary font-semibold; }
@@ -39,7 +39,7 @@
   .breadcrumb a { @apply font-sans normal-case; }
   .btn { @apply inline-flex whitespace-nowrap bg-borgogna text-crema px-10 py-4 font-display uppercase tracking-wider hover:bg-primary transition-all transform hover:-translate-y-1 shadow-lg; }
   .footer { @apply bg-legno-scuro font-normal pt-16 pb-8 text-sm text-white/80; }
-  .footer a { @apply transition-colors hover:text-primary; }
+  .footer a { @apply text-crema transition-colors hover:text-secondary; }
   .photo { @apply rounded-lg shadow-lg ring-1 ring-gray-200 overflow-hidden; }
   .btn-primary { @apply inline-flex items-center justify-center px-6 py-3 bg-borgogna text-crema font-bold transition-all hover:bg-opacity-90 active:scale-95 rounded-brand; }
   .btn-secondary { @apply inline-flex items-center justify-center px-6 py-3 border-2 border-borgogna text-borgogna font-bold transition-all hover:bg-borgogna hover:text-crema active:scale-95 rounded-brand; }
