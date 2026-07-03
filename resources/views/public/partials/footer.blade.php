@@ -11,7 +11,7 @@
                         <span class="text-2xl font-bold text-white">{{ config('app.name') }}</span>
                     @endif
                 </div>
-                <div class="text-gray-300 text-sm leading-relaxed mb-6">
+                <div>
                     {{ app()->getLocale() === 'en' ? ($global_settings['footer_description_en'] ?? $global_settings['footer_description'] ?? 'Your complete solution for business management and a professional online presence.') : ($global_settings['footer_description'] ?? 'La tua soluzione completa per la gestione aziendale e la presenza online professionale.') }}
                 </div>
                 <!-- Social Icons -->
