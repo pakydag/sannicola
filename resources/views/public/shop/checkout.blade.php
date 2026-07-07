@@ -1,7 +1,7 @@
 @extends('public.layouts.main')
 
 @section('title', 'Checkout Sicuro - ' . config('app.name'))
-
+@section('content')
 @php
     $shopSection = \App\Models\Section::where('modulo', 'shop')->first();
     $bannerImmagine = $shopSection ? $shopSection->immagine : null;
