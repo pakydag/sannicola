@@ -374,7 +374,7 @@
 <script>
     function checkoutForm() {
         return {
-            checkoutMode: '{{ Auth::check() ? 'login' : 'guest' }}',
+            checkoutMode: '{{ Auth::check() ? 'login' : 'register' }}',
             isAzienda: {{ old('is_azienda') ? 'true' : 'false' }},
             nazione: '{{ old('nazione', 'Italia') }}',
             subtotal: {{ $totale }},
