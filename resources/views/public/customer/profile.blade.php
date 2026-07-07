@@ -99,14 +99,7 @@
                         <!-- Indirizzo -->
                         <div class="sm:col-span-2 mt-4">
                             <label for="nazione" class="block text-sm font-medium text-gray-700">Nazione *</label>
-                            <select id="nazione" name="nazione" required class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                <option value="Italia" {{ old('nazione', $customer->nazione) == 'Italia' ? 'selected' : '' }}>Italia</option>
-                                <option value="San Marino" {{ old('nazione', $customer->nazione) == 'San Marino' ? 'selected' : '' }}>San Marino</option>
-                                <option value="Svizzera" {{ old('nazione', $customer->nazione) == 'Svizzera' ? 'selected' : '' }}>Svizzera</option>
-                                <option value="Francia" {{ old('nazione', $customer->nazione) == 'Francia' ? 'selected' : '' }}>Francia</option>
-                                <option value="Germania" {{ old('nazione', $customer->nazione) == 'Germania' ? 'selected' : '' }}>Germania</option>
-                                <option value="Spagna" {{ old('nazione', $customer->nazione) == 'Spagna' ? 'selected' : '' }}>Spagna</option>
-                            </select>
+                            <input type="text" id="nazione" name="nazione" value="Italia" readonly class="mt-1 block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none sm:text-sm cursor-not-allowed">
                         </div>
 
                         <div class="sm:col-span-2">

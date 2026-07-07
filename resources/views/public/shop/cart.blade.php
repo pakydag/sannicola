@@ -119,12 +119,7 @@
 
                     <div class="mb-6">
                         <label for="estimate_nation" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Destinazione per la stima</label>
-                        <select id="estimate_nation" x-model="nazione" @change="updateShipping()" class="w-full bg-slate-50 border-slate-200 rounded-lg text-sm focus:ring-indigo-500 focus:border-indigo-500 transition-all p-3">
-                            <option value="">Seleziona nazione...</option>
-                            @foreach($shippingCosts as $cost)
-                                <option value="{{ $cost->nazione }}">{{ $cost->nazione }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" id="estimate_nation" x-model="nazione" readonly class="w-full bg-slate-100 border-slate-200 rounded-lg text-sm text-gray-600 focus:outline-none p-3 cursor-not-allowed">
                     </div>
 
                     <dl class="mt-6 space-y-4">

@@ -188,12 +188,7 @@
                             <div class="sm:col-span-2">
                                 <label for="nazione" class="block text-sm font-medium text-gray-700">Nazione *</label>
                                 <div class="mt-1">
-                                    <select id="nazione" name="nazione" required x-model="nazione" @change="updateShipping()" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                                        <option value="">Seleziona una nazione...</option>
-                                        @foreach($shippingCosts as $cost)
-                                            <option value="{{ $cost->nazione }}">{{ $cost->nazione }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" id="nazione" name="nazione" x-model="nazione" readonly class="block w-full bg-gray-50 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none sm:text-sm cursor-not-allowed">
                                 </div>
                             </div>
 
