@@ -27,15 +27,14 @@
             <div class="swiper-wrapper flex items-center">
                 @foreach($widget->data['photos'] as $photo)
                     @if(!empty($photo['url']) || !empty($photo['video_url']))
-                        <div class="swiper-slide overflow-hidden group" role="group">
+                        <div class="swiper-slide overflow-hidden group relative" role="group">
 
                             @if(!empty($photo['video_url']))
                                 <video autoplay loop muted playsinline class="w-full h-full object-cover">
                                     <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
                                 </video>
                             @elseif(!empty($photo['url']))
-                            <div class="relative w-full h-full">
-                                @if(!empty($photo['link']))
+                                @if(!empty($photo['link']) && empty($photo['titolo']) && empty($photo['sottotitolo']))
                                     <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
                                         <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
                                     </a>
@@ -43,7 +42,26 @@
                                     <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
                                 @endif
                             @endif
-                            </div>
+
+                            @if(!empty($photo['titolo']) || !empty($photo['sottotitolo']))
+                                <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-8 md:p-16 text-white text-left z-10">
+                                    @if(!empty($photo['titolo']))
+                                        <h3 class="text-2xl md:text-4xl font-extrabold mb-2 tracking-tight drop-shadow-md">{{ $photo['titolo'] }}</h3>
+                                    @endif
+                                    @if(!empty($photo['sottotitolo']))
+                                        <p class="text-sm md:text-lg mb-4 opacity-90 font-medium drop-shadow-sm">{{ $photo['sottotitolo'] }}</p>
+                                    @endif
+                                    @if(!empty($photo['link']))
+                                        <div>
+                                            <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-md text-sm hover:scale-105 transform">
+                                                Scopri di più
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
+                            @elseif(!empty($photo['link']))
+                                <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="absolute inset-0 z-10"></a>
+                            @endif
                         </div>
                     @endif
                 @endforeach

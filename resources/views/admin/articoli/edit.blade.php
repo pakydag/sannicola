@@ -340,12 +340,16 @@
                                             // but Sortable does move the elements. However, Alpine's x-for might reset it.
                                             // So we should update the array.
                                             const newOrder = [];
-                                            const photoDivs = Array.from(this.$refs.galleryGrid.querySelectorAll('.relative.group'));
+                                                                                        const photoDivs = Array.from(this.$refs.galleryGrid.querySelectorAll('.relative.group'));
                                             photoDivs.forEach(div => {
                                                 const url = div.querySelector('input[name*=\'[url]\']').value;
                                                 const video_url = div.querySelector('input[name*=\'[video_url]\']').value;
+                                                const titoloInput = div.querySelector('input[name*=\'[titolo]\']');
+                                                const sottotitoloInput = div.querySelector('input[name*=\'[sottotitolo]\']');
                                                 const link = div.querySelector('input[name*=\'[link]\']').value;
-                                                newOrder.push({ url, video_url, link });
+                                                const titolo = titoloInput ? titoloInput.value : '';
+                                                const sottotitolo = sottotitoloInput ? sottotitoloInput.value : '';
+                                                newOrder.push({ url, video_url, titolo, sottotitolo, link });
                                             });
                                             this.galleryPhotos = newOrder;
                                         }
@@ -619,6 +623,8 @@
                                             <!-- Optional Metadata -->
                                             <div class="mt-2 space-y-1">
                                                 <input type="text" :name="'data[photos]['+index+'][video_url]'" x-model="foto.video_url" placeholder="Video (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
+                                                <input type="text" :name="'data[photos]['+index+'][titolo]'" x-model="foto.titolo" placeholder="Titolo (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
+                                                <input type="text" :name="'data[photos]['+index+'][sottotitolo]'" x-model="foto.sottotitolo" placeholder="Sottotitolo (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
                                                 <input type="text" :name="'data[photos]['+index+'][link]'" x-model="foto.link" placeholder="Link (opzionale)..." class="w-full text-[10px] border-gray-100 rounded-lg p-1 focus:ring-indigo-500 bg-gray-50 border">
                                             </div>
                                         </div>
