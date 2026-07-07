@@ -29,12 +29,12 @@
                 <li aria-current="page">
                     <div class="flex items-center">
                         <span class="mx-2 text-gray-300">/</span>
-                        <span class="text-indigo-600">{{ $categoria->nome }}</span>
+                        <span class="text-primary">{{ $categoria->nome }}</span>
                     </div>
                 </li>
             </ol>
         </nav>
-        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
+        <h1 class="text-4xl tracking-tight mb-2">
             {{ $categoria->nome }}
         </h1>
         <p class="text-gray-500 max-w-2xl">

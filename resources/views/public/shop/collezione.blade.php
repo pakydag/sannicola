@@ -13,12 +13,12 @@
                 <li>
                     <div class="flex items-center">
                         <span class="mx-2">/</span>
-                        <span class="text-indigo-600">Collezione: {{ $collezione->nome }}</span>
+                        <span class="text-primary">Collezione: {{ $collezione->nome }}</span>
                     </div>
                 </li>
             </ol>
         </nav>
-        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 mb-2">
+        <h1 class="text-4xl tracking-tight mb-2">
             Collezione: {{ $collezione->nome }}
         </h1>
         <p class="text-gray-500 max-w-2xl">

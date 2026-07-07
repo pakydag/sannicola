@@ -79,7 +79,7 @@
             @if($articolo->hasMedia('allegati') || $articolo->link)
                 <div class="mt-12 pt-8 border-t border-gray-100 flex flex-col sm:flex-row gap-4 justify-center items-center">
                     @if($articolo->link)
-                        <a href="{{ $articolo->link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-md bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition">
+                        <a href="{{ $articolo->link }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center rounded-md bg-primary px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition">
                             Visita Sito Esterno
                             <svg class="ml-2 -mr-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" /></svg>
                         </a>
