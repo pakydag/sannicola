@@ -38,40 +38,73 @@
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
         
         <!-- Galleria Immagini -->
-        <div x-data="{ currentImage: 0, 
-                      images: [
-                        @if(is_array($prodotto->foto_aggiuntive))
-                            @foreach($prodotto->foto_aggiuntive as $foto)
-                                '{{ $foto }}',
-                            @endforeach
-                        @endif
-                      ]
-                    }" 
-             class="flex flex-col">
-             
-            <template x-if="images.length > 0">
-                <div class="w-full bg-white rounded-lg border overflow-hidden">
-                    <img :src="images[currentImage]" alt="{{ $prodotto->nome }}" class="w-full max-h-96 object-contain">
+        @once
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+        @endonce
+        <div class="flex flex-col w-full">
+            @php
+                $fotoList = is_array($prodotto->foto_aggiuntive) ? $prodotto->foto_aggiuntive : [];
+            @endphp
+            @if(count($fotoList) > 0)
+                <!-- Main Swiper Slider -->
+                <div class="swiper product-main-swiper shadow-sm overflow-hidden rounded-2xl border border-gray-100 bg-white w-full h-[400px] md:h-[550px] relative">
+                    <div class="swiper-wrapper">
+                        @foreach($fotoList as $index => $foto)
+                            <div class="swiper-slide flex items-center justify-center overflow-hidden bg-white" role="group">
+                                <!-- Hover/Click Zoom Container -->
+                                <div 
+                                    x-data="{ zoom: false, x: 50, y: 50 }"
+                                    @mouseenter="zoom = true"
+                                    @mouseleave="zoom = false"
+                                    @click="zoom = !zoom"
+                                    @mousemove="
+                                        const rect = $el.getBoundingClientRect();
+                                        x = (($event.clientX - rect.left) / rect.width) * 100;
+                                        y = (($event.clientY - rect.top) / rect.height) * 100;
+                                    "
+                                    class="relative w-full h-full cursor-zoom-in overflow-hidden flex items-center justify-center"
+                                >
+                                    <img 
+                                        src="{{ asset($foto) }}" 
+                                        alt="{{ $prodotto->nome }}" 
+                                        class="w-full h-full object-contain transition-transform duration-100"
+                                        :class="zoom ? 'scale-[1.8]' : 'scale-100'"
+                                        :style="zoom ? { transformOrigin: `${x}% ${y}%` } : {}"
+                                    >
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    @if(count($fotoList) > 1)
+                        <!-- Navigation arrows -->
+                        <div class="swiper-button-prev !text-indigo-600 !bg-white/80 !shadow-md !w-10 !h-10 !rounded-full after:!text-sm hover:!bg-white transition z-20"></div>
+                        <div class="swiper-button-next !text-indigo-600 !bg-white/80 !shadow-md !w-10 !h-10 !rounded-full after:!text-sm hover:!bg-white transition z-20"></div>
+                        <!-- Pagination -->
+                        <div class="swiper-pagination"></div>
+                    @endif
                 </div>
-            </template>
-            <template x-if="images.length === 0">
-                 <div class="w-full h-96 max-h-96 bg-gray-100 rounded-lg flex items-center justify-center border">
-                    <span class="text-gray-400">Nessuna immagine</span>
-                </div>
-            </template>
 
-            <!-- Thumbnails -->
-            <template x-if="images.length > 1">
-                <div class="mt-4 grid grid-cols-4 gap-2">
-                    <template x-for="(img, index) in images" :key="index">
-                        <button @click="currentImage = index" 
-                                class="border-2 rounded-lg overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                :class="{'border-indigo-500': currentImage === index, 'border-transparent': currentImage !== index}">
-                            <img :src="img" class="h-20 w-full object-cover">
-                        </button>
-                    </template>
+                <!-- Thumbnails Grid -->
+                @if(count($fotoList) > 1)
+                    <div class="mt-4 grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
+                        @foreach($fotoList as $index => $foto)
+                            <button 
+                                onclick="window.productSwiper.slideTo({{ $index }})"
+                                class="border-2 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 aspect-square border-transparent transition hover:opacity-90 product-thumb-btn"
+                                data-index="{{ $index }}"
+                            >
+                                <img src="{{ asset($foto) }}" class="h-full w-full object-cover">
+                            </button>
+                        @endforeach
+                    </div>
+                @endif
+            @else
+                <!-- Placeholder if no images -->
+                <div class="w-full h-96 bg-gray-100 rounded-2xl flex items-center justify-center border border-gray-200">
+                    <span class="text-gray-400 font-medium">Nessuna immagine</span>
                 </div>
-            </template>
+            @endif
         </div>
 
         <!-- Dettagli e Carrello -->
@@ -237,18 +270,12 @@
                 // Watch per agganciare l'immagine della variante se l'utente clicca una thumb
                 this.$watch('selectedVariantId', (val) => {
                     const variant = this.currentVariant;
-                    if (variant && variant.foto) {
-                        // Se la variante ha una foto specifica e c'è una galleria attiva
-                        const galleryApp = document.querySelector('[x-data="{ currentImage: 0"]').__x.$data;
-                        if(galleryApp) {
-                            // Cerca se la foto della variante è già nelle immagini passate, altrimenti l'aggiunge/la mostra
-                            let idx = galleryApp.images.findIndex(img => img.includes(variant.foto) || variant.foto.includes(img));
-                            if (idx !== -1) {
-                                galleryApp.currentImage = idx;
-                            } else {
-                                galleryApp.images.push(variant.foto);
-                                galleryApp.currentImage = galleryApp.images.length - 1;
-                            }
+                    if (variant && variant.foto && window.productSwiper) {
+                        // Cerca l'indice della foto della variante
+                        const thumbs = Array.from(document.querySelectorAll('.product-thumb-btn img'));
+                        const idx = thumbs.findIndex(img => img.getAttribute('src').includes(variant.foto) || variant.foto.includes(img.getAttribute('src')));
+                        if (idx !== -1) {
+                            window.productSwiper.slideTo(idx);
                         }
                     }
                 });
@@ -334,4 +361,49 @@
     });
 </script>
 @endpush
+@once
+    @push('scripts')
+        <script type="module">
+            import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs'
+            
+            document.addEventListener('DOMContentLoaded', () => {
+                const mainSwiper = new Swiper('.product-main-swiper', {
+                    loop: false,
+                    grabCursor: true,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    on: {
+                        init: function() {
+                            updateActiveThumb(this.activeIndex);
+                        },
+                        slideChange: function() {
+                            updateActiveThumb(this.activeIndex);
+                        }
+                    }
+                });
+
+                window.productSwiper = mainSwiper;
+
+                function updateActiveThumb(index) {
+                    document.querySelectorAll('.product-thumb-btn').forEach((btn) => {
+                        const btnIdx = parseInt(btn.getAttribute('data-index'));
+                        if (btnIdx === index) {
+                            btn.classList.add('border-indigo-500');
+                            btn.classList.remove('border-transparent');
+                        } else {
+                            btn.classList.remove('border-indigo-500');
+                            btn.classList.add('border-transparent');
+                        }
+                    });
+                }
+            });
+        </script>
+    @endpush
+@endonce
 @endsection
