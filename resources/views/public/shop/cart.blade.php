@@ -3,19 +3,34 @@
 @section('title', 'Il Tuo Carrello - ' . config('app.name'))
 
 @section('content')
-@php $totale = 0; @endphp
-<div class="bg-gray-50 min-h-screen pt-12 pb-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="flex items-center space-x-2 text-sm text-gray-500 mb-8">
-            <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
-            <span>/</span>
-            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900">Shop</a>
-            <span>/</span>
-            <span class="text-gray-900 font-medium">Carrello</span>
-        </div>
+@php
+    $totale = 0;
+    $shopSection = \App\Models\Section::where('modulo', 'shop')->first();
+    $bannerImmagine = $shopSection ? $shopSection->immagine : null;
+@endphp
 
-        <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Il Tuo Carrello</h1>
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+        <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
+            <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Shop</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <span class="text-gray-900 font-medium">Carrello</span>
+        </nav>
+    </div>
+</div>
+
+<div class="bg-gray-50 pb-24">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+        <div class="text-center titoli">
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">
+                Il Tuo Carrello
+            </h1>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         @if(session('success'))
             <div class="mb-6 bg-green-100 text-green-700 px-4 py-3 rounded text-sm font-bold border border-green-200">

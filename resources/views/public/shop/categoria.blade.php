@@ -3,41 +3,29 @@
 @section('title', $categoria->nome . ' - Shop ' . config('app.name'))
 
 @section('content')
-<div class="bg-gray-50 border-b border-gray-200">
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <nav class="flex mb-4 text-xs font-medium text-gray-400 uppercase tracking-widest" aria-label="Breadcrumb">
-            <ol class="inline-flex items-center space-x-1 md:space-x-3">
-                <li class="inline-flex items-center">
-                    <a href="{{ route('public.shop.index') }}" class="hover:text-indigo-600 transition-colors">Shop</a>
-                </li>
-                @if($categoria->parent && $categoria->parent->parent)
-                    <li>
-                        <div class="flex items-center">
-                            <span class="mx-2">/</span>
-                            <a href="{{ route('public.shop.categoria', $categoria->parent->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $categoria->parent->parent->nome }}</a>
-                        </div>
-                    </li>
-                @endif
-                @if($categoria->parent)
-                    <li>
-                        <div class="flex items-center">
-                            <span class="mx-2">/</span>
-                            <a href="{{ route('public.shop.categoria', $categoria->parent->slug) }}" class="hover:text-indigo-600 transition-colors">{{ $categoria->parent->nome }}</a>
-                        </div>
-                    </li>
-                @endif
-                <li aria-current="page">
-                    <div class="flex items-center">
-                        <span class="mx-2 text-gray-300">/</span>
-                        <span class="text-primary">{{ $categoria->nome }}</span>
-                    </div>
-                </li>
-            </ol>
+@php
+    $shopSection = \App\Models\Section::where('modulo', 'shop')->first();
+    $bannerImmagine = $shopSection ? $shopSection->immagine : null;
+@endphp
+
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+        <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
+            <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Shop</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <span class="text-gray-900 font-medium">{{ $categoria->nome }}</span>
         </nav>
-        <h1 class="text-4xl tracking-tight mb-2">
+    </div>
+</div>
+
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+    <div class="text-center titoli">
+        <h1 class="text-4xl sm:text-5xl">
             {{ $categoria->nome }}
         </h1>
-        <p class="text-gray-500 max-w-2xl">
+        <p class="mt-4 max-w-2xl mx-auto text-gray-500">
             Sfoglia i nostri prodotti della categoria {{ $categoria->nome }}.
         </p>
     </div>

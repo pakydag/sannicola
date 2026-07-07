@@ -2,16 +2,34 @@
 
 @section('title', 'Checkout Sicuro - ' . config('app.name'))
 
-@section('content')
-<div class="bg-gray-50 min-h-screen pt-12 pb-24" x-data="checkoutForm()">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <div class="flex items-center justify-between text-sm text-gray-500 mb-8 w-full">
-             <div class="flex space-x-2">
-                <a href="{{ route('public.shop.cart.index') }}" class="hover:text-gray-900">&larr; Torna al Carrello</a>
-            </div>
-            <div class="font-bold text-gray-900">Checkout Sicuro</div>
+@php
+    $shopSection = \App\Models\Section::where('modulo', 'shop')->first();
+    $bannerImmagine = $shopSection ? $shopSection->immagine : null;
+@endphp
+
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
+    <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
+        <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
+            <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Shop</a>
+            <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
+            <span class="text-gray-900 font-medium">Checkout</span>
+        </nav>
+    </div>
+</div>
+
+<div class="bg-gray-50 pb-24" x-data="checkoutForm()">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
+        <div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">Checkout Sicuro</h1>
         </div>
+        <div>
+            <a href="{{ route('public.shop.cart.index') }}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm">&larr; Torna al Carrello</a>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         @if(session('error'))
             <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
