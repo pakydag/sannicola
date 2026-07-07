@@ -3,6 +3,7 @@
 @section('title', 'Il Tuo Carrello - ' . config('app.name'))
 
 @section('content')
+@php $totale = 0; @endphp
 <div class="bg-gray-50 min-h-screen pt-12 pb-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
