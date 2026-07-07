@@ -62,14 +62,15 @@
                                         x = (($event.clientX - rect.left) / rect.width) * 100;
                                         y = (($event.clientY - rect.top) / rect.height) * 100;
                                     "
-                                    class="relative w-full h-full cursor-zoom-in overflow-hidden flex items-center justify-center"
+                                    class="relative w-full h-full overflow-hidden flex items-center justify-center"
+                                    style="cursor: zoom-in;"
                                 >
                                     <img 
                                         src="{{ asset($foto) }}" 
                                         alt="{{ $prodotto->nome }}" 
-                                        class="w-full h-full object-contain transition-transform duration-100"
-                                        :class="zoom ? 'scale-[1.8]' : 'scale-100'"
-                                        :style="zoom ? { transformOrigin: `${x}% ${y}%` } : {}"
+                                        class="w-full h-full object-contain"
+                                        style="transition: transform 0.15s ease-out;"
+                                        :style="zoom ? { transform: 'scale(1.8)', transformOrigin: `${x}% ${y}%` } : { transform: 'scale(1)', transformOrigin: 'center center' }"
                                     >
                                 </div>
                             </div>
