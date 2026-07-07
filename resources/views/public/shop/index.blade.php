@@ -148,7 +148,7 @@
                             </div>
 
                             <div class="absolute bottom-0 left-0 right-0 p-6 text-white text-center">
-                                <h3 class="text-2xl font-bold">{{ $collezione->nome }}</h3>
+                                <h3 class="text-2xl text-white font-bold">{{ $collezione->nome }}</h3>
                                 <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="bottone-personalizzato2 mt-4 inline-flex items-center text-sm font-bold bg-white text-gray-900 px-6 py-2 rounded-xl hover:bg-indigo-600 hover:text-white transition-all">
                                     Esplora Collezione
                                     <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>

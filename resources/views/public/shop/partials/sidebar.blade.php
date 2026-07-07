@@ -47,8 +47,8 @@
                     );
                 @endphp
                 <div x-data="{ open: {{ $isOpen ? 'true' : 'false' }} }" class="group">
-                    <div class="flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-indigo-50 transition-all cursor-pointer @if($isOpen) bg-indigo-50/50 @endif">
-                        <a href="{{ route('public.shop.categoria', $item->slug) }}" class="flex-grow text-sm font-semibold @if(isset($categoria) && $categoria->id == $item->id) text-indigo-600 @else text-gray-700 @endif group-hover:text-indigo-600 transition-colors">
+                    <div class="flex items-center justify-between px-4 py-2.5 rounded-xl hover:bg-gray-100 transition-all cursor-pointer @if($isOpen) bg-gray-100 @endif">
+                        <a href="{{ route('public.shop.categoria', $item->slug) }}" class="flex-grow text-sm font-semibold @if(isset($categoria) && $categoria->id == $item->id) text-primary @else text-gray-700 @endif group-hover:text-primary transition-colors">
                             {{ $item->nome }}
                         </a>
                         @if($item->children->count() > 0)
@@ -71,7 +71,7 @@
                                 @endphp
                                 <div x-data="{ subOpen: {{ $isSubOpen ? 'true' : 'false' }} }">
                                     <div class="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-white hover:shadow-sm transition-all @if(isset($categoria) && $categoria->id == $child->id) bg-white shadow-sm ring-1 ring-indigo-100 @endif">
-                                        <a href="{{ route('public.shop.categoria', $child->slug) }}" class="flex-grow text-xs @if(isset($categoria) && $categoria->id == $child->id) text-indigo-600 font-bold @else text-gray-500 @endif hover:text-indigo-600">
+                                        <a href="{{ route('public.shop.categoria', $child->slug) }}" class="flex-grow text-xs @if(isset($categoria) && $categoria->id == $child->id) text-primary font-bold @else text-gray-500 @endif hover:text-primary">
                                             {{ $child->nome }}
                                         </a>
                                         @if($child->children->count() > 0)
@@ -112,7 +112,7 @@
                 @php
                     $isActive = request('marca') == $m->slug;
                 @endphp
-                <a href="{{ route('public.shop.index', ['marca' => $m->slug]) }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all @if($isActive) bg-indigo-50 text-indigo-600 @else text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 @endif">
+                <a href="{{ route('public.shop.index', ['marca' => $m->slug]) }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all @if($isActive) bg-gray-100 text-primary @else text-gray-700 hover:bg-gray-100 hover:text-primary @endif">
                     {{ $m->nome }}
                 </a>
             @endforeach
@@ -123,7 +123,7 @@
 <div class="mt-6 bg-secondary rounded-2xl p-6 text-white shadow-lg overflow-hidden relative group">
     <div class="relative z-10">
         <h4 class="font-semibold text-lg mb-2">Offerta Speciale</h4>
-        <p class="text-white text-xs leading-relaxed mb-4">Scopri i nostri prodotti in promozione con sconti fino al 30%!</p>
+        <p class="text-black text-xs leading-relaxed mb-4">Scopri i nostri prodotti in promozione con sconti fino al 30%!</p>
         <a href="#" class="bottone-personalizzato mt-4 inline-flex items-center text-xs font-bold bg-primary text-white px-4 py-2 rounded-xl hover:bg-legno-scuro transition-all shadow-sm">
             Vedi Offerte
             <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
