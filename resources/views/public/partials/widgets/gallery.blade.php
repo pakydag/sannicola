@@ -34,13 +34,15 @@
                                     <source src="{{ asset($photo['video_url']) }}" type="video/mp4">
                                 </video>
                             @elseif(!empty($photo['url']))
-                                @if(!empty($photo['link']) && empty($photo['titolo']) && empty($photo['sottotitolo']))
-                                    <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
+                                <div class="relative w-full h-full">
+                                    @if(!empty($photo['link']) && empty($photo['titolo']) && empty($photo['sottotitolo']))
+                                        <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
+                                            <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
+                                        </a>
+                                    @else
                                         <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
-                                    </a>
-                                @else
-                                    <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110" alt="Image">
-                                @endif
+                                    @endif
+                                </div>
                             @endif
 
                             @if(!empty($photo['titolo']) || !empty($photo['sottotitolo']))
