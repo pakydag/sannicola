@@ -142,7 +142,7 @@ a[title="Accedi Area Booking"] svg {
                 </nav>
             </div>
 
-            <div class="flex items-center space-x-5 sm:ml-6 hidden">
+            <div class="flex items-center space-x-5 sm:ml-6">
     @if($shopEnabled == '1' || Auth::check())
         @auth
             <a href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('public.account.dashboard') }}" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Il Mio Account">
@@ -227,6 +227,37 @@ a[title="Accedi Area Booking"] svg {
                         </a>
                     @endif
                 @endforeach
+            @endif
+
+            @if($shopEnabled == '1' || Auth::check())
+                <div class="border-t border-gray-200 pt-4 pb-2 mt-4">
+                    <div class="space-y-1 font-display">
+                        @if($shopEnabled == '1')
+                            <a href="{{ route('public.shop.cart.index') }}" class="block pl-3 pr-4 py-2 border-l-2 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 text-base font-medium transition duration-150 ease-in-out flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="mr-3">🛒</span>
+                                    <span>Carrello B2C</span>
+                                </div>
+                                @php $cartCount = array_sum(array_column(session()->get('cart', []), 'quantita')); @endphp
+                                @if($cartCount > 0)
+                                    <span class="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $cartCount }}</span>
+                                @endif
+                            </a>
+                        @endif
+
+                        @auth
+                            <a href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('public.account.dashboard') }}" class="block pl-3 pr-4 py-2 border-l-2 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 text-base font-medium transition duration-150 ease-in-out flex items-center">
+                                <span class="mr-3">👤</span>
+                                <span>Il Mio Account</span>
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="block pl-3 pr-4 py-2 border-l-2 border-transparent text-gray-600 hover:text-gray-800 hover:bg-gray-50 text-base font-medium transition duration-150 ease-in-out flex items-center">
+                                <span class="mr-3">👤</span>
+                                <span>Accedi / Registrati</span>
+                            </a>
+                        @endauth
+                    </div>
+                </div>
             @endif
         </div>
     </div>

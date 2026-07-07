@@ -82,8 +82,11 @@
             <div class="mt-8">
                 <!-- MESSAGGI DI ERRORE O SUCCESSO -->
                 @if(session('success'))
-                    <div class="mb-4 bg-green-100 text-green-700 px-4 py-3 rounded text-sm font-bold border border-green-200 shadow-sm">
-                        {{ session('success') }}
+                    <div class="mb-4 bg-green-100 text-green-800 px-4 py-3 rounded text-sm font-bold border border-green-200 shadow-sm flex items-center justify-between">
+                        <span>{{ session('success') }}</span>
+                        <a href="{{ route('public.shop.cart.index') }}" class="underline hover:text-green-950 flex items-center gap-1">
+                            Vai al Carrello &rarr;
+                        </a>
                     </div>
                 @endif
                 @if(session('error'))
