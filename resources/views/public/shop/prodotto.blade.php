@@ -41,10 +41,25 @@
         @once
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
         @endonce
-        <div class="flex flex-col w-full">
-            @php
-                $fotoList = is_array($prodotto->foto_aggiuntive) ? $prodotto->foto_aggiuntive : [];
-            @endphp
+        @php
+            $fotoList = is_array($prodotto->foto_aggiuntive) ? $prodotto->foto_aggiuntive : [];
+        @endphp
+        <div class="flex flex-col w-full"
+             @if(count($fotoList) > 0)
+                 x-data="{ 
+                     isLightboxOpen: false, 
+                     lightboxIndex: 0,
+                     images: [
+                         @foreach($fotoList as $foto)
+                             '{{ asset($foto) }}',
+                         @endforeach
+                     ]
+                 }"
+                 @keydown.escape.window="isLightboxOpen = false"
+                 @keydown.arrow-left.window="if(isLightboxOpen && images.length > 1) lightboxIndex = (lightboxIndex - 1 + images.length) % images.length"
+                 @keydown.arrow-right.window="if(isLightboxOpen && images.length > 1) lightboxIndex = (lightboxIndex + 1) % images.length"
+             @endif
+        >
             @if(count($fotoList) > 0)
                 <!-- Main Swiper Slider -->
                 <div class="swiper product-main-swiper shadow-sm overflow-hidden rounded-2xl border border-gray-100 bg-white w-full h-[400px] md:h-[550px] relative">
@@ -56,7 +71,7 @@
                                     x-data="{ zoom: false, x: 50, y: 50 }"
                                     @mouseenter="zoom = true"
                                     @mouseleave="zoom = false"
-                                    @click="zoom = !zoom"
+                                    @click="isLightboxOpen = true; lightboxIndex = {{ $index }}; zoom = false;"
                                     @mousemove="
                                         const rect = $el.getBoundingClientRect();
                                         x = (($event.clientX - rect.left) / rect.width) * 100;
@@ -100,6 +115,56 @@
                         @endforeach
                     </div>
                 @endif
+
+                <!-- Custom Full-Screen Lightbox Modal -->
+                <div 
+                    x-show="isLightboxOpen" 
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    class="fixed inset-0 bg-black/95 z-[100] flex flex-col justify-between p-4"
+                    style="display: none;"
+                >
+                    <!-- Header -->
+                    <div class="flex justify-between items-center p-2 border-b border-white/10 select-none">
+                        <span class="text-white/80 font-medium text-sm truncate pr-4">{{ $prodotto->nome }}</span>
+                        <button @click="isLightboxOpen = false" class="text-white/80 hover:text-white text-3xl font-light focus:outline-none transition">&times;</button>
+                    </div>
+
+                    <!-- Main Area -->
+                    <div class="flex-grow flex items-center justify-center relative">
+                        <!-- Prev Button -->
+                        <button 
+                            x-show="images.length > 1" 
+                            @click="lightboxIndex = (lightboxIndex - 1 + images.length) % images.length" 
+                            class="absolute left-2 md:left-6 text-white/50 hover:text-white text-5xl font-light focus:outline-none select-none z-50 p-3 bg-white/5 hover:bg-white/10 rounded-full transition"
+                        >&lsaquo;</button>
+
+                        <!-- Active Image -->
+                        <div class="max-w-4xl max-h-[75vh] w-full h-full flex items-center justify-center p-2 md:p-6">
+                            <img 
+                                :src="images[lightboxIndex]" 
+                                class="max-w-full max-h-full object-contain rounded-lg shadow-2xl select-none" 
+                                alt="Product detail"
+                            >
+                        </div>
+
+                        <!-- Next Button -->
+                        <button 
+                            x-show="images.length > 1" 
+                            @click="lightboxIndex = (lightboxIndex + 1) % images.length" 
+                            class="absolute right-2 md:right-6 text-white/50 hover:text-white text-5xl font-light focus:outline-none select-none z-50 p-3 bg-white/5 hover:bg-white/10 rounded-full transition"
+                        >&rsaquo;</button>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="text-center text-white/80 text-xs font-semibold select-none pb-4">
+                        Foto <span x-text="lightboxIndex + 1"></span> di <span x-text="images.length"></span>
+                    </div>
+                </div>
             @else
                 <!-- Placeholder if no images -->
                 <div class="w-full h-96 bg-gray-100 rounded-2xl flex items-center justify-center border border-gray-200">
