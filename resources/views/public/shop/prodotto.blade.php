@@ -6,15 +6,15 @@
 <div class="bg-white shadow">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">{{ $prodotto->nome }}</h1>
+            <h1 class="text-2xl font-normal text-gray-900">{{ $prodotto->nome }}</h1>
             @if($prodotto->marca)
                 <p class="text-sm text-gray-500 mt-1 uppercase tracking-wider">{{ $prodotto->marca }}</p>
             @endif
         </div>
         @if($collezione)
-            <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">&larr; Torna a {{ $collezione->nome }}</a>
+            <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="text-primary hover:text-secondary font-medium text-sm">&larr; Torna a {{ $collezione->nome }}</a>
         @else
-            <a href="{{ route('public.shop.index') }}" class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">&larr; Torna allo Shop</a>
+            <a href="{{ route('public.shop.index') }}" class="text-primary hover:text-secondary font-medium text-sm">&larr; Torna allo Shop</a>
         @endif
     </div>
 </div>

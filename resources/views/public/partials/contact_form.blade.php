@@ -69,9 +69,9 @@
                 <div class="ml-3">
                     <label for="privacy" class="text-sm text-gray-700">
                         @if($isEn)
-                            Having read the <a href="/informative/informativa-form-contatti" target="_blank" class="text-indigo-600 hover:underline font-semibold">privacy policy</a>, I consent to the processing of my personal data for the contact form.
+                            Having read the <a href="/informative/informativa-form-contatti" target="_blank" class="text-primary hover:underline font-semibold">privacy policy</a>, I consent to the processing of my personal data for the contact form.
                         @else
-                            Presa visione dell'<a href="/informative/informativa-form-contatti" target="_blank" class="text-indigo-600 hover:underline font-semibold">informativa sul form contatti</a>, acconsento al trattamento dei miei dati personali per il form contatti.
+                            Presa visione dell'<a href="/informative/informativa-form-contatti" target="_blank" class="text-primary hover:underline font-semibold">informativa sul form contatti</a>, acconsento al trattamento dei miei dati personali per il form contatti.
                         @endif
                     </label>
                 </div>
