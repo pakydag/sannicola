@@ -46,7 +46,7 @@
                             @endif
 
                             @if(!empty($photo['titolo']) || !empty($photo['sottotitolo']))
-                                <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-8 md:p-16 text-white text-left z-10">
+                                <div class="absolute inset-0 flex flex-col justify-end p-8 md:p-16 text-white text-left z-10" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);">
                                     @if(!empty($photo['titolo']))
                                         <h3 class="text-2xl md:text-4xl font-extrabold mb-2 tracking-tight drop-shadow-md">{{ $photo['titolo'] }}</h3>
                                     @endif
