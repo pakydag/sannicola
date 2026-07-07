@@ -50,7 +50,7 @@
                                     <input type="number" step="0.01" name="shop_free_shipping_threshold" id="shop_free_shipping_threshold" value="{{ $freeThreshold }}" class="bg-slate-50 border-slate-200 text-slate-900 text-lg rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 p-4 transition-all" placeholder="Es. 49.90">
                                 </div>
                             </div>
-                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center">
+                            <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-4 px-6 rounded-xl shadow-lg shadow-indigo-200 transition-all flex items-center justify-center">
                                 Salva Soglia
                             </button>
                         </form>
@@ -79,7 +79,7 @@
                                 <input type="number" step="0.01" name="costo" id="costo" required class="w-full bg-white border-slate-200 rounded-xl focus:ring-indigo-500 focus:border-indigo-500 p-3" placeholder="Es. 9.90">
                             </div>
                             <div class="col-span-1 flex items-end">
-                                <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-6 rounded-xl transition-all">
+                                <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 px-6 rounded-xl transition-all">
                                     Aggiungi
                                 </button>
                             </div>

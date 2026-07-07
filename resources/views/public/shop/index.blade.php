@@ -47,9 +47,9 @@
 
         <!-- Main Content -->
         <div class="flex-grow">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center justify-between">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-8 flex items-center justify-between">
                 <div class="flex items-center">
-                    <span class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                    <span class="w-8 h-8 bg-gray-200 text-primary rounded-lg flex items-center justify-center mr-3">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     </span>
                     @if($filtered)
@@ -87,7 +87,7 @@
                                     <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                                 @endif
 
-                                <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                                <h3 class="text-lg font-normal text-primary group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
 
                                 <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                     @php
@@ -107,12 +107,12 @@
                                         @if($showPreview)
                                             @if($prezzo_scontato > 0)
                                                 <div class="flex flex-col">
-                                                    <span class="text-lg font-black text-red-600 leading-none">€ {{ number_format($prezzo_scontato, 2, ',', '.') }}</span>
+                                                    <span class="text-lg font-normal text-red-600 leading-none">€ {{ number_format($prezzo_scontato, 2, ',', '.') }}</span>
                                                     <span class="text-xs line-through text-gray-400 mt-1">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
                                                 </div>
                                             @elseif($prezzo > 0)
                                                 <div class="flex flex-col">
-                                                    <span class="text-lg font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                                    <span class="text-lg font-normal text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
                                                 </div>
                                             @endif
                                         @else
@@ -120,7 +120,7 @@
                                         @endif
                                     </div>
 
-                                    <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-gray-900 text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
+                                    <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-primary text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                                     </a>
                                 </div>
@@ -149,7 +149,7 @@
 
                             <div class="absolute bottom-0 left-0 right-0 p-6 text-white text-center">
                                 <h3 class="text-2xl text-white font-bold">{{ $collezione->nome }}</h3>
-                                <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="bottone-personalizzato2 mt-4 inline-flex items-center text-sm font-bold bg-white text-gray-900 px-6 py-2 rounded-xl hover:bg-indigo-600 hover:text-white transition-all">
+                                <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="bottone-personalizzato2 mt-4 inline-flex items-center text-sm font-bold bg-white text-gray-900 px-6 py-2 rounded-xl hover:bg-primary hover:text-white transition-all">
                                     Esplora Collezione
                                     <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                                 </a>

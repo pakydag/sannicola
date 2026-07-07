@@ -118,7 +118,7 @@
                                     </select>
                                 </div>
                                 
-                                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition duration-300 shadow text-xs uppercase tracking-widest">
+                                <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 rounded-lg transition duration-300 shadow text-xs uppercase tracking-widest">
                                     Salva Modifiche
                                 </button>
                                 <p class="text-[10px] text-gray-400 text-center uppercase tracking-tighter">Attenzione: l'aggiornamento ricalcolerà il totale in base a quantità e prezzi inseriti.</p>

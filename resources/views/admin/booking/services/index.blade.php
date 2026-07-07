@@ -53,7 +53,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-3 px-4 rounded-xl shadow transition-all transform active:scale-95">
+                            <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-extrabold py-3 px-4 rounded-xl shadow transition-all transform active:scale-95">
                                 + Aggiungi Servizio
                             </button>
                         </form>

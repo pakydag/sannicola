@@ -79,7 +79,7 @@
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-500">
                                             @foreach($agent->b2bBrands as $brand)
-                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 mr-1">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-primary mr-1">
                                                     {{ $brand->name }}
                                                 </span>
                                             @endforeach

@@ -112,7 +112,7 @@
                 @php
                     $isActive = request('marca') == $m->slug;
                 @endphp
-                <a href="{{ route('public.shop.index', ['marca' => $m->slug]) }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all @if($isActive) bg-gray-100 text-primary @else text-gray-700 hover:bg-gray-100 hover:text-primary @endif">
+                <a href="{{ route('public.shop.index', ['marca' => $m->slug]) }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all @if($isActive) bg-gray-200 text-primary @else text-gray-700 hover:bg-gray-100 hover:text-primary @endif">
                     {{ $m->nome }}
                 </a>
             @endforeach
@@ -123,7 +123,7 @@
 <div class="mt-6 bg-secondary rounded-2xl p-6 text-white shadow-lg overflow-hidden relative group">
     <div class="relative z-10">
         <h4 class="font-semibold text-lg mb-2">Offerta Speciale</h4>
-        <p class="text-black text-xs leading-relaxed mb-4">Scopri i nostri prodotti in promozione con sconti fino al 30%!</p>
+        <p class="text-white text-xs leading-relaxed mb-4">Scopri i nostri prodotti in promozione con sconti fino al 30%!</p>
         <a href="#" class="bottone-personalizzato mt-4 inline-flex items-center text-xs font-bold bg-primary text-white px-4 py-2 rounded-xl hover:bg-legno-scuro transition-all shadow-sm">
             Vedi Offerte
             <svg class="ml-2 w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>

@@ -41,7 +41,7 @@
                                 <div class="mt-4 flex items-center gap-2">
                                     <span class="text-sm font-semibold text-gray-600">Metodo di Pagamento:</span>
                                     @if($ordine->metodo_pagamento === 'stripe')
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-primary">
                                             Carta di Credito (Stripe)
                                         </span>
                                     @elseif($ordine->metodo_pagamento === 'bonifico')

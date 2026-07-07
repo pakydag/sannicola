@@ -62,17 +62,17 @@
         <!-- Dettagli e Carrello -->
         <div class="mt-10 px-4 sm:px-0 lg:mt-0" 
              x-data='productB2C(@json($prodotto->variants), @json(($settings["shop_stock_infinite"] ?? "0") == "1"))'>
-            <h2 class="text-3xl tracking-tight text-gray-900 font-extrabold">{{ $prodotto->nome }}</h2>
+            <h2 class="text-4xl">{{ $prodotto->nome }}</h2>
             @if($prodotto->sku_padre)
                 <p class="text-sm text-gray-500 mt-2">SKU: {{ $prodotto->sku_padre }}</p>
             @endif
 
             <div class="mt-3">
-                <p class="text-3xl text-gray-900 font-bold" x-html="formattedPrice"></p>
+                <p class="text-3xl text-gray-700" x-html="formattedPrice"></p>
             </div>
 
             <div class="mt-6 border-t border-gray-200 pt-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Descrizione</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Descrizione</h3>
                 <div class="prose prose-sm text-gray-700">
                     {!! $prodotto->descrizione !!}
                 </div>
@@ -106,8 +106,8 @@
                                     <template x-for="color in availableColors()" :key="color">
                                         <button type="button" 
                                                 @click="selectColor(color)"
-                                                class="px-4 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                                                :class="selectedColor === color ? 'bg-indigo-600 text-white border-transparent shadow-md' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
+                                                class="px-4 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+                                                :class="selectedColor === color ? 'bg-primary text-white border-transparent shadow-md' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
                                             <span x-text="color"></span>
                                         </button>
                                     </template>
@@ -124,7 +124,7 @@
                                         <button type="button" 
                                                 @click="selectSize(size)"
                                                 class="px-4 py-2 border rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
-                                                :class="selectedSize === size ? 'bg-indigo-600 text-white border-transparent shadow-md' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
+                                                :class="selectedSize === size ? 'bg-primary text-white border-transparent shadow-md' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'">
                                             <span x-text="size"></span>
                                         </button>
                                     </template>
@@ -169,7 +169,7 @@
                     <div class="mt-6 flex">
                         <button type="submit" 
                                 :disabled="selectedVariantId === null || (!infiniteStock && currentVariant && currentVariant.quantita <= 0)"
-                                class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                class="w-full bg-primary hover:bg-secondary text-white font-bold py-3 px-8 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
@@ -184,7 +184,7 @@
                     <h3 class="text-sm font-medium text-gray-900">Tag Profilazione</h3>
                     <div class="mt-2 flex flex-wrap gap-2">
                         @foreach($prodotto->tags as $tag)
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 text-primary">
                                 {{ $tag->nome }}
                             </span>
                         @endforeach

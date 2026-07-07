@@ -79,7 +79,7 @@
                                 <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                             @endif
 
-                            <h3 class="text-lg font-bold text-gray-900 group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                            <h3 class="text-lg font-normal text-primary group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
 
                             <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                 @php
@@ -110,13 +110,13 @@
                                                 @if($prodotto->variants->count() > 1)
                                                     <span class="text-[10px] text-gray-400 uppercase font-bold mb-1">A partire da</span>
                                                 @endif
-                                                <span class="text-lg font-black text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
+                                                <span class="text-lg font-normal text-gray-900 leading-none">€ {{ number_format($prezzo, 2, ',', '.') }}</span>
                                             </div>
                                         @else
-                                            <span class="text-sm font-bold text-gray-400 italic">Prezzo su richiesta</span>
+                                            <span class="text-sm font-normal text-gray-400 italic">Prezzo su richiesta</span>
                                         @endif
                                     @else
-                                        <span class="text-sm font-bold text-gray-400 uppercase tracking-widest text-indigo-500">Vedi Dettagli</span>
+                                        <span class="text-sm font-normal text-gray-400 uppercase tracking-widest text-indigo-500">Vedi Dettagli</span>
                                     @endif
                                 </div>
 

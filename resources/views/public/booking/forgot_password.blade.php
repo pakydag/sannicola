@@ -61,7 +61,7 @@
                                 </div>
                             @endif
 
-                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-4 px-6 rounded-xl shadow-lg shadow-indigo-100 transition-all flex justify-center items-center gap-2">
+                            <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-extrabold py-4 px-6 rounded-xl shadow-lg shadow-indigo-100 transition-all flex justify-center items-center gap-2">
                                 <span>{{ app()->getLocale() === 'en' ? 'Send New Password' : 'Invia Nuova Password' }}</span>
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                             </button>
