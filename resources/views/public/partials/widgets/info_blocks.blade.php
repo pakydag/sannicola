@@ -15,7 +15,7 @@
     <div class="{{ $gridClasses }}">
         @foreach($items as $item)
             @if(!empty($item['image']) || !empty($item['text']))
-                <div class="flex flex-col items-center text-center group">
+                <div class="flex flex-col items-center text-center group bg-gray-100 rounded-lg p-12">
                     @if(!empty($item['image']))
                         <div class="mb-5 relative">
                             <div class="absolute -inset-2 bg-indigo-50 opacity-0 group-hover:transition-opacity duration-300"></div>

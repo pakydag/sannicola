@@ -48,7 +48,7 @@
                             @include('public.partials.widgets.booking_search', ['widget' => $widget])
                         </div>
                     @elseif($widget->tipo === 'info_blocks')
-                        <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-16 widget-block overflow-hidden">
+                        <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-8 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
                             @endif
                             @include('public.partials.widgets.info_blocks', ['widget' => $widget])</div>
