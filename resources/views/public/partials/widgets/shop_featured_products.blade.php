@@ -1,4 +1,4 @@
-<div class="py-8 bg-gray-50">
+<div class="py-8 bg-gray-50 pb-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @if($widget->titolo)
             <div class="mb-10 text-center">

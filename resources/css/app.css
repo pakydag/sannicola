@@ -50,4 +50,5 @@
   .nav-link-active { @apply text-borgogna font-bold border-borgogna; }
   .badge-artigianale { @apply inline-block px-2 py-1 bg-terracotta text-crema text-[10px] font-bold uppercase tracking-widest rounded-sm; }
   .separatore { @apply mt-2 h-0.5 w-20 bg-secondary mx-auto rounded; }
+  .swiper-pagination-bullet-active { @apply !bg-secondary; }
 }

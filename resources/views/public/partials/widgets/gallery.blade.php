@@ -48,14 +48,14 @@
                             @if(!empty($photo['titolo']) || !empty($photo['sottotitolo']))
                                 <div class="absolute inset-0 flex flex-col justify-end p-8 md:p-16 text-white text-left z-10" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);">
                                     @if(!empty($photo['titolo']))
-                                        <h3 class="text-2xl md:text-4xl font-extrabold mb-2 tracking-tight drop-shadow-md">{{ $photo['titolo'] }}</h3>
+                                        <h3 class="text-2xl md:text-4xl font-semibold mb-2 tracking-tight drop-shadow-md text-white">{{ $photo['titolo'] }}</h3>
                                     @endif
                                     @if(!empty($photo['sottotitolo']))
                                         <p class="text-sm md:text-lg mb-4 opacity-90 font-medium drop-shadow-sm">{{ $photo['sottotitolo'] }}</p>
                                     @endif
                                     @if(!empty($photo['link']))
                                         <div>
-                                            <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="inline-flex items-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-md text-sm hover:scale-105 transform">
+                                            <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="btn">
                                                 Scopri di più
                                             </a>
                                         </div>
