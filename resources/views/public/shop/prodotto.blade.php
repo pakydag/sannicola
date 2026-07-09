@@ -20,17 +20,17 @@
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
+<div class="max-w-7xl pt-1 mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
     <div>
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ $prodotto->nome }}</h1>
+        <h1 class="text-2xl sm:text-3xl">{{ $prodotto->nome }}</h1>
         @if($prodotto->marca)
             <p class="text-sm text-gray-500 mt-1 uppercase tracking-wider">{{ $prodotto->marca }}</p>
         @endif
     </div>
     @if($collezione)
-        <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm">&larr; Torna a {{ $collezione->nome }}</a>
+        <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna a {{ $collezione->nome }}</a>
     @else
-        <a href="{{ route('public.shop.index') }}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm">&larr; Torna allo Shop</a>
+        <a href="{{ route('public.shop.index') }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna allo Shop</a>
     @endif
 </div>
 

@@ -13,7 +13,7 @@
         </nav>
     </div>
 </div>
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+<div class="max-w-7xl mx-auto py-0 pb-3 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
     <div class="text-center titoli">
         <h1 class="text-4xl sm:text-5xl">
             Il Nostro Shop
@@ -38,7 +38,7 @@
 </div>
 @endif
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pt-5">
     <div class="flex flex-col lg:flex-row gap-8">
         <!-- Sidebar -->
         <aside class="w-full lg:w-1/5 flex-shrink-0">

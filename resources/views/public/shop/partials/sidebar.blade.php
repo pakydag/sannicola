@@ -122,7 +122,7 @@
 
 <div class="mt-6 bg-secondary rounded-2xl p-6 text-white shadow-lg overflow-hidden relative group">
     <div class="relative z-10">
-        <h4 class="font-semibold text-lg mb-2">Offerta Speciale</h4>
+        <h4 class="font-semibold text-white text-lg mb-2">Offerta Speciale</h4>
         <p class="text-white text-xs leading-relaxed mb-4">Scopri i nostri prodotti in promozione con sconti fino al 30%!</p>
         <a href="#" class="bottone-personalizzato mt-4 inline-flex items-center text-xs font-bold bg-primary text-white px-4 py-2 rounded-xl hover:bg-legno-scuro transition-all shadow-sm">
             Vedi Offerte
