@@ -20,9 +20,9 @@
 </div>
 
 <div class="bg-gray-50 pb-24" x-data="checkoutForm()">
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
+    <div class="max-w-7xl pt-1 mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
         <div>
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Checkout Sicuro</h1>
+            <h1 class="text-2xl sm:text-3xl">Checkout Sicuro</h1>
         </div>
         <div>
             <a href="{{ route('public.shop.cart.index') }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna al Carrello</a>
@@ -241,7 +241,7 @@
                             <div class="sm:col-span-2">
                                 <label for="note_ordine" class="block text-sm font-medium text-gray-700">Note Ordine (Opzionale)</label>
                                 <div class="mt-1">
-                                    <textarea id="note_ordine" name="note_ordine" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm placeholder-gray-400" placeholder="Istruzioni particolari per la consegna...">{{ old('note_ordine') }}</textarea>
+                                    <textarea id="note_ordine" name="note_ordine" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-gray-400" placeholder="Istruzioni particolari per la consegna...">{{ old('note_ordine') }}</textarea>
                                 </div>
                             </div>
                         </div>
