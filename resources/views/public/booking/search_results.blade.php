@@ -60,7 +60,7 @@
                                 @if($structure->is_available && $structure->prenotabile)
                                     <div>
                                         <span class="block text-xs text-gray-500 uppercase font-semibold">{{ app()->getLocale() === 'en' ? 'Est. Quote' : 'Preventivo Est.' }}</span>
-                                        <span class="text-2xl font-black text-indigo-600">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
+                                        <span class="text-2xl font-semibold text-primary">€{{ number_format($structure->preventivo, 2, ',', '.') }}</span>
                                     </div>
 
                                     <a href="{{ route('public.booking.show', ['id' => $structure->id, 'slug' => \Illuminate\Support\Str::slug($structure->nome)]) }}?start_date={{ $searchParams['start_date'] }}&end_date={{ $searchParams['end_date'] }}&adulti={{ $searchParams['adulti'] }}&bambini={{ $searchParams['bambini'] }}"

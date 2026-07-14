@@ -72,13 +72,13 @@
                     <h2 class="text-xl font-bold text-gray-900 mb-4">Come vuoi procedere?</h2>
                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                         <div class="flex items-center">
-                            <input id="mode-guest" name="mode" type="radio" value="guest" x-model="checkoutMode" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            <input id="mode-guest" name="mode" type="radio" value="guest" x-model="checkoutMode" class="focus:ring-secondary h-4 w-4 text-indigo-600 border-gray-300">
                             <label for="mode-guest" class="ml-3 block text-sm font-medium text-gray-700">
                                 Continua come Ospite
                             </label>
                         </div>
                         <div class="flex items-center">
-                            <input id="mode-register" name="mode" type="radio" value="register" x-model="checkoutMode" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300">
+                            <input id="mode-register" name="mode" type="radio" value="register" x-model="checkoutMode" class="focus:ring-secondary h-4 w-4 text-indigo-600 border-gray-300">
                             <label for="mode-register" class="ml-3 block text-sm font-medium text-gray-700">
                                 Crea un Account
                             </label>

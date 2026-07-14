@@ -131,7 +131,7 @@
 
                 <!-- Riepilogo Ordine -->
                 <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow border-t-2 border-secondary sticky top-6">
-                    <h2 id="summary-heading" class="text-xl font-bold text-gray-900 border-b pb-4 mb-6">Riepilogo Ordine</h2>
+                    <h2 id="summary-heading" class="text-xl font-semibold text-gray-900 border-b pb-4 mb-6">Riepilogo Ordine</h2>
 
                     <div class="mb-6">
                         <label for="estimate_nation" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Destinazione per la stima</label>
@@ -161,12 +161,12 @@
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="text-base font-bold text-gray-900">Totale Ordine</dt>
-                            <dd class="text-2xl font-black text-indigo-600">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
+                            <dd class="text-2xl font-semibold text-primary">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
                         </div>
                     </dl>
 
                     <div class="mt-8">
-                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full bg-indigo-600 border border-transparent rounded-xl shadow-lg py-4 px-4 text-lg font-bold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all flex justify-center items-center h-14 uppercase tracking-widest">
+                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full btn flex justify-center items-center">
                             Procedi al Checkout
                         </a>
                     </div>
