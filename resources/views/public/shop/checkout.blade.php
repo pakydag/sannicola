@@ -69,16 +69,16 @@
                 @guest
                 <!-- Scelta Modalità Checkout per Utenti non Autenticati -->
                 <div class="bg-white shadow rounded-lg px-4 py-6 sm:p-6 p-8">
-                    <h2 class="text-xl font-bold text-gray-900 mb-4">Come vuoi procedere?</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Come vuoi procedere?</h2>
                     <div class="space-y-4 sm:flex sm:items-center sm:space-y-0 sm:space-x-10">
                         <div class="flex items-center">
-                            <input id="mode-guest" name="mode" type="radio" value="guest" x-model="checkoutMode" class="focus:ring-secondary h-4 w-4 text-indigo-600 border-gray-300">
+                            <input id="mode-guest" name="mode" type="radio" value="guest" x-model="checkoutMode" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300">
                             <label for="mode-guest" class="ml-3 block text-sm font-medium text-gray-700">
                                 Continua come Ospite
                             </label>
                         </div>
                         <div class="flex items-center">
-                            <input id="mode-register" name="mode" type="radio" value="register" x-model="checkoutMode" class="focus:ring-secondary h-4 w-4 text-indigo-600 border-gray-300">
+                            <input id="mode-register" name="mode" type="radio" value="register" x-model="checkoutMode" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300">
                             <label for="mode-register" class="ml-3 block text-sm font-medium text-gray-700">
                                 Crea un Account
                             </label>
@@ -86,7 +86,7 @@
                     </div>
                     <div class="mt-4 pt-4 border-t border-gray-200">
                         <p class="text-sm text-gray-500">
-                            Sei già registrato? <a href="{{ route('login', ['redirect_to' => route('public.shop.cart.checkout')]) }}" class="font-medium text-indigo-600 hover:text-indigo-500">Accedi qui</a>.
+                            Sei già registrato? <a href="{{ route('login', ['redirect_to' => route('public.shop.cart.checkout')]) }}" class="font-medium text-primary hover:text-indigo-500">Accedi qui</a>.
                         </p>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
 
                 <!-- Form Principale Checkout -->
                 <div class="bg-white shadow rounded-lg px-4 py-6 sm:p-6 p-8">
-                    <h2 class="text-xl font-bold text-gray-900 mb-6 border-b pb-4">Dati di Spedizione e Fatturazione</h2>
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 border-b pb-4">Dati di Spedizione e Fatturazione</h2>
                     
                     <form action="{{ route('public.shop.cart.process') }}" method="POST" class="space-y-6" id="checkout-form">
                         @csrf
@@ -251,7 +251,7 @@
 
                  <!-- Metodo di Pagamento -->
                 <div class="bg-white shadow rounded-lg px-4 py-6 sm:p-6 p-8">
-                     <h2 class="text-xl font-bold text-gray-900 mb-6 border-b pb-4">Metodo di Pagamento</h2>
+                     <h2 class="text-xl font-semibold text-gray-900 mb-6 border-b pb-4">Metodo di Pagamento</h2>
                      
                      @php
                         $stripe_enabled = \App\Models\Setting::where('key', 'payment_stripe_enabled')->value('value') == '1';
@@ -314,7 +314,7 @@
 
             <!-- Riepilogo Ordine (Sidebar Destra) -->
             <div class="mt-10 lg:mt-0 lg:col-span-5">
-                <section aria-labelledby="summary-heading" class="bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 shadow border-t-4 border-indigo-600 sticky top-6">
+                <section aria-labelledby="summary-heading" class="bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 shadow border-t-4 border-primary sticky top-6">
                     <h2 id="summary-heading" class="text-xl font-bold text-gray-900 mb-6">Il tuo Ordine</h2>
 
                     <ul role="list" class="divide-y divide-gray-200">

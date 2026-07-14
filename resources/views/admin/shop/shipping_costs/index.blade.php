@@ -8,7 +8,7 @@
             
             <div class="mb-8 flex items-center justify-between">
                 <h3 class="text-2xl font-extrabold text-slate-900">Configurazione Costi Spedizione</h3>
-                <a href="{{ route('admin.shop.configuration') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">&larr; Torna alla Configurazione</a>
+                <a href="{{ route('admin.shop.configuration') }}" class="text-sm font-medium text-primary hover:text-gray-700">&larr; Torna alla Configurazione</a>
             </div>
 
         @if(session('success'))
