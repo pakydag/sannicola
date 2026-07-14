@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl pt-1 mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
+<div class="max-w-7xl pt-1 mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
     <div>
         <h1 class="text-2xl sm:text-3xl">{{ $prodotto->nome }}</h1>
         @if($prodotto->marca)
