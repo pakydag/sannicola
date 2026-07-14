@@ -106,20 +106,20 @@
                             <div>
                                 <label for="nome" class="block text-sm font-medium text-gray-700">Nome *</label>
                                 <div class="mt-1">
-                                    <input type="text" id="nome" name="nome" value="{{ old('nome', Auth::user()?->name ? explode(' ', Auth::user()->name)[0] : '') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="nome" name="nome" value="{{ old('nome', Auth::user()?->name ? explode(' ', Auth::user()->name)[0] : '') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
                             <div>
                                 <label for="cognome" class="block text-sm font-medium text-gray-700">Cognome *</label>
                                 <div class="mt-1">
-                                    <input type="text" id="cognome" name="cognome" value="{{ old('cognome', Auth::user()?->name ? (count(explode(' ', Auth::user()->name)) > 1 ? explode(' ', Auth::user()->name)[1] : '') : '') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="cognome" name="cognome" value="{{ old('cognome', Auth::user()?->name ? (count(explode(' ', Auth::user()->name)) > 1 ? explode(' ', Auth::user()->name)[1] : '') : '') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
                             
                             <div class="sm:col-span-2">
                                 <label for="email" class="block text-sm font-medium text-gray-700">Indirizzo Email *</label>
                                 <div class="mt-1">
-                                    <input type="email" id="email" name="email" value="{{ old('email', Auth::user()?->email) }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" @if(Auth::check()) readonly @endif>
+                                    <input type="email" id="email" name="email" value="{{ old('email', Auth::user()?->email) }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm" @if(Auth::check()) readonly @endif>
                                 </div>
                             </div>
 
@@ -132,13 +132,13 @@
                                     <div>
                                         <label for="password" class="block text-sm font-medium text-gray-700">Password *</label>
                                         <div class="mt-1">
-                                            <input type="password" id="password" name="password" x-bind:required="checkoutMode === 'register'" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <input type="password" id="password" name="password" x-bind:required="checkoutMode === 'register'" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Conferma Password *</label>
                                         <div class="mt-1">
-                                            <input type="password" id="password_confirmation" name="password_confirmation" x-bind:required="checkoutMode === 'register'" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <input type="password" id="password_confirmation" name="password_confirmation" x-bind:required="checkoutMode === 'register'" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                             <div class="sm:col-span-2">
                                 <label for="telefono" class="block text-sm font-medium text-gray-700">Telefono / Cellulare *</label>
                                 <div class="mt-1">
-                                    <input type="text" id="telefono" name="telefono" value="{{ old('telefono') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="telefono" name="telefono" value="{{ old('telefono') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
 
@@ -169,31 +169,31 @@
                                     <div class="sm:col-span-2">
                                         <label for="ragione_sociale" class="block text-sm font-medium text-gray-700">Ragione Sociale *</label>
                                         <div class="mt-1">
-                                            <input type="text" id="ragione_sociale" name="ragione_sociale" value="{{ old('ragione_sociale') }}" x-bind:required="isAzienda" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <input type="text" id="ragione_sociale" name="ragione_sociale" value="{{ old('ragione_sociale') }}" x-bind:required="isAzienda" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="partita_iva" class="block text-sm font-medium text-gray-700">Partita IVA *</label>
                                         <div class="mt-1">
-                                            <input type="text" id="partita_iva" name="partita_iva" value="{{ old('partita_iva') }}" x-bind:required="isAzienda" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <input type="text" id="partita_iva" name="partita_iva" value="{{ old('partita_iva') }}" x-bind:required="isAzienda" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="codice_fiscale" class="block text-sm font-medium text-gray-700">Codice Fiscale (Opzionale)</label>
                                         <div class="mt-1">
-                                            <input type="text" id="codice_fiscale" name="codice_fiscale" value="{{ old('codice_fiscale') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <input type="text" id="codice_fiscale" name="codice_fiscale" value="{{ old('codice_fiscale') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="sdi" class="block text-sm font-medium text-gray-700">Codice SDI</label>
                                         <div class="mt-1">
-                                            <input type="text" id="sdi" name="sdi" value="{{ old('sdi') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Es. KRRH6B9">
+                                            <input type="text" id="sdi" name="sdi" value="{{ old('sdi') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm" placeholder="Es. KRRH6B9">
                                         </div>
                                     </div>
                                     <div>
                                         <label for="pec" class="block text-sm font-medium text-gray-700">PEC Aziendale</label>
                                         <div class="mt-1">
-                                            <input type="email" id="pec" name="pec" value="{{ old('pec') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                            <input type="email" id="pec" name="pec" value="{{ old('pec') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                         </div>
                                     </div>
                                 </div>
@@ -213,35 +213,35 @@
                             <div class="sm:col-span-2">
                                 <label for="indirizzo" class="block text-sm font-medium text-gray-700">Indirizzo e N. Civico *</label>
                                 <div class="mt-1">
-                                    <input type="text" id="indirizzo" name="indirizzo" value="{{ old('indirizzo') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="indirizzo" name="indirizzo" value="{{ old('indirizzo') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
 
                             <div>
                                 <label for="citta" class="block text-sm font-medium text-gray-700">Città *</label>
                                 <div class="mt-1">
-                                    <input type="text" id="citta" name="citta" value="{{ old('citta') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="citta" name="citta" value="{{ old('citta') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
 
                             <div>
                                 <label for="cap" class="block text-sm font-medium text-gray-700">CAP *</label>
                                 <div class="mt-1">
-                                    <input type="text" id="cap" name="cap" value="{{ old('cap') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="cap" name="cap" value="{{ old('cap') }}" required class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
 
                             <div class="sm:col-span-2">
                                 <label for="provincia" class="block text-sm font-medium text-gray-700">Provincia (Sigla es. MI, RM)</label>
                                 <div class="mt-1">
-                                    <input type="text" id="provincia" name="provincia" value="{{ old('provincia') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                    <input type="text" id="provincia" name="provincia" value="{{ old('provincia') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm">
                                 </div>
                             </div>
                             
                             <div class="sm:col-span-2">
                                 <label for="note_ordine" class="block text-sm font-medium text-gray-700">Note Ordine (Opzionale)</label>
                                 <div class="mt-1">
-                                    <textarea id="note_ordine" name="note_ordine" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-gray-400" placeholder="Istruzioni particolari per la consegna...">{{ old('note_ordine') }}</textarea>
+                                    <textarea id="note_ordine" name="note_ordine" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm placeholder-gray-400" placeholder="Istruzioni particolari per la consegna...">{{ old('note_ordine') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -372,12 +372,12 @@
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt class="text-base font-bold text-gray-900">Totale Da Pagare</dt>
-                            <dd class="text-2xl font-extrabold text-indigo-600">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
+                            <dd class="text-2xl font-bold text-primary">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
                         </div>
                     </dl>
 
                     <div class="mt-8">
-                        <button type="submit" form="checkout-form" class="w-full bg-indigo-600 border border-transparent rounded-md shadow-sm py-4 px-4 text-lg font-bold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-gray-50 flex justify-center items-center h-14">
+                        <button type="submit" form="checkout-form" class="w-full btn flex justify-center items-center">
                             Genera Ordine
                         </button>
                     </div>
