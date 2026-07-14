@@ -25,11 +25,11 @@
             <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">Checkout Sicuro</h1>
         </div>
         <div>
-            <a href="{{ route('public.shop.cart.index') }}" class="text-indigo-600 hover:text-indigo-800 font-semibold text-sm">&larr; Torna al Carrello</a>
+            <a href="{{ route('public.shop.cart.index') }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna al Carrello</a>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
 
         @if(session('error'))
             <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">

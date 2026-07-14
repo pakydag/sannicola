@@ -22,15 +22,15 @@
 </div>
 
 <div class="bg-gray-50 pb-24">
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+    <div class="max-w-7xl mx-auto pt-0 pb-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
         <div class="text-center titoli">
-            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">
+            <h1 class="text-4xl sm:text-5xl">
                 Il Tuo Carrello
             </h1>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
 
         @if(session('success'))
             <div class="mb-6 bg-green-100 text-green-700 px-4 py-3 rounded text-sm font-bold border border-green-200">
@@ -130,7 +130,7 @@
                 </div>
 
                 <!-- Riepilogo Ordine -->
-                <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow border-t-2 border-indigo-500 sticky top-6">
+                <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow border-t-2 border-secondary sticky top-6">
                     <h2 id="summary-heading" class="text-xl font-bold text-gray-900 border-b pb-4 mb-6">Riepilogo Ordine</h2>
 
                     <div class="mb-6">

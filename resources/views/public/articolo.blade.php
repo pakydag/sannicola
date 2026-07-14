@@ -21,7 +21,7 @@
 
     <div class="mx-auto max-w-7xl rounded-b-lg">
 
-        <article class="bg-white shadow-sm py-6 px-11 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
+        <article class="bg-white shadow-sm py-0 px-11 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
 
             <header class="mb-10 text-center titoli">
                 <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase hidden">
@@ -143,7 +143,7 @@
 
         <!-- Area Forms -->
         @if($articolo->has_contact_form)
-            <div class="mt-8">
+            <div>
                 @include('public.partials.contact_form')
             </div>
         @endif
