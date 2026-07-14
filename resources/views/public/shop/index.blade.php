@@ -15,10 +15,10 @@
 </div>
 <div class="max-w-7xl mx-auto py-0 pb-3 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
     <div class="text-center titoli">
-        <h1 class="text-4xl sm:text-5xl">
+        <h1 class="text-3xl sm:text-4xl">
             Il Nostro Shop
         </h1>
-        <h2 class="mt-4 max-w-2xl mx-auto">
+        <h2 class="mt-1 max-w-2xl mx-auto">
             Esplora le nostre collezioni e categorie per trovare i migliori prodotti.
 </h2>
     </div>
@@ -27,10 +27,10 @@
 <div class="bg-white shadow-sm border-b">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-            <h1 class="text-4xl sm:text-5xl">
+            <h1 class="text-3xl sm:text-4xl">
                 Il Nostro Shop
             </h1>
-            <h2 class="mt-4 max-w-2xl mx-auto">
+            <h2 class="mt-1 max-w-2xl mx-auto">
                 Esplora le nostre collezioni e categorie per trovare i migliori prodotti.
 </h2>
         </div>

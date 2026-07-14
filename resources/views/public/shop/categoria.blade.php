@@ -22,12 +22,12 @@
 
 <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
     <div class="text-center titoli">
-        <h1 class="text-4xl sm:text-5xl">
+        <h1 class="text-3xl sm:text-4xl">
             {{ $categoria->nome }}
         </h1>
-        <p class="mt-4 max-w-2xl mx-auto text-gray-500">
+        <h2>
             Sfoglia i nostri prodotti della categoria {{ $categoria->nome }}.
-        </p>
+        </h2>
     </div>
 </div>
 

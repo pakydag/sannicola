@@ -83,7 +83,7 @@
                                     <img 
                                         src="{{ asset($foto) }}" 
                                         alt="{{ $prodotto->nome }}" 
-                                        class="w-full h-full object-contain"
+                                        class="w-full h-full object-cover"
                                         style="transition: transform 0.15s ease-out;"
                                         :style="zoom ? { transform: 'scale(1.8)', transformOrigin: `${x}% ${y}%` } : { transform: 'scale(1)', transformOrigin: 'center center' }"
                                     >

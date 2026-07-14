@@ -16,7 +16,7 @@
 
 <div class="max-w-7xl mx-6 lg:mx-auto py-6 px-11 sm:px-12 lg:px-14 bg-white shadow-sm rounded-b-lg mb-12 relative z-10">
     <header class="titoli text-center mb-5">
-        <h1 class="text-4xl sm:text-5xl tracking-tight primary">
+        <h1 class="text-3xl sm:text-4xl tracking-tight primary">
             {{ $sezione->nome }}
         </h1>
         @if($sezione->sottotitolo)

@@ -16,7 +16,7 @@
             </div>
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 pb-12 bg-white relative z-10">
                 <div class="titoli text-center mb-16">
-                    <h1 class="text-4xl sm:text-5xl">{{ $structure->nome }}</h1>
+                    <h1 class="text-3xl sm:text-4xl">{{ $structure->nome }}</h1>
                     <h2 class="mt-4 text-xl">{{ $structure->sottotitolo }}</h2>
                 </div>
         @else

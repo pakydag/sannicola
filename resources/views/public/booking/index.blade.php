@@ -14,13 +14,13 @@
         </div>
         <div class="max-w-7xl mx-auto px-6 lg:px-0 relative z-10">
             <div class="titoli text-center mb-16 bg-white py-12 border-t-0 shadow-sm rounded-b-lg border border-gray-100 px-4 md:px-4">
-                <h1 class="text-4xl sm:text-5xl">{{ app()->getLocale() === 'en' ? 'Our Structures' : 'Le Nostre Strutture' }}</h1>
+                <h1 class="text-3xl sm:text-4xl">{{ app()->getLocale() === 'en' ? 'Our Structures' : 'Le Nostre Strutture' }}</h1>
                 <h2 class="mt-4 text-xl">{{ app()->getLocale() === 'en' ? 'Book your ideal stay in one of our fantastic locations.' : 'Prenota il tuo soggiorno ideale in una delle nostre fantastiche location.' }}</h2>
             </div>
         @else
         <div class="pt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h1 class="text-4xl sm:text-5xl">{{ app()->getLocale() === 'en' ? 'Our Structures' : 'Le Nostre Strutture' }}</h1>
+                <h1 class="text-3xl sm:text-4xl">{{ app()->getLocale() === 'en' ? 'Our Structures' : 'Le Nostre Strutture' }}</h1>
                 <h2 class="mt-4 text-xl">{{ app()->getLocale() === 'en' ? 'Book your ideal stay in one of our fantastic locations.' : 'Prenota il tuo soggiorno ideale in una delle nostre fantastiche location.' }}</h2>
             </div>
         @endif

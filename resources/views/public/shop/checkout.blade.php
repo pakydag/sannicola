@@ -22,7 +22,7 @@
 <div class="bg-gray-50 pb-24" x-data="checkoutForm()">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
         <div>
-            <h1 class="text-4xl sm:text-5xl font-bold text-gray-900">Checkout Sicuro</h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">Checkout Sicuro</h1>
         </div>
         <div>
             <a href="{{ route('public.shop.cart.index') }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna al Carrello</a>

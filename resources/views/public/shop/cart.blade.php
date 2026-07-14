@@ -24,7 +24,7 @@
 <div class="bg-gray-50 pb-24">
     <div class="max-w-7xl mx-auto pt-0 pb-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
         <div class="text-center titoli">
-            <h1 class="text-4xl sm:text-5xl">
+            <h1 class="text-3xl sm:text-4xl">
                 Il Tuo Carrello
             </h1>
         </div>
