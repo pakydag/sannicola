@@ -78,7 +78,7 @@
             </div>
 
             <div class="text-right">
-                <button type="submit" class="inline-flex justify-center px-6 pt-[17px] pb-[17px] btn">
+                <button type="submit" class="inline-flex justify-center px-6 rounded-md btn">
                     {{ $isEn ? 'Send Request' : 'Invia Richiesta' }}
                 </button>
             </div>

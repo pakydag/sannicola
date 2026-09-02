@@ -377,7 +377,7 @@
                     </dl>
 
                     <div class="mt-8">
-                        <button type="submit" form="checkout-form" class="w-full btn flex justify-center items-center">
+                        <button type="submit" form="checkout-form" class="w-full btn flex justify-center items-center rounded-md">
                             Genera Ordine
                         </button>
                     </div>

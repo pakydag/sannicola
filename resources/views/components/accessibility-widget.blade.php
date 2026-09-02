@@ -1,6 +1,6 @@
 <div id="accessibility-widget-root">
     <!-- Trigger Button -->
-    <button id="accessibility-trigger" title="Impostazioni di accessibilità" aria-label="Apri impostazioni accessibilità">
+    <button id="accessibility-trigger" title="Impostazioni di accessibilità" aria-label="Apri impostazioni accessibilità" clas="bg-primary">
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"/><path d="M9 22V12h6v10"/><path d="M5 12V7.5a4.5 4.5 0 0 1 9 0V12h3"/></svg>
     </button>
 

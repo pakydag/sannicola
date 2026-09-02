@@ -70,7 +70,7 @@
                                     );
                                 @endphp
                                 <div x-data="{ subOpen: {{ $isSubOpen ? 'true' : 'false' }} }">
-                                    <div class="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-white hover:shadow-sm transition-all @if(isset($categoria) && $categoria->id == $child->id) bg-white shadow-sm ring-1 ring-indigo-100 @endif">
+                                    <div class="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-white hover:transition-all @if(isset($categoria) && $categoria->id == $child->id) bg-white @endif">
                                         <a href="{{ route('public.shop.categoria', $child->slug) }}" class="flex-grow text-xs @if(isset($categoria) && $categoria->id == $child->id) text-primary font-bold @else text-gray-500 @endif hover:text-primary">
                                             {{ $child->nome }}
                                         </a>
@@ -86,7 +86,7 @@
                                     @if($child->children->count() > 0)
                                         <div x-show="subOpen" x-cloak x-collapse class="pl-4 py-1 space-y-0.5">
                                             @foreach($child->children as $sub)
-                                                <a href="{{ route('public.shop.categoria', $sub->slug) }}" class="block px-4 py-1.5 text-[11px] @if(isset($categoria) && $categoria->id == $sub->id) text-indigo-600 font-bold @else text-gray-400 @endif hover:text-indigo-500 border-l border-gray-100 ml-1">
+                                                <a href="{{ route('public.shop.categoria', $sub->slug) }}" class="block px-4 py-1.5 text-xs @if(isset($categoria) && $categoria->id == $sub->id) text-indigo-600 font-bold @else text-gray-400 @endif hover:text-primary ml-1">
                                                     {{ $sub->nome }}
                                                 </a>
                                             @endforeach

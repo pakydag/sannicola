@@ -166,7 +166,7 @@
                     </dl>
 
                     <div class="mt-8">
-                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full btn flex justify-center items-center">
+                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full btn flex justify-center items-center rounded-md">
                             Procedi al Checkout
                         </a>
                     </div>
