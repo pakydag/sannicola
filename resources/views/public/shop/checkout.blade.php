@@ -315,7 +315,7 @@
             <!-- Riepilogo Ordine (Sidebar Destra) -->
             <div class="mt-10 lg:mt-0 lg:col-span-5">
                 <section aria-labelledby="summary-heading" class="bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 shadow border-t-4 border-primary sticky top-6">
-                    <h2 id="summary-heading" class="text-xl font-bold text-gray-900 mb-6">Il tuo Ordine</h2>
+                    <h2 id="summary-heading" class="text-xl font-semibold text-gray-900 mb-6">Il tuo Ordine</h2>
 
                     <ul role="list" class="divide-y divide-gray-200">
                         @php $totale = 0; @endphp

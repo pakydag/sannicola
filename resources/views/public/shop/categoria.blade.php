@@ -67,7 +67,7 @@
                                 <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                             @endif
 
-                            <h3 class="text-lg font-normal text-primary group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                            <h3 class="text-lg font-normal text-primary group-hover:text-secondary transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
 
                             <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                 @php

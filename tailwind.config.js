@@ -19,24 +19,20 @@ export default {
                 terracotta: '#a64d32',
                 'oro-antico': '#c5a059',
                 
-                // Mappatura semantica
-                primary: {
-                    DEFAULT: '#721c24',
-                    foreground: '#ffffff',
-                },
-                secondary: {
-                    DEFAULT: '#c5a059',
-                    foreground: '#2d2926',
-                },
+                // Mappatura semantica diretta
+                primary: '#721c24',
+                'primary-foreground': '#ffffff',
+                
+                secondary: '#c5a059',
+                'secondary-foreground': '#2d2926',
+                
                 background: '#fbf9f5',
-                surface: {
-                    DEFAULT: '#ffffff',
-                    variant: '#f5f3ef',
-                },
-                outline: {
-                    DEFAULT: '#dbdad6',
-                    variant: 'rgba(219, 218, 214, 0.3)',
-                }
+                
+                surface: '#ffffff',
+                'surface-variant': '#f5f3ef',
+                
+                outline: '#dbdad6',
+                'outline-variant': 'rgba(219, 218, 214, 0.3)',
             },
             fontFamily: {
                 'display': ['"Jost"', 'serif'],
@@ -53,7 +49,7 @@ export default {
             borderRadius: {
                 'brand': '4px',
             }
-        }, // Chiusura corretta di extend
+        },
     },
 
     plugins: [forms],
