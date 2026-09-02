@@ -164,7 +164,7 @@
                             </div>
                         </div>
 
-                        <div class="max-w-none text-gray-600 mb-12">
+                        <div class="pt-8 sm:pt-0 max-w-none text-gray-600 mb-12">
                             {!! $structure->descrizione !!}
                         </div>
 

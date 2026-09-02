@@ -204,25 +204,25 @@ a[title="Accedi Area Booking"] svg {
 
                     @if($sez->tipo == 'archivio' && $sez->menu_a_tendina && !$sez->modulo)
                         <div x-data="{ openSub: false }">
-                            <button @click="openSub = !openSub" class="w-full uppercase flex justify-between items-center text-left pl-3 pr-4 py-2 border-transparent hover:bg-gray-50 hover:border-gray-300 text-sm font-medium transition duration-150 ease-in-out">
+                            <button @click="openSub = !openSub" class="text-black w-full uppercase flex justify-between items-center text-left pl-3 pr-4 py-2 border-transparent hover:bg-gray-50 hover:border-gray-300 text-sm font-medium transition duration-150 ease-in-out">
                                 {{ $sez->nome }}
                                 <svg class="ml-1 h-4 w-4 transform transition-transform duration-200 text-gray-400" :class="{'rotate-180': openSub}" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
                             </button>
                             <div x-show="openSub" class="bg-gray-50 pl-6 pr-4 py-2 space-y-1 uppercase" style="display: none;">
-                                <a href="{{ $url }}" class="block py-2 text-sm text-gray-700 font-semibold hover:text-indigo-600">
+                                <a href="{{ $url }}" class="text-black block py-2 text-sm text-gray-700 font-semibold hover:text-indigo-600">
                                     Tutti gli articoli
                                 </a>
                                 @foreach($sez->articles()->where('visibile', true)->latest()->get() as $articolo)
-                                    <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="block py-2 text-sm text-gray-500 hover:text-primary">
+                                    <a href="{{ route('public.articolo', ['sezione_slug' => $sez->slug ?? $sez->id.'-it', 'articolo_slug' => $articolo->slug ?? $articolo->id.'-it']) }}" class="text-black block py-2 text-sm text-gray-500 hover:text-primary">
                                         {{ Str::limit($articolo->titolo, 30) }}
                                     </a>
                                 @endforeach
                             </div>
                         </div>
                     @else
-                        <a href="{{ $url }}" class="block pl-3 pr-4 py-2 border-l-2 font-medium border-primary {{ $isActive ? 'border-text-primary text-primary' : 'border-transparent hover:bg-gray-50 hover:border-gray-300' }} text-sm uppercase transition duration-150 ease-in-out">
+                        <a href="{{ $url }}" class="text-black block pl-3 pr-4 py-2 border-l-2 font-medium border-primary {{ $isActive ? 'border-text-primary text-primary' : 'border-transparent hover:bg-gray-50 hover:border-gray-300' }} text-sm uppercase transition duration-150 ease-in-out">
                             {{ $sez->nome }}
                         </a>
                     @endif

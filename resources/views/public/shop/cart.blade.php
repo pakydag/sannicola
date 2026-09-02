@@ -9,7 +9,7 @@
     $bannerImmagine = $shopSection ? $shopSection->immagine : null;
 @endphp
 
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<div class="bg-gray-50 pb-24">
+<div class="bg-gray-50 pb-24 mx-6">
     <div class="max-w-7xl mx-auto pt-0 pb-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
         <div class="text-center titoli">
             <h1 class="text-3xl sm:text-4xl">
@@ -30,7 +30,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
+    <div class="max-w-7xl mx-auto px-0">
 
         @if(session('success'))
             <div class="mb-6 bg-green-100 text-green-700 px-4 py-3 rounded text-sm font-bold border border-green-200">

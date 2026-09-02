@@ -8,7 +8,7 @@
     $bannerImmagine = $shopSection ? $shopSection->immagine : null;
 @endphp
 
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<div class="max-w-7xl pt-1 mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
+<div class="max-w-7xl mx-6 lg:mx-auto py-6 px-6 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-0 sm:mb-6 border-t-0">
     <div>
         <h1 class="text-2xl sm:text-3xl">{{ $prodotto->nome }}</h1>
         @if($prodotto->marca)
@@ -34,7 +34,7 @@
     @endif
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-auto py-12 px-6 sm:px-6 lg:px-0">
     <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
         
         <!-- Galleria Immagini -->
@@ -107,7 +107,7 @@
                         @foreach($fotoList as $index => $foto)
                             <button 
                                 onclick="window.productSwiper.slideTo({{ $index }})"
-                                class="border-2 rounded-xl overflow-hidden focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 aspect-square border-transparent transition hover:opacity-90 product-thumb-btn"
+                                class="border-2 rounded-xl overflow-hidden focus:outline-none focus:ring-primary border-primary aspect-square border-transparent transition hover:opacity-90 product-thumb-btn"
                                 data-index="{{ $index }}"
                             >
                                 <img src="{{ asset($foto) }}" class="h-full w-full object-cover">

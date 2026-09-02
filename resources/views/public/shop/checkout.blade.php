@@ -7,7 +7,7 @@
     $bannerImmagine = $shopSection ? $shopSection->immagine : null;
 @endphp
 
-<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6 lg:px-0" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
+<div class="relative bg-gray-50 h-64 flex items-end bg-cover bg-bg-top bg-fixed px-6" style="background-image: url('{{ $bannerImmagine ? asset($bannerImmagine) : '' }}');">
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg">
         <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
@@ -20,7 +20,7 @@
 </div>
 
 <div class="bg-gray-50 pb-24" x-data="checkoutForm()">
-    <div class="max-w-7xl pt-1 mx-auto py-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0 flex items-center justify-between">
+    <div class="max-w-7xl mx-6 lg:mx-auto py-6 px-6 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
         <div>
             <h1 class="text-2xl sm:text-3xl">Checkout Sicuro</h1>
         </div>
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
+    <div class="max-w-7xl mx-auto px-6 sm:px-0 lg:px-0">
 
         @if(session('error'))
             <div class="mb-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">

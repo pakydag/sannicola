@@ -3,7 +3,7 @@
 @section('title', $articolo->titolo . ' - ' . config('app.name'))
 
 @section('content')
-<div class="gradient relative bg-gray-50 h-64 flex items-end bg-cover bg-top px-6 lg:px-0" @if($articolo->section && $articolo->section->immagine) style="background-image: url('{{ asset($articolo->section->immagine) }}');" @endif>
+<div class="gradient relative bg-gray-50 h-64 flex items-end bg-cover bg-top px-6" @if($articolo->section && $articolo->section->immagine) style="background-image: url('{{ asset($articolo->section->immagine) }}');" @endif>
     <div class="mx-auto max-w-7xl w-full bg-white rounded-t-lg px-6 lg:px-0 relative z-10">
         <!-- Breadcrumb / Back link -->
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
@@ -21,7 +21,7 @@
 
     <div class="mx-auto max-w-7xl rounded-b-lg">
 
-        <article class="bg-white shadow-sm py-0 px-11 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
+        <article class="bg-white shadow-sm pb-8 px-8 sm:px-12 lg:px-14 overflow-hidden relative rounded-lg">
 
             <header class="mb-10 text-center titoli">
                 <p class="text-base font-semibold text-indigo-600 tracking-wide uppercase hidden">
@@ -60,11 +60,11 @@
                 </figure>
             @elseif($articolo->hasMedia('foto'))
                 <figure class="{{ $alignment === 'center' ? 'my-10' : '' }}">
-                    <img class="{{ $alignmentClasses }}" src="{{ $articolo->getFirstMediaUrl('foto') }}" alt="{{ $articolo->titolo }}">
+                    <img class="mb-6 sm:mb-0 {{ $alignmentClasses }}" src="{{ $articolo->getFirstMediaUrl('foto') }}" alt="{{ $articolo->titolo }}">
                 </figure>
             @elseif($articolo->foto)
                 <figure class="{{ $alignment === 'center' ? 'my-10' : '' }}">
-                    <img class="{{ $alignmentClasses }}" src="{{ asset($articolo->foto) }}" alt="{{ $articolo->titolo }}">
+                    <img class="mb-6 sm:mb-0 {{ $alignmentClasses }}" src="{{ asset($articolo->foto) }}" alt="{{ $articolo->titolo }}">
                 </figure>
             @endif
 

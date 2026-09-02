@@ -38,7 +38,7 @@
                         <h2 class="text-base mb-2">{{ $widget->data['subtitle'] }}</h2>
                     @endif
 
-                    <h3 class="text-3xl mb-6 leading-tight">{{ $widget->titolo }}</h3>
+                    <h3 class="text-2xl sm:text-3xl mb-6 leading-tight">{{ $widget->titolo }}</h3>
 
                     @if(!empty($widget->data['link']))
                         <div class="mt-4">
@@ -69,10 +69,10 @@
                         <p class="text-sm opacity-80 mb-2">{{ $widget->data['subtitle'] }}</p>
                     @endif
 
-                    <h3 class="text-3xl mb-6 leading-tight">{{ $widget->titolo }}</h3>
+                    <h3 class="text-2xl sm:text-3xl mb-6 leading-tight">{{ $widget->titolo }}</h3>
 
                     @if(!empty($widget->data['link']))
-                        <div class="mt-4">
+                        <div>
                             <a href="{{ $widget->data['link'] }}" class="btn">
                                 {{ app()->getLocale() === 'en' ? 'Find out more' : 'Scopri di più' }}
                             </a>
