@@ -17,7 +17,7 @@
         </nav>
     </div>
 </div>
-<div class="bg-gray-50 pb-16 mx-6 lg:mx-auto">
+<div class="bg-gray-50 pb-16 mx-6">
 
     <div class="mx-auto max-w-7xl rounded-b-lg">
 

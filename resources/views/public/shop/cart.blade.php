@@ -51,7 +51,7 @@
                 <h3 class="mt-2 text-lg font-medium text-gray-900">Il tuo carrello è vuoto</h3>
                 <p class="mt-1 text-sm text-gray-500">Aggiungi dei prodotti per poter procedere all'acquisto.</p>
                 <div class="mt-6">
-                    <a href="{{ route('public.shop.index') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <a href="{{ route('public.shop.index') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                         Inizia lo Shopping
                     </a>
                 </div>
@@ -166,7 +166,7 @@
                     </dl>
 
                     <div class="mt-8">
-                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full btn flex justify-center items-center rounded-md">
+                        <a href="{{ route('public.shop.cart.checkout') }}" class="w-full btn font-semibold flex justify-center items-center rounded-md">
                             Procedi al Checkout
                         </a>
                     </div>
