@@ -16,8 +16,8 @@
             <!-- Sidebar Nav Area Clienti -->
             <aside class="lg:col-span-3 mb-8 lg:mb-0">
                 <nav class="space-y-1 bg-white p-4 rounded-lg shadow">
-                    <a href="{{ route('public.account.dashboard') }}" class="bg-indigo-50 text-indigo-700 hover:text-indigo-700 hover:bg-indigo-50 group rounded-md px-3 py-2 flex items-center text-sm font-medium">
-                        <svg class="text-indigo-500 group-hover:text-indigo-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <a href="{{ route('public.account.dashboard') }}" class="bg-gray-100 text-primary hover:text-secondary hover:bg-gray-100 group rounded-md px-3 py-2 flex items-center text-sm font-medium">
+                        <svg class="text-primary group-hover:text-secondary flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
                         I Miei Ordini
@@ -51,7 +51,7 @@
                         <div class="p-6 text-center text-gray-500">
                             Non hai ancora effettuato nessun ordine.
                             <div class="mt-4">
-                                <a href="{{ route('public.shop.index') }}" class="text-indigo-600 hover:text-indigo-900 font-medium">Inizia lo shopping &rarr;</a>
+                                <a href="{{ route('public.shop.index') }}" class="text-primary hover:text-secondary font-medium">Inizia lo shopping &rarr;</a>
                             </div>
                         </div>
                     @else
@@ -60,13 +60,13 @@
                                 <li class="p-6 hover:bg-gray-50">
                                     <div class="flex items-center justify-between">
                                         <div>
-                                            <p class="text-sm font-medium text-indigo-600 truncate">Ordine #{{ $order->numero_ordine }}</p>
+                                            <p class="text-sm font-semibold text-primary truncate">Ordine #{{ $order->numero_ordine }}</p>
                                             <p class="mt-1 text-sm text-gray-500">Del {{ $order->created_at->format('d/m/Y H:i') }}</p>
                                         </div>
                                         <div class="text-right">
                                             <p class="text-sm font-bold text-gray-900">€ {{ number_format($order->totale_ordine, 2, ',', '.') }}</p>
                                             <p class="mt-1 text-xs font-semibold px-2 py-1 rounded inline-block 
-                                                @if($order->stato === 'nuovo') bg-blue-100 text-blue-800 
+                                                @if($order->stato === 'nuovo') bg-green-100 text-green-800 
                                                 @elseif($order->stato === 'in_lavorazione') bg-yellow-100 text-yellow-800
                                                 @elseif($order->stato === 'spedito') bg-green-100 text-green-800
                                                 @elseif($order->stato === 'annullato') bg-red-100 text-red-800

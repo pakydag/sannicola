@@ -86,7 +86,7 @@
                     </div>
                     <div class="mt-4 pt-4 border-t border-gray-200">
                         <p class="text-sm text-gray-500">
-                            Sei già registrato? <a href="{{ route('login', ['redirect_to' => route('public.shop.cart.checkout')]) }}" class="font-medium text-primary hover:text-indigo-500">Accedi qui</a>.
+                            Sei già registrato? <a href="{{ route('login', ['redirect_to' => route('public.shop.cart.checkout')]) }}" class="font-medium text-primary hover:text-primary">Accedi qui</a>.
                         </p>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                             <div class="sm:col-span-2 mt-4">
                                 <div class="relative flex items-start">
                                     <div class="flex items-center h-5">
-                                        <input id="is_azienda" name="is_azienda" type="checkbox" value="1" x-model="isAzienda" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                        <input id="is_azienda" name="is_azienda" type="checkbox" value="1" x-model="isAzienda" class="focus:ring-secondary h-4 w-4 text-primary border-gray-300 rounded">
                                     </div>
                                     <div class="ml-3 text-sm">
                                         <label for="is_azienda" class="font-bold text-gray-700">Richiedi Fattura Aziendale</label>
@@ -165,7 +165,7 @@
 
                             <!-- Dati Azienda -->
                             <template x-if="isAzienda">
-                                <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4 bg-indigo-50 p-4 rounded-md border border-indigo-100 mt-4">
+                                <div class="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-4 bg-gray-100 p-4 rounded-md border border-secondary mt-4">
                                     <div class="sm:col-span-2">
                                         <label for="ragione_sociale" class="block text-sm font-medium text-gray-700">Ragione Sociale *</label>
                                         <div class="mt-1">
@@ -241,7 +241,7 @@
                             <div class="sm:col-span-2">
                                 <label for="note_ordine" class="block text-sm font-medium text-gray-700">Note Ordine (Opzionale)</label>
                                 <div class="mt-1">
-                                    <textarea id="note_ordine" name="note_ordine" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm placeholder-gray-400" placeholder="Istruzioni particolari per la consegna...">{{ old('note_ordine') }}</textarea>
+                                    <textarea id="note_ordine" name="note_ordine" rows="3" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-secondary focus:border-secondary sm:text-sm placeholder-gray-400" placeholder="Istruzioni particolari per la consegna...">{{ old('note_ordine') }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -272,8 +272,8 @@
                      @else
                          <div class="space-y-4">
                              @if($stripe_enabled)
-                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-indigo-200 transition-colors cursor-pointer">
-                                 <input id="payment_stripe" name="payment_method" form="checkout-form" type="radio" value="stripe" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 cursor-pointer" required {{ $preferred_method === 'stripe' ? 'checked' : '' }}>
+                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-secondary transition-colors cursor-pointer">
+                                 <input id="payment_stripe" name="payment_method" form="checkout-form" type="radio" value="stripe" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300 cursor-pointer" required {{ $preferred_method === 'stripe' ? 'checked' : '' }}>
                                  <label for="payment_stripe" class="ml-3 block text-sm font-medium text-gray-900 flex items-center flex-1 cursor-pointer">
                                     Carta di Credito (Stripe)
                                  </label>
@@ -281,8 +281,8 @@
                              @endif
 
                              @if($paypal_enabled)
-                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-indigo-200 transition-colors cursor-pointer">
-                                 <input id="payment_paypal" name="payment_method" form="checkout-form" type="radio" value="paypal" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 cursor-pointer" required {{ $preferred_method === 'paypal' ? 'checked' : '' }}>
+                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-secondary transition-colors cursor-pointer">
+                                 <input id="payment_paypal" name="payment_method" form="checkout-form" type="radio" value="paypal" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300 cursor-pointer" required {{ $preferred_method === 'paypal' ? 'checked' : '' }}>
                                  <label for="payment_paypal" class="ml-3 block text-sm font-medium text-gray-900 flex items-center flex-1 cursor-pointer">
                                     PayPal Checkout
                                  </label>
@@ -290,8 +290,8 @@
                              @endif
 
                              @if($bonifico_enabled)
-                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-indigo-200 transition-colors cursor-pointer">
-                                 <input id="payment_bonifico" name="payment_method" form="checkout-form" type="radio" value="bonifico" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 cursor-pointer" required {{ $preferred_method === 'bonifico' ? 'checked' : '' }}>
+                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-secondary transition-colors cursor-pointer">
+                                 <input id="payment_bonifico" name="payment_method" form="checkout-form" type="radio" value="bonifico" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300 cursor-pointer" required {{ $preferred_method === 'bonifico' ? 'checked' : '' }}>
                                  <label for="payment_bonifico" class="ml-3 block text-sm font-medium text-gray-900 flex-1 cursor-pointer">
                                     Bonifico Bancario Anticipato
                                  </label>
@@ -299,8 +299,8 @@
                              @endif
 
                              @if($contrassegno_enabled)
-                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-indigo-200 transition-colors cursor-pointer">
-                                 <input id="payment_contrassegno" name="payment_method" form="checkout-form" type="radio" value="contrassegno" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 cursor-pointer" required {{ $preferred_method === 'contrassegno' ? 'checked' : '' }}>
+                             <div class="border rounded px-4 py-3 flex items-center bg-gray-50 border-gray-200 hover:border-secondary transition-colors cursor-pointer">
+                                 <input id="payment_contrassegno" name="payment_method" form="checkout-form" type="radio" value="contrassegno" class="focus:ring-secondary h-4 w-4 text-secondary border-gray-300 cursor-pointer" required {{ $preferred_method === 'contrassegno' ? 'checked' : '' }}>
                                  <label for="payment_contrassegno" class="ml-3 block text-sm font-medium text-gray-900 flex-1 cursor-pointer">
                                     Contrassegno (Pagamento alla Consegna)
                                  </label>
