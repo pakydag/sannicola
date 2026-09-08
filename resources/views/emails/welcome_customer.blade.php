@@ -7,7 +7,7 @@
         .header { text-align: center; margin-bottom: 30px; }
         .content { margin-bottom: 30px; }
         .footer { font-size: 12px; color: #999; text-align: center; border-top: 1px solid #eee; padding-top: 20px; }
-        .button { display: inline-block; padding: 12px 24px; background-color: #4f46e5; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        .button { display: inline-block; padding: 12px 24px; background-color: #721c24; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>

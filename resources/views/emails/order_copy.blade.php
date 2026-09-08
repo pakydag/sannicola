@@ -5,7 +5,7 @@
     <style>
         body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f7f6; }
         .container { max-width: 600px; margin: 20px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .header { background: #4f46e5; color: #fff; padding: 30px; text-align: center; }
+        .header { background: #721c24; color: #fff; padding: 30px; text-align: center; }
         .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
         .content { padding: 30px; }
         .order-info { margin-bottom: 30px; border-bottom: 2px solid #f0f0f0; pb: 20px; }
@@ -15,7 +15,7 @@
         .table td { padding: 12px; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
         .total-row { font-weight: bold; background: #f9fafb; }
         .footer { background: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #9ca3af; }
-        .btn { display: inline-block; padding: 15px 30px; background: #4f46e5; color: #fff !important; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; text-transform: uppercase; font-size: 14px; }
+        .btn { display: inline-block; padding: 15px 30px; background: #721c24; color: #fff !important; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 20px; text-transform: uppercase; font-size: 14px; }
         .payment-box { background: #eff6ff; border: 1px dashed #bfdbfe; padding: 20px; border-radius: 8px; margin-top: 30px; text-align: center; }
         .bonifico-info { text-align: left; background: #fff; padding: 15px; border-radius: 4px; border: 1px solid #e5e7eb; margin-top: 10px; }
     </style>
@@ -56,7 +56,7 @@
                     @endforeach
                     <tr class="total-row">
                         <td colspan="2" style="text-align: right; padding: 15px;">TOTALE ORDINE</td>
-                        <td style="text-align: right; padding: 15px; font-size: 18px; color: #4f46e5;">€ {{ number_format($order->total_amount, 2, ',', '.') }}</td>
+                        <td style="text-align: right; padding: 15px; font-size: 18px; color: #721c24;">€ {{ number_format($order->total_amount, 2, ',', '.') }}</td>
                     </tr>
                 </tbody>
             </table>

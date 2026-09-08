@@ -87,12 +87,12 @@
         }
         .price-label {
             font-size: 16px;
-            color: #4f46e5;
+            color: #721c24;
             font-weight: 700;
         }
         .price-value {
             font-size: 22px;
-            color: #4f46e5;
+            color: #721c24;
             font-weight: 900;
         }
         .button-container {
@@ -102,7 +102,7 @@
         .btn {
             display: inline-block; 
             padding: 14px 32px; 
-            background-color: #4f46e5; 
+            background-color: #721c24; 
             color: #ffffff !important; 
             text-decoration: none; 
             border-radius: 14px; 
@@ -147,7 +147,7 @@
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            color: #4f46e5;
+            color: #721c24;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;

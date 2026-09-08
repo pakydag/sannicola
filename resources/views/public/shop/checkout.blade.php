@@ -94,7 +94,7 @@
 
                 <!-- Form Principale Checkout -->
                 <div class="bg-white shadow rounded-lg px-4 py-6 sm:p-6 p-8">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-6 border-b pb-4">Dati di Spedizione e Fatturazione</h2>
+                    <h2 class="text-xl font-medium text-gray-900 mb-6 border-b pb-4">Dati di Spedizione e Fatturazione</h2>
                     
                     <form action="{{ route('public.shop.cart.process') }}" method="POST" class="space-y-6" id="checkout-form">
                         @csrf
@@ -251,7 +251,7 @@
 
                  <!-- Metodo di Pagamento -->
                 <div class="bg-white shadow rounded-lg px-4 py-6 sm:p-6 p-8">
-                     <h2 class="text-xl font-semibold text-gray-900 mb-6 border-b pb-4">Metodo di Pagamento</h2>
+                     <h2 class="text-xl font-medium text-gray-900 mb-6 border-b pb-4">Metodo di Pagamento</h2>
                      
                      @php
                         $stripe_enabled = \App\Models\Setting::where('key', 'payment_stripe_enabled')->value('value') == '1';
@@ -315,7 +315,7 @@
             <!-- Riepilogo Ordine (Sidebar Destra) -->
             <div class="mt-10 lg:mt-0 lg:col-span-5">
                 <section aria-labelledby="summary-heading" class="bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 shadow border-t-4 border-primary sticky top-6">
-                    <h2 id="summary-heading" class="text-xl font-semibold text-gray-900 mb-6">Il tuo Ordine</h2>
+                    <h2 id="summary-heading" class="text-xl font-medium text-gray-900 mb-6">Il tuo Ordine</h2>
 
                     <ul role="list" class="divide-y divide-gray-200">
                         @php $totale = 0; @endphp

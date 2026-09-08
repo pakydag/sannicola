@@ -20,8 +20,8 @@
         <style>
             .fc-event { cursor: pointer; }
             .fc-toolbar-title { font-size: 1.25rem !important; font-weight: bold; color: #374151; }
-            .fc-button-primary { background-color: #4f46e5 !important; border-color: #4f46e5 !important; }
-            .fc-button-primary:hover { background-color: #4338ca !important; border-color: #4338ca !important; }
+            .fc-button-primary { background-color: #721c24 !important; border-color: #721c24 !important; }
+            .fc-button-primary:hover { background-color: #721c24 !important; border-color: #721c24 !important; }
         </style>
     @endpush
 

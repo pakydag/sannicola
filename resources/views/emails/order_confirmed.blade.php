@@ -6,7 +6,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-w-xl mx-auto p-4 border rounded shadow-sm">
-        <h2 style="color: #4F46E5;">Conferma Ricezione Ordine</h2>
+        <h2 style="color: #721c24;">Conferma Ricezione Ordine</h2>
         <p>Gentile <strong>{{ $order->customer->nome }} {{ $order->customer->cognome }}</strong>,</p>
         <p>Ti confermiamo di aver ricevuto correttamente il tuo ordine <strong>#{{ $order->numero_ordine }}</strong> del {{ $order->created_at->format('d/m/Y H:i') }}.</p>
         
@@ -65,8 +65,8 @@
         </p>
 
         @if($order->metodo_pagamento === 'bonifico')
-            <div style="margin-top: 30px; padding: 20px; background-color: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 8px;">
-                <h3 style="margin-top: 0; color: #4F46E5;">Coordinate Bancarie per il Pagamento</h3>
+            <div style="margin-top: 30px; padding: 20px; background-color: #f3f3f3; border: 1px solid #e9e9e9; border-radius: 8px;">
+                <h3 style="margin-top: 0; color: #721c24;">Coordinate Bancarie per il Pagamento</h3>
                 <p style="font-size: 0.95em; color: #374151;">
                     Per completare il tuo ordine, effettua un bonifico bancario utilizzando le coordinate seguenti.<br>
                     <strong>Causale:</strong> Numero Ordine #{{ $order->numero_ordine }}

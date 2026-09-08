@@ -4,13 +4,13 @@
     <style>
         body { font-family: sans-serif; line-height: 1.6; color: #333; }
         .container { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #eee; border-radius: 5px; }
-        .header { background: #4f46e5; color: white; padding: 15px; border-radius: 5px 5px 0 0; text-align: center; }
+        .header { background: #721c24; color: white; padding: 15px; border-radius: 5px 5px 0 0; text-align: center; }
         .content { padding: 20px; }
         .footer { font-size: 12px; color: #777; text-align: center; margin-top: 20px; }
         .field { margin-bottom: 15px; }
-        .label { font-weight: bold; color: #4f46e5; display: block; }
+        .label { font-weight: bold; color: #721c24; display: block; }
         .value { color: #111; font-size: 16px; }
-        .btn { display: inline-block; padding: 10px 20px; background: #4f46e5; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 15px; }
+        .btn { display: inline-block; padding: 10px 20px; background: #721c24; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 15px; }
     </style>
 </head>
 <body>

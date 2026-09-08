@@ -6,12 +6,12 @@
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
     <div style="max-w-xl mx-auto p-4 border rounded shadow-sm">
-        <h2 style="color: #4F46E5;">Aggiornamento Stato Ordine</h2>
+        <h2 style="color: #721c24;">Aggiornamento Stato Ordine</h2>
         <p>Gentile <strong>{{ $order->customer->nome ?? 'Cliente' }} {{ $order->customer->cognome ?? '' }}</strong>,</p>
         
         <p>Ti informiamo che lo stato del tuo ordine <strong>#{{ $order->numero_ordine }}</strong> del {{ $order->created_at->format('d/m/Y') }} è stato aggiornato.</p>
         
-        <div style="background-color: #f3f4f6; padding: 15px; border-left: 4px solid #4F46E5; margin-bottom: 20px;">
+        <div style="background-color: #f3f4f6; padding: 15px; border-left: 4px solid #721c24; margin-bottom: 20px;">
             <h3 style="margin-top: 0; margin-bottom: 5px;">Nuovo Stato Spedizione: 
                 @if($order->stato === 'nuovo')
                     <span style="color: #d97706;">Ricevuto</span>

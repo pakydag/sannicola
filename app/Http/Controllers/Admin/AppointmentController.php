@@ -44,8 +44,8 @@ class AppointmentController extends Controller
                 'start' => $appointment->start_time->toIso8601String(),
                 'end' => $appointment->end_time->toIso8601String(),
                 'description' => $appointment->description,
-                'backgroundColor' => $appointment->status === 'cancelled' ? '#ef4444' : '#4f46e5',
-                'borderColor' => $appointment->status === 'cancelled' ? '#ef4444' : '#4f46e5',
+                'backgroundColor' => $appointment->status === 'cancelled' ? '#ef4444' : '#721c24',
+                'borderColor' => $appointment->status === 'cancelled' ? '#ef4444' : '#721c24',
                 'extendedProps' => [
                     'status' => $appointment->status,
                     'contact' => $clientLabel,
