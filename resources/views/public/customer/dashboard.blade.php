@@ -1,13 +1,14 @@
+
 @extends('public.layouts.main')
 
 @section('title', 'Il Mio Account - ' . config('app.name'))
 
 @section('content')
-<div class="bg-gray-50 min-h-screen pt-12 pb-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-gray-50 min-h-screen mt-12 pt-12 pb-24">
+    <div class="max-w-7xl mx-auto pt-6 mt-12 px-4 sm:px-6 lg:px-8">
         
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Area Clienti</h1>
+            <h1 class="text-3xl font-medium text-primary">Area Clienti</h1>
             <p class="mt-2 text-sm text-gray-500">Benvenuto {{ $user->name }}, qui puoi gestire i tuoi ordini e i tuoi dati personali.</p>
         </div>
 

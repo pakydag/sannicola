@@ -3,8 +3,8 @@
 @section('title', 'Ordine Ricevuto - ' . config('app.name'))
 
 @section('content')
-<div class="bg-gray-50 min-h-screen pt-12 pb-24 flex items-center justify-center">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+<div class="bg-gray-50 min-h-screen mt-12 pt-12 pb-24 flex items-center justify-center">
+    <div class="max-w-2xl mx-auto mt-12 pt-12 px-4 sm:px-6 lg:px-8 w-full">
         
         <div class="bg-white shadow rounded-lg px-4 py-8 sm:p-12 text-center border-t-4 border-green-500">
             
