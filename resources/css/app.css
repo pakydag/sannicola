@@ -21,7 +21,7 @@
 @layer components {
   h1, h2, h3, h4, h5, h6 { @apply font-display text-primary; }
   .titoli h2, .titoli h5 { @apply mb-4 normal-case text-secondary; }
-  b, strong { @apply font-medium; }
+  b, strong { @apply font-bold; }
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
   .logo { @apply h-20 w-auto transition-all duration-300; }
   .menu { @apply top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out; }
