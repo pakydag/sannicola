@@ -20,6 +20,57 @@
                         </div>
                     @endif
 
+                    @php
+                        // Categorie principali (parent_id è null)
+                        $mainCategories = $categorie->whereNull('parent_id');
+                        $grouped = $categorie->groupBy('parent_id');
+                        
+                        $renderedIds = collect();
+                        foreach ($mainCategories as $m) {
+                            $renderedIds->push($m->id);
+                            foreach ($grouped->get($m->id, collect()) as $c) {
+                                $renderedIds->push($c->id);
+                                foreach ($grouped->get($c->id, collect()) as $s) {
+                                    $renderedIds->push($s->id);
+                                }
+                            }
+                        }
+                        $unlinkedCategories = $categorie->whereNotIn('id', $renderedIds);
+                    @endphp
+
+                    @if($unlinkedCategories->isNotEmpty())
+                        <div class="mb-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-md">
+                            <h4 class="font-bold text-amber-800 text-sm mb-1">Categorie con gerarchia anomala ({{ $unlinkedCategories->count() }})</h4>
+                            <p class="text-xs text-amber-700 mb-3">Queste categorie non sono visibili nell'albero principale (es. genitore non trovato o annidate oltre 3 livelli). Clicca su "Correggi" per assegnare la Macrocategoria/Categoria corretta o impostarle come Macrocategoria.</p>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-amber-200 text-xs rounded">
+                                    <thead>
+                                        <tr class="bg-amber-100/60 text-amber-900">
+                                            <th class="py-1.5 px-3 border-b text-left">Nome</th>
+                                            <th class="py-1.5 px-3 border-b text-left">Genitore Attuale</th>
+                                            <th class="py-1.5 px-3 border-b text-right">Azioni</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($unlinkedCategories as $orphan)
+                                            <tr>
+                                                <td class="py-2 px-3 border-b font-medium text-gray-800">{{ $orphan->nome }}</td>
+                                                <td class="py-2 px-3 border-b text-gray-500">ID: {{ $orphan->parent_id ?? 'Nessuno' }} ({{ optional($orphan->parent)->nome ?? 'inesistente' }})</td>
+                                                <td class="py-2 px-3 border-b text-right">
+                                                    <a href="{{ route('admin.shop.categorie.edit', $orphan) }}" class="text-indigo-600 hover:text-indigo-900 font-bold mr-3">Correggi</a>
+                                                    <form action="{{ route('admin.shop.categorie.destroy', $orphan) }}" method="POST" class="inline-block" onsubmit="return confirm('Sicuro di voler eliminare questa categoria?');">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="text-red-600 hover:text-red-900">Elimina</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full bg-white border border-gray-200">
                             <thead>
@@ -31,16 +82,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    // Group categories by parent to simulate a tree
-                                    $grouped = $categorie->groupBy('parent_id');
-                                    $mainCategories = $grouped->get('') ?? collect(); // Root categories (parent_id is null)
-                                    if ($mainCategories->isEmpty() && $categorie->count() > 0) {
-                                        // Fallback if there are no root categories but there are categories
-                                        $mainCategories = $categorie->whereNull('parent_id');
-                                    }
-                                @endphp
-
                                 @foreach($mainCategories as $macro)
                                     <!-- 1. Macrocategoria -->
                                     <tr class="bg-indigo-50 border-t-2 border-indigo-200">

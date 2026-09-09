@@ -38,6 +38,7 @@ class ShopCategoryController extends Controller
             'visibile' => 'boolean',
         ]);
         $validated['visibile'] = $request->has('visibile');
+        $validated['parent_id'] = $request->filled('parent_id') ? $request->parent_id : null;
         
         ShopCategory::create($validated);
         
@@ -46,7 +47,8 @@ class ShopCategoryController extends Controller
 
     public function edit(ShopCategory $categoria)
     {
-        $categorie_padre = ShopCategory::where('id', '!=', $categoria->id)->with('parent')->orderBy('ordine')->get();
+        $excludeIds = array_merge([$categoria->id], $categoria->getAllDescendantIds());
+        $categorie_padre = ShopCategory::whereNotIn('id', $excludeIds)->with('parent')->orderBy('ordine')->get();
         return view('admin.shop.categorie.edit', compact('categoria', 'categorie_padre'));
     }
 
@@ -61,13 +63,20 @@ class ShopCategoryController extends Controller
         }
         $request->merge(['slug' => $slug]);
 
+        $excludeIds = array_merge([$categoria->id], $categoria->getAllDescendantIds());
+
         $validated = $request->validate([
             'nome' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:shop_categories,slug,' . $categoria->id,
-            'parent_id' => 'nullable|exists:shop_categories,id',
+            'parent_id' => [
+                'nullable',
+                'exists:shop_categories,id',
+                \Illuminate\Validation\Rule::notIn($excludeIds),
+            ],
             'visibile' => 'boolean',
         ]);
         $validated['visibile'] = $request->has('visibile');
+        $validated['parent_id'] = $request->filled('parent_id') ? $request->parent_id : null;
         
         $categoria->update($validated);
         

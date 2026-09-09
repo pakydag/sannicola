@@ -27,6 +27,7 @@
                         <div class="mb-4">
                             <label class="block text-gray-700 text-sm font-bold mb-2">Categoria Padre</label>
                             <select name="parent_id" class="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none">
+                                <option value="" {{ old('parent_id', $categoria->parent_id) ? '' : 'selected' }}>-- Nessuna (Macrocategoria Principale) --</option>
                                 @php
                                     $rootCats = $categorie_padre->whereNull('parent_id');
                                 @endphp
@@ -40,8 +41,10 @@
                                     @endforeach
                                 @endforeach
                             </select>
-                            <p class="text-[11px] text-gray-500 mt-2">
-                                Modifica la gerarchia spostando questa categoria sotto un'altra.
+                            <p class="text-[11px] text-gray-500 mt-2 leading-relaxed">
+                                • Scegli <b>-- Nessuna --</b> se questa è una <b>Macrocategoria</b>.<br>
+                                • Scegli una Macrocategoria se questa è una <b>Categoria</b>.<br>
+                                • Scegli una Categoria se questa è una <b>Sottocategoria</b>.
                             </p>
                         </div>
                         <div class="mb-6">
