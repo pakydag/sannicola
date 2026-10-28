@@ -26,19 +26,74 @@ class PublicShopController extends Controller
         $section = \App\Models\Section::where('modulo', 'shop')->first();
         $settings = $this->settings;
         
+        $search = trim($request->get('q', $request->get('search', '')));
         $marca_slug = $request->get('marca');
         $categoria_slug = $request->get('categoria');
+        $in_offerta = $request->boolean('in_offerta') || $request->has('in_offerta') || $request->has('offerta');
         
         $prodotti = collect();
         $marca = null;
         $categoria = null;
         $filtered = false;
         
-        $seoTitle = $section->seo_title ?: 'Shop';
-        $seoDesc = $section->seo_description ?: ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro shop online.');
+        $seoTitle = $section->seo_title ?: 'Catalogo';
+        $seoDesc = $section->seo_description ?: ($this->global_seo['home_seo_description'] ?? 'Esplora il nostro catalogo online.');
         $seoImage = ($section->seo_image ?: ($this->global_seo['home_seo_image'] ?? 'img/default-share.jpg'));
 
-        if ($marca_slug) {
+        if ($search !== '') {
+            $query = ShopProduct::where('visibile', true)
+                ->where(function($q) use ($search) {
+                    $q->where('nome', 'like', "%{$search}%")
+                      ->orWhereHas('tags', function($qTag) use ($search) {
+                          $qTag->where('nome', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('category', function($qCat) use ($search) {
+                          $qCat->where('nome', 'like', "%{$search}%")
+                               ->orWhereHas('parent', function($qParent) use ($search) {
+                                   $qParent->where('nome', 'like', "%{$search}%");
+                               });
+                      });
+                })
+                ->with(['variants', 'collection', 'brand', 'category', 'tags'])
+                ->orderBy('ordine')
+                ->orderBy('nome', 'asc');
+
+            if ($in_offerta) {
+                $query->whereHas('variants', function($q) {
+                    $q->where('prezzo_scontato', '>', 0);
+                });
+            }
+
+            if ($marca_slug) {
+                $marca = \App\Models\ShopBrand::where('slug', $marca_slug)->first();
+                if ($marca) {
+                    $query->where('shop_brand_id', $marca->id);
+                }
+            }
+
+            $prodotti = $query->get();
+            $filtered = true;
+            $seoTitle = 'Ricerca: ' . $search . ' - ' . $seoTitle;
+        } elseif ($in_offerta) {
+            $query = ShopProduct::where('visibile', true)
+                ->whereHas('variants', function($q) {
+                    $q->where('prezzo_scontato', '>', 0);
+                })
+                ->with(['variants', 'collection', 'brand', 'category'])
+                ->orderBy('ordine')
+                ->orderBy('nome', 'asc');
+
+            if ($marca_slug) {
+                $marca = \App\Models\ShopBrand::where('slug', $marca_slug)->first();
+                if ($marca) {
+                    $query->where('shop_brand_id', $marca->id);
+                }
+            }
+
+            $prodotti = $query->get();
+            $filtered = true;
+            $seoTitle = 'In Offerta - ' . $seoTitle;
+        } elseif ($marca_slug) {
             $marca = \App\Models\ShopBrand::where('slug', $marca_slug)->firstOrFail();
             $prodotti = ShopProduct::where('shop_brand_id', $marca->id)
                         ->where('visibile', true)
@@ -64,6 +119,8 @@ class PublicShopController extends Controller
                 ->whereIn('shop_category_id', $categoryIds)
                 ->with(['variants', 'collection'])
                 ->orderBy('ordine')
+                ->orderBy('nome', 'asc')
+                ->orderBy('id', 'asc')
                 ->get();
             $filtered = true;
             $seoTitle = $categoria->nome . ' - ' . $seoTitle;
@@ -77,10 +134,10 @@ class PublicShopController extends Controller
         ];
 
         $collezioni = ShopCollection::where('visibile', true)->orderBy('ordine')->get();
-        return view('public.shop.index', compact('collezioni', 'prodotti', 'marca', 'categoria', 'filtered', 'seo', 'settings', 'section'));
+        return view('public.shop.index', compact('collezioni', 'prodotti', 'marca', 'categoria', 'filtered', 'seo', 'settings', 'section', 'in_offerta'));
     }
 
-    public function collezione($slug)
+    public function collezione($slug, Request $request)
     {
         $collezione = ShopCollection::where('slug', $slug)->where('visibile', true)->firstOrFail();
         
@@ -97,6 +154,25 @@ class PublicShopController extends Controller
             })
             ->with(['variants', 'collection'])
             ->orderBy('ordine');
+
+        if ($request->filled('q') || $request->filled('search')) {
+            $search = trim($request->get('q', $request->get('search', '')));
+            $query->where(function($q) use ($search) {
+                $q->where('nome', 'like', "%{$search}%")
+                  ->orWhereHas('tags', function($qTag) use ($search) {
+                      $qTag->where('nome', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('category', function($qCat) use ($search) {
+                      $qCat->where('nome', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->boolean('in_offerta') || $request->has('in_offerta') || $request->has('offerta')) {
+            $query->whereHas('variants', function($q) {
+                $q->where('prezzo_scontato', '>', 0);
+            });
+        }
             
         $prodotti = $query->get();
         
@@ -111,7 +187,7 @@ class PublicShopController extends Controller
         return view('public.shop.collezione', compact('collezione', 'prodotti', 'seo', 'settings'));
     }
 
-    public function categoria($slug)
+    public function categoria($slug, Request $request)
     {
         $categoria = ShopCategory::where('slug', $slug)->where('visibile', true)->firstOrFail();
         
@@ -128,11 +204,33 @@ class PublicShopController extends Controller
         
         \Illuminate\Support\Facades\Log::info("Category IDs: " . implode(',', $categoryIds));
 
-        $prodotti = ShopProduct::where('visibile', true)
+        $query = ShopProduct::where('visibile', true)
             ->whereIn('shop_category_id', $categoryIds)
             ->with(['variants', 'collection'])
             ->orderBy('ordine')
-            ->get();
+            ->orderBy('nome', 'asc')
+            ->orderBy('id', 'asc');
+
+        if ($request->filled('q') || $request->filled('search')) {
+            $search = trim($request->get('q', $request->get('search', '')));
+            $query->where(function($q) use ($search) {
+                $q->where('nome', 'like', "%{$search}%")
+                  ->orWhereHas('tags', function($qTag) use ($search) {
+                      $qTag->where('nome', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('category', function($qCat) use ($search) {
+                      $qCat->where('nome', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if ($request->boolean('in_offerta') || $request->has('in_offerta') || $request->has('offerta')) {
+            $query->whereHas('variants', function($q) {
+                $q->where('prezzo_scontato', '>', 0);
+            });
+        }
+
+        $prodotti = $query->get();
 
         \Illuminate\Support\Facades\Log::info("Products Count: " . $prodotti->count());
 

@@ -40,7 +40,7 @@
                     <td style="padding: 10px; text-align: right;">€ {{ number_format($order->totale_imponibile, 2, ',', '.') }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold;">Spedizione:</td>
+                    <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold;">Costo Consegna:</td>
                     <td style="padding: 10px; text-align: right;">
                         @if($order->costo_spedizione > 0)
                             € {{ number_format($order->costo_spedizione, 2, ',', '.') }}
@@ -56,7 +56,34 @@
             </tfoot>
         </table>
 
-        <h3 style="border-bottom: 2px solid #eee; padding-bottom: 8px;">Dati di Spedizione</h3>
+        @if($order->data_consegna)
+        <div style="background-color: {{ $order->tipo_consegna === 'ritiro' ? '#ecfdf5' : '#fef3c7' }}; border: 1px solid {{ $order->tipo_consegna === 'ritiro' ? '#a7f3d0' : '#fde68a' }}; padding: 12px; border-radius: 6px; margin: 15px 0;">
+            <p style="margin: 0; color: {{ $order->tipo_consegna === 'ritiro' ? '#065f46' : '#92400e' }}; font-weight: bold;">
+                @if($order->tipo_consegna === 'ritiro')
+                    🏪 Ritiro in Sede Programmato:
+                @else
+                    🚚 Consegna a Domicilio Programmata a Barletta:
+                @endif
+            </p>
+            <p style="margin: 4px 0 0 0; color: #1f2937;">
+                <strong>Giorno:</strong> {{ \Carbon\Carbon::parse($order->data_consegna)->translatedFormat('l d F Y') }}<br>
+                <strong>Orario:</strong> Ore {{ $order->orario_consegna }}<br>
+                <strong>Costo:</strong> {{ $order->costo_spedizione > 0 ? '€ ' . number_format($order->costo_spedizione, 2, ',', '.') : 'Gratuito' }}
+                @if($order->tipo_consegna === 'ritiro')
+                    <br><strong>Punto di Ritiro:</strong> Gastronomia Salumeria San Nicola - Via Canne 124-12, 76121 Barletta (BT)
+                @endif
+            </p>
+            @if($order->note_cliente)
+                <p style="margin: 6px 0 0 0; color: #4b5563; font-size: 0.9em; font-style: italic;">
+                    <strong>Note Cliente:</strong> {{ $order->note_cliente }}
+                </p>
+            @endif
+        </div>
+        @endif
+
+        <h3 style="border-bottom: 2px solid #eee; padding-bottom: 8px;">
+            {{ $order->tipo_consegna === 'ritiro' ? 'Dati Cliente / Ritiro' : 'Dati di Spedizione' }}
+        </h3>
         <p>
             {{ $order->spedizione_nome }}<br>
             {{ $order->spedizione_indirizzo }}<br>

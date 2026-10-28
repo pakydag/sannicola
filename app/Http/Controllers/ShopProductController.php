@@ -14,7 +14,10 @@ class ShopProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = ShopProduct::with(['category', 'collection'])->orderBy('ordine');
+        $query = ShopProduct::with(['category', 'collection', 'tags'])
+            ->orderBy('ordine')
+            ->orderBy('nome', 'asc')
+            ->orderBy('id', 'asc');
         
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
@@ -24,12 +27,30 @@ class ShopProductController extends Controller
                   ->orWhere('marca', 'like', "%{$search}%")
                   ->orWhereHas('category', function($q2) use ($search) {
                       $q2->where('nome', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('tags', function($q2) use ($search) {
+                      $q2->where('nome', 'like', "%{$search}%")
+                        ->orWhere('slug', 'like', "%{$search}%");
+                  })
+                  ->orWhereHas('variants', function($q3) use ($search) {
+                      $q3->where('sku', 'like', "%{$search}%")
+                        ->orWhere('ean', 'like', "%{$search}%");
                   });
+            });
+        }
+
+        if ($request->filled('tag')) {
+            $tag = $request->tag;
+            $query->whereHas('tags', function($q) use ($tag) {
+                $q->where('tags.id', $tag)
+                  ->orWhere('tags.slug', $tag)
+                  ->orWhere('tags.nome', $tag);
             });
         }
         
         $prodotti = $query->paginate(20)->withQueryString();
-        return view('admin.shop.prodotti.index', compact('prodotti'));
+        $tags = \App\Models\Tag::orderBy('nome')->get();
+        return view('admin.shop.prodotti.index', compact('prodotti', 'tags'));
     }
 
     public function create()

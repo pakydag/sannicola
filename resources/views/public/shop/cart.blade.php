@@ -14,23 +14,31 @@
         <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Shop</a>
+            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Catalogo</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
             <span class="text-gray-900 font-medium">Carrello</span>
         </nav>
     </div>
 </div>
 
-<div class="bg-gray-50 pb-24 mx-6">
-    <div class="max-w-7xl mx-auto pt-0 pb-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
-        <div class="text-center titoli">
+<div class="max-w-7xl mx-6 xl:mx-auto bg-gray-50 pb-24">
+    <div class="w-full pt-0 pb-6 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-3 border-t-0 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div class="titoli text-center sm:text-left">
             <h1 class="text-3xl sm:text-4xl">
                 Il Tuo Carrello
             </h1>
         </div>
+        <div class="text-center sm:text-right">
+            <a href="{{ route('public.shop.index') }}" class="text-secondary hover:text-primary font-semibold text-sm inline-flex items-center gap-1.5 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Continua gli acquisti
+            </a>
+        </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-0">
+    <div class="w-full px-0 pt-0">
+        <!-- Barra di Ricerca e Filtri Sempre Visibile -->
+        @include('public.shop.partials.search_bar')
 
         @if(session('success'))
             <div class="mb-6 bg-green-100 text-green-700 px-4 py-3 rounded text-sm font-bold border border-green-200">
@@ -52,7 +60,7 @@
                 <p class="mt-1 text-sm text-gray-500">Aggiungi dei prodotti per poter procedere all'acquisto.</p>
                 <div class="mt-6">
                     <a href="{{ route('public.shop.index') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
-                        Inizia lo Shopping
+                        Continua gli acquisti
                     </a>
                 </div>
             </div>
@@ -93,7 +101,7 @@
                                                     <p class="text-gray-500">Colore: {{ $item['colore'] }}</p>
                                                 @endif
                                                 @if($item['taglia'])
-                                                    <p class="ml-4 pl-4 border-l border-gray-200 text-gray-500">Taglia: {{ $item['taglia'] }}</p>
+                                                    <p class="ml-4 pl-4 border-l border-gray-200 text-gray-500">Formato: {{ $item['taglia'] }}</p>
                                                 @endif
                                             </div>
                                             <p class="mt-1 text-sm font-medium text-gray-900">€ {{ number_format($item['prezzo'], 2, ',', '.') }} x {{ $item['quantita'] }}</p>
@@ -127,61 +135,38 @@
                             </li>
                         @endforeach
                     </ul>
+
+                    <div class="mt-4 flex items-center justify-between">
+                        <a href="{{ route('public.shop.index') }}" class="text-secondary hover:text-primary font-semibold text-sm inline-flex items-center gap-1.5 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                            Continua gli acquisti
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Riepilogo Ordine -->
-                <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow border-t-2 border-secondary sticky top-6">
-                    <h2 id="summary-heading" class="text-xl font-semibold text-gray-900 border-b pb-4 mb-6">Riepilogo Ordine</h2>
+                <section aria-labelledby="summary-heading" class="mt-16 bg-white rounded-lg px-4 py-6 sm:p-6 lg:p-8 lg:mt-0 lg:col-span-4 shadow border-t-4 border-primary sticky top-6">
+                    <h2 id="summary-heading" class="text-xl font-medium text-gray-900 border-b pb-4 mb-6">Il tuo Ordine</h2>
 
-                    <div class="mb-6">
-                        <label for="estimate_nation" class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Destinazione per la stima</label>
-                        <input type="text" id="estimate_nation" x-model="nazione" readonly class="w-full bg-slate-100 border-slate-200 rounded-lg text-sm text-gray-600 focus:outline-none p-3 cursor-not-allowed">
-                    </div>
-
-                    <dl class="mt-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <dt class="text-sm text-gray-600">Subtotale Prodotti</dt>
-                            <dd class="text-sm font-bold text-gray-900">€ <span x-text="formatPrice(subtotal)"></span></dd>
-                        </div>
-                        <div class="flex items-center justify-between border-t border-gray-100 pt-4 group relative">
-                            <dt class="text-sm text-gray-600 flex items-center">
-                                Spedizione stimata
-                                <svg class="w-3 h-3 ml-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </dt>
-                            <dd class="text-sm font-bold text-gray-900">
-                                <span x-show="shippingCost > 0">€ <span x-text="formatPrice(shippingCost)"></span></span>
-                                <span x-show="shippingCost == 0" class="text-emerald-600 uppercase tracking-widest text-xs">Gratis</span>
-                            </dd>
-
-                            <template x-if="freeThreshold > 0 && subtotal < freeThreshold">
-                                <div class="absolute -top-10 right-0 bg-slate-800 text-white text-[10px] px-2 py-2 rounded shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all z-20">
-                                    Aggiungi € <span x-text="formatPrice(freeThreshold - subtotal)"></span> per la spedizione <span class="text-emerald-400 font-bold">Gratis</span>!
-                                </div>
-                            </template>
+                    <dl class="space-y-4">
+                        <div class="flex items-center justify-between text-sm">
+                            <dt class="text-gray-600">Subtotale</dt>
+                            <dd class="font-medium text-gray-900">€ <span x-text="formatPrice(subtotal)"></span></dd>
                         </div>
                         <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-                            <dt class="text-base font-bold text-gray-900">Totale Ordine</dt>
-                            <dd class="text-2xl font-semibold text-primary">€ <span x-text="formatPrice(parseFloat(subtotal) + parseFloat(shippingCost))"></span></dd>
+                            <dt class="text-base font-bold text-gray-900">Totale Da Pagare</dt>
+                            <dd class="text-2xl font-bold text-primary">€ <span x-text="formatPrice(subtotal)"></span></dd>
                         </div>
                     </dl>
 
-                    <div class="mt-8">
+                    <div class="mt-8 space-y-3">
                         <a href="{{ route('public.shop.cart.checkout') }}" class="w-full btn font-semibold flex justify-center items-center rounded-md">
                             Procedi al Checkout
                         </a>
+                        <a href="{{ route('public.shop.index') }}" class="w-full inline-flex justify-center items-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                            Continua gli acquisti
+                        </a>
                     </div>
-
-                    @if($freeThreshold > 0)
-                    <div class="mt-6 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                        <div class="flex items-center justify-between text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-                            <span>Soglia Gratuita</span>
-                            <span>€ <span x-text="formatPrice(freeThreshold)"></span></span>
-                        </div>
-                        <div class="w-full bg-slate-200 rounded-full h-1.5 mb-1 overflow-hidden">
-                            <div class="bg-indigo-500 h-1.5 rounded-full transition-all duration-700" :style="'width: ' + Math.min((subtotal / freeThreshold) * 100, 100) + '%'"></div>
-                        </div>
-                    </div>
-                    @endif
                 </section>
             </div>
         @endif
@@ -192,30 +177,7 @@
 <script>
     function cartSummary() {
         return {
-            nazione: 'Italia',
             subtotal: {{ $totale }},
-            shippingCost: 0,
-            freeThreshold: {{ $freeThreshold }},
-            costs: @json($shippingCosts->pluck('costo', 'nazione')),
-            
-            init() {
-                this.updateShipping();
-            },
-            
-            updateShipping() {
-                if (!this.nazione) {
-                    this.shippingCost = 0;
-                    return;
-                }
-                let cost = this.costs[this.nazione] !== undefined ? parseFloat(this.costs[this.nazione]) : 5.00;
-                
-                if (this.freeThreshold > 0 && this.subtotal >= this.freeThreshold) {
-                    this.shippingCost = 0;
-                } else {
-                    this.shippingCost = cost;
-                }
-            },
-            
             formatPrice(price) {
                 return parseFloat(price).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }

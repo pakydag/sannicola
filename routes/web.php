@@ -73,6 +73,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/profile', [\App\Http\Controllers\CustomerAreaController::class, 'updateProfile'])->name('public.account.updateProfile');
 });
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::post('/file-manager/chunk-upload', [\App\Http\Controllers\Admin\FileManagerChunkController::class, 'uploadChunk'])->name('fm.chunk-upload');
+});
+
 Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::resource('articoli', ArticleController::class);
@@ -100,6 +104,9 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
     Route::get('/file-manager/fm-button', function () {
         return view('admin.filemanager_button');
     })->name('filemanager.button');
+
+    Route::post('/file-manager/chunk-upload', [\App\Http\Controllers\Admin\FileManagerChunkController::class, 'uploadChunk'])->name('filemanager.chunk-upload');
+
 
     // Configurazione Sito
     Route::get('/settings', [\App\Http\Controllers\Admin\SettingController::class, 'edit'])->name('settings.edit');
@@ -133,6 +140,14 @@ Route::middleware(['auth', 'admin'])->prefix('amministrazione')->name('admin.')-
         Route::post('shipping-costs', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'store'])->name('shipping_costs.store');
         Route::patch('shipping-costs/threshold', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'updateThreshold'])->name('shipping_costs.threshold');
         Route::delete('shipping-costs/{shippingCost}', [\App\Http\Controllers\Admin\ShopShippingCostController::class, 'destroy'])->name('shipping_costs.destroy');
+
+        // Gestione Orari e Giorni di Consegna
+        Route::get('delivery-times', [\App\Http\Controllers\Admin\ShopDeliverySlotController::class, 'index'])->name('delivery_slots.index');
+        Route::post('delivery-times/slots', [\App\Http\Controllers\Admin\ShopDeliverySlotController::class, 'storeSlot'])->name('delivery_slots.store_slot');
+        Route::patch('delivery-times/slots/{slot}/toggle', [\App\Http\Controllers\Admin\ShopDeliverySlotController::class, 'toggleSlot'])->name('delivery_slots.toggle_slot');
+        Route::put('delivery-times/slots/{slot}', [\App\Http\Controllers\Admin\ShopDeliverySlotController::class, 'updateSlot'])->name('delivery_slots.update_slot');
+        Route::delete('delivery-times/slots/{slot}', [\App\Http\Controllers\Admin\ShopDeliverySlotController::class, 'destroySlot'])->name('delivery_slots.destroy_slot');
+        Route::post('delivery-times/days', [\App\Http\Controllers\Admin\ShopDeliverySlotController::class, 'updateDays'])->name('delivery_slots.update_days');
 
         Route::resource('tags', \App\Http\Controllers\TagController::class);
     });

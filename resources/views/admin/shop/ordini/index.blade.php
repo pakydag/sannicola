@@ -22,6 +22,7 @@
                                     <th class="py-2 px-4 border-b text-left">N° Ordine</th>
                                     <th class="py-2 px-4 border-b text-left">Data</th>
                                     <th class="py-2 px-4 border-b text-left">Cliente B2B</th>
+                                    <th class="py-2 px-4 border-b text-left">Consegna Richiesta</th>
                                     <th class="py-2 px-4 border-b text-left">Totale</th>
                                     <th class="py-2 px-4 border-b text-left">Metodo Pagamento</th>
                                     <th class="py-2 px-4 border-b text-left">Stato Pagamento</th>
@@ -39,6 +40,25 @@
                                                 {{ $o->customer->ragione_sociale ?? ($o->customer->nome . ' ' . $o->customer->cognome) }}
                                             @else
                                                 <span class="text-red-500 italic">Cliente Eliminato</span>
+                                            @endif
+                                        </td>
+                                        <td class="py-2 px-4 border-b">
+                                            <div class="mb-1">
+                                                @if($o->tipo_consegna === 'ritiro')
+                                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">🏪 Ritiro</span>
+                                                @else
+                                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">🚚 Domicilio</span>
+                                                @endif
+                                            </div>
+                                            @if($o->data_consegna)
+                                                <div class="font-medium text-slate-900 text-xs">
+                                                    {{ \Carbon\Carbon::parse($o->data_consegna)->format('d/m/Y') }}
+                                                </div>
+                                                <div class="text-xs text-indigo-700 font-bold">
+                                                    Ore {{ $o->orario_consegna ?? '-' }}
+                                                </div>
+                                            @else
+                                                <span class="text-gray-400 text-xs italic">-</span>
                                             @endif
                                         </td>
                                         <td class="py-2 px-4 border-b font-bold text-indigo-700">€ {{ number_format($o->totale_ordine, 2, ',', '.') }}</td>
@@ -92,7 +112,7 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="7" class="py-4 px-4 text-center text-gray-500">Nessun ordine presente.</td></tr>
+                                    <tr><td colspan="9" class="py-4 px-4 text-center text-gray-500">Nessun ordine presente.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>

@@ -62,24 +62,33 @@
                                     <select name="shop_category_id" class="shadow border rounded w-full py-2 px-3 text-gray-700">
                                         <option value="">Nessuna</option>
                                         @foreach($categorie->whereNull('parent_id') as $macro)
-                                            <optgroup label="{{ $macro->nome }}">
-                                                @php
-                                                    $cats = $categorie->where('parent_id', $macro->id);
-                                                @endphp
-                                                @foreach($cats as $cat)
-                                                    <option value="{{ $cat->id }}" {{ old('shop_category_id') == $cat->id ? 'selected' : '' }} class="font-bold">
-                                                        {{ $cat->nome }}
+                                            @php
+                                                $cats = $categorie->where('parent_id', $macro->id);
+                                            @endphp
+                                            @if($cats->isEmpty())
+                                                <option value="{{ $macro->id }}" {{ old('shop_category_id') == $macro->id ? 'selected' : '' }} class="font-bold">
+                                                    {{ $macro->nome }}
+                                                </option>
+                                            @else
+                                                <optgroup label="{{ $macro->nome }}">
+                                                    <option value="{{ $macro->id }}" {{ old('shop_category_id') == $macro->id ? 'selected' : '' }}>
+                                                        • {{ $macro->nome }} (Tutta la categoria)
                                                     </option>
-                                                    @php
-                                                        $subs = $categorie->where('parent_id', $cat->id);
-                                                    @endphp
-                                                    @foreach($subs as $sub)
-                                                        <option value="{{ $sub->id }}" {{ old('shop_category_id') == $sub->id ? 'selected' : '' }}>
-                                                            &nbsp;&nbsp;&nbsp;{{ $sub->nome }}
+                                                    @foreach($cats as $cat)
+                                                        <option value="{{ $cat->id }}" {{ old('shop_category_id') == $cat->id ? 'selected' : '' }} class="font-bold">
+                                                            {{ $cat->nome }}
                                                         </option>
+                                                        @php
+                                                            $subs = $categorie->where('parent_id', $cat->id);
+                                                        @endphp
+                                                        @foreach($subs as $sub)
+                                                            <option value="{{ $sub->id }}" {{ old('shop_category_id') == $sub->id ? 'selected' : '' }}>
+                                                                &nbsp;&nbsp;&nbsp;↳ {{ $sub->nome }}
+                                                            </option>
+                                                        @endforeach
                                                     @endforeach
-                                                @endforeach
-                                            </optgroup>
+                                                </optgroup>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>

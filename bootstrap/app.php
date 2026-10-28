@@ -19,6 +19,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'webhook/spoki',
             'webhook/*',
+            'file-manager/chunk-upload',
+            'amministrazione/file-manager/chunk-upload',
         ]);
 
         $middleware->alias([

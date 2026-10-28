@@ -24,6 +24,7 @@
 
 <!-- File manager -->
 <script src="{{ asset('vendor/file-manager/js/file-manager.js') }}"></script>
+<script src="{{ asset('vendor/file-manager/js/fm-progressive-upload.js') }}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // set fm height

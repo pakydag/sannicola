@@ -3,12 +3,23 @@
 @section('title', 'Ordine Ricevuto - ' . config('app.name'))
 
 @section('content')
-<div class="bg-gray-50 min-h-screen mt-12 pt-12 pb-24 flex items-center justify-center">
-    <div class="max-w-2xl mx-auto mt-12 pt-12 px-4 sm:px-6 lg:px-8 w-full">
+<div class="checkout-success-page bg-gray-50 min-h-screen pb-24 pt-20 sm:pt-24 md:pt-28">
+    <style>
+        .checkout-success-page .checkout-success-search-bar {
+            display: none !important;
+        }
+    </style>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+        <!-- Barra di Ricerca e Filtri Sempre Visibile -->
+        <div class="checkout-success-search-bar">
+            @include('public.shop.partials.search_bar')
+        </div>
+    </div>
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         
         <div class="bg-white shadow rounded-lg px-4 py-8 sm:p-12 text-center border-t-4 border-green-500">
             
-            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6">
+            <div class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 mb-6" style="margin-top:200px">
                 <svg class="h-10 w-10 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>

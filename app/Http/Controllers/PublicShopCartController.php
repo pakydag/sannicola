@@ -58,7 +58,7 @@ class PublicShopCartController extends Controller
         }
 
         session()->put('cart', $cart);
-        return redirect()->back()->with('success', 'Prodotto aggiunto al carrello!');
+        return redirect()->route('public.shop.cart.index')->with('success', 'Prodotto aggiunto al carrello!');
     }
 
     public function remove($variant_id)
@@ -78,10 +78,48 @@ class PublicShopCartController extends Controller
             return redirect()->route('public.shop.index')->with('error', 'Il tuo carrello è vuoto.');
         }
 
-        $shippingCosts = \App\Models\ShopShippingCost::orderBy('nazione')->get();
-        $freeThreshold = \App\Models\Setting::where('key', 'shop_free_shipping_threshold')->value('value') ?? 0;
+        $deliverySlots = \App\Models\ShopDeliverySlot::where('attivo', true)->orderBy('orario_consegna')->get();
+        $deliveryDaysJson = \App\Models\Setting::where('key', 'shop_delivery_days')->value('value');
+        $deliveryDaysRaw = $deliveryDaysJson ? json_decode($deliveryDaysJson, true) : null;
+        $maxDays = (int)(\App\Models\Setting::where('key', 'shop_delivery_max_days')->value('value') ?? 7);
 
-        return view('public.shop.checkout', compact('cart', 'shippingCosts', 'freeThreshold'));
+        $availableDates = [];
+        $today = \Carbon\Carbon::today();
+        for ($i = 0; $i < $maxDays; $i++) {
+            $date = $today->copy()->addDays($i);
+            $dayOfWeek = (string)$date->isoFormat('E');
+            
+            $mattina = false;
+            $pomeriggio = false;
+            if (is_array($deliveryDaysRaw)) {
+                if (isset($deliveryDaysRaw[$dayOfWeek]) && is_array($deliveryDaysRaw[$dayOfWeek])) {
+                    $mattina = !empty($deliveryDaysRaw[$dayOfWeek]['mattina']);
+                    $pomeriggio = !empty($deliveryDaysRaw[$dayOfWeek]['pomeriggio']);
+                } elseif (in_array($dayOfWeek, $deliveryDaysRaw)) {
+                    $mattina = true;
+                    $pomeriggio = true;
+                }
+            } else {
+                $mattina = ((int)$dayOfWeek <= 6);
+                $pomeriggio = ((int)$dayOfWeek <= 6);
+            }
+
+            if ($mattina || $pomeriggio) {
+                $availableDates[] = [
+                    'value' => $date->format('Y-m-d'),
+                    'label' => $date->isToday() 
+                        ? 'Oggi (' . $date->translatedFormat('d M') . ')' 
+                        : ($date->isTomorrow() 
+                            ? 'Domani (' . $date->translatedFormat('d M') . ')' 
+                            : ucfirst($date->translatedFormat('l d F'))),
+                    'is_today' => $date->isToday(),
+                    'mattina' => $mattina,
+                    'pomeriggio' => $pomeriggio,
+                ];
+            }
+        }
+
+        return view('public.shop.checkout', compact('cart', 'deliverySlots', 'availableDates'));
     }
 
     public function processCheckout(Request $request)
@@ -91,6 +129,32 @@ class PublicShopCartController extends Controller
             return redirect()->route('public.shop.index')->with('error', 'Il tuo carrello è vuoto.');
         }
 
+        $tipoConsegna = $request->input('tipo_consegna', 'domicilio');
+        if (!in_array($tipoConsegna, ['domicilio', 'ritiro'])) {
+            $tipoConsegna = 'domicilio';
+        }
+
+        if ($tipoConsegna === 'ritiro') {
+            $orario = $request->input('orario_ritiro') ?: $request->input('orario_consegna');
+            $request->merge([
+                'tipo_consegna' => 'ritiro',
+                'orario_consegna' => $orario,
+                'indirizzo' => $request->input('indirizzo') ?: 'Ritiro in sede (Via Canne 124-12, Barletta)',
+                'citta' => 'Barletta',
+                'cap' => '76121',
+                'provincia' => 'BT',
+                'nazione' => 'Italia',
+            ]);
+        } else {
+            $request->merge([
+                'tipo_consegna' => 'domicilio',
+                'citta' => $request->citta ?: 'Barletta',
+                'cap' => $request->cap ?: '76121',
+                'provincia' => $request->provincia ?: 'BT',
+                'nazione' => $request->nazione ?: 'Italia',
+            ]);
+        }
+
         // 1. Validation for the different fields depending on checkout mode
         $rules = [
             'checkout_mode' => 'required|in:guest,register,login',
@@ -98,6 +162,9 @@ class PublicShopCartController extends Controller
             'cognome' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'telefono' => 'required|string|max:50',
+            'tipo_consegna' => 'required|in:domicilio,ritiro',
+            'data_consegna' => 'required|date',
+            'orario_consegna' => 'required|string|max:50',
             'indirizzo' => 'required|string|max:255',
             'citta' => 'required|string|max:255',
             'cap' => 'required|string|max:20',
@@ -118,6 +185,22 @@ class PublicShopCartController extends Controller
         }
 
         $request->validate($rules);
+
+        // Verifica disponibilità data e orario di consegna
+        $deliveryDate = \Carbon\Carbon::parse($request->data_consegna)->startOfDay();
+        $today = \Carbon\Carbon::today();
+
+        if ($deliveryDate->lt($today)) {
+            return redirect()->back()->withInput()->with('error', 'La data selezionata non è valida (nel passato).');
+        }
+
+        $chosenSlot = null;
+        if ($tipoConsegna === 'domicilio') {
+            $chosenSlot = \App\Models\ShopDeliverySlot::where('orario_consegna', $request->orario_consegna)->first();
+            if ($chosenSlot && !$chosenSlot->isAvailableForDate($deliveryDate)) {
+                return redirect()->back()->withInput()->with('error', "La fascia oraria delle {$chosenSlot->orario_consegna} non è più disponibile per la data selezionata (accettazione ordini chiusa alle {$chosenSlot->orario_limite}).");
+            }
+        }
 
         // 2. Handle User Creation if 'register'
         if ($request->checkout_mode === 'register') {
@@ -163,14 +246,8 @@ class PublicShopCartController extends Controller
             $totaleImponibile += $item['prezzo'] * $item['quantita'];
         }
 
-        // Calcolo Dinamico Spedizione
-        $costoSpedizione = \App\Models\ShopShippingCost::where('nazione', $request->nazione)->value('costo') ?? 5.00;
-        $freeThreshold = \App\Models\Setting::where('key', 'shop_free_shipping_threshold')->value('value') ?? 0;
-
-        if ($freeThreshold > 0 && $totaleImponibile >= $freeThreshold) {
-            $costoSpedizione = 0;
-        }
-
+        // Spese di consegna: Gratuite per ritiro in sede, altrimenti costo dello slot
+        $costoSpedizione = ($tipoConsegna === 'domicilio' && $chosenSlot) ? (float)$chosenSlot->costo : 0.0;
         $totaleOrdine = $totaleImponibile + $costoSpedizione;
 
         // 5. Create the Order record
@@ -180,6 +257,9 @@ class PublicShopCartController extends Controller
         $order->stato = 'nuovo';
         $order->stato_pagamento = 'attesa';
         $order->metodo_pagamento = $request->payment_method ?? 'bonifico';
+        $order->tipo_consegna = $tipoConsegna;
+        $order->data_consegna = $request->data_consegna;
+        $order->orario_consegna = $request->orario_consegna;
         $order->note_cliente = $request->note_ordine;
         
         $order->totale_imponibile = $totaleImponibile;
@@ -188,7 +268,7 @@ class PublicShopCartController extends Controller
         $order->costo_spedizione = $costoSpedizione;
 
         $order->spedizione_nome = $request->nome . ' ' . $request->cognome;
-        $order->spedizione_indirizzo = $request->indirizzo;
+        $order->spedizione_indirizzo = ($tipoConsegna === 'ritiro') ? 'Ritiro in sede (Via Canne 124-12, Barletta)' : $request->indirizzo;
         $order->spedizione_cap = $request->cap;
         $order->spedizione_citta = $request->citta;
         $order->spedizione_provincia = $request->provincia; // Opzionale
@@ -282,7 +362,7 @@ class PublicShopCartController extends Controller
                         'price_data' => [
                             'currency' => 'eur',
                             'product_data' => [
-                                'name' => 'Spedizione',
+                                'name' => 'Consegna a Mano (' . ($order->orario_consegna ? 'Ore ' . $order->orario_consegna : 'Fascia Oraria') . ')',
                             ],
                             'unit_amount' => round($costoSpedizione * 100),
                         ],

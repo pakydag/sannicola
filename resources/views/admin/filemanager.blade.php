@@ -29,7 +29,8 @@
             #fm a { text-decoration: none; }
         </style>
         
-        <script src="{{ asset('vendor/file-manager/js/file-manager.js') }}"></script>
+        <script src="{{ asset('vendor/file-manager/js/file-manager.js') }}?v={{ filemtime(public_path('vendor/file-manager/js/file-manager.js')) }}"></script>
+        <script src="{{ asset('vendor/file-manager/js/fm-progressive-upload.js') }}?v={{ filemtime(public_path('vendor/file-manager/js/fm-progressive-upload.js')) }}"></script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 // Set explicitly the base URL to avoid subdirectory/routing issues

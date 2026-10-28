@@ -50,8 +50,8 @@
                             </div>
                         @endif
                         
-                        @if($prodotto->variants->first() && $prodotto->variants->first()->prezzo_scontato > 0)
-                            <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">Saldi</div>
+                        @if($prodotto->variants->where('prezzo_scontato', '>', 0)->isNotEmpty())
+                            <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">In offerta</div>
                         @endif
                     </div>
                     
@@ -66,15 +66,17 @@
                         
                         <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
                             @php
-                                $variant = $prodotto->variants->first();
+                                $variant = $prodotto->variants->where('prezzo_scontato', '>', 0)->first() ?: $prodotto->variants->first();
                                 $prezzo = $variant ? $variant->prezzo : 0;
                                 $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
                                 
                                 $showPreview = ($settings['shop_price_preview'] ?? '0') == '1';
                                 if ($showPreview) {
                                     $priceData = $prodotto->getLowestPrice();
-                                    $prezzo = $priceData['prezzo'];
-                                    $prezzo_scontato = $priceData['prezzo_scontato'];
+                                    if ($priceData['prezzo_scontato'] > 0) {
+                                        $prezzo = $priceData['prezzo'];
+                                        $prezzo_scontato = $priceData['prezzo_scontato'];
+                                    }
                                 }
                             @endphp
                             

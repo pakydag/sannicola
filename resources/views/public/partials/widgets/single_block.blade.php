@@ -51,7 +51,7 @@
             </div>
         @else
             <!-- Layout Side (Foto a Sinistra) - Default -->
-            <div class="flex flex-col md:flex-row items-stretch bg-gray-100 rounded-lg">
+            <div class="flex flex-col md:flex-row items-stretch bg-gray-100 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg">
                 @if(!empty($widget->data['video']))
                     <div class="md:w-1/2 relative min-h-[300px] bg-black">
                         <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover">
@@ -59,7 +59,7 @@
                         </video>
                     </div>
                 @elseif(!empty($widget->data['image']))
-                    <div class="md:w-1/2 relative min-h-[300px] photo rounded-r-none rounded-r-none">
+                    <div class="md:w-1/2 relative min-h-[300px] overflow-hidden rounded-tl-lg rounded-tr-lg rounded-bl-none rounded-br-none md:rounded-tl-lg md:rounded-bl-lg md:rounded-tr-none md:rounded-br-none">
                         <img src="{{ asset($widget->data['image']) }}" alt="{{ $widget->titolo }}" class="absolute inset-0 w-full h-full object-cover">
                     </div>
                 @endif

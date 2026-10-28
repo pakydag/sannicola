@@ -52,3 +52,7 @@
   .separatore { @apply mt-2 h-0.5 w-20 bg-secondary mx-auto rounded; }
   .swiper-pagination-bullet-active{ background:#c5a059 !important; }
 }
+
+@media (max-width: 640px) {
+  .sticky { top: 65px !important; }
+}

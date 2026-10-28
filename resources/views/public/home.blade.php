@@ -7,42 +7,68 @@
 <!-- Home Blocks (Drag & Drop Widgets) -->
 @if(isset($homeBlocks) && $homeBlocks->count() > 0)
     <div class="mx-auto">
-        @foreach($homeBlocks as $block)
-            @php $widget = $block->globalWidget; @endphp
-            @if($widget)
+        @php
+            $firstGalleryBlock = $homeBlocks->first(fn($b) => $b->globalWidget && $b->globalWidget->tipo === 'gallery');
+            $remainingBlocks = $firstGalleryBlock 
+                ? $homeBlocks->filter(fn($b) => $b->id !== $firstGalleryBlock->id) 
+                : $homeBlocks;
+        @endphp
 
+        {{-- 1. Prima Gallery in evidenza a schermo intero --}}
+        @if($firstGalleryBlock && $firstGalleryBlock->globalWidget)
+            @php $widget = $firstGalleryBlock->globalWidget; @endphp
+            <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden">
+                @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
+                @endif
+                @include('public.partials.widgets.gallery', ['widget' => $widget])
+            </div>
+        @endif
 
+        {{-- 2. Contenitore per Barra di Ricerca Sticky e tutti i blocchi successivi --}}
+        <div class="relative pt-3 pb-8">
+            <!-- Barra di Ricerca che parte sotto la Gallery e si blocca in testa allo scroll -->
+            @include('public.shop.partials.search_bar')
 
+            {{-- 3. Tutti gli altri blocchi della Home --}}
+            @foreach($remainingBlocks as $block)
+                @php $widget = $block->globalWidget; @endphp
+                @if($widget)
                     @if($widget->tipo === 'gallery')
-                    <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden">
-                    @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
-                    @endif
-                        @include('public.partials.widgets.gallery', ['widget' => $widget])</div>
+                        <div class="max-w-full w-screen mx-auto widget-block shadow-sm rounded-none overflow-hidden">
+                            @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
+                            @endif
+                            @include('public.partials.widgets.gallery', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'video')
                         <div class="max-w-full w-screen mx-auto widget-block bg-white shadow-sm rounded-none overflow-hidden">
                             @if($widget->titolo)<h2 class="text-3xl hidden font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.video', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.video', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'mirror_blocks')
                         <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="text-3xl font-extrabold hidden text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.mirror', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.mirror', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'single_block')
-                        <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-16 widget-block overflow-hidden mt-20">
+                        <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-16 widget-block overflow-hidden mt-8 md:mt-20">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-4 mt-12 pb-4">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.single_block', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.single_block', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'section_grid')
-                        <div class="max-w-7xl mx-6 lg:mx-auto mb-12 widget-block overflow-hidden">
+                        <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.section_grid', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.section_grid', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'image_text_image')
                         <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-center text-gray-900 tracking-tight sm:text-4xl px-4 py-6 hidden">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.image_text_image', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.image_text_image', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'booking_search' && (config('app.booking_enabled') === '1' || \App\Models\Setting::where('key', 'booking_enabled')->value('value') == '1'))
                         <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto -mt-16 relative z-20 widget-block">
                             @include('public.partials.widgets.booking_search', ['widget' => $widget])
@@ -51,12 +77,14 @@
                         <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-16 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.info_blocks', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.info_blocks', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'booking_structures')
-                        <div class="max-w-7xl mx-6 lg:mx-auto mb-10 py-12 widget-block overflow-hidden">
+                        <div class="max-w-7xl mx-6 lg:mx-8 xl:mx-auto mb-10 py-12 widget-block overflow-hidden">
                             @if($widget->titolo)<h2 class="hidden text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl mb-8 pb-4 border-b border-gray-100">{{ $widget->titolo }}</h2>
                             @endif
-                            @include('public.partials.widgets.booking_structures', ['widget' => $widget])</div>
+                            @include('public.partials.widgets.booking_structures', ['widget' => $widget])
+                        </div>
                     @elseif($widget->tipo === 'map')
                         @php $fullWidth = $widget->data['full_width'] ?? 0; @endphp
                         <div class="{{ $fullWidth ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8' }} widget-block">
@@ -80,9 +108,9 @@
                             @include('public.partials.widgets.shop_brands', ['widget' => $widget])
                         </div>
                     @endif
-
-            @endif
-        @endforeach
+                @endif
+            @endforeach
+        </div>
     </div>
 @else
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">

@@ -22,7 +22,41 @@
                                 <p><strong>Email:</strong> <a href="mailto:{{ $ordine->customer->email ?? '' }}" class="text-indigo-600 hover:underline">{{ $ordine->customer->email ?? '-' }}</a></p>
                             </div>
                             <div class="mt-4 pt-4 border-t">
-                                <p class="font-semibold text-gray-700 mb-1">Indirizzo Spedizione (Storicizzato):</p>
+                                <div class="{{ $ordine->tipo_consegna === 'ritiro' ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200' }} p-3.5 rounded-lg border mb-3">
+                                    <div class="flex items-center justify-between gap-2 mb-2">
+                                        <p class="font-bold {{ $ordine->tipo_consegna === 'ritiro' ? 'text-emerald-950' : 'text-amber-950' }} flex items-center gap-1.5 text-sm">
+                                            @if($ordine->tipo_consegna === 'ritiro')
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-emerald-200 text-emerald-900">🏪 Ritiro in Sede</span>
+                                            @else
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-amber-200 text-amber-900">🚚 Consegna a Domicilio</span>
+                                            @endif
+                                        </p>
+                                        <span class="text-xs font-semibold px-2 py-0.5 rounded {{ $ordine->costo_spedizione > 0 ? 'bg-amber-100 text-amber-900' : 'bg-emerald-100 text-emerald-800' }}">
+                                            {{ $ordine->costo_spedizione > 0 ? ('+ € ' . number_format($ordine->costo_spedizione, 2, ',', '.')) : 'Gratuito' }}
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-slate-800 mt-1">
+                                        <strong>Giorno:</strong> {{ $ordine->data_consegna ? \Carbon\Carbon::parse($ordine->data_consegna)->translatedFormat('l d F Y') : 'Non specificato' }}
+                                    </p>
+                                    <p class="text-sm text-slate-800">
+                                        <strong>Orario:</strong> <span class="font-bold text-indigo-700">Ore {{ $ordine->orario_consegna ?? '-' }}</span>
+                                    </p>
+                                    @if($ordine->tipo_consegna === 'ritiro')
+                                        <p class="text-xs text-emerald-800 mt-1.5">
+                                            📍 <strong>Presso:</strong> Gastronomia Salumeria San Nicola - Via Canne 124-12, Barletta
+                                        </p>
+                                    @endif
+                                    @if($ordine->note_cliente)
+                                        <div class="mt-2 pt-2 border-t {{ $ordine->tipo_consegna === 'ritiro' ? 'border-emerald-200/60' : 'border-amber-200/60' }} text-xs text-slate-700">
+                                            <strong>Note del Cliente:</strong>
+                                            <p class="italic mt-0.5 text-slate-600 bg-white/80 p-2 rounded">{{ $ordine->note_cliente }}</p>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <p class="font-semibold text-gray-700 mb-1">
+                                    {{ $ordine->tipo_consegna === 'ritiro' ? 'Riferimento e Luogo di Ritiro:' : 'Indirizzo Consegna a Barletta:' }}
+                                </p>
                                 <p>{{ $ordine->spedizione_nome }}</p>
                                 <p>{{ $ordine->spedizione_indirizzo }}</p>
                                 <p>{{ $ordine->spedizione_cap }} {{ $ordine->spedizione_citta }} ({{ $ordine->spedizione_provincia }})</p>
@@ -33,8 +67,15 @@
                         <div class="p-4 bg-gray-50 rounded border flex flex-col justify-between">
                             <div>
                                 <h3 class="font-bold text-lg mb-2 border-b pb-2">Riepilogo Importi</h3>
-                                <div class="flex justify-between mb-1"><span class="text-gray-600">Imponibile (Netto):</span> <span>€ {{ number_format($ordine->totale_imponibile, 2, ',', '.') }}</span></div>
-                                <div class="flex justify-between mb-1"><span class="text-gray-600">IVA/Imposte:</span> <span>€ {{ number_format($ordine->totale_iva, 2, ',', '.') }}</span></div>
+                                <div class="flex justify-between mb-1"><span class="text-gray-600">Subtotale Prodotti (Netto):</span> <span>€ {{ number_format($ordine->totale_imponibile, 2, ',', '.') }}</span></div>
+                                <div class="flex justify-between mb-1"><span class="text-gray-600">Costo Consegna a Mano:</span> <span class="font-semibold {{ $ordine->costo_spedizione > 0 ? 'text-indigo-700' : 'text-emerald-600' }}">{{ $ordine->costo_spedizione > 0 ? '€ ' . number_format($ordine->costo_spedizione, 2, ',', '.') : 'Gratuito' }}</span></div>
+                                @if($ordine->totale_iva > 0)
+                                    <div class="flex justify-between mb-1"><span class="text-gray-600">IVA/Imposte:</span> <span>€ {{ number_format($ordine->totale_iva, 2, ',', '.') }}</span></div>
+                                @endif
+                                <div class="flex justify-between mt-3 pt-3 border-t font-bold text-lg text-slate-900">
+                                    <span>Totale Ordine:</span>
+                                    <span class="text-primary">€ {{ number_format($ordine->totale_ordine, 2, ',', '.') }}</span>
+                                </div>
                             </div>
                             <div>
                                 </div>

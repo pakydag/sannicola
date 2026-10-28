@@ -18,6 +18,11 @@ class ShopCategory extends Model
         return $this->hasMany(ShopCategory::class, 'parent_id');
     }
 
+    public function products()
+    {
+        return $this->hasMany(ShopProduct::class, 'shop_category_id');
+    }
+
     /**
      * Restituisce gli ID di tutti i discendenti (figli, nipoti, ecc.)
      */

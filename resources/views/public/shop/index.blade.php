@@ -1,6 +1,6 @@
 @extends('public.layouts.main')
 
-@section('title', 'Shop - ' . config('app.name'))
+@section('title', 'Catalogo - ' . config('app.name'))
 
 @section('content')
 @if(isset($section) && $section->immagine)
@@ -9,39 +9,42 @@
         <nav class=" flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <span class="text-gray-900">Shop</span>
+            <span class="text-gray-900">Catalogo</span>
         </nav>
     </div>
 </div>
-<div class="max-w-7xl mx-auto py-0 pb-3 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+<div class="max-w-7xl mx-6 xl:mx-auto py-0 pb-3 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-3 border-t-0">
     <div class="text-center titoli">
         <h1 class="text-3xl sm:text-4xl">
-            Il Nostro Shop
+            Il Nostro Catalogo
         </h1>
         <h2 class="mt-1 max-w-2xl mx-auto">
             Esplora le nostre collezioni e categorie per trovare i migliori prodotti.
-</h2>
+        </h2>
     </div>
 </div>
 @else
-<div class="bg-white shadow-sm border-b">
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<div class="bg-white shadow-sm border-b mb-3">
+    <div class="max-w-7xl mx-6 xl:mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <div class="text-center">
             <h1 class="text-3xl sm:text-4xl">
-                Il Nostro Shop
+                Il Nostro Catalogo
             </h1>
             <h2 class="mt-1 max-w-2xl mx-auto">
                 Esplora le nostre collezioni e categorie per trovare i migliori prodotti.
-</h2>
+            </h2>
         </div>
     </div>
 </div>
 @endif
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 pt-5">
+<div class="max-w-7xl mx-6 xl:mx-auto pb-12 sm:px-0 lg:px-0 pt-0">
+    <!-- Barra di Ricerca Sempre Visibile -->
+    @include('public.shop.partials.search_bar')
+
     <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Sidebar -->
-        <aside class="w-full lg:w-1/5 flex-shrink-0">
+        <!-- Sidebar (Nascosta su mobile perché presente nella barra sticky) -->
+        <aside class="hidden lg:block w-full lg:w-1/5 flex-shrink-0">
             @include('public.shop.partials.sidebar')
         </aside>
 
@@ -53,15 +56,12 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                     </span>
                     @if($filtered)
-                        Risultati per: {{ $marca ? $marca->nome : ($categoria ? $categoria->nome : 'Filtro') }}
+                        Risultati per: {{ (request('q') || request('search')) ? 'Ricerca "' . (request('q') ?? request('search')) . '"' : (!empty($in_offerta) ? 'In Offerta' : ($marca ? $marca->nome : ($categoria ? $categoria->nome : 'Filtro'))) }}
                     @else
                         Le Nostre Collezioni
                     @endif
                 </div>
 
-                @if($filtered)
-                    <a href="{{ route('public.shop.index') }}" class="text-xs font-bold text-red-500 hover:text-red-700 underline uppercase tracking-widest">Rimuovi Filtro</a>
-                @endif
             </h2>
 
             @if($filtered)
@@ -70,9 +70,10 @@
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-xl hover:-translate-y-1 group">
                             @php
                                 $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
+                                $productUrl = route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]);
                             @endphp
 
-                            <div class="relative overflow-hidden aspect-[4/3]">
+                            <a href="{{ $productUrl }}" class="block relative overflow-hidden aspect-[4/3] cursor-pointer">
                                 @if($primaFoto)
                                     <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                                 @else
@@ -80,26 +81,35 @@
                                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     </div>
                                 @endif
-                            </div>
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300"></div>
+
+                                @if($prodotto->variants->where('prezzo_scontato', '>', 0)->isNotEmpty())
+                                    <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">In offerta</div>
+                                @endif
+                            </a>
 
                             <div class="p-6 flex-grow flex flex-col">
                                 @if($prodotto->marca)
-                                    <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
+                                    <span class="text-[10px] font-bold text-secondary uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                                 @endif
 
-                                <h3 class="text-lg font-normal text-primary group-hover:text-indigo-600 transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                                <a href="{{ $productUrl }}" class="block hover:text-secondary">
+                                    <h3 class="text-lg font-normal text-primary group-hover:text-secondary transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                                </a>
 
                                 <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                     @php
-                                        $variant = $prodotto->variants->first();
+                                        $variant = $prodotto->variants->where('prezzo_scontato', '>', 0)->first() ?: $prodotto->variants->first();
                                         $prezzo = $variant ? $variant->prezzo : 0;
                                         $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
 
                                         $showPreview = ($settings['shop_price_preview'] ?? '0') == '1';
                                         if ($showPreview) {
                                             $priceData = $prodotto->getLowestPrice();
-                                            $prezzo = $priceData['prezzo'];
-                                            $prezzo_scontato = $priceData['prezzo_scontato'];
+                                            if ($priceData['prezzo_scontato'] > 0) {
+                                                $prezzo = $priceData['prezzo'];
+                                                $prezzo_scontato = $priceData['prezzo_scontato'];
+                                            }
                                         }
                                     @endphp
 
@@ -116,11 +126,11 @@
                                                 </div>
                                             @endif
                                         @else
-                                            <span class="text-xs font-bold text-indigo-500 uppercase tracking-widest">Dettagli</span>
+                                            <span class="text-xs font-bold text-secondary uppercase tracking-widest">Dettagli</span>
                                         @endif
                                     </div>
 
-                                    <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? 'all', 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-primary text-white rounded-xl hover:bg-indigo-600 transition-all shadow-sm">
+                                    <a href="{{ $productUrl }}" class="inline-flex items-center justify-center w-10 h-10 bg-primary text-white rounded-xl hover:bg-secondary transition-all shadow-sm">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                                     </a>
                                 </div>
@@ -128,7 +138,11 @@
                         </div>
                     @empty
                         <div class="col-span-full py-12 text-center text-gray-400 italic bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-                            Nessun prodotto trovato per questo filtro.
+                            @if(request('q') || request('search'))
+                                Nessun prodotto trovato per la ricerca "{{ request('q') ?? request('search') }}".
+                            @else
+                                Nessun prodotto trovato per questo filtro.
+                            @endif
                         </div>
                     @endforelse
                 </div>

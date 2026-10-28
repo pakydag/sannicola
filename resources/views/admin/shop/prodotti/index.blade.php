@@ -20,12 +20,24 @@
                         </div>
                     @endif
 
-                    <div class="mb-4 flex justify-between items-center">
-                        <form action="{{ route('admin.shop.prodotti.index') }}" method="GET" class="flex w-full max-w-md">
-                            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cerca per nome, SKU, marca..." class="shadow-sm border-gray-300 rounded-l-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <button type="submit" class="bg-gray-100 border border-l-0 border-gray-300 text-gray-700 px-4 py-2 rounded-r-md hover:bg-gray-200">Cerca</button>
-                            @if(request('search'))
-                                <a href="{{ route('admin.shop.prodotti.index') }}" class="ml-2 text-sm text-gray-500 hover:text-gray-700 underline">Azzera</a>
+                    <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                        <form action="{{ route('admin.shop.prodotti.index') }}" method="GET" class="flex flex-wrap items-center gap-2 w-full max-w-2xl">
+                            <div class="flex flex-1 min-w-[240px]">
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cerca per nome, SKU, marca, tag..." class="shadow-sm border-gray-300 rounded-l-md w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                                <button type="submit" class="bg-gray-100 border border-l-0 border-gray-300 text-gray-700 px-4 py-2 rounded-r-md hover:bg-gray-200 text-sm font-medium">Cerca</button>
+                            </div>
+                            <div class="w-auto">
+                                <select name="tag" onchange="this.form.submit()" class="shadow-sm border-gray-300 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500 py-2">
+                                    <option value="">-- Filtra per Tag --</option>
+                                    @foreach($tags as $t)
+                                        <option value="{{ $t->id }}" {{ request('tag') == $t->id ? 'selected' : '' }}>
+                                            #{{ $t->nome }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if(request('search') || request('tag'))
+                                <a href="{{ route('admin.shop.prodotti.index') }}" class="text-sm text-gray-500 hover:text-gray-700 underline">Azzera</a>
                             @endif
                         </form>
                     </div>
@@ -54,7 +66,20 @@
                                             @endif
                                         </td>
                                         <td class="py-2 px-4 border-b text-gray-500 text-sm">{{ $p->sku_padre ?? '-' }}</td>
-                                        <td class="py-2 px-4 border-b font-bold">{{ $p->nome }}</td>
+                                        <td class="py-2 px-4 border-b">
+                                            <div class="font-bold text-gray-900">{{ $p->nome }}</div>
+                                            @if($p->tags && $p->tags->isNotEmpty())
+                                                <div class="flex flex-wrap gap-1 mt-1">
+                                                    @foreach($p->tags as $t)
+                                                        <a href="{{ route('admin.shop.prodotti.index', ['tag' => $t->id]) }}" 
+                                                           title="Filtra per il tag {{ $t->nome }}" 
+                                                           class="inline-flex items-center px-1.5 py-0.5 rounded text-[11px] font-normal bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-100 transition-colors">
+                                                            #{{ $t->nome }}
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td class="py-2 px-4 border-b">{{ $p->category->nome ?? '-' }}</td>
                                         <td class="py-2 px-4 border-b">{{ $p->marca ?? '-' }}</td>
                                         <td class="py-2 px-4 border-b text-center">

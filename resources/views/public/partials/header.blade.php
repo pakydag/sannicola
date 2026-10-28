@@ -53,18 +53,18 @@ a[title="Accedi Area Booking"] svg {
                 @endif
             </div>
         @endif
-        <div class="flex items-center justify-between h-20">
+        <div class="flex items-center justify-between h-16 sm:h-20">
              <!-- Logo -->
                 <div class="flex shrink-0 mr-5 ml-4 lg:ml-0">
                     <a href="{{ route('public.home') }}" class="text-2xl font-bold text-indigo-600 flex items-center">
                         @if($siteLogo)
-                            <img :src="scrolled ? '{{ asset($siteLogo) }}' : '{{ asset('storage/logo-b.png') }}'" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'logo-hover'" class="logo">
+                            <img :src="scrolled ? '{{ asset($siteLogo) }}' : '{{ asset('storage/logo-b.png') }}'" alt="{{ config('app.name') }}" :class="scrolled ? '' : 'logo-hover'" class="logo h-14 sm:h-20 w-auto">
                         @else
                             {{ config('app.name', 'Il Mio Sito') }}
                         @endif
                     </a>
                 </div>
-            <div class="flex items-center gap-7 ml-auto space-x-4">
+            <div class="flex items-center ml-auto gap-2 sm:gap-7">
                 <!-- Mobile menu button -->
                 <div class="-ml-2 mr-2 flex items-center lg:hidden">
                   <button @click="mobileMenuOpen = !mobileMenuOpen" type="button"
@@ -142,7 +142,7 @@ a[title="Accedi Area Booking"] svg {
                 </nav>
             </div>
 
-            <div class="flex items-center space-x-5 sm:ml-6">
+            <div class="flex items-center space-x-0 sm:space-x-5 sm:ml-6">
     @if($shopEnabled == '1' || Auth::check())
         @auth
             <a href="{{ Auth::user()->role === 'admin' ? route('dashboard') : route('public.account.dashboard') }}" :class="scrolled ? 'text-gray-600 hover:text-black' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors" title="Il Mio Account">
@@ -156,7 +156,7 @@ a[title="Accedi Area Booking"] svg {
     @endif
 
     @if($shopEnabled == '1')
-        <a href="{{ route('public.shop.cart.index') }}" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors">
+        <a href="{{ route('public.shop.cart.index') }}" :class="scrolled ? 'text-gray-600 hover:text-primary' : 'text-white/80 hover:text-white'" class="relative inline-flex items-center p-2 transition-colors text-gray-600 hover:text-primary">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
             @php $cartCount = array_sum(array_column(session()->get('cart', []), 'quantita')); @endphp
             @if($cartCount > 0)

@@ -1,6 +1,6 @@
 @extends('public.layouts.main')
 
-@section('title', $collezione->nome . ' - Shop ' . config('app.name'))
+@section('title', $collezione->nome . ' - Catalogo ' . config('app.name'))
 
 @section('content')
 @php
@@ -13,28 +13,31 @@
         <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Shop</a>
+            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Catalogo</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <span class="text-gray-900 font-medium">Collezione: {{ $collezione->nome }}</span>
+            <span class="min-w-0 flex-1 truncate text-gray-900 font-medium lg:flex-none lg:overflow-visible lg:whitespace-normal">Collezione: {{ $collezione->nome }}</span>
         </nav>
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-1 pb-4 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-12 border-t-0">
+<div class="max-w-7xl mx-6 xl:mx-auto py-1 pb-4 px-4 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-3 border-t-0">
     <div class="text-center titoli">
-        <h1 class="text-3xl sm:text-4xl">
+        <h1 class="min-w-0 truncate text-2xl lg:overflow-visible lg:whitespace-normal lg:text-4xl">
             Collezione: {{ $collezione->nome }}
         </h1>
         <h2>
             {{ $collezione->descrizione ?? 'Esplora i prodotti di questa collezione.' }}
-</h2>
+        </h2>
     </div>
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+<div class="max-w-7xl mx-6 xl:mx-auto pb-12 sm:px-0 xl:px-0 pt-0">
+    <!-- Barra di Ricerca Sempre Visibile -->
+    @include('public.shop.partials.search_bar')
+
     <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Sidebar -->
-        <aside class="w-full lg:w-1/5 flex-shrink-0">
+        <!-- Sidebar (Nascosta su mobile perché presente nella barra sticky) -->
+        <aside class="hidden lg:block w-full lg:w-1/5 flex-shrink-0">
             @include('public.shop.partials.sidebar')
         </aside>
 
@@ -45,9 +48,10 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-xl hover:-translate-y-1 group">
                         @php
                             $primaFoto = is_array($prodotto->foto_aggiuntive) && count($prodotto->foto_aggiuntive) > 0 ? $prodotto->foto_aggiuntive[0] : null;
+                            $productUrl = route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? $collezione->slug, 'prodotto_slug' => $prodotto->slug]);
                         @endphp
 
-                        <div class="relative overflow-hidden aspect-[4/3]">
+                        <a href="{{ $productUrl }}" class="block relative overflow-hidden aspect-[4/3] cursor-pointer">
                             @if($primaFoto)
                                 <img src="{{ $primaFoto }}" alt="{{ $prodotto->nome }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                             @else
@@ -56,29 +60,33 @@
                                 </div>
                             @endif
 
-                            @if($prodotto->variants->first() && $prodotto->variants->first()->prezzo_scontato > 0)
-                                <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">Saldi</div>
+                            @if($prodotto->variants->where('prezzo_scontato', '>', 0)->isNotEmpty())
+                                <div class="absolute top-4 left-4 bg-red-600 text-white text-[10px] font-bold uppercase px-3 py-1 rounded-full shadow-lg">In offerta</div>
                             @endif
-                        </div>
+                        </a>
 
                         <div class="p-6 flex-grow flex flex-col">
                             @if($prodotto->marca)
                                 <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest mb-1">{{ $prodotto->marca }}</span>
                             @endif
 
-                            <h3 class="text-lg font-semibold text-primary group-hover:text-black transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                            <a href="{{ $productUrl }}" class="block hover:text-black">
+                                <h3 class="text-lg font-semibold text-primary group-hover:text-black transition-colors mb-4 truncate">{{ $prodotto->nome }}</h3>
+                            </a>
 
                             <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-50">
                                 @php
-                                    $variant = $prodotto->variants->first();
+                                    $variant = $prodotto->variants->where('prezzo_scontato', '>', 0)->first() ?: $prodotto->variants->first();
                                     $prezzo = $variant ? $variant->prezzo : 0;
                                     $prezzo_scontato = $variant ? $variant->prezzo_scontato : null;
 
                                     $showPreview = ($settings['shop_price_preview'] ?? '0') == '1';
                                     if ($showPreview) {
                                         $priceData = $prodotto->getLowestPrice();
-                                        $prezzo = $priceData['prezzo'];
-                                        $prezzo_scontato = $priceData['prezzo_scontato'];
+                                        if ($priceData['prezzo_scontato'] > 0) {
+                                            $prezzo = $priceData['prezzo'];
+                                            $prezzo_scontato = $priceData['prezzo_scontato'];
+                                        }
                                     }
                                 @endphp
 
@@ -107,7 +115,7 @@
                                     @endif
                                 </div>
 
-                                <a href="{{ route('public.shop.prodotto', ['collezione_slug' => $prodotto->collection?->slug ?? $collezione->slug, 'prodotto_slug' => $prodotto->slug]) }}" class="inline-flex items-center justify-center w-10 h-10 bg-primary text-white rounded-xl hover:bg-secondary transition-all shadow-sm">
+                                <a href="{{ $productUrl }}" class="inline-flex items-center justify-center w-10 h-10 bg-primary text-white rounded-xl hover:bg-secondary transition-all shadow-sm">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7-7 7"></path></svg>
                                 </a>
                             </div>

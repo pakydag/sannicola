@@ -13,16 +13,16 @@
         <nav class="flex p-6 items-left text-sm font-medium text-gray-400 breadcrumb">
             <a href="{{ route('public.home') }}" class="hover:text-gray-900 font-medium">Home</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Shop</a>
+            <a href="{{ route('public.shop.index') }}" class="hover:text-gray-900 font-medium">Catalogo</a>
             <svg class="h-5 w-5 shrink-0 text-gray-400 mx-1" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>
-            <span class="text-gray-900 font-medium">{{ $prodotto->nome }}</span>
+            <span class="min-w-0 flex-1 truncate text-gray-900 font-medium sm:flex-none sm:overflow-visible sm:whitespace-normal">{{ $prodotto->nome }}</span>
         </nav>
     </div>
 </div>
 
-<div class="max-w-7xl mx-6 lg:mx-auto py-6 px-6 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-0 sm:mb-6 border-t-0">
+<div class="max-w-7xl mx-6 lg:mx-auto pt-0 py-6 px-6 sm:px-6 lg:px-8 bg-white border border-gray-100 shadow-sm rounded-b-lg mb-3 border-t-0">
     <div>
-        <h1 class="text-2xl sm:text-3xl">{{ $prodotto->nome }}</h1>
+        <h1 class="min-w-0 truncate text-2xl sm:overflow-visible sm:whitespace-normal sm:text-3xl">{{ $prodotto->nome }}</h1>
         @if($prodotto->marca)
             <p class="text-sm text-gray-500 mt-1 uppercase tracking-wider">{{ $prodotto->marca }}</p>
         @endif
@@ -30,12 +30,23 @@
     @if($collezione)
         <a href="{{ route('public.shop.collezione', $collezione->slug) }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna a {{ $collezione->nome }}</a>
     @else
-        <a href="{{ route('public.shop.index') }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna allo Shop</a>
+        <a href="{{ route('public.shop.index') }}" class="text-secondary hover:text-primary font-semibold text-sm">&larr; Torna al Catalogo</a>
     @endif
 </div>
 
-<div class="max-w-7xl mx-auto py-12 px-6 sm:px-6 lg:px-0">
-    <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
+<div class="max-w-7xl mx-auto pb-12 px-4 sm:px-6 lg:px-8 pt-0">
+    <!-- Barra di Ricerca e Filtri Sempre Visibile -->
+    @include('public.shop.partials.search_bar')
+
+    <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Sidebar (Nascosta su mobile perché presente nella barra sticky) -->
+        <aside class="hidden lg:block w-full lg:w-1/5 flex-shrink-0">
+            @include('public.shop.partials.sidebar', ['categoria' => $categoria ?? $prodotto->category])
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-grow">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start">
         
         <!-- Galleria Immagini -->
         @once
@@ -44,7 +55,7 @@
         @php
             $fotoList = is_array($prodotto->foto_aggiuntive) ? $prodotto->foto_aggiuntive : [];
         @endphp
-        <div class="flex flex-col w-full"
+        <div class="flex flex-col w-full px-4 lg:px-0"
              @if(count($fotoList) > 0)
                  x-data="{ 
                      isLightboxOpen: false, 
@@ -232,10 +243,10 @@
                             </div>
                         </template>
 
-                        <!-- Selezione Taglia -->
+                        <!-- Selezione Taglia / Formato -->
                         <template x-if="availableSizes().length > 0">
                             <div class="mb-6">
-                                <h3 class="text-sm text-gray-900 font-medium whitespace-nowrap mb-3" id="size-choice-heading">Taglia: <span x-text="selectedSize"></span></h3>
+                                <h3 class="text-sm text-gray-900 font-medium whitespace-nowrap mb-3" id="size-choice-heading">Formato</h3>
                                 <div class="grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-4">
                                     <template x-for="size in availableSizes()" :key="size">
                                         <button type="button" 
@@ -259,20 +270,10 @@
                             <h3 class="text-sm text-gray-900 font-medium mr-4">Quantità:</h3>
                             <input type="number" name="quantita" min="1" :max="currentVariant ? currentVariant.quantita : 1" x-model="quantity" class="w-20 text-center border-gray-300 rounded shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             
-                            <!-- Check Disponibilità stock -->
-                            <template x-if="currentVariant">
-                                <span class="ml-4 text-sm" :class="(infiniteStock || (currentVariant && currentVariant.quantita > 0)) ? 'text-green-600' : 'text-red-600'">
-                                    <template x-if="infiniteStock">
-                                        <span>Disponibile</span>
-                                    </template>
-                                    <template x-if="!infiniteStock">
-                                        <span>
-                                            <span x-show="currentVariant && currentVariant.quantita > 0">
-                                                Disponibile (<span x-text="currentVariant.quantita"></span>)
-                                            </span>
-                                            <span x-show="!currentVariant || currentVariant.quantita <= 0">Esaurito</span>
-                                        </span>
-                                    </template>
+                            <!-- Avviso se esaurito (disponibilità numerica nascosta) -->
+                            <template x-if="currentVariant && !infiniteStock && currentVariant.quantita <= 0">
+                                <span class="ml-4 text-sm font-semibold text-red-600">
+                                    Esaurito
                                 </span>
                             </template>
                         </div>
@@ -308,6 +309,8 @@
                     </div>
                 </div>
             @endif
+        </div>
+    </div>
         </div>
     </div>
 </div>
