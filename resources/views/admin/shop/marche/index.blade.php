@@ -38,7 +38,7 @@
                                     <tr class="hover:bg-gray-50 transition">
                                         <td class="py-3 px-4 border-b">
                                             @if($marca->foto)
-                                                <img src="{{ $marca->foto }}" alt="{{ $marca->nome }}"
+                                                <img src="{{ asset($marca->foto) }}" alt="{{ $marca->nome }}"
                                                      class="h-10 w-16 object-contain rounded border border-gray-200 bg-gray-50 p-0.5">
                                             @else
                                                 <span class="inline-flex items-center justify-center h-10 w-16 bg-gray-100 rounded text-gray-400 text-xs">nessuna</span>

@@ -7,10 +7,10 @@
                         <div class="swiper-slide h-screen">
                             @if(!empty($photo['link']))
                                 <a href="{{ $photo['link'] }}" target="_blank" rel="noopener" class="block w-full h-full">
-                                    <img src="{{ $photo['url'] }}" class="w-full h-full object-cover" alt="Image">
+                                    <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
                                 </a>
                             @else
-                                <img src="{{ $photo['url'] }}" class="w-full h-full object-cover" alt="Image">
+                                <img src="{{ asset($photo['url']) }}" class="w-full h-full object-cover" alt="Image">
                             @endif
                         </div>
                     @endif
