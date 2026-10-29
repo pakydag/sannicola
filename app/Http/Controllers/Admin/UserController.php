@@ -38,7 +38,18 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    $existingAdmin = User::where('email', $value)->where('role', 'admin')->first();
+                    if ($existingAdmin) {
+                        $fail('Un amministratore con questo indirizzo email è già presente.');
+                    }
+                },
+            ],
             'is_super_admin' => 'boolean',
             'can_manage_site' => 'boolean',
             'can_manage_shop' => 'boolean',
@@ -49,23 +60,45 @@ class UserController extends Controller
 
         $password = $this->generatePassword();
 
-        $user = User::create([
-            'name' => $request->name,
-            'surname' => $request->surname,
-            'email' => $request->email,
-            'password' => Hash::make($password),
-            'role' => 'admin',
-            'is_super_admin' => $request->has('is_super_admin'),
-            'can_manage_site' => $request->has('can_manage_site'),
-            'can_manage_shop' => $request->has('can_manage_shop'),
-            'can_manage_booking' => $request->has('can_manage_booking'),
-            'can_manage_voip' => $request->has('can_manage_voip'),
-            'can_manage_agents' => $request->has('can_manage_agents'),
-        ]);
+        $existingUser = User::where('email', $request->email)->first();
 
-        Mail::to($user->email)->send(new AdminUserCreated($user, $password));
+        if ($existingUser) {
+            $existingUser->update([
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'password' => Hash::make($password),
+                'role' => 'admin',
+                'is_super_admin' => $request->has('is_super_admin'),
+                'can_manage_site' => $request->has('can_manage_site'),
+                'can_manage_shop' => $request->has('can_manage_shop'),
+                'can_manage_booking' => $request->has('can_manage_booking'),
+                'can_manage_voip' => $request->has('can_manage_voip'),
+                'can_manage_agents' => $request->has('can_manage_agents'),
+            ]);
+            $user = $existingUser;
+        } else {
+            $user = User::create([
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'email' => $request->email,
+                'password' => Hash::make($password),
+                'role' => 'admin',
+                'is_super_admin' => $request->has('is_super_admin'),
+                'can_manage_site' => $request->has('can_manage_site'),
+                'can_manage_shop' => $request->has('can_manage_shop'),
+                'can_manage_booking' => $request->has('can_manage_booking'),
+                'can_manage_voip' => $request->has('can_manage_voip'),
+                'can_manage_agents' => $request->has('can_manage_agents'),
+            ]);
+        }
 
-        return redirect()->route('admin.users.index')->with('success', 'Amministratore creato con successo e notificato via email.');
+        try {
+            Mail::to($user->email)->send(new AdminUserCreated($user, $password));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Errore invio email credenziali amministratore: ' . $e->getMessage());
+        }
+
+        return redirect()->route('admin.users.index')->with('success', 'Amministratore configurato con successo e credenziali inviate via email.');
     }
 
     /**
@@ -84,7 +117,22 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                function ($attribute, $value, $fail) use ($user) {
+                    $conflict = User::where('email', $value)->where('id', '!=', $user->id)->first();
+                    if ($conflict) {
+                        if ($conflict->role === 'admin') {
+                            $fail('Un altro amministratore con questo indirizzo email è già registrato.');
+                        } else {
+                            $fail('Questo indirizzo email appartiene già a un altro utente.');
+                        }
+                    }
+                },
+            ],
             'is_super_admin' => 'boolean',
             'can_manage_site' => 'boolean',
             'can_manage_shop' => 'boolean',

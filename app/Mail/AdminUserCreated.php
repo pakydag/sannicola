@@ -30,8 +30,12 @@ class AdminUserCreated extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = ($this->user->role === 'admin')
+            ? 'Impostazione Accesso Amministratore - ' . config('app.name')
+            : 'Impostazione Accesso Agente - ' . config('app.name');
+
         return new Envelope(
-            subject: 'Impostazione Accesso Agente - ' . config('app.name'),
+            subject: $subject,
         );
     }
 

@@ -91,23 +91,7 @@
                             @error('has_contact_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Includi Modulo Transfer -->
-                        <div class="mb-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="has_transfer_form" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('has_transfer_form') ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-600">Includi modulo di richiesta transfer alla fine dell'articolo</span>
-                            </label>
-                            @error('has_transfer_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
-                        </div>
 
-                        <!-- Includi Modulo Noleggio Auto -->
-                        <div class="mb-4">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="has_car_rental_form" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" {{ old('has_car_rental_form') ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-600">Includi modulo noleggio auto alla fine dell'articolo</span>
-                            </label>
-                            @error('has_car_rental_form') <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p> @enderror
-                        </div>
 
                         <!-- Mostra Data -->
                         <div class="mb-4">

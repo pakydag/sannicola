@@ -148,17 +148,7 @@
             </div>
         @endif
 
-        @if($articolo->has_transfer_form)
-            <div class="mt-8">
-                @include('public.partials.transfer_form')
-            </div>
-        @endif
 
-        @if($articolo->has_car_rental_form)
-            <div class="mt-8">
-                @include('public.partials.car_rental_form')
-            </div>
-        @endif
 
     </div>
 </div>

@@ -6,7 +6,11 @@
 <body style="font-family: sans-serif; line-height: 1.6; color: #333;">
     <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
         <h2 style="color: #4A90E2;">Ciao {{ $user->name }},</h2>
-        <p>È stato creato per te un nuovo account Agente su <strong>{{ config('app.name') }}</strong>.</p>
+        @if(($user->role ?? null) === 'admin')
+            <p>È stato creato o aggiornato per te un account Amministratore su <strong>{{ config('app.name') }}</strong>.</p>
+        @else
+            <p>È stato creato per te un nuovo account Agente su <strong>{{ config('app.name') }}</strong>.</p>
+        @endif
         
         <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
             <p><strong>Dati di accesso:</strong></p>

@@ -56,12 +56,6 @@
                     <a href="{{ route('admin.contatti.index') }}" class="{{ request()->routeIs('admin.contatti.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
                         <span class="ml-7">Form Contatti</span>
                     </a>
-                    <a href="{{ route('admin.transfers.index') }}" class="{{ request()->routeIs('admin.transfers.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
-                        <span class="ml-7">Richieste Transfer</span>
-                    </a>
-                    <a href="{{ route('admin.car-rentals.index') }}" class="{{ request()->routeIs('admin.car-rentals.*') ? 'bg-slate-800 text-white border-l-4 border-indigo-500' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-all">
-                        <span class="ml-7">Richieste Noleggio</span>
-                    </a>
                 </div>
             </div>
             @endif
@@ -237,8 +231,6 @@
                     <a href="{{ route('admin.sezioni.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Sezioni Sito</a>
                     <a href="{{ route('admin.global-widgets.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Widget Globali</a>
                     <a href="{{ route('admin.contatti.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Form Contatti</a>
-                    <a href="{{ route('admin.transfers.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Richieste Transfer</a>
-                    <a href="{{ route('admin.car-rentals.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-white hover:bg-slate-700">Richieste Noleggio</a>
                 </div>
                 @endif
 
