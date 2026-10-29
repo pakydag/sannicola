@@ -31,9 +31,9 @@ Route::get('/lang/{locale}', function ($locale) {
 
 // Rotte Autenticate / Amministrazione
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::get('/admin-emergency-migrate', function () {
     try {
