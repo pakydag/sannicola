@@ -59,7 +59,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end gap-3">
                                             <a href="{{ route('admin.users.edit', $user) }}" class="text-indigo-600 hover:text-indigo-900">Modifica</a>
-                                            @if($user->email !== 'admin@admin.com')
+                                            @if($user->id !== auth()->id())
                                                 <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questo amministratore?')">
                                                     @csrf
                                                     @method('DELETE')

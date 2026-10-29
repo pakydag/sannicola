@@ -161,8 +161,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if ($user->email === 'admin@admin.com') {
-            return back()->with('error', 'Impossibile eliminare l\'amministratore principale.');
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Impossibile eliminare il proprio account amministratore.');
         }
 
         $user->delete();
